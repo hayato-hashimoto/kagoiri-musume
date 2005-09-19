@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.3 2005/09/19 14:30:58 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.4 2005/09/19 14:57:24 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -423,7 +423,7 @@
    (map/ (lambda (t m)
 	   (dl/
 	    (dt/ (sys-ctime t))
-	    (dd/ m)))
+	    (dd/ (pre/ m))))
 	 (map (lambda (m)
 		(ref m 'ctime))
 	      (all-musics musume-id))
