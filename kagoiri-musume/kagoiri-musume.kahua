@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.2 2005/09/19 13:58:30 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -309,7 +309,7 @@
 		       (th/ "タイプ"))
 		  (map/ (lambda (m)
 			  (tr/ (td/ (a/cont/
-				     (@@/ (cont melody-list (unit-id-of m) (key-of m)))
+				     (@@/ (cont musume-edit (key-of m)))
 				     (x->string (mno-of m))))
 			       (td/ (a/cont/
 				     (@@/ (cont melody-list (unit-id-of m) (key-of m)))
@@ -412,9 +412,10 @@
   (kagoiri-page
    "娘。の閲覧"))
 
-(define-entry (musume-edit)
+(define-entry (musume-edit musume-id)
   (kagoiri-page
-   "娘。に追記する。"))
+   (h3/ #`"『,(mname-of (find-kahua-instance <musume> musume-id)) 』を編集する。")
+   ))
 
 (define-entry (melody-list unit-id musume-id)
   (kagoiri-page
@@ -428,6 +429,33 @@
 	      (all-musics musume-id))
 	 (map melody-of
 	      (all-musics musume-id)))
+   (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status)
+			      ;; TODO: here we send mail for members
+			      (make <music>
+				:musume-id musume-id
+				:melody melody)
+			    (let1 musume (find-kahua-instance <musume> musume-id)
+			      (set! (status-of musume) status))
+			    (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
+	       (table/
+		(tr/ (th/ "ステータス"))
+		(tr/ (td/
+		      (select/ (@/ (name "status"))
+			       (map/ (lambda (s)
+				       (if (equal? (statusid-of s)
+						   (status-of (find-kahua-instance <musume> musume-id)))
+					   (option/ (@/ (value (statusid-of s))
+							(selected "true"))
+						    (disp-name-of s))
+					   (option/ (@/ (value (statusid-of s)))
+						    (disp-name-of s))))
+				     (map (lambda (s) (find-kahua-instance <status> s))
+					  (statuss-of
+					   (find-kahua-instance <unit> unit-id))))))))
+
+	       (textarea/ (@/ (type "text") (name "melody")
+			      (rows 20) (cols 80)) "")
+	       (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
    ))
 
 ;

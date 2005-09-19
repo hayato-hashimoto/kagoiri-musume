@@ -1,3 +1,7 @@
 DIST
 DIST_EXCLUDE
 DIST_EXCLUDE_X
+./CVS
+./kagoiri-musume/CVS
+./plugins/CVS
+./test/CVS
