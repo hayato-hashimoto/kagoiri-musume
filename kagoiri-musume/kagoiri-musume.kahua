@@ -1,0 +1,437 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: kagoiri-musume.kahua,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;;
+;; include
+(load "kagoiri-musume/version.kahua")
+(load "kagoiri-musume/local.kahua")
+(load "kagoiri-musume/class.kahua")
+
+;;
+(use srfi-13)
+(use util.list)
+(use gauche.collection)
+
+;
+; kagoiri-musume-page-template
+;
+
+(define (kagoiri-page . body)
+  (html/
+   (head/ (title/ *kagoiri-musume-title*)
+	  (meta/ (@/ (http-equiv "Content-type")
+		     (content "text/html; charset=euc-jp")))
+	  (link/ (@/ (rel "stylesheet") (type "text/css")
+		     (href (kahua-static-document-url
+			    "kagoiri-musume/kagoiri-musume.css")))))
+   (body/ (h1/ *kagoiri-musume-title*)
+	  (hr/)
+	  (node-set body))))
+
+(define (redirect-page path)
+  (html/ (extra-header/
+	  (@/ (name "Status") (value "302 Moved")))
+	 (extra-header/
+	  (@/ (name "Location")
+	      (value (string-append (kahua-self-uri-full) path))))))
+
+
+(define-entry (kagoiri)
+  (kagoiri-page
+   (h2/ "籠入娘。へようこそ！")
+   (ul/ (li/ (a/cont/ (@@/ (cont admin-system)) "システム設定管理画面"))
+	(li/ (a/cont/ (@@/ (cont unit-list)) "ユニット一覧")))
+   ))
+
+(define-entry (admin-system)
+  (kagoiri-page
+   (h2/ "籠入娘。システム設定管理画面")
+   "工事中"
+   ))
+
+
+(define-entry (unit-list)
+  (kagoiri-page
+   (h2/ "ユニット一覧")
+   (table/
+    (tr/ (th/) (th/)
+	 (th/ "ユニット名")
+	 (th/ "概要")
+	 (th/ "ファン"))
+    (map/ (lambda (u)
+	    (tr/ (td/ (a/cont/
+		       (@@/ (cont unit-edit (key-of u)))
+		       "編集"))
+		 (td/ (a/cont/
+		       (@@/ (cont unit-fallout (key-of u)))
+		       "削除"))
+		 (td/ (a/cont/
+		       (@@/ (cont musume-list (key-of u)))
+		       (unit-name-of u)))
+		 (td/ (description-of u))
+		 (td/ (string-join (fans-of u) " , "))))
+	  (all-units)))
+   (hr/)
+   (h2/ "新ユニット結成")
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword name desc)
+		   (and (not (string-null? name))
+			(or (find-kahua-instance <unit> name)
+			    (make <unit>
+			      :unit-name name
+			      :description desc
+			      :fans (kahua-context-ref* "fans")
+			      :priorities (kahua-context-ref* "priority")
+			      :statuss (kahua-context-ref* "status")
+			      :types (kahua-context-ref* "type")
+			      :categories (kahua-context-ref* "category")
+			      )))
+		 (redirect-page "unit-list"))))
+    (table/
+     (tr/ (th/ "優先度")
+	  (th/ "ステータス")
+	  (th/ "タイプ")
+	  (th/ "カテゴリ"))
+     (tr/ (td/
+	   (select/ (@/ (name "priority") (size "5") (multiple "true"))
+		    (map/ (lambda (p)
+			    (option/ (@/ (value (priorityid-of p)))
+				     (disp-name-of p)))
+			  (all-priorities))))
+	  (td/
+	   (select/ (@/ (name "status") (size "5") (multiple "true"))
+		    (map/ (lambda (s)
+			    (option/ (@/ (value (statusid-of s)))
+				     (disp-name-of s)))
+			  (all-statuss))))
+	  (td/
+	   (select/ (@/ (name "type") (size "5") (multiple "true"))
+		    (map/ (lambda (t)
+			    (option/ (@/ (value (typeid-of t)))
+				     (disp-name-of t)))
+			  (all-types))))
+	  (td/
+	   (select/ (@/ (name "category") (size "5") (multiple "true"))
+		    (map/ (lambda (c)
+			    (option/ (@/ (value (categoryid-of c)))
+				     (disp-name-of c)))
+			  (all-categories))))))
+    (table/
+     (tr/ (td/ "ユニット名")
+	  (td/
+	   (textarea/ (@/ (type "text") (name "name")
+			  (rows 1) (cols 32)) "")))
+     (tr/ (td/ "概要")
+	  (td/
+	   (textarea/ (@/ (type "text") (name "desc")
+			  (rows 10) (cols 80)) "")))
+     ;; 複数選択の仕方が不明
+     (tr/ (td/ "ファン")
+	  (td/
+	   (select/ (@/ (name "fans") (size "5") (multiple "true"))
+		    (map/ option/ (all-fans)))))
+     )
+    (input/ (@/ (type "submit") (name "submit") (value "新ユニット登録"))))
+   ))
+
+
+(define-entry (unit-edit unit-id)
+  (let1 unit (find-kahua-instance <unit> unit-id)
+    (kagoiri-page
+     (h2/ "ユニット編集")
+     (hr/)
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword name desc)
+		     (begin
+		       (if (not (string-null? name))
+			   (set! (unit-name-of unit) name))
+		       (set! (description-of unit) desc)
+		       (set! (fans-of unit) (kahua-context-ref* "fans"))
+		       (set! (priorities-of unit) (kahua-context-ref* "priority"))
+		       (set! (statuss-of unit) (kahua-context-ref* "status"))
+		       (set! (types-of unit) (kahua-context-ref* "type"))
+		       (set! (categories-of unit) (kahua-context-ref* "category"))
+		       (redirect-page "unit-list"))
+		   (redirect-page "unit-list"))))
+      (table/
+       (tr/ (th/ "優先度")
+	    (th/ "ステータス")
+	    (th/ "タイプ")
+	    (th/ "カテゴリ"))
+       (tr/ (td/
+	     (select/ (@/ (name "priority") (size "5") (multiple "true"))
+		      (map/ (lambda (p)
+			      (if (has-priority? unit-id (priorityid-of p))
+				  (option/ (@/ (value (priorityid-of p))
+					       (selected "true"))
+					   (disp-name-of p))
+				  (option/ (@/ (value (priorityid-of p)))
+					   (disp-name-of p))))
+			    (all-priorities))))
+	    (td/
+	     (select/ (@/ (name "status") (size "5") (multiple "true"))
+		      (map/ (lambda (s)
+			      (if (has-status? unit-id (statusid-of s))
+				  (option/ (@/ (value (statusid-of s))
+					       (selected "true"))
+					   (disp-name-of s))
+				  (option/ (@/ (value (statusid-of s)))
+					   (disp-name-of s))))
+			    (all-statuss))))
+	    (td/
+	     (select/ (@/ (name "type") (size "5") (multiple "true"))
+		      (map/ (lambda (t)
+			      (if (has-type? unit-id (typeid-of t))
+				  (option/ (@/ (value (typeid-of t))
+					       (selected "true"))
+					   (disp-name-of t))
+				  (option/ (@/ (value (typeid-of t)))
+					   (disp-name-of t))))
+			    (all-types))))
+	    (td/
+	     (select/ (@/ (name "category") (size "5") (multiple "true"))
+		      (map/ (lambda (c)
+			      (if (has-category? unit-id (categoryid-of c))
+				  (option/ (@/ (value (categoryid-of c))
+					       (selected "true"))
+					   (disp-name-of c))
+				  (option/ (@/ (value (categoryid-of c)))
+					   (disp-name-of c))))
+			    (all-categories))))))
+      (table/
+       (tr/ (td/ "ユニット名")
+	    (td/
+	     (textarea/ (@/ (type "text") (name "name")
+			    (rows 1) (cols 32))
+			(unit-name-of unit))))
+       (tr/ (td/ "概要")
+	    (td/
+	     (textarea/ (@/ (type "text") (name "desc")
+			    (rows 10) (cols 80))
+			(description-of unit))))
+       ;; 複数選択の仕方が不明
+       (tr/ (td/ "ファン")
+	    (td/
+	     (select/ (@/ (name "fans") (size "5") (multiple "true"))
+		      (map/ (lambda (f)
+			      (if (fan-to? unit-id f)
+				  (option/ (@/ (selected "true")) f)
+				  (option/ f)))
+			    (all-fans)))))
+       )
+      (input/ (@/ (type "submit") (name "submit") (value "確定"))))
+     )))
+
+(define-entry (unit-fallout unit-id)
+  (let1 unit (find-kahua-instance <unit> unit-id)
+    (set! (ref unit 'fallout) #t)
+    (redirect-page "unit-list")))
+
+
+
+(define-entry (musume-list unit-id :keyword priority status assign)
+  (let* ((p-filter (if (or (not priority)
+			   (equal? "*all*" priority))
+		       identity
+		       (lambda (m) (equal? (priority-of m) priority))))
+	 (s-filter (if (or (not status)
+			   (equal? "*all*" status))
+		       identity
+		       (lambda (m) (equal? (status-of m) status))))
+	 (a-filter (if (or (not assign)
+			   (equal? "   " assign))
+		       identity
+		       (lambda (m) (equal? (assign-of m) assign))))
+	 (and-filter (lambda (m) (and (p-filter m)
+				      (s-filter m)
+				      (a-filter m)))))
+    (kagoiri-page
+     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+     (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 娘。一覧")
+     (form/cont/ (@@/ (cont musume-list unit-id))
+		 (table/
+		  (tr/ (th/ "優先度")
+		       (th/ "ステータス")
+		       (th/ "アサイン"))
+		  (tr/
+		   (td/
+		    (select/
+		     (@/ (name "priority"))
+		     (node-set
+		      (cons (option/ (@/ (value "*all*")) "全て")
+			    (map (lambda (p)
+				   (if (equal? (priorityid-of p) priority)
+				       (option/ (@/ (value (priorityid-of p)) (selected "true"))
+						(disp-name-of p))
+				       (option/ (@/ (value (priorityid-of p)))
+						(disp-name-of p))))
+				 (map (lambda (p) (find-kahua-instance <priority> p))
+				      (priorities-of
+				       (find-kahua-instance <unit> unit-id))))))))
+		   (td/
+		    (select/
+		     (@/ (name "status"))
+		     (node-set
+		      (cons (option/ (@/ (value "*all*")) "全て")
+			    (map (lambda (s)
+				   (if (equal? (statusid-of s) status)
+				       (option/ (@/ (value (statusid-of s)) (selected "true"))
+						(disp-name-of s))
+				       (option/ (@/ (value (statusid-of s)))
+						(disp-name-of s))))
+				 (map (lambda (s) (find-kahua-instance <status> s))
+				      (statuss-of
+				       (find-kahua-instance <unit> unit-id))))))))
+		   (td/
+		    (select/
+		     (@/ (name "assign"))
+		     (map/ (lambda (a)
+			     (if (equal? (fan-name-of a) assign)
+				 (option/ (@/ (value (fan-name-of a)) (selected "true"))
+					  (fan-name-of a))
+				 (option/ (@/ (value (fan-name-of a)))
+					  (fan-name-of a))))
+			   (map (lambda (a) (find-kahua-instance <fan-property> a))
+				(fans-of
+				 (find-kahua-instance <unit> unit-id))))))
+		   (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
+		   ))
+		 (table/
+		  (tr/ (th/ "No.")
+		       (th/ "タイトル")
+		       (th/ "優先度")
+		       (th/ "ステータス")
+		       (th/ "アサイン")
+		       (th/ "タイプ"))
+		  (map/ (lambda (m)
+			  (tr/ (td/ (a/cont/
+				     (@@/ (cont melody-list (unit-id-of m) (key-of m)))
+				     (x->string (mno-of m))))
+			       (td/ (a/cont/
+				     (@@/ (cont melody-list (unit-id-of m) (key-of m)))
+				     (mname-of m)))
+			       (td/ (disp-name-of
+				     (find-kahua-instance
+				      <priority> (priority-of m))))
+			       (td/ (disp-name-of
+				     (find-kahua-instance
+				      <status> (status-of m))))
+			       (td/ (fan-name-of
+				     (find-kahua-instance
+				      <fan-property> (assign-of m))))
+			       (td/ (disp-name-of
+				     (find-kahua-instance
+				      <type> (type-of m))))))
+			(sort (filter and-filter
+				      (all-musumes unit-id))
+			      (lambda (m1 m2)
+				(> (mno-of m1) (mno-of m2))))))
+		 ))))
+
+(define-entry (musume-new unit-id)
+  (kagoiri-page
+   (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+   (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
+		   (let1 musume (make <musume>
+				  :unit-id unit-id
+				  :musume-name name
+				  :priority priority
+				  :status status
+				  :assign assign
+				  :type type
+				  :category category)
+		     (make <music>
+		       :musume-id (key-of musume)
+		       :melody melody))
+		 (redirect-page #`"musume-list/,|unit-id|"))))
+    (table/
+     (tr/ (th/ "優先度")
+	  (th/ "ステータス")
+	  (th/ "タイプ")
+	  (th/ "カテゴリ")
+	  (th/ "アサイン"))
+     (tr/
+      (td/
+       (select/ (@/ (name "priority"))
+		(map/ (lambda (p)
+			(option/ (@/ (value (priorityid-of p)))
+				 (disp-name-of p)))
+		      (map (lambda (p) (find-kahua-instance <priority> p))
+			   (priorities-of
+			    (find-kahua-instance <unit> unit-id))))))
+      (td/
+       (select/ (@/ (name "status"))
+		(map/ (lambda (s)
+			(option/ (@/ (value (statusid-of s)))
+				 (disp-name-of s)))
+		      (map (lambda (s) (find-kahua-instance <status> s))
+			   (statuss-of
+			    (find-kahua-instance <unit> unit-id))))))
+      (td/
+       (select/ (@/ (name "type"))
+		(map/ (lambda (t)
+			(option/ (@/ (value (typeid-of t)))
+				 (disp-name-of t)))
+		      (map (lambda (t) (find-kahua-instance <type> t))
+			   (types-of
+			    (find-kahua-instance <unit> unit-id))))))
+      (td/
+       (select/ (@/ (name "category"))
+		(map/ (lambda (c)
+			(option/ (@/ (value (categoryid-of c)))
+				 (disp-name-of c)))
+		      (map (lambda (c) (find-kahua-instance <category> c))
+			   (categories-of
+			    (find-kahua-instance <unit> unit-id))))))
+      (td/
+       (select/ (@/ (name "assign"))
+		(map/ (lambda (a)
+			(option/ (@/ (value (fan-name-of a)))
+				 (fan-name-of a)))
+		      (map (lambda (a) (find-kahua-instance <fan-property> a))
+			   (fans-of
+			    (find-kahua-instance <unit> unit-id))))))
+      ))
+    (table/ (tr/ (td/ "タイトル")
+		 (td/ (textarea/ (@/ (type "text") (name "name")
+				     (rows 1) (cols 32)) "")))
+	    (tr/ (td/ "内容")
+		 (td/ (textarea/ (@/ (type "text") (name "melody")
+				     (rows 20) (cols 80)) ""))))
+    (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))
+   ))
+
+(define-entry (musume-view)
+  (kagoiri-page
+   "娘。の閲覧"))
+
+(define-entry (musume-edit)
+  (kagoiri-page
+   "娘。に追記する。"))
+
+(define-entry (melody-list unit-id musume-id)
+  (kagoiri-page
+   (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
+   (map/ (lambda (t m)
+	   (dl/
+	    (dt/ (sys-ctime t))
+	    (dd/ m)))
+	 (map (lambda (m)
+		(ref m 'ctime))
+	      (all-musics musume-id))
+	 (map melody-of
+	      (all-musics musume-id)))
+   ))
+
+;
+; initialization
+;
+   
+(initialize-main-proc kagoiri)

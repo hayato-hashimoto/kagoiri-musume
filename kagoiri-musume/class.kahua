@@ -1,0 +1,287 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: class.kahua,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;;
+;; include
+;;(load "kagoiri-musume/version.kahua")
+(load "kagoiri-musume/local.kahua")
+;;
+;(use srfi-13)
+;(use util.list)
+;(use gauche.collection)
+
+;; Unit means Project.
+;;
+(define-class <unit> (<kahua-persistent-base>)
+  (
+   ;; unit name means project name.
+   (unit-name       :allocation :persistent :init-keyword :unit-name
+		    :accessor unit-name-of)
+   (description     :allocation :persistent :init-keyword :description
+		    :init-value "" :accessor description-of)
+   ;; counter of musume as issue.
+   (next-musume-no  :allocation :persistent :init-keyword :next-musume-no
+		    :init-value 1)
+   ;; fans means developers.
+   (fans            :allocation :persistent :init-keyword :fans
+		    :init-value '() :accessor fans-of)
+   ;; priorities
+   (priorities      :allocation :persistent :init-keyword :priorities
+		    :init-value '() :accessor priorities-of)
+   ;; statuss
+   (statuss         :allocation :persistent :init-keyword :statuss
+		    :init-value '() :accessor statuss-of)
+   ;; types
+   (types           :allocation :persistent :init-keyword :types
+		    :init-value '() :accessor types-of)
+   ;; categories
+   (categories      :allocation :persistent :init-keyword :categories
+		    :init-value '() :accessor categories-of)
+   (ctime           :allocation :persistent :init-keyword :ctime
+		    :init-value (sys-time))
+   ;; delete flag
+   (fallout         :allocation :persistent :init-keyword :fallout
+		    :init-value #f)
+   ))
+
+;; comment
+#|
+(define-method key-of ((self <unit>))
+  (unit-name-of self))
+|#
+
+(define (active? unit)
+  (not (ref unit 'fallout)))
+
+(define (all-units)
+  (filter active?
+	  (make-kahua-collection <unit>)))
+
+(define (unit-exist? unit-id)
+  (if (find-kahua-instance <unit> unit-id) #t #f))
+
+;; Musume means issue.
+;;
+(define-class <musume> (<kahua-persistent-base>)
+  (
+   ;; back pointer for unit
+   (unit-id         :allocation :persistent :init-keyword :unit-id
+		    :accessor unit-id-of)
+   ;; musume-no means issue number.
+   (musume-no       :allocation :persistent :init-keyword :musume-no
+		    :init-value #f :accessor mno-of)
+   ;; issue title
+   (musume-name     :allocation :persistent :init-keyword :musume-name
+		    :init-value "" :accessor mname-of)
+   ;; issue priority
+   ;; normal above-normal low high super
+   (priority        :allocation :persistent :init-keyword :priority
+		    :init-value "normal" :accessor priority-of)
+   ;; status
+   ;; open completed on-hold taken rejected
+   (status          :allocation :persistent :init-keyword :status
+		    :init-value "open" :accessor status-of)
+   ;; type
+   ;; discuss request bug report task term etc
+   (type            :allocation :persistent :init-keyword :type
+		    :init-value #f :accessor type-of)
+   ;; category
+   ;;
+   (category        :allocation :persistent :init-keyword :category
+		    :initi-value #f)
+   ;; assign
+   (assign          :allocation :persistent :init-keyword :assign
+		    :init-value #f :accessor assign-of)
+   ;; musics
+   (musics          :allocation :persistent :init-keyword :musics
+		    :init-value '() :accessor musics-of)
+   ;; create time
+   (ctime           :allocation :persistent :init-keyword :ctime
+		    :init-value (sys-time))
+   ))
+
+(define-method initialize ((obj <musume>) initargs)
+  (next-method)
+  (let* ((unit (find-kahua-instance <unit> (unit-id-of obj)))
+	 (mno (slot-ref unit 'next-musume-no)))
+    (set! (slot-ref obj 'musume-no) mno)
+    (set! (slot-ref unit 'next-musume-no) (+ mno 1))))
+
+(define (all-musumes unit-id)
+  (filter (lambda (m)
+	    (equal? unit-id (unit-id-of m)))
+	  (make-kahua-collection <musume>)))
+
+;; music means one of issue.
+;;
+(define-class <music> (<kahua-persistent-base>)
+  (;; back pointer
+   ;; which is value of (key-of <musume>)
+   (musume-id       :allocation :persistent :init-keyword :musume-id
+		    :accessor musume-id-of)
+   (melody          :allocation :persistent :init-keyword :melody
+		    :accessor melody-of)
+   (ctime           :allocation :persistent :init-keyword :ctime
+		    :init-value (sys-time))
+   ))
+
+(define-method initialize ((obj <music>) initargs)
+  (next-method)
+  (let* ((musume (find-kahua-instance <musume> (musume-id-of obj)))
+	 (musics (musics-of musume)))
+    (set! (musics-of musume)
+	  (cons (key-of obj) musics))))
+
+(define (all-musics musume-id)
+  (and-let* ((musume (find-kahua-instance <musume> musume-id)))
+    (map (lambda (id)
+	   (find-kahua-instance <music> id))
+	 (musics-of musume))))
+
+;; fans means developer
+;;
+(define-class <fan-property> (<kahua-persistent-base>)
+  (
+   ;; fan-name equal <kahua-user> login-name
+   ;; so, this property needs a instance of <kahua-user>.
+   (fan-name        :allocation :persistent :init-keyword :fan-name
+		    :init-value #f :accessor fan-name-of)
+   (email           :allocation :persistent :init-keyword :email
+		    :init-value #f)
+   ;; delete flag
+   (delete          :allocation :persistent :init-keyword :delete
+		    :init-value #f :accessor get-delete-flag)
+   ))
+
+;; comment
+(define-method key-of ((self <fan-property>))
+  (fan-name-of self))
+
+
+(define (lucky-fan? fan-prop)
+  (not (ref fan-prop 'delete)))
+
+(define (all-fans)
+  (map fan-name-of
+       (filter lucky-fan?
+	       (make-kahua-collection <fan-property>))))
+
+(define (add-fan name passwd email)
+  (and-let* ((user (kahua-add-user name passwd))
+	     (fanp (make <fan-property>
+		     :fan-name name :email email)))
+    user))
+
+(define (fan-to? unit-id fan-name)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member fan-name (fans-of unit))))
+    (if include? #t #f)))
+
+;; priority property
+;;
+(define-class <priority> (<kahua-persistent-base>)
+  ((priorityid       :allocation :persistent :init-keyword :priorityid
+		     :accessor priorityid-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (level            :allocation :persistent :init-keyword :level
+		     :init-value 0 :accessor level-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f)))
+
+;; comment
+(define-method key-of ((self <priority>))
+  (priorityid-of self))
+
+
+(define-method enable? ((obj <priority>))
+  (not (ref obj 'delete)))
+
+(define (all-priorities)
+  (filter enable? (make-kahua-collection <priority>)))
+
+(define (has-priority? unit-id priority)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member priority (priorities-of unit))))
+    (if include? #t #f)))
+
+;; status property
+;;
+(define-class <status> (<kahua-persistent-base>)
+  ((statusid         :allocation :persistent :init-keyword :statusid
+		     :accessor statusid-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f)))
+
+;; comment
+(define-method key-of ((self <status>))
+  (statusid-of self))
+
+
+(define-method enable? ((obj <status>))
+  (not (ref obj 'delete)))
+
+(define (all-statuss)
+  (filter enable? (make-kahua-collection <status>)))
+
+(define (has-status? unit-id status)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member status (statuss-of unit))))
+    (if include? #t #f)))
+
+;; type property
+;;
+(define-class <type> (<kahua-persistent-base>)
+  ((typeid           :allocation :persistent :init-keyword :typeid
+		     :accessor typeid-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f)))
+
+;; comment
+(define-method key-of ((self <type>))
+  (typeid-of self))
+
+
+(define-method enable? ((obj <type>))
+  (not (ref obj 'delete)))
+
+(define (all-types)
+  (filter enable? (make-kahua-collection <type>)))
+
+(define (has-type? unit-id type)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member type (types-of unit))))
+    (if include? #t #f)))
+
+;; categories property
+;;
+(define-class <category> (<kahua-persistent-base>)
+  ((categoryid       :allocation :persistent :init-keyword :categoryid
+		     :accessor categoryid-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f)))
+
+;; comment
+(define-method key-of ((self <category>))
+  (categoryid-of self))
+
+
+(define-method enable? ((obj <category>))
+  (not (ref obj 'delete)))
+
+(define (all-categories)
+  (filter enable? (make-kahua-collection <category>)))
+
+(define (has-category? unit-id category)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member category (categories-of unit))))
+    (if include? #t #f)))

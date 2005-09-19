@@ -1,0 +1,10 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;; $Id: kagoiri-musume.conf.in,v 1.1 2005/09/19 12:00:12 cut-sea Exp $
+
+(make <kahua-config>
+  :sockbase             "unix:###KAGOIRI_MUSUME_INPLACE_SOCKETBASE###"
+  :working-directory    "###KAGOIRI_MUSUME_INPLACE_WORKING###"
+  :static-document-path "###KAGOIRI_MUSUME_INPLACE_DOCPATH###"
+  :static-document-url  "/"
+  )

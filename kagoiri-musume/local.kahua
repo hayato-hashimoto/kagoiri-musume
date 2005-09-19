@@ -1,0 +1,26 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: local.kahua,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;;
+;; include
+;;(load "kagoiri-musume/version.kahua")
+;;
+
+;; DB Setting.
+;;
+(define-syntax define-if-not-bound
+  (syntax-rules ()
+    ((_ var expr)
+     (define var (if (symbol-bound? 'var) var expr)))))
+
+(define-if-not-bound *kagoiri-musume-title*
+  "äÆÆþÌ¼¡£ - Bug Tracking System")
+
+(define-if-not-bound *kagoiri-musume-database-name*
+  "mysql:cut-sea::db=kagoiri")
+
+(primary-database-name *kagoiri-musume-database-name*)
+

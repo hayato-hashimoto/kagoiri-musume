@@ -1,0 +1,54 @@
+$Id: INSTALL,v 1.1 2005/09/19 12:00:12 cut-sea Exp $
+
+kagoiri-musume : A simple dummy application of Kahua
+
+[Requirements]
+
+Gauche-0.8.5
+Kahua-0.3.3
+
+[Installation]
+
+  % autoconf
+  % ./configure [any options if you need]
+
+You have to give some options to specify the same install directories 
+as Kahua installed. For example if you gave --prefix=$HOME to 
+configure script of Kahua when you installed it, you have to give the 
+same option to kahua-web's configure script.
+
+  % ./configure --prefix=$HOME
+
+And then
+
+  % make
+  % make check
+  % make install
+  % gosh initdb.scm
+
+Then, edit app-servers in the Kahua working directory to add "kagoiri-musume" entry.
+
+  (kagoiri-musume :argument () :run-by-default 0)
+
+If you want to allow non registered user to edit page, 
+give 'non-member-edit as a argument.
+
+  (kagoiri-musume :argument (non-member-edit) :run-by-default 0)
+
+[Invoke kagoiri-musume in place]
+
+You can invoke the kagoiri-musume before doing "make install", using
+"kagoiri-musume-start" script.  This script invoke kagoiri-musume in the kahua-spvr
+with test HTTP direct mode on 8080 port.  You can also use
+"kagoiri-musume-stop" to stop process invoked by "kagoiri-musume-start"
+
+[Information]
+
+You can find some kagoiri-musume's information at the Kahua.org site.
+
+Sorry, it is now not updated.  Please participate and post your questions
+to the kahua-dev mailing list.
+
+http://www.kahua.org/cgi-bin/kahua.cgi/kahua-web/show/info/Mailing%20List
+
+

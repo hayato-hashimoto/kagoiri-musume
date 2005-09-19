@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ -n "$1" ]; then
+    PORT=$1
+else
+    PORT=8080
+fi
+
+(kahua-spvr -c ###KAGOIRI_MUSUME_INPLACE###/kagoiri-musume.conf -H $PORT -l - &)

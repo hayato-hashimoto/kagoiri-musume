@@ -1,0 +1,111 @@
+# Makefile for kagoiri-musume
+# $Id: Makefile.in,v 1.1 2005/09/19 12:00:12 cut-sea Exp $
+
+package	          = kagoiri-musume
+kahua		  = kahua
+SHELL             = @SHELL@
+prefix            = @prefix@
+exec_prefix       = @exec_prefix@
+bindir            = @bindir@/$(kahua)
+sbindir           = @sbindir@/$(kahua)
+libexecdir	  = @libexecdir@/$(kahua)
+datadir		  = @datadir@/$(kahua)
+sysconfdir        = @sysconfdir@/$(kahua)
+sharedstatedir    = @sharedstatedir@/$(kahua)
+localstatedir     = @localstatedir@/$(kahua)
+libdir            = @libdir@/$(kahua)
+includedir        = @includedir@/$(kahua)
+oldincludedir     = @oldincludedir@/$(kahua)
+infodir           = @infodir@/$(kahua)
+mandir            = @mandir@/$(kahua)
+srcdir            = @srcdir@
+VPATH             = $(srcdir)
+top_builddir      = @top_builddir@
+top_srcdir        = @top_srcdir@
+
+DESTDIR  =
+
+GOSH = @GOSH@
+INSTALL = @INSTALL@
+KAHUA_INSTALL = @KAHUA_INSTALL@
+KAHUA_WORKING = $(localstatedir)
+KAHUA_LIB     = $(libdir)
+
+# specify -c ../kahua.conf etc. to give an alternative conf file
+KAHUACONFIG = -c $(sysconfdir)/kahua.conf
+
+KAGOIRI_MUSUME_INPLACE = $(shell pwd)
+
+KAGOIRI_MUSUME_VERSION = $(shell cat $(top_srcdir)/VERSION)
+KAGOIRI_MUSUME_WORKING = $(KAGOIRI_MUSUME_INPLACE)
+KAGOIRI_MUSUMECONFIG = -c $(KAGOIRI_MUSUME_INPLACE)/kagoiri-musume.conf
+
+SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
+
+SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
+	      kagoiri-musume/local.kahua \
+	      kagoiri-musume/class.kahua \
+	      kagoiri-musume/version.kahua
+
+STATICFILES = kagoiri-musume/kagoiri-musume.css
+
+SOURCEDIR   = kagoiri-musume
+PLUGINDIR   = plugins
+PLUGINFILE  = kagoiri-musume.scm
+
+
+
+CONFIG_GENERATED = Makefile kagoiri-musume.conf test/test.scm config.log config.status autom4*.cache
+
+.PHONY: all check clean distclean install maintainer-clean
+
+all:	test/test.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
+	-rm -rf tmp
+	mkdir tmp
+	ln -s . checkout
+
+kagoiri-musume-start: kagoiri-musume-start.in
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+	chmod +x $@
+
+kagoiri-musume-stop: kagoiri-musume-stop.in
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+	chmod +x $@
+
+test/test.scm:	test/test.scm.in
+	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
+
+kagoiri-musume/version.kahua: kagoiri-musume/version.kahua.in
+	sed -e "s@###KAGOIRI_MUSUME_VERSION###@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
+
+kagoiri-musume.conf: kagoiri-musume.conf.in
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE_SOCKETBASE###@$(KAGOIRI_MUSUME_INPLACE)/tmp@" -e "s@###KAGOIRI_MUSUME_INPLACE_WORKING###@$(KAGOIRI_MUSUME_INPLACE)@" -e "s@###KAGOIRI_MUSUME_INPLACE_DOCPATH###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+
+check:  all
+	rm -f test/test.log
+	cd test; $(GOSH) -I$(KAHUA_LIB) ./test.scm > test.log
+
+clean:
+	rm -rf core *~ kagoiri-musume/*~ test/*~ test/test.log $(SCRIPTS) checkout
+
+install: 
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script $(SCRIPTFILES)
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t static --no-overwrite $(STATICFILES)
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $(PLUGINFILE) \
+                                        $(PLUGINDIR)/$(PLUGINFILE)
+	for f in $(SCRIPTS); do \
+	  $(INSTALL) -m 555 $$f $(bindir)/$$f;\
+	done
+
+uninstall :
+	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t script $(SCRIPTFILES)
+	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t static $(STATICFILES)
+	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t plugin -r $(PLUGINFILE) \
+                                        $(PLUGINDIR)/$(PLUGINFILE)
+
+distclean: clean
+	-rm -rf $(CONFIG_GENERATED)
+
+maintainer-clean: clean
+	-rm -rf $(CONFIG_GENERATED) configure VERSION DIST_EXCLUDE_X
