@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.3 2005/09/20 12:31:23 cut-sea Exp $
+;; $Id: class.kahua,v 1.4 2005/09/20 13:09:49 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -121,7 +121,9 @@
 ;; music means one of issue.
 ;;
 (define-class <music> (<kahua-persistent-base>)
-  (;; back pointer
+  ((music-id        :allocation :persistent :init-keyword :music-id
+		    :init-value #f :accessor music-id-of)
+   ;; back pointer
    ;; which is value of (key-of <musume>)
    (musume-id       :allocation :persistent :init-keyword :musume-id
 		    :accessor musume-id-of)
@@ -137,8 +139,11 @@
   (next-method)
   (let* ((musume (find-kahua-instance <musume> (musume-id-of obj)))
 	 (musics (musics-of musume)))
-    (set! (musics-of musume)
-	  (cons (key-of obj) musics))))
+    (if (not (music-id-of obj))
+	(begin
+	  (set! (music-id-of obj) (key-of obj))
+	  (set! (musics-of musume)
+		(cons (key-of obj) musics))))))
 
 (define (all-musics musume-id)
   (and-let* ((musume (find-kahua-instance <musume> musume-id)))

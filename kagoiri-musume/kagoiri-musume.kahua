@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.4 2005/09/19 14:57:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.5 2005/09/20 13:09:49 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -27,9 +27,17 @@
 	  (link/ (@/ (rel "stylesheet") (type "text/css")
 		     (href (kahua-static-document-url
 			    "kagoiri-musume/kagoiri-musume.css")))))
-   (body/ (h1/ *kagoiri-musume-title*)
-	  (hr/)
-	  (node-set body))))
+   (body/
+    ;; navi-link
+    (table/ (tr/ (td/ (h1/ *kagoiri-musume-title*))
+		 (td/ (a/cont/
+		       (@@/ (cont kagoiri)) "トップ"))
+		 (td/ (a/cont/
+		       (@@/ (cont admin-system)) "システム管理"))
+		 (td/ (a/cont/
+		       (@@/ (cont unit-list)) "ユニット一覧"))))
+    (hr/)
+    (node-set body))))
 
 (define (redirect-page path)
   (html/ (extra-header/
@@ -424,11 +432,12 @@
 	   (dl/
 	    (dt/ (sys-ctime t))
 	    (dd/ (pre/ m))))
+
 	 (map (lambda (m)
 		(ref m 'ctime))
-	      (all-musics musume-id))
+	      (reverse (all-musics musume-id)))
 	 (map melody-of
-	      (all-musics musume-id)))
+	      (reverse (all-musics musume-id))))
    (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status assign)
 			      ;; TODO: here we send mail for members
 			      (if (not (string-null? melody))
@@ -467,8 +476,8 @@
 					   (option/ (@/ (value (fan-name-of a)))
 						    (fan-name-of a))))
 				     (map (lambda (a) (find-kahua-instance <fan-property> a))
-					    (fans-of
-					     (find-kahua-instance <unit> unit-id))))))
+					  (fans-of
+					   (find-kahua-instance <unit> unit-id))))))
 		     ))
 
 	       (textarea/ (@/ (type "text") (name "melody")
