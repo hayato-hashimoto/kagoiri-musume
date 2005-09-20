@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.7 2005/09/20 15:21:37 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.8 2005/09/20 16:55:50 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -240,7 +240,7 @@
 
 
 
-(define-entry (musume-list unit-id :keyword priority status assign)
+(define-entry (musume-list unit-id :keyword priority status assign type)
   (let* ((p-filter (if (or (not priority)
 			   (equal? "*all*" priority))
 		       identity
@@ -253,9 +253,14 @@
 			   (equal? "   " assign))
 		       identity
 		       (lambda (m) (equal? (assign-of m) assign))))
+	 (t-filter (if (or (not type)
+			   (equal? "*all*" type))
+		       identity
+		       (lambda (m) (equal? (type-of m) type))))
 	 (and-filter (lambda (m) (and (p-filter m)
 				      (s-filter m)
-				      (a-filter m)))))
+				      (a-filter m)
+				      (t-filter m)))))
     (kagoiri-page
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
@@ -264,7 +269,8 @@
 		 (table/
 		  (tr/ (th/ "優先度")
 		       (th/ "ステータス")
-		       (th/ "アサイン"))
+		       (th/ "アサイン")
+		       (th/ "タイプ"))
 		  (tr/
 		   (td/
 		    (select/
@@ -306,6 +312,20 @@
 			   (map (lambda (a) (find-kahua-instance <fan-property> a))
 				(fans-of
 				 (find-kahua-instance <unit> unit-id))))))
+		   (td/
+		    (select/
+		     (@/ (name "type"))
+		     (node-set
+		      (cons (option/ (@/ (value "*all*")) "全て")
+			    (map (lambda (t)
+				   (if (equal? (typeid-of t) type)
+				       (option/ (@/ (value (typeid-of t)) (selected "true"))
+						(disp-name-of t))
+				       (option/ (@/ (value (typeid-of t)))
+						(disp-name-of t))))
+				 (map (lambda (t) (find-kahua-instance <type> t))
+				      (types-of
+				       (find-kahua-instance <unit> unit-id))))))))
 		   (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
 		   ))
 		 (table/
@@ -427,6 +447,8 @@
 
 (define-entry (melody-list unit-id musume-id)
   (kagoiri-page
+   (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
    (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
    (map/ (lambda (t m)
 	   (dl/
