@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.9 2005/09/21 17:41:37 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.10 2005/09/21 19:52:25 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -73,6 +73,17 @@
     ;; new account set
     ((setter kahua-current-user) (ref user 'login-name))
     (kagoiri-page (node-set body))))
+
+;
+; maybe, redirect-page will called at the end of begin-body.
+;
+(define (permission-check-logic checker begin-body)
+  (let1 user (or (and (kahua-current-user)
+		      (checker (kahua-current-user)))
+		 (login-pc-page #f checker))
+    ((setter kahua-current-user) (ref user 'login-name))
+    begin-body))
+
 
 ;
 ; partial continuation login page
@@ -148,8 +159,7 @@
 		       (@@/ (cont unit-edit (key-of u)))
 		       "編集"))
 		 (td/ (a/cont/
-		       (@@/ (cont (lambda _
-				    (unit-fallout (key-of u)))))
+		       (@@/ (cont unit-fallout (key-of u)))
 		       "削除"))
 		 (td/ (a/cont/
 		       (@@/ (cont musume-list (key-of u)))
@@ -224,7 +234,10 @@
 
 (define-entry (unit-edit unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
-    (permission-check-page identity
+    (permission-check-page
+     (lambda (u)
+       (if (member (ref u 'login-name) (fans-of unit))
+	   u #f))
      (h2/ "ユニット編集")
      (hr/)
      (form/cont/
@@ -308,12 +321,22 @@
       (input/ (@/ (type "submit") (name "submit") (value "確定"))))
      )))
 
-; If you change this to define-entry, we can't permission check.
-; therefore, you change carefully.
-(define (unit-fallout unit-id)
+; TODO: check account
+;
+(define-entry (unit-fallout unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
-    (set! (ref unit 'fallout) #t)
-    (redirect-page "unit-list")))
+    (define checker (lambda (u)
+		      (if (member (ref u 'login-name) (fans-of unit))
+			  u #f)))
+    (let1 user (or (and (kahua-current-user)
+			(checker (kahua-current-user)))
+		   (login-pc-page #f checker))
+      (permission-check-logic
+       checker
+       (begin
+	 (if (checker user)
+	     (set! (ref unit 'fallout) #t))
+	 (redirect-page "unit-list"))))))
 
 (define-entry (musume-list unit-id :keyword priority status assign type)
   (let* ((p-filter (if (or (not priority)
@@ -336,180 +359,188 @@
 				      (s-filter m)
 				      (a-filter m)
 				      (t-filter m)))))
-    (permission-check-page identity
-     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-     (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 娘。一覧")
-     (form/cont/ (@@/ (cont musume-list unit-id))
-		 (table/
-		  (tr/ (th/ "優先度")
-		       (th/ "ステータス")
-		       (th/ "アサイン")
-		       (th/ "タイプ"))
-		  (tr/
-		   (td/
-		    (select/
-		     (@/ (name "priority"))
-		     (node-set
-		      (cons (option/ (@/ (value "*all*")) "全て")
-			    (map (lambda (p)
-				   (if (equal? (priorityid-of p) priority)
-				       (option/ (@/ (value (priorityid-of p)) (selected "true"))
-						(disp-name-of p))
-				       (option/ (@/ (value (priorityid-of p)))
-						(disp-name-of p))))
-				 (map (lambda (p) (find-kahua-instance <priority> p))
-				      (priorities-of
-				       (find-kahua-instance <unit> unit-id))))))))
-		   (td/
-		    (select/
-		     (@/ (name "status"))
-		     (node-set
-		      (cons (option/ (@/ (value "*all*")) "全て")
-			    (map (lambda (s)
-				   (if (equal? (statusid-of s) status)
-				       (option/ (@/ (value (statusid-of s)) (selected "true"))
-						(disp-name-of s))
-				       (option/ (@/ (value (statusid-of s)))
-						(disp-name-of s))))
-				 (map (lambda (s) (find-kahua-instance <status> s))
-				      (statuss-of
-				       (find-kahua-instance <unit> unit-id))))))))
-		   (td/
-		    (select/
-		     (@/ (name "assign"))
-		     (map/ (lambda (a)
-			     (if (equal? (fan-name-of a) assign)
-				 (option/ (@/ (value (fan-name-of a)) (selected "true"))
-					  (fan-name-of a))
-				 (option/ (@/ (value (fan-name-of a)))
-					  (fan-name-of a))))
-			   (map (lambda (a) (find-kahua-instance <fan-property> a))
-				(fans-of
-				 (find-kahua-instance <unit> unit-id))))))
-		   (td/
-		    (select/
-		     (@/ (name "type"))
-		     (node-set
-		      (cons (option/ (@/ (value "*all*")) "全て")
-			    (map (lambda (t)
-				   (if (equal? (typeid-of t) type)
-				       (option/ (@/ (value (typeid-of t)) (selected "true"))
-						(disp-name-of t))
-				       (option/ (@/ (value (typeid-of t)))
-						(disp-name-of t))))
-				 (map (lambda (t) (find-kahua-instance <type> t))
-				      (types-of
-				       (find-kahua-instance <unit> unit-id))))))))
-		   (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
-		   ))
-		 (table/
-		  (tr/ (th/ "No.")
-		       (th/ "タイトル")
-		       (th/ "優先度")
-		       (th/ "ステータス")
-		       (th/ "アサイン")
-		       (th/ "タイプ"))
-		  (map/ (lambda (m)
-			  (tr/ (td/ (a/cont/
-				     (@@/ (cont musume-edit (key-of m)))
-				     (x->string (mno-of m))))
-			       (td/ (a/cont/
-				     (@@/ (cont melody-list (unit-id-of m) (key-of m)))
-				     (mname-of m)))
-			       (td/ (disp-name-of
-				     (find-kahua-instance
-				      <priority> (priority-of m))))
-			       (td/ (disp-name-of
-				     (find-kahua-instance
-				      <status> (status-of m))))
-			       (td/ (fan-name-of
-				     (find-kahua-instance
-				      <fan-property> (assign-of m))))
-			       (td/ (disp-name-of
-				     (find-kahua-instance
-				      <type> (type-of m))))))
-			(sort (filter and-filter
-				      (all-musumes unit-id))
-			      (lambda (m1 m2)
-				(> (mno-of m1) (mno-of m2))))))
-		 ))))
+    (let1 unit (find-kahua-instance <unit> unit-id)
+      (permission-check-page
+       (lambda (u)
+	 (if (member (ref u 'login-name) (fans-of unit))
+	     u #f))
+       (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	    (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+       (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 娘。一覧")
+       (form/cont/ (@@/ (cont musume-list unit-id))
+		   (table/
+		    (tr/ (th/ "優先度")
+			 (th/ "ステータス")
+			 (th/ "アサイン")
+			 (th/ "タイプ"))
+		    (tr/
+		     (td/
+		      (select/
+		       (@/ (name "priority"))
+		       (node-set
+			(cons (option/ (@/ (value "*all*")) "全て")
+			      (map (lambda (p)
+				     (if (equal? (priorityid-of p) priority)
+					 (option/ (@/ (value (priorityid-of p)) (selected "true"))
+						  (disp-name-of p))
+					 (option/ (@/ (value (priorityid-of p)))
+						  (disp-name-of p))))
+				   (map (lambda (p) (find-kahua-instance <priority> p))
+					(priorities-of
+					 (find-kahua-instance <unit> unit-id))))))))
+		     (td/
+		      (select/
+		       (@/ (name "status"))
+		       (node-set
+			(cons (option/ (@/ (value "*all*")) "全て")
+			      (map (lambda (s)
+				     (if (equal? (statusid-of s) status)
+					 (option/ (@/ (value (statusid-of s)) (selected "true"))
+						  (disp-name-of s))
+					 (option/ (@/ (value (statusid-of s)))
+						  (disp-name-of s))))
+				   (map (lambda (s) (find-kahua-instance <status> s))
+					(statuss-of
+					 (find-kahua-instance <unit> unit-id))))))))
+		     (td/
+		      (select/
+		       (@/ (name "assign"))
+		       (map/ (lambda (a)
+			       (if (equal? (fan-name-of a) assign)
+				   (option/ (@/ (value (fan-name-of a)) (selected "true"))
+					    (fan-name-of a))
+				   (option/ (@/ (value (fan-name-of a)))
+					    (fan-name-of a))))
+			     (map (lambda (a) (find-kahua-instance <fan-property> a))
+				  (fans-of
+				   (find-kahua-instance <unit> unit-id))))))
+		     (td/
+		      (select/
+		       (@/ (name "type"))
+		       (node-set
+			(cons (option/ (@/ (value "*all*")) "全て")
+			      (map (lambda (t)
+				     (if (equal? (typeid-of t) type)
+					 (option/ (@/ (value (typeid-of t)) (selected "true"))
+						  (disp-name-of t))
+					 (option/ (@/ (value (typeid-of t)))
+						  (disp-name-of t))))
+				   (map (lambda (t) (find-kahua-instance <type> t))
+					(types-of
+					 (find-kahua-instance <unit> unit-id))))))))
+		     (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
+		     ))
+		   (table/
+		    (tr/ (th/ "No.")
+			 (th/ "タイトル")
+			 (th/ "優先度")
+			 (th/ "ステータス")
+			 (th/ "アサイン")
+			 (th/ "タイプ"))
+		    (map/ (lambda (m)
+			    (tr/ (td/ (a/cont/
+				       (@@/ (cont musume-edit (key-of m)))
+				       (x->string (mno-of m))))
+				 (td/ (a/cont/
+				       (@@/ (cont melody-list (unit-id-of m) (key-of m)))
+				       (mname-of m)))
+				 (td/ (disp-name-of
+				       (find-kahua-instance
+					<priority> (priority-of m))))
+				 (td/ (disp-name-of
+				       (find-kahua-instance
+					<status> (status-of m))))
+				 (td/ (fan-name-of
+				       (find-kahua-instance
+					<fan-property> (assign-of m))))
+				 (td/ (disp-name-of
+				       (find-kahua-instance
+					<type> (type-of m))))))
+			  (sort (filter and-filter
+					(all-musumes unit-id))
+				(lambda (m1 m2)
+				  (> (mno-of m1) (mno-of m2))))))
+		   )))))
 
 (define-entry (musume-new unit-id)
-  (permission-check-page identity
-   (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-   (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
-   (form/cont/
-    (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
-		   (let1 musume (make <musume>
-				  :unit-id unit-id
-				  :musume-name name
-				  :priority priority
-				  :status status
-				  :assign assign
-				  :type type
-				  :category category)
-		     (make <music>
-		       :musume-id (key-of musume)
-		       :melody melody))
-		 (redirect-page #`"musume-list/,|unit-id|"))))
-    (table/
-     (tr/ (th/ "優先度")
-	  (th/ "ステータス")
-	  (th/ "タイプ")
-	  (th/ "カテゴリ")
-	  (th/ "アサイン"))
-     (tr/
-      (td/
-       (select/ (@/ (name "priority"))
-		(map/ (lambda (p)
-			(option/ (@/ (value (priorityid-of p)))
-				 (disp-name-of p)))
-		      (map (lambda (p) (find-kahua-instance <priority> p))
-			   (priorities-of
-			    (find-kahua-instance <unit> unit-id))))))
-      (td/
-       (select/ (@/ (name "status"))
-		(map/ (lambda (s)
-			(option/ (@/ (value (statusid-of s)))
-				 (disp-name-of s)))
-		      (map (lambda (s) (find-kahua-instance <status> s))
-			   (statuss-of
-			    (find-kahua-instance <unit> unit-id))))))
-      (td/
-       (select/ (@/ (name "type"))
-		(map/ (lambda (t)
-			(option/ (@/ (value (typeid-of t)))
-				 (disp-name-of t)))
-		      (map (lambda (t) (find-kahua-instance <type> t))
-			   (types-of
-			    (find-kahua-instance <unit> unit-id))))))
-      (td/
-       (select/ (@/ (name "category"))
-		(map/ (lambda (c)
-			(option/ (@/ (value (categoryid-of c)))
-				 (disp-name-of c)))
-		      (map (lambda (c) (find-kahua-instance <category> c))
-			   (categories-of
-			    (find-kahua-instance <unit> unit-id))))))
-      (td/
-       (select/ (@/ (name "assign"))
-		(map/ (lambda (a)
-			(option/ (@/ (value (fan-name-of a)))
-				 (fan-name-of a)))
-		      (map (lambda (a) (find-kahua-instance <fan-property> a))
-			   (fans-of
-			    (find-kahua-instance <unit> unit-id))))))
-      ))
-    (table/ (tr/ (td/ "タイトル")
-		 (td/ (textarea/ (@/ (type "text") (name "name")
-				     (rows 1) (cols 32)) "")))
-	    (tr/ (td/ "内容")
-		 (td/ (textarea/ (@/ (type "text") (name "melody")
-				     (rows 20) (cols 80)) ""))))
-    (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))
-   ))
+  (let1 unit (find-kahua-instance <unit> unit-id)
+    (permission-check-page
+     (lambda (u)
+       (if (member (ref u 'login-name) (fans-of unit))
+	   u #f))
+     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+     (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
+		     (let1 musume (make <musume>
+				    :unit-id unit-id
+				    :musume-name name
+				    :priority priority
+				    :status status
+				    :assign assign
+				    :type type
+				    :category category)
+		       (make <music>
+			 :musume-id (key-of musume)
+			 :melody melody))
+		   (redirect-page #`"musume-list/,|unit-id|"))))
+      (table/
+       (tr/ (th/ "優先度")
+	    (th/ "ステータス")
+	    (th/ "タイプ")
+	    (th/ "カテゴリ")
+	    (th/ "アサイン"))
+       (tr/
+	(td/
+	 (select/ (@/ (name "priority"))
+		  (map/ (lambda (p)
+			  (option/ (@/ (value (priorityid-of p)))
+				   (disp-name-of p)))
+			(map (lambda (p) (find-kahua-instance <priority> p))
+			     (priorities-of
+			      (find-kahua-instance <unit> unit-id))))))
+	(td/
+	 (select/ (@/ (name "status"))
+		  (map/ (lambda (s)
+			  (option/ (@/ (value (statusid-of s)))
+				   (disp-name-of s)))
+			(map (lambda (s) (find-kahua-instance <status> s))
+			     (statuss-of
+			      (find-kahua-instance <unit> unit-id))))))
+	(td/
+	 (select/ (@/ (name "type"))
+		  (map/ (lambda (t)
+			  (option/ (@/ (value (typeid-of t)))
+				   (disp-name-of t)))
+			(map (lambda (t) (find-kahua-instance <type> t))
+			     (types-of
+			      (find-kahua-instance <unit> unit-id))))))
+	(td/
+	 (select/ (@/ (name "category"))
+		  (map/ (lambda (c)
+			  (option/ (@/ (value (categoryid-of c)))
+				   (disp-name-of c)))
+			(map (lambda (c) (find-kahua-instance <category> c))
+			     (categories-of
+			      (find-kahua-instance <unit> unit-id))))))
+	(td/
+	 (select/ (@/ (name "assign"))
+		  (map/ (lambda (a)
+			  (option/ (@/ (value (fan-name-of a)))
+				   (fan-name-of a)))
+			(map (lambda (a) (find-kahua-instance <fan-property> a))
+			     (fans-of
+			      (find-kahua-instance <unit> unit-id))))))
+	))
+      (table/ (tr/ (td/ "タイトル")
+		   (td/ (textarea/ (@/ (type "text") (name "name")
+				       (rows 1) (cols 32)) "")))
+	      (tr/ (td/ "内容")
+		   (td/ (textarea/ (@/ (type "text") (name "melody")
+				       (rows 20) (cols 80)) ""))))
+      (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))
+     )))
 
 (define-entry (musume-view)
   (permission-check-page identity
@@ -521,66 +552,70 @@
    ))
 
 (define-entry (melody-list unit-id musume-id)
-  (permission-check-page identity
-   (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-   (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
-   (map/ (lambda (t m)
-	   (dl/
-	    (dt/ (sys-ctime t))
-	    (dd/ (pre/ m))))
+  (let1 unit (find-kahua-instance <unit> unit-id)
+    (permission-check-page
+     (lambda (u)
+       (if (member (ref u 'login-name) (fans-of unit))
+	   u #f))
+     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+     (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
+     (map/ (lambda (t m)
+	     (dl/
+	      (dt/ (sys-ctime t))
+	      (dd/ (pre/ m))))
 
-	 (map (lambda (m)
-		(ref m 'ctime))
-	      (reverse (all-musics musume-id)))
-	 (map melody-of
-	      (reverse (all-musics musume-id))))
-   (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status assign)
-			      ;; TODO: here we send mail for members
-			      (if (not (string-null? melody))
-				  (make <music>
-				    :musume-id musume-id
-				    :melody melody))
-			    (let1 musume (find-kahua-instance <musume> musume-id)
-			      (set! (status-of musume) status)
-			      (set! (assign-of musume) assign))
-			    (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
-	       (table/
-		(tr/ (th/ "ステータス") (th/ "アサイン"))
-		(tr/ (td/
-		      (select/ (@/ (name "status"))
-			       (map/ (lambda (s)
-				       (if (equal? (statusid-of s)
-						   (status-of (find-kahua-instance <musume> musume-id)))
-					   (option/ (@/ (value (statusid-of s))
-							(selected "true"))
-						    (disp-name-of s))
-					   (option/ (@/ (value (statusid-of s)))
-						    (disp-name-of s))))
-				     ;; sequencial for time.
-				     (reverse
-				      (map (lambda (s) (find-kahua-instance <status> s))
-					   (statuss-of
-					    (find-kahua-instance <unit> unit-id)))))))
-		     (td/
-		      (select/ (@/ (name "assign"))
-			       (map/ (lambda (a)
-				       (if (equal? (fan-name-of a)
-						   (assign-of (find-kahua-instance <musume> musume-id)))
-					   (option/ (@/ (value (fan-name-of a))
-							(selected "true"))
-						    (fan-name-of a))
-					   (option/ (@/ (value (fan-name-of a)))
-						    (fan-name-of a))))
-				     (map (lambda (a) (find-kahua-instance <fan-property> a))
-					  (fans-of
-					   (find-kahua-instance <unit> unit-id))))))
-		     ))
+	   (map (lambda (m)
+		  (ref m 'ctime))
+		(reverse (all-musics musume-id)))
+	   (map melody-of
+		(reverse (all-musics musume-id))))
+     (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status assign)
+				;; TODO: here we send mail for members
+				(if (not (string-null? melody))
+				    (make <music>
+				      :musume-id musume-id
+				      :melody melody))
+			      (let1 musume (find-kahua-instance <musume> musume-id)
+				(set! (status-of musume) status)
+				(set! (assign-of musume) assign))
+			      (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
+		 (table/
+		  (tr/ (th/ "ステータス") (th/ "アサイン"))
+		  (tr/ (td/
+			(select/ (@/ (name "status"))
+				 (map/ (lambda (s)
+					 (if (equal? (statusid-of s)
+						     (status-of (find-kahua-instance <musume> musume-id)))
+					     (option/ (@/ (value (statusid-of s))
+							  (selected "true"))
+						      (disp-name-of s))
+					     (option/ (@/ (value (statusid-of s)))
+						      (disp-name-of s))))
+				       ;; sequencial for time.
+				       (reverse
+					(map (lambda (s) (find-kahua-instance <status> s))
+					     (statuss-of
+					      (find-kahua-instance <unit> unit-id)))))))
+		       (td/
+			(select/ (@/ (name "assign"))
+				 (map/ (lambda (a)
+					 (if (equal? (fan-name-of a)
+						     (assign-of (find-kahua-instance <musume> musume-id)))
+					     (option/ (@/ (value (fan-name-of a))
+							  (selected "true"))
+						      (fan-name-of a))
+					     (option/ (@/ (value (fan-name-of a)))
+						      (fan-name-of a))))
+				       (map (lambda (a) (find-kahua-instance <fan-property> a))
+					    (fans-of
+					     (find-kahua-instance <unit> unit-id))))))
+		       ))
 
-	       (textarea/ (@/ (type "text") (name "melody")
-			      (rows 20) (cols 80)) "")
-	       (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
-   ))
+		 (textarea/ (@/ (type "text") (name "melody")
+				(rows 20) (cols 80)) "")
+		 (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
+     )))
 
 
 ;
