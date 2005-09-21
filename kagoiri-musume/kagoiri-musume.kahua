@@ -3,23 +3,22 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.8 2005/09/20 16:55:50 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.9 2005/09/21 17:41:37 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
 (load "kagoiri-musume/local.kahua")
 (load "kagoiri-musume/class.kahua")
 
-;;
+;; use
 (use srfi-13)
 (use util.list)
 (use gauche.collection)
 
 ;
-; kagoiri-musume-page-template
+; page base
 ;
-
-(define (kagoiri-page . body)
+(define (page-base . body)
   (html/
    (head/ (title/ *kagoiri-musume-title*)
 	  (meta/ (@/ (http-equiv "Content-type")
@@ -28,25 +27,97 @@
 		     (href (kahua-static-document-url
 			    "kagoiri-musume/kagoiri-musume.css")))))
    (body/
-    ;; navi-link
-    (table/ (tr/ (td/ (h1/ *kagoiri-musume-title*))
-		 (td/ (a/cont/
-		       (@@/ (cont kagoiri)) "トップ"))
-		 (td/ (a/cont/
-		       (@@/ (cont admin-system)) "システム管理"))
-		 (td/ (a/cont/
-		       (@@/ (cont unit-list)) "ユニット一覧"))))
-    (hr/)
     (node-set body))))
 
-(define (redirect-page path)
-  (html/ (extra-header/
-	  (@/ (name "Status") (value "302 Moved")))
-	 (extra-header/
-	  (@/ (name "Location")
-	      (value (string-append (kahua-self-uri-full) path))))))
+;
+; simple page for no permission check
+;
+(define (simple-page . body)
+  (page-base
+   (h1/ *kagoiri-musume-title*)
+   (hr/)
+   (node-set body)))
 
+;
+; kagoiri-musume-page-template
+;
+(define (kagoiri-page . body)
+  (page-base
+   ;; navi-link
+   (table/ (tr/ (td/ (h1/ *kagoiri-musume-title*))
+		(td/ (a/cont/
+		      (@@/ (cont kagoiri)) "トップ"))
+		(td/ (a/cont/
+		      (@@/ (cont admin-system)) "システム管理"))
+		(td/ (a/cont/
+		      (@@/ (cont unit-list)) "ユニット一覧"))
+		(td/ (a/cont/
+		      (@@/ (cont logout)) "[[Logout]]"))))
+   (hr/)
+   (node-set body)))
 
+;
+; permission check page
+;
+; [checker]
+; checker is a predicate for <kahua-user> object.
+; return value is #f or <kahua-user> object.
+; So, at default, this template check whether kahua-user or not,
+; therefore, you write additional check.
+; If you care only kahua-user or not, you set identity as checker.
+;
+(define (permission-check-page checker . body)
+  (let1 user (or (and (kahua-current-user)
+		      (checker (kahua-current-user)))
+		 (login-pc-page #f checker))
+    ;; new account set
+    ((setter kahua-current-user) (ref user 'login-name))
+    (kagoiri-page (node-set body))))
+
+;
+; partial continuation login page
+;
+(define (login-pc-page cont checker . message)
+  (let/pc k
+      (if cont
+	  (set! k cont))
+    (kagoiri-page
+     (h1/ "籠入娘。へようこそ")
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword name pass)
+		     (let1 user (and-let* ((kuser (kahua-check-user name pass)))
+				  (checker kuser))
+		       (if user
+			   (k user)
+			   (login-pc-page k checker "アカウントが必要です"))))))
+      (table/
+       (tr/ (th/ "Login Name")
+	    (td/ (input/ (@/ (type "text") (name "name")
+			     (value "")))))
+       (tr/ (th/ "Password")
+	    (td/ (input/ (@/ (type "password") (name "pass")
+			     (value ""))))))
+      (input/ (@/ (type "submit") (name "submit") (value "login")))
+      (h5/ (node-set message))))))
+
+(define-entry (logout)
+  (set! (kahua-current-user) #f)
+  (redirect-page))
+
+;
+; redirect page
+;
+(define (redirect-page . path)
+  (let1 path (get-optional path "")
+    (html/ (extra-header/
+	    (@/ (name "Status") (value "302 Moved")))
+	   (extra-header/
+	    (@/ (name "Location")
+		(value (string-append (kahua-self-uri-full) path)))))))
+
+;
+; No Check
+;
 (define-entry (kagoiri)
   (kagoiri-page
    (h2/ "籠入娘。へようこそ！")
@@ -55,14 +126,17 @@
    ))
 
 (define-entry (admin-system)
-  (kagoiri-page
+  (permission-check-page
+   ;; checker: admin role?
+   (lambda (u)
+     (if (kahua-user-has-role? u '(admin))
+	 u #f))
    (h2/ "籠入娘。システム設定管理画面")
    "工事中"
    ))
 
-
 (define-entry (unit-list)
-  (kagoiri-page
+  (permission-check-page identity
    (h2/ "ユニット一覧")
    (table/
     (tr/ (th/) (th/)
@@ -74,7 +148,8 @@
 		       (@@/ (cont unit-edit (key-of u)))
 		       "編集"))
 		 (td/ (a/cont/
-		       (@@/ (cont unit-fallout (key-of u)))
+		       (@@/ (cont (lambda _
+				    (unit-fallout (key-of u)))))
 		       "削除"))
 		 (td/ (a/cont/
 		       (@@/ (cont musume-list (key-of u)))
@@ -149,7 +224,7 @@
 
 (define-entry (unit-edit unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
-    (kagoiri-page
+    (permission-check-page identity
      (h2/ "ユニット編集")
      (hr/)
      (form/cont/
@@ -233,12 +308,12 @@
       (input/ (@/ (type "submit") (name "submit") (value "確定"))))
      )))
 
-(define-entry (unit-fallout unit-id)
+; If you change this to define-entry, we can't permission check.
+; therefore, you change carefully.
+(define (unit-fallout unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
     (set! (ref unit 'fallout) #t)
     (redirect-page "unit-list")))
-
-
 
 (define-entry (musume-list unit-id :keyword priority status assign type)
   (let* ((p-filter (if (or (not priority)
@@ -261,7 +336,7 @@
 				      (s-filter m)
 				      (a-filter m)
 				      (t-filter m)))))
-    (kagoiri-page
+    (permission-check-page identity
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 娘。一覧")
@@ -361,7 +436,7 @@
 		 ))))
 
 (define-entry (musume-new unit-id)
-  (kagoiri-page
+  (permission-check-page identity
    (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
    (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
@@ -437,16 +512,16 @@
    ))
 
 (define-entry (musume-view)
-  (kagoiri-page
+  (permission-check-page identity
    "娘。の閲覧"))
 
 (define-entry (musume-edit musume-id)
-  (kagoiri-page
+  (permission-check-page identity
    (h3/ #`"『,(mname-of (find-kahua-instance <musume> musume-id)) 』を編集する。")
    ))
 
 (define-entry (melody-list unit-id musume-id)
-  (kagoiri-page
+  (permission-check-page identity
    (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	(li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
    (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
@@ -506,6 +581,7 @@
 			      (rows 20) (cols 80)) "")
 	       (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
    ))
+
 
 ;
 ; initialization

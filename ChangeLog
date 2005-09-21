@@ -1,3 +1,12 @@
+2005-09-21  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+
+	* rewrite page template.
+	  add permission check into page template,
+	  which is impletented by means of partial continuation.
+
+	* kagoiri-musume allow only kahua-user who has admin role,
+	  to access system-admin page.
+
 2005-09-19  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
 
 	* construct pages, musume-list,musume-edit.
