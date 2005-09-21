@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.11 2005/09/21 21:26:15 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.12 2005/09/21 22:15:46 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -12,6 +12,7 @@
 
 ;; use
 (use srfi-13)
+(use srfi-19)
 (use util.list)
 (use gauche.collection)
 
@@ -436,7 +437,8 @@
 			 (th/ "優先度")
 			 (th/ "ステータス")
 			 (th/ "アサイン")
-			 (th/ "タイプ"))
+			 (th/ "タイプ")
+			 (th/ "登録日"))
 		    (map/ (lambda (m)
 			    (tr/ (td/ (a/cont/
 				       (@@/ (cont musume-edit (key-of m)))
@@ -455,7 +457,9 @@
 					<fan-property> (assign-of m))))
 				 (td/ (disp-name-of
 				       (find-kahua-instance
-					<type> (type-of m))))))
+					<type> (type-of m))))
+				 (td/ (sys-strftime "%Y/%M/%d"
+					(sys-localtime (ref m 'ctime))))))
 			  (sort (filter and-filter
 					(all-musumes unit-id))
 				(lambda (m1 m2)
@@ -560,7 +564,12 @@
 	   u #f))
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-     (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
+     (h3/ (x->string (mno-of (find-kahua-instance <musume> musume-id))) "："
+	  (mname-of (find-kahua-instance <musume> musume-id)) " - "
+	  (disp-name-of
+	   (find-kahua-instance
+	    <status>
+	    (status-of (find-kahua-instance <musume> musume-id)))))
      (let1 musics (reverse (all-musics musume-id))
        (map/ (lambda (f t m)
 	       (dl/

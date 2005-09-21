@@ -3,6 +3,7 @@
 	* modify checker predicate which is first argument
 	  of permission-check-page template, and a similer
 	  template permission-check-logic.
+	* Improve display, a little.
 
 2005-09-21  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
 
