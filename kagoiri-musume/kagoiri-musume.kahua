@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.10 2005/09/21 19:52:25 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.11 2005/09/21 21:26:15 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -483,7 +483,8 @@
 				    :category category)
 		       (make <music>
 			 :musume-id (key-of musume)
-			 :melody melody))
+			 :melody melody
+			 :fan-id (ref (kahua-current-user) 'login-name)))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
        (tr/ (th/ "優先度")
@@ -560,22 +561,21 @@
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h3/ (mname-of (find-kahua-instance <musume> musume-id)))
-     (map/ (lambda (t m)
-	     (dl/
-	      (dt/ (sys-ctime t))
-	      (dd/ (pre/ m))))
-
-	   (map (lambda (m)
-		  (ref m 'ctime))
-		(reverse (all-musics musume-id)))
-	   (map melody-of
-		(reverse (all-musics musume-id))))
+     (let1 musics (reverse (all-musics musume-id))
+       (map/ (lambda (f t m)
+	       (dl/
+		(dt/ #`",(sys-ctime t)[,f]")
+		(dd/ (pre/ m))))
+	     (map (lambda (m) (fan-id-of m)) musics)
+	     (map (lambda (m) (ref m 'ctime)) musics)
+	     (map melody-of musics)))
      (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status assign)
 				;; TODO: here we send mail for members
 				(if (not (string-null? melody))
 				    (make <music>
 				      :musume-id musume-id
-				      :melody melody))
+				      :melody melody
+				      :fan-id (ref (kahua-current-user) 'login-name)))
 			      (let1 musume (find-kahua-instance <musume> musume-id)
 				(set! (status-of musume) status)
 				(set! (assign-of musume) assign))
