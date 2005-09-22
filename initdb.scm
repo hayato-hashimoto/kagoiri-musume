@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.2 2005/09/21 17:41:37 cut-sea Exp $
+;; $Id: initdb.scm,v 1.3 2005/09/22 23:00:16 cut-sea Exp $
 ;;
 ;; include
 (use kahua)
@@ -16,11 +16,10 @@
 ;;
 (define (main args)
   (with-db (db *kagoiri-musume-database-name*)
-      (add-fan "dummy" "dummy" "dummy@kagoiri.org")
     (add-fan "yasuyuki" "yasuyuki" "yasuyuki@timedia.co.jp" 'user)
-    (add-fan "nobsun" "nobsun" "nobsun@timedia.co.jp" 'user)
-    (add-fan "cut-sea" "cutsea" "cut-sea@master.email.ne.jp" 'admin)
-    (add-fan "kago" "kago" "kago@timedia.co.jp" 'admin 'user)
+    (add-fan "nobsun" "nobsun" "nyama@timedia.co.jp" 'user)
+    (add-fan "cut-sea" "cutsea" "cut-sea@timedia.co.jp" 'user)
+    (add-fan "kago" "kago" "kago@kagoiri.org" 'admin 'user)
     (add-fan "   " "anybody" "dummy@kahua.org")
 
     (make <priority> :priorityid "super" :disp-name "Ä¶¹â" :level 5)
