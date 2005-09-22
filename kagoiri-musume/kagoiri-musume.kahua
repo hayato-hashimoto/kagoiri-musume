@@ -3,18 +3,20 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.13 2005/09/22 02:42:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.14 2005/09/22 22:45:26 cut-sea Exp $
 ;;
 ;; include
-(load "kagoiri-musume/version.kahua")
-(load "kagoiri-musume/local.kahua")
-(load "kagoiri-musume/class.kahua")
-
 ;; use
 (use srfi-13)
 (use srfi-19)
 (use util.list)
 (use gauche.collection)
+
+(use sendmail)
+
+(load "kagoiri-musume/version.kahua")
+(load "kagoiri-musume/local.kahua")
+(load "kagoiri-musume/class.kahua")
 
 ;
 ; page base
@@ -477,18 +479,20 @@
      (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
-		     (let1 musume (make <musume>
-				    :unit-id unit-id
-				    :musume-name name
-				    :priority priority
-				    :status status
-				    :assign assign
-				    :type type
-				    :category category)
-		       (make <music>
-			 :musume-id (key-of musume)
-			 :melody melody
-			 :fan-id (ref (kahua-current-user) 'login-name)))
+		     (if (and (not (string-null? name))
+			      (not (string-null? melody)))
+			 (let1 musume (make <musume>
+					:unit-id unit-id
+					:musume-name name
+					:priority priority
+					:status status
+					:assign assign
+					:type type
+					:category category)
+			   (make <music>
+			     :musume-id (key-of musume)
+			     :melody melody
+			     :fan-id (ref (kahua-current-user) 'login-name))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
        (tr/ (th/ "優先度")
@@ -579,52 +583,67 @@
 	     (map (lambda (m) (fan-id-of m)) musics)
 	     (map (lambda (m) (ref m 'ctime)) musics)
 	     (map melody-of musics)))
-     (form/cont/ (@@/ (cont (entry-lambda (:keyword melody status assign)
-				;; TODO: here we send mail for members
-				(if (not (string-null? melody))
-				    (make <music>
-				      :musume-id musume-id
-				      :melody melody
-				      :fan-id (ref (kahua-current-user) 'login-name)))
-			      (let1 musume (find-kahua-instance <musume> musume-id)
-				(set! (status-of musume) status)
-				(set! (assign-of musume) assign))
-			      (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
-		 (table/
-		  (tr/ (th/ "ステータス") (th/ "アサイン"))
-		  (tr/ (td/
-			(select/ (@/ (name "status"))
-				 (map/ (lambda (s)
-					 (if (equal? (statusid-of s)
-						     (status-of (find-kahua-instance <musume> musume-id)))
-					     (option/ (@/ (value (statusid-of s))
-							  (selected "true"))
-						      (disp-name-of s))
-					     (option/ (@/ (value (statusid-of s)))
-						      (disp-name-of s))))
-				       ;; sequencial for time.
-				       (reverse
-					(map (lambda (s) (find-kahua-instance <status> s))
-					     (statuss-of
-					      (find-kahua-instance <unit> unit-id)))))))
-		       (td/
-			(select/ (@/ (name "assign"))
-				 (map/ (lambda (a)
-					 (if (equal? (fan-name-of a)
-						     (assign-of (find-kahua-instance <musume> musume-id)))
-					     (option/ (@/ (value (fan-name-of a))
-							  (selected "true"))
-						      (fan-name-of a))
-					     (option/ (@/ (value (fan-name-of a)))
-						      (fan-name-of a))))
-				       (map (lambda (a) (find-kahua-instance <fan-property> a))
-					    (fans-of
-					     (find-kahua-instance <unit> unit-id))))))
-		       ))
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword melody status assign)
+		     (if (not (string-null? melody))
+			 (begin
+			   (let1 music (make <music>
+					 :musume-id musume-id
+					 :melody melody
+					 :fan-id (ref (kahua-current-user) 'login-name))
+			     (let1 musume (find-kahua-instance <musume> musume-id)
+			       (set! (status-of musume) status)
+			       (set! (assign-of musume) assign)
+			       ;; TODO: here we send mail for members
+			       (and-let* ((fan-ids (fans-of unit))
+					  (fans (map (lambda (id)
+						       (find-kahua-instance <fan-property> id))
+						     fan-ids)))
+				 (sendmail (string-join (map (cut ref <> 'email) fans) ", ")
+					   *kagoiri-musume-email*
+					   #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+					   (string-append
+					    #`"ポスト: ,(fan-id-of music) \n"
+					    #`"日時: ,(sys-ctime (ref music 'ctime)) \n"
+					    #`"ステータス: ,(status-of musume) \n"
+					    #`"コメント:,melody"
+					    #`"URL: (kahua-self-uri-full)melody-list/,(mno-of musume)/,(music-id-of music)")))))))
+		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
+      (table/
+       (tr/ (th/ "ステータス") (th/ "アサイン"))
+       (tr/ (td/
+	     (select/ (@/ (name "status"))
+		      (map/ (lambda (s)
+			      (if (equal? (statusid-of s)
+					  (status-of (find-kahua-instance <musume> musume-id)))
+				  (option/ (@/ (value (statusid-of s))
+					       (selected "true"))
+					   (disp-name-of s))
+				  (option/ (@/ (value (statusid-of s)))
+					   (disp-name-of s))))
+			    ;; sequencial for time.
+			    (reverse
+			     (map (lambda (s) (find-kahua-instance <status> s))
+				  (statuss-of
+				   (find-kahua-instance <unit> unit-id)))))))
+	    (td/
+	     (select/ (@/ (name "assign"))
+		      (map/ (lambda (a)
+			      (if (equal? (fan-name-of a)
+					  (assign-of (find-kahua-instance <musume> musume-id)))
+				  (option/ (@/ (value (fan-name-of a))
+					       (selected "true"))
+					   (fan-name-of a))
+				  (option/ (@/ (value (fan-name-of a)))
+					   (fan-name-of a))))
+			    (map (lambda (a) (find-kahua-instance <fan-property> a))
+				 (fans-of
+				  (find-kahua-instance <unit> unit-id))))))
+	    ))
 
-		 (textarea/ (@/ (type "text") (name "melody")
-				(rows 20) (cols 80)) "")
-		 (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
+      (textarea/ (@/ (type "text") (name "melody")
+		     (rows 20) (cols 80)) "")
+      (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
      )))
 
 

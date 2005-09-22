@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: local.kahua,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;; $Id: local.kahua,v 1.2 2005/09/22 22:45:26 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -24,3 +24,7 @@
 
 (primary-database-name *kagoiri-musume-database-name*)
 
+;; mail address
+;;
+(define-if-not-bound *kagoiri-musume-email*
+  "kagoiri-musume@kagoiri.org")
