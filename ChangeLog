@@ -1,3 +1,7 @@
+2005-09-23  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+
+	* supprt sendmail, when posted.
+
 2005-09-22  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
 
 	* modify checker predicate which is first argument
