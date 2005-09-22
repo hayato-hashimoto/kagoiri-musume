@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.1 2005/09/19 12:00:12 cut-sea Exp $
+$Id: INSTALL,v 1.2 2005/09/22 02:42:24 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
@@ -11,6 +11,11 @@ Kahua-0.3.3
 
   % autoconf
   % ./configure [any options if you need]
+
+You may modify to your environment for DB setting.
+Which modify point is in the file kagoiri-musume/local.kahua.
+
+  % vi kagoiri-musume/local.kahua
 
 You have to give some options to specify the same install directories 
 as Kahua installed. For example if you gave --prefix=$HOME to 

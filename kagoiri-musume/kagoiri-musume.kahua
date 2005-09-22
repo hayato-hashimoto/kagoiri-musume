@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.12 2005/09/21 22:15:46 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.13 2005/09/22 02:42:24 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/version.kahua")
@@ -571,10 +571,11 @@
 	    <status>
 	    (status-of (find-kahua-instance <musume> musume-id)))))
      (let1 musics (reverse (all-musics musume-id))
-       (map/ (lambda (f t m)
+       (map/ (lambda (n f t m)
 	       (dl/
-		(dt/ #`",(sys-ctime t)[,f]")
+		(dt/ #`"#,|n|. ,(sys-ctime t)[,f]")
 		(dd/ (pre/ m))))
+	     (map (lambda (m) (seq-no-of m)) musics)
 	     (map (lambda (m) (fan-id-of m)) musics)
 	     (map (lambda (m) (ref m 'ctime)) musics)
 	     (map melody-of musics)))
