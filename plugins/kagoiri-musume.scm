@@ -1,3 +1,4 @@
+(allow-module gauche.charconv)
 (allow-module rfc.base64)
 (allow-module srfi-13)
 (allow-module srfi-19)
