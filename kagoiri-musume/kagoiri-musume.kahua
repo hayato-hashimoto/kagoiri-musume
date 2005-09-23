@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.21 2005/09/23 11:19:37 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.22 2005/09/23 11:44:03 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -609,7 +609,10 @@
 							#`"ステータス: ,(status-of musume) \n"
 							#`"コメント:,|melody| \n\n"
 							#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
-					     fans))))))
+					     fans)))))
+			 (let1 musume (find-kahua-instance <musume> musume-id)
+			   (set! (status-of musume) status)
+			   (set! (assign-of musume) assign)))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "ステータス") (th/ "アサイン"))
