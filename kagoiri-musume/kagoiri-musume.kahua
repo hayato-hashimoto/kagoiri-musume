@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.24 2005/09/23 13:16:15 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.25 2005/09/23 14:16:28 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -604,13 +604,14 @@
 				 (for-each (lambda (fan)
 					     (sendmail (ref fan 'email)
 						       *kagoiri-musume-email*
-						       (string-append
-							"=?ISO-2022-JP?B?"
-							(base64-encode-string
-							 (ces-convert
-							  #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
-							  "eucjp" "iso2022jp"))
-							"?=")
+						       (string-join
+							(map (lambda (str)
+							       #`" =?ISO-2022-JP?B?,|str|?= ")
+							     (string-split
+							      (base64-encode-string
+							       (ces-convert
+								#`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+								"eucjp" "iso2022jp")) #\newline)) "\n")
 						       (string-append
 							#`"ポスト: ,(fan-id-of music) \n"
 							#`"日時: ,(sys-ctime (ref music 'ctime)) \n"
