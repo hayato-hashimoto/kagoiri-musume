@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.20 2005/09/23 10:06:36 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.21 2005/09/23 11:19:37 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -460,7 +460,7 @@
 				 (td/ (disp-name-of
 				       (find-kahua-instance
 					<type> (type-of m))))
-				 (td/ (sys-strftime "%Y/%M/%d"
+				 (td/ (sys-strftime "%Y/%m/%d"
 					(sys-localtime (ref m 'ctime))))))
 			  (sort (filter and-filter
 					(all-musumes unit-id))
@@ -594,7 +594,6 @@
 			     (let1 musume (find-kahua-instance <musume> musume-id)
 			       (set! (status-of musume) status)
 			       (set! (assign-of musume) assign)
-			       ;; TODO: here we send mail for members
 			       (and-let* ((fan-ids (filter (lambda (f) (not (equal? "   " f)))
 							   (fans-of unit)))
 					  (fans (map (lambda (id)
