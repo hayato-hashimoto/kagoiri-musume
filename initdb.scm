@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.4 2005/09/23 08:25:39 cut-sea Exp $
+;; $Id: initdb.scm,v 1.5 2005/09/23 11:23:20 cut-sea Exp $
 ;;
 ;; include
 (use kahua)
@@ -19,7 +19,7 @@
     (add-fan "yasuyuki" "yasuyuki" "yasuyuki@kahua.org" 'user)
     (add-fan "nobsun" "nobsun" "nobsun@kahua.org" 'user)
     (add-fan "cut-sea" "cutsea" "cut-sea@kahua.org" 'user)
-    (add-fan "shibata" "shibata" "shitaba@kahua.org" 'user)
+    (add-fan "shibata" "shibata" "shibata@kahua.org" 'user)
     (add-fan "takahiro" "takahiro" "takahiro@kahua.org" 'user)
     (add-fan "kago" "kago" "cut-sea@kahua.org" 'admin 'user)
     (add-fan "   " "anybody" "khead@kahua.org")
