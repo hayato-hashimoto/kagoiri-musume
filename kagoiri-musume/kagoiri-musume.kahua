@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.19 2005/09/23 08:29:51 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.20 2005/09/23 10:06:36 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -600,17 +600,17 @@
 					  (fans (map (lambda (id)
 						       (find-kahua-instance <fan-property> id))
 						     fan-ids)))
-				 (sendmail (string-join (map (cut ref <> 'email) 
-							     (filter (lambda (f) (not (equal? "   " f)))
-								     fans)) ", ")
-					   *kagoiri-musume-email*
-					   #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
-					   (string-append
-					    #`"ポスト: ,(fan-id-of music) \n"
-					    #`"日時: ,(sys-ctime (ref music 'ctime)) \n"
-					    #`"ステータス: ,(status-of musume) \n"
-					    #`"コメント:,|melody| \n\n"
-					    #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))))))
+				 (for-each (lambda (fan)
+					     (sendmail (ref fan 'email)
+						       *kagoiri-musume-email*
+						       #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+						       (string-append
+							#`"ポスト: ,(fan-id-of music) \n"
+							#`"日時: ,(sys-ctime (ref music 'ctime)) \n"
+							#`"ステータス: ,(status-of musume) \n"
+							#`"コメント:,|melody| \n\n"
+							#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
+					     fans))))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "ステータス") (th/ "アサイン"))
