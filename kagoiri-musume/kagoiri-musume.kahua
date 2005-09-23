@@ -3,10 +3,11 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.22 2005/09/23 11:44:03 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.23 2005/09/23 12:38:23 cut-sea Exp $
 ;;
 ;; include
 ;; use
+(use rfc.base64)
 (use srfi-13)
 (use srfi-19)
 (use util.list)
@@ -602,7 +603,11 @@
 				 (for-each (lambda (fan)
 					     (sendmail (ref fan 'email)
 						       *kagoiri-musume-email*
-						       #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+						       (string-append
+							"=?ISO-2022-JP?B?"
+							(base64-encode-string
+							 #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
+							"?=")
 						       (string-append
 							#`"ポスト: ,(fan-id-of music) \n"
 							#`"日時: ,(sys-ctime (ref music 'ctime)) \n"
