@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.29 2005/09/24 04:47:54 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.30 2005/09/24 07:30:11 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -56,6 +56,8 @@
 		      (@@/ (cont admin-system)) "システム管理"))
 		(td/ (a/cont/
 		      (@@/ (cont unit-list)) "ユニット一覧"))
+		(td/ (a/cont/
+		      (@@/ (cont change-passwd)) "パスワード変更"))
 		(td/ (a/cont/
 		      (@@/ (cont logout)) "[[Logout]]"))))
    (hr/)
@@ -674,6 +676,44 @@
 		     (rows 20) (cols 80)) "")
       (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
      )))
+
+(define (change-passwd . message)
+  (let* ((cuser (kahua-current-user))
+	 (cuser-name (ref cuser 'login-name)))
+    (permission-check-page
+     identity
+     (h3/ #`",|cuser-name| さんのパスワード変更")
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
+		     (cond ((or (equal? "" new-pw)
+				(equal? "" new-again-pw)
+				(not (equal? new-pw new-again-pw)))
+			    (change-passwd "新パスワードが不正です"))
+			   ((not (kahua-check-user cuser-name old-pw))
+			    (change-passwd "旧パスワードが不正です"))
+			   (else
+			    (kahua-user-password-change-force cuser new-pw)
+			    (message-only-page #`",|cuser-name| さんのパスワードを変更しました"))))))
+      (table/
+       (tr/ (th/ "旧パスワード")
+	    (td/ (input/ (@/ (type "password") (name "old-pw")
+			     (value "")) "")))
+       (tr/ (th/ "新パスワード")
+	    (td/ (input/ (@/ (type "password") (name "new-pw")
+			     (value "")) "")))
+       (tr/ (th/ "新パスワード(確認)")
+	    (td/ (input/ (@/ (type "password") (name "new-again-pw")
+			     (value "")) ""))))
+      (input/ (@/ (type "submit") (name "submit") (value "変更")))
+      (p/ (@/ (class "warning")) (node-set message))
+      ))))
+
+(define (message-only-page . message)
+  message
+  (kagoiri-page
+   (div/ (@/ (class "msgbox"))
+	 (h3/ (node-set message)))))
+
 
 
 ;
