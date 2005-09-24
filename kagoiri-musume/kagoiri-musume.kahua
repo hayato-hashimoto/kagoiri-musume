@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.26 2005/09/23 14:42:50 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.27 2005/09/24 01:43:14 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -586,7 +586,7 @@
 	     (map (lambda (m) (ref m 'ctime)) musics)
 	     (map melody-of musics)))
      (form/cont/
-      (@@/ (cont (entry-lambda (:keyword melody status assign)
+      (@@/ (cont (entry-lambda (:keyword melody status type assign)
 		     (if (not (string-null? melody))
 			 (begin
 			   (let1 music (make <music>
@@ -595,6 +595,7 @@
 					 :fan-id (ref (kahua-current-user) 'login-name))
 			     (let1 musume (find-kahua-instance <musume> musume-id)
 			       (set! (status-of musume) status)
+			       (set! (type-of musume) type)
 			       (set! (assign-of musume) assign)
 			       (and-let* ((fan-ids (filter (lambda (f) (not (equal? "   " f)))
 							   (fans-of unit)))
@@ -604,27 +605,29 @@
 				 (for-each (lambda (fan)
 					     (sendmail (ref fan 'email)
 						       *kagoiri-musume-email*
-						       (string-join
-							(map (lambda (str)
-							       #`"=?ISO-2022-JP?B?,|str|?=")
-							     (string-split
-							      (base64-encode-string
-							       (ces-convert
-								#`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
-								"eucjp" "iso2022jp")) #\newline)) " ")
+						       (string-append
+							"=?ISO-2022-JP?B?"
+							(string-join
+							 (string-split
+							  (base64-encode-string
+							   (ces-convert
+							    #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+							    "eucjp" "iso2022jp")) #\newline) "")
+							"?=")
 						       (string-append
 							#`"ポスト: ,(fan-id-of music) \n"
 							#`"日時: ,(sys-ctime (ref music 'ctime)) \n"
 							#`"ステータス: ,(status-of musume) \n"
 							#`"コメント:,|melody| \n\n"
 							#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
-					     fans)))))
+					   fans)))))
 			 (let1 musume (find-kahua-instance <musume> musume-id)
 			   (set! (status-of musume) status)
+			   (set! (type-of musume) type)
 			   (set! (assign-of musume) assign)))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
-       (tr/ (th/ "ステータス") (th/ "アサイン"))
+       (tr/ (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
        (tr/ (td/
 	     (select/ (@/ (name "status"))
 		      (map/ (lambda (s)
@@ -636,10 +639,22 @@
 				  (option/ (@/ (value (statusid-of s)))
 					   (disp-name-of s))))
 			    ;; sequencial for time.
-			    (reverse
-			     (map (lambda (s) (find-kahua-instance <status> s))
-				  (statuss-of
-				   (find-kahua-instance <unit> unit-id)))))))
+			    (map (lambda (s) (find-kahua-instance <status> s))
+				 (statuss-of
+				  (find-kahua-instance <unit> unit-id))))))
+	    (td/
+	     (select/ (@/ (name "type"))
+		      (map/ (lambda (t)
+			      (if (equal? (typeid-of t)
+					  (type-of (find-kahua-instance <musume> musume-id)))
+				  (option/ (@/ (value (typeid-of t))
+					       (selected "true"))
+					   (disp-name-of t))
+				  (option/ (@/ (value (typeid-of t)))
+					   (disp-name-of t))))
+			    (map (lambda (t) (find-kahua-instance <type> t))
+				 (types-of
+				  (find-kahua-instance <unit> unit-id))))))
 	    (td/
 	     (select/ (@/ (name "assign"))
 		      (map/ (lambda (a)
