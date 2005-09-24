@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.36 2005/09/24 17:28:01 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.37 2005/09/24 17:31:34 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -23,8 +23,6 @@
 
 ; logging
 ;
-(log-open (kahua-logpath "kagoiri-musume.log"))
-(log-format "~A: open" (kahua-logpath "kagoiri-musume.log"))
 
 ;
 ; page base
@@ -629,8 +627,6 @@
 	     (map melody-of musics)))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword melody status type assign)
-		     (log-open (kahua-logpath "kagoiri-musume.log"))
-		   #;(log-format "[PreMail-Check] melody:~A status:~A type:~A assign:~A" melody status type assign)
 		   (if (not (string-null? melody))
 		       (begin
 			 (let1 music (make <music>
@@ -646,8 +642,6 @@
 					(fans (map (lambda (id)
 						     (find-kahua-instance <fan-property> id))
 						   fan-ids)))
-			       #;(log-format "[FansList] fans:~A fan-ids:~A" fans fan-ids)
-			       (log-format "[RawSubject] subject:~A" #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
 			       (let ((subject (string-append
 					       "=?ISO-2022-JP?B?"
 					       (string-join
@@ -667,7 +661,6 @@
 					     #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")
 					    "\n")))
 				 (for-each (lambda (fan)
-					     (log-format "[SendMail] fan:~A Subject:~A Body:~A" (ref fan 'email) subject body)
 					     (sendmail (ref fan 'email)
 						       *kagoiri-musume-email*
 						       subject
@@ -735,14 +728,11 @@
      (h3/ #`",|cuser-name| さんのパスワード変更")
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
-		     (log-open (kahua-logpath "kagoiri-musume.log"))
 		   (cond ((or (equal? "" new-pw)
 			      (equal? "" new-again-pw)
 			      (not (equal? new-pw new-again-pw)))
-			  (log-format "[NewPassWd] old:~A new:~A new-again:~A" old-pw new-pw new-again-pw)
 			  (change-passwd "新パスワードが不正です"))
 			 ((not (kahua-check-user cuser-name old-pw))
-			  (log-format "[OldPassWd] old:~A new:~A new-again:~A" old-pw new-pw new-again-pw)
 			  (change-passwd "旧パスワードが不正です"))
 			 (else
 			  (kahua-user-password-change-force cuser new-pw)
