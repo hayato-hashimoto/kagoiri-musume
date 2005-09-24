@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.31 2005/09/24 11:18:09 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.32 2005/09/24 12:22:51 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -620,12 +620,15 @@
 						     #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
 						     "eucjp" "iso2022jp")) #\newline) "")
 						 "?="))
-				       (body (string-append
-					      #`"ポスト: ,(fan-id-of music) \n"
-					      #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime))) \n"
-					      #`"ステータス: ,(status-of musume) \n"
-					      #`"コメント:,|melody| \n\n"
-					      #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
+				       (body (string-join
+					      (list
+					       #`"ポスト: ,(fan-id-of music)"
+					       #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime)))"
+					       #`"ステータス: ,(status-of musume)"
+					       #`"コメント:,|melody|"
+					       ""
+					       #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")
+					      "\n")))
 				   (for-each (lambda (fan)
 					       (log-format "[SendMail] ~A: Subject: ~A Body: ~A" (ref fan 'email) subject body)
 					       (sendmail (ref fan 'email)
