@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.7 2005/09/24 02:53:30 cut-sea Exp $
+;; $Id: class.kahua,v 1.8 2005/09/24 04:25:59 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -41,7 +41,7 @@
    (categories      :allocation :persistent :init-keyword :categories
 		    :init-value '() :accessor categories-of)
    (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-form (sys-time))
+		    :init-thunk sys-time)
    ;; delete flag
    (fallout         :allocation :persistent :init-keyword :fallout
 		    :init-value #f)
@@ -100,7 +100,7 @@
 		    :init-value '() :accessor musics-of)
    ;; create time
    (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-form (sys-time))
+		    :init-thunk sys-time)
    ))
 
 (define-method initialize ((obj <musume>) initargs)
@@ -137,7 +137,7 @@
    (fan-id          :allocation :persistent :init-keyword :fan-id
 		    :init-value #f :accessor fan-id-of)
    (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-form (sys-time))
+		    :init-thunk sys-time)
    ))
 
 (define-method initialize ((obj <music>) initargs)
