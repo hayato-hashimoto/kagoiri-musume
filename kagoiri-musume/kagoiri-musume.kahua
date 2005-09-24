@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.28 2005/09/24 02:53:30 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.29 2005/09/24 04:47:54 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -616,7 +616,7 @@
 							"?=")
 						       (string-append
 							#`"ポスト: ,(fan-id-of music) \n"
-							#`"日時: ,(sys-strftime \"%Y/%m/%d %h:H:%M:%S\" (sys-localtime (ref music 'ctime))) \n"
+							#`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime))) \n"
 							#`"ステータス: ,(status-of musume) \n"
 							#`"コメント:,|melody| \n\n"
 							#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
