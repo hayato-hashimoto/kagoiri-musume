@@ -3,11 +3,12 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.30 2005/09/24 07:30:11 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.31 2005/09/24 11:18:09 cut-sea Exp $
 ;;
 ;; include
 ;; use
 (use gauche.charconv)
+(use gauche.logger)
 (use rfc.base64)
 (use srfi-13)
 (use srfi-19)
@@ -19,6 +20,11 @@
 (load "kagoiri-musume/version.kahua")
 (load "kagoiri-musume/local.kahua")
 (load "kagoiri-musume/class.kahua")
+
+; logging
+;
+(log-open (kahua-logpath "kagoiri-musume.log"))
+(log-format "~A: open" (kahua-logpath "kagoiri-musume.log"))
 
 ;
 ; page base
@@ -589,6 +595,7 @@
 	     (map melody-of musics)))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword melody status type assign)
+		     (log-open (kahua-logpath "kagoiri-musume.log"))
 		     (if (not (string-null? melody))
 			 (begin
 			   (let1 music (make <music>
@@ -604,25 +611,28 @@
 					  (fans (map (lambda (id)
 						       (find-kahua-instance <fan-property> id))
 						     fan-ids)))
-				 (for-each (lambda (fan)
-					     (sendmail (ref fan 'email)
-						       *kagoiri-musume-email*
-						       (string-append
-							"=?ISO-2022-JP?B?"
-							(string-join
-							 (string-split
-							  (base64-encode-string
-							   (ces-convert
-							    #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
-							    "eucjp" "iso2022jp")) #\newline) "")
-							"?=")
-						       (string-append
-							#`"ポスト: ,(fan-id-of music) \n"
-							#`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime))) \n"
-							#`"ステータス: ,(status-of musume) \n"
-							#`"コメント:,|melody| \n\n"
-							#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
-					   fans)))))
+				 (let ((subject (string-append
+						 "=?ISO-2022-JP?B?"
+						 (string-join
+						  (string-split
+						   (base64-encode-string
+						    (ces-convert
+						     #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+						     "eucjp" "iso2022jp")) #\newline) "")
+						 "?="))
+				       (body (string-append
+					      #`"ポスト: ,(fan-id-of music) \n"
+					      #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime))) \n"
+					      #`"ステータス: ,(status-of musume) \n"
+					      #`"コメント:,|melody| \n\n"
+					      #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")))
+				   (for-each (lambda (fan)
+					       (log-format "[SendMail] ~A: Subject: ~A Body: ~A" (ref fan 'email) subject body)
+					       (sendmail (ref fan 'email)
+							 *kagoiri-musume-email*
+							 subject
+							 body))
+					     fans))))))
 			 (let1 musume (find-kahua-instance <musume> musume-id)
 			   (set! (status-of musume) status)
 			   (set! (type-of musume) type)
@@ -685,15 +695,18 @@
      (h3/ #`",|cuser-name| さんのパスワード変更")
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
-		     (cond ((or (equal? "" new-pw)
-				(equal? "" new-again-pw)
-				(not (equal? new-pw new-again-pw)))
-			    (change-passwd "新パスワードが不正です"))
-			   ((not (kahua-check-user cuser-name old-pw))
-			    (change-passwd "旧パスワードが不正です"))
-			   (else
-			    (kahua-user-password-change-force cuser new-pw)
-			    (message-only-page #`",|cuser-name| さんのパスワードを変更しました"))))))
+		     (log-open (kahua-logpath "kagoiri-musume.log"))
+		   (cond ((or (equal? "" new-pw)
+			      (equal? "" new-again-pw)
+			      (not (equal? new-pw new-again-pw)))
+			  (log-format "[NewPassWd] old:~A new:~A new-again:~A" old-pw new-pw new-again-pw)
+			  (change-passwd "新パスワードが不正です"))
+			 ((not (kahua-check-user cuser-name old-pw))
+			  (log-format "[OldPassWd] old:~A new:~A new-again:~A" old-pw new-pw new-again-pw)
+			  (change-passwd "旧パスワードが不正です"))
+			 (else
+			  (kahua-user-password-change-force cuser new-pw)
+			  (message-only-page #`",|cuser-name| さんのパスワードを変更しました"))))))
       (table/
        (tr/ (th/ "旧パスワード")
 	    (td/ (input/ (@/ (type "password") (name "old-pw")
