@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.35 2005/09/24 15:52:25 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.36 2005/09/24 17:28:01 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -504,10 +504,39 @@
 					:assign assign
 					:type type
 					:category category)
-			   (make <music>
-			     :musume-id (key-of musume)
-			     :melody melody
-			     :fan-id (ref (kahua-current-user) 'login-name))))
+			   (let1 music (make <music>
+					 :musume-id (key-of musume)
+					 :melody melody
+					 :fan-id (ref (kahua-current-user) 'login-name))
+			     (and-let* ((fan-ids (filter (lambda (f) (not (equal? "   " f)))
+							 (fans-of unit)))
+					(fans (map (lambda (id)
+						     (find-kahua-instance <fan-property> id))
+						   fan-ids)))
+			       (let ((subject  (string-append
+					       "=?ISO-2022-JP?B?"
+					       (string-join
+						(string-split
+						 (base64-encode-string
+						  (ces-convert
+						   #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"
+						   "eucjp" "iso2022jp")) #\newline) "")
+					       "?="))
+				     (body  (string-join
+					    (list
+					     #`"ポスト: ,(fan-id-of music)"
+					     #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime)))"
+					     #`"ステータス: ,(status-of musume)"
+					     #`"コメント:,|melody|"
+					     ""
+					     #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,(key-of musume)")
+					    "\n")))
+				 (for-each (lambda (fan)
+					     (sendmail (ref fan 'email)
+						       *kagoiri-musume-email*
+						       subject
+						       body))
+					   fans))))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
        (tr/ (th/ "優先度")
