@@ -1,0 +1,129 @@
+;;-*-Scheme-*-
+;;
+;;  Copyright (c) 2004 Scheme Arts, L.L.C., All rights reserved.
+;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: search.kahua,v 1.1 2005/09/25 13:36:42 shibata Exp $
+
+;; methods for search.
+(define-method searchable-text ((obj <unit>))
+  (list ;; (cons "ユニット名" (ref obj 'unit-name))
+        (cons "概要" (ref obj 'description))))
+
+(define-method searchable-text ((obj <musume>))
+;;   (cons (cons "タイトル" (ref obj 'musume-name))
+        (map
+         (lambda (music)
+           (let ((music (find-kahua-instance <music> music)))
+             (cons
+              (sys-strftime
+               "%Y/%m/%d %H:%M:%S"
+               (sys-localtime (ref music 'ctime)))
+              (melody-of music))))
+         (reverse (ref obj 'musics))));; )
+
+(define-method label-of ((obj <unit>))
+  (a/cont/ (@@/ (cont musume-list (key-of obj))) (ref obj 'unit-name)))
+
+(define-method label-of ((obj <musume>))
+  (let ((unit-id (unit-id-of obj)))
+    (span/
+     (a/cont/ (@@/ (cont musume-list unit-id))
+              (ref (find-kahua-instance <unit> unit-id)'unit-name))
+     " : "
+     (a/cont/
+      (@@/ (cont melody-list unit-id (key-of obj)))
+      (mname-of obj)))))
+  
+
+;; (define-method searchable-text ((obj <music>))
+;;   (list (cons (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ref obj 'ctime)))
+;;               (melody-of obj))))
+
+;; search page
+(define-entry (search :keyword word unit-id)
+  (let* ((word-len (string-length word))
+         (user (ref (kahua-current-user) 'login-name))
+         (units (if unit-id
+                    (cons (find-kahua-instance <unit> unit-id) '())
+                  (filter
+                   (lambda (unit)
+                     (member user (fans-of unit)))
+                   (all-units)))))
+    
+     (define (find-all context word)
+
+       (define (highlight line)
+         (let ((idx (string-contains-ci line word)))
+           (if idx
+               (node-set
+                (list (string-take line idx)
+                      (span/ (@/ (class "highlight")
+                                 (style "background-color:yellow"))
+                             word)
+                      (highlight
+                       (string-drop line (+ idx word-len)))))
+             (node-set (list line "\n")))))
+       (define (iter list acc)
+         (if (<= (length list) 1)
+             (reverse acc)
+           (if (string-contains-ci (cadr list) word)
+               (iter (cddr list)
+                     (cons
+                      (pre/
+                       (node-set
+                        (map highlight
+                             (take* list 3))))
+                      acc))
+             (iter (cdr list) acc))))
+
+       (iter (cons "" (call-with-input-string context port->string-list)) '()))
+
+     (define (search-result)
+
+       (define (sorter x y)
+         (> (ref x 'mtime) (ref y 'mtime)))
+       (define (contain? item)
+         (let ((s (searchable-text item)))
+           (and (find (lambda (t&v)
+                        (string-contains-ci (cdr t&v) word))
+                      s)
+                (cons (label-of item)
+                      s))))
+
+       ;; (define (make-link path)
+       ;;         (format-link item))
+       ;;         `(a/cont (@@ (cont ,show ,@(pagename-split path)))
+       ;;                  ,path))
+
+       (if (< 1 word-len)
+           (let* ((hits (filter-map
+                         contain?
+                         (fold
+                          (lambda (x y)
+                            (append (cons x
+                                          (all-musumes (key-of x))
+                                          ;; (musics-of x)
+                                          )
+                                    y))
+                          '()
+                          units))))
+             (div/
+              (h1/ (format "search key: ~a (~a items)\n" word (length hits)))
+              (node-set
+               (map (lambda (hit)
+                      (fieldset/
+                       (legend/ (car hit))
+                       (node-set
+                        (map (lambda (item)
+                               (div/
+                                ;; (blockquote/
+                                (strong/ (car item))
+                                (node-set
+                                 (find-all (cdr item) word))));; )
+                             (cdr hit)))))
+                    hits))))
+         (h1/ "Keyword is too short: " word)))
+
+     (kagoiri-page (search-result))))
