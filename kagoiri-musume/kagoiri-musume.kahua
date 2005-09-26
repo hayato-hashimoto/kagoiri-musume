@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.42 2005/09/26 06:29:43 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.43 2005/09/26 07:03:34 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -453,39 +453,42 @@
 					 (find-kahua-instance <unit> unit-id))))))))
 		     (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
 		     ))
-		   (table/
-		    (tr/ (th/ "No.")
-			 (th/ "タイトル")
-			 (th/ "優先度")
-			 (th/ "ステータス")
-			 (th/ "アサイン")
-			 (th/ "タイプ")
-			 (th/ "登録日"))
-		    (map/ (lambda (m)
-			    (tr/ (td/ (a/cont/
-				       (@@/ (cont musume-edit (key-of m)))
-				       (x->string (mno-of m))))
-				 (td/ (a/cont/
-				       (@@/ (cont melody-list (unit-id-of m) (key-of m)))
-				       (mname-of m)))
-				 (td/ (disp-name-of
-				       (find-kahua-instance
-					<priority> (priority-of m))))
-				 (td/ (disp-name-of
-				       (find-kahua-instance
-					<status> (status-of m))))
-				 (td/ (fan-name-of
-				       (find-kahua-instance
-					<fan-property> (assign-of m))))
-				 (td/ (disp-name-of
-				       (find-kahua-instance
-					<type> (type-of m))))
-				 (td/ (sys-strftime "%Y/%m/%d"
-					(sys-localtime (ref m 'ctime))))))
-			  (sort (filter and-filter
-					(all-musumes unit-id))
-				(lambda (m1 m2)
-				  (> (mno-of m1) (mno-of m2))))))
+		   ;; data table
+		   (let1 musumes (sort (filter and-filter
+					       (all-musumes unit-id))
+				       (lambda (m1 m2)
+					 (> (mno-of m1) (mno-of m2))))
+		     (table/
+		      (thead/ #`",(length musumes)人の娘。に萌えました。")
+		      (tr/ (th/ "No.")
+			   (th/ "タイトル")
+			   (th/ "優先度")
+			   (th/ "ステータス")
+			   (th/ "アサイン")
+			   (th/ "タイプ")
+			   (th/ "登録日"))
+		      (map/ (lambda (m)
+			      (tr/ (td/ (a/cont/
+					 (@@/ (cont musume-edit (key-of m)))
+					 (x->string (mno-of m))))
+				   (td/ (a/cont/
+					 (@@/ (cont melody-list (unit-id-of m) (key-of m)))
+					 (mname-of m)))
+				   (td/ (disp-name-of
+					 (find-kahua-instance
+					  <priority> (priority-of m))))
+				   (td/ (disp-name-of
+					 (find-kahua-instance
+					  <status> (status-of m))))
+				   (td/ (fan-name-of
+					 (find-kahua-instance
+					  <fan-property> (assign-of m))))
+				   (td/ (disp-name-of
+					 (find-kahua-instance
+					  <type> (type-of m))))
+				   (td/ (sys-strftime "%Y/%m/%d"
+						      (sys-localtime (ref m 'ctime))))))
+			    musumes)))
 		   )))))
 
 (define-entry (musume-new unit-id)
@@ -533,7 +536,11 @@
 					       (list
 						#`"ポスト: ,(fan-id-of music)"
 						#`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime)))"
-						#`"ステータス: ,(status-of musume)"
+						#`"ステータス: ,(disp-name-of (find-kahua-instance <status> (status-of musume)))"
+						#`"優先度: ,(disp-name-of (find-kahua-instance <priority> (priority-of musume)))"
+						#`"タイプ: ,(disp-name-of (find-kahua-instance <type> (type-of musume)))"
+						#`"カテゴリ: ,(disp-name-of (find-kahua-instance <category> (category-of musume)))"
+						#`"アサイン: ,(assign-of musume)"
 						#`"コメント:,|melody|"
 						""
 						#`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,(key-of musume)")
@@ -666,7 +673,11 @@
 					    (list
 					     #`"ポスト: ,(fan-id-of music)"
 					     #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ref music 'ctime)))"
-					     #`"ステータス: ,(status-of musume)"
+					     #`"ステータス: ,(disp-name-of (find-kahua-instance <status> (status-of musume)))"
+					     #`"優先度: ,(disp-name-of (find-kahua-instance <priority> (priority-of musume)))"
+					     #`"タイプ: ,(disp-name-of (find-kahua-instance <type> (type-of musume)))"
+					     #`"カテゴリ: ,(disp-name-of (find-kahua-instance <category> (category-of musume)))"
+					     #`"アサイン: ,(assign-of musume)"
 					     #`"コメント:,|melody|"
 					     ""
 					     #`"URL: ,(kahua-self-uri-full)melody-list/,(unit-id-of musume)/,|musume-id|")
