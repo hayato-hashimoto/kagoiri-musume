@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.43 2005/09/26 07:03:34 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.44 2005/09/26 09:19:22 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -459,7 +459,11 @@
 				       (lambda (m1 m2)
 					 (> (mno-of m1) (mno-of m2))))
 		     (table/
-		      (thead/ #`",(length musumes)人の娘。に萌えました。")
+		      (thead/ (cond ((= 0 (length musumes)) "萌えられる娘。がいません(T^T)")
+				    ((= 1 (length musumes)) "ただひとりの娘。に萌えました")
+				    ((> 100 (length musumes)) #`",(length musumes)人の娘。に萌えました")
+				    ((> 500 (length musumes)) #`",(length musumes)人もの娘。に萌えました(萌えすぎです)")
+				    (else #`"なんと,(length musumes)人もの娘。に萌えまつきました orz")))
 		      (tr/ (th/ "No.")
 			   (th/ "タイトル")
 			   (th/ "優先度")
@@ -502,9 +506,9 @@
      (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
-		     (if (and (not (string-null? name))
-			      (not (string-null? melody)))
+		     (if (not (string-null? name))
 			 (begin
+			   (if (string-null? melody) (set! melody name))
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
 			   (let1 musume (make <musume>
 					  :unit-id unit-id
