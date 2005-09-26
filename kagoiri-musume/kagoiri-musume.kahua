@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.38 2005/09/25 13:36:42 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.39 2005/09/26 00:48:27 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -69,11 +69,11 @@
 		    (td/ (a/cont/
 			  (@@/ (cont logout)) "[[Logout]]")) "")
 		(if (kahua-current-user)
-		    (td/ #`" Now login: ,(ref (kahua-current-user) 'login-name)") "")
-                (if (kahua-current-user)
                     (td/ (form/cont/
                         (@@/ (cont search))
                         (input/ (@/ (type "text") (name "word") (size 10))))) "")
+                (if (kahua-current-user)
+		    (td/ #`" Now login: ,(ref (kahua-current-user) 'login-name)") "")
 		))
    (hr/)
    (node-set body)))

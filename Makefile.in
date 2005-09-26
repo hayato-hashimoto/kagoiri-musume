@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.1 2005/09/19 12:00:12 cut-sea Exp $
+# $Id: Makefile.in,v 1.2 2005/09/26 00:48:27 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -45,6 +45,7 @@ SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
 SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/local.kahua \
 	      kagoiri-musume/class.kahua \
+	      kagoiri-musume/search.kahua \
 	      kagoiri-musume/version.kahua
 
 STATICFILES = kagoiri-musume/kagoiri-musume.css
