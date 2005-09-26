@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.41 2005/09/26 01:54:35 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.42 2005/09/26 06:29:43 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -609,6 +609,7 @@
 (define-entry (musume-edit musume-id)
   (permission-check-page identity
    (h3/ #`"『,(mname-of (find-kahua-instance <musume> musume-id)) 』を編集する。")
+   "工事中"
    ))
 
 (define-entry (melody-list unit-id musume-id)
