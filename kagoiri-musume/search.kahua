@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.1 2005/09/25 13:36:42 shibata Exp $
+;; $Id: search.kahua,v 1.2 2005/09/27 14:50:32 shibata Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -117,11 +117,13 @@
                        (legend/ (car hit))
                        (node-set
                         (map (lambda (item)
-                               (div/
-                                ;; (blockquote/
-                                (strong/ (car item))
-                                (node-set
-                                 (find-all (cdr item) word))));; )
+                               (let1 match (find-all (cdr item) word)
+                                 (if (null? match)
+                                     ""
+                                   (div/
+                                    (strong/ (car item))
+                                    (node-set
+                                     match)))))
                              (cdr hit)))))
                     hits))))
          (h1/ "Keyword is too short: " word)))
