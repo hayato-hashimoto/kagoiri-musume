@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.47 2005/09/27 14:17:42 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.48 2005/09/27 15:00:55 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -409,6 +409,11 @@
 	       u #f))
 	 (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	      (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+         (form/cont/
+          (@@/ (cont search `(unit-id ,unit-id)))
+          "ユニット内検索:"
+          (input/ (@/ (type "text") (name "word") (size 10)))
+          (input/ (@/ (type "submit") (value "検索"))))
 	 (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 娘。一覧")
 	 (form/cont/ (@@/ (cont musume-list unit-id))
 		     (table/
