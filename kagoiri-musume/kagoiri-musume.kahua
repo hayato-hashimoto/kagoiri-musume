@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.58 2005/09/28 12:45:36 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.59 2005/09/28 14:48:54 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -15,6 +15,7 @@
 (use util.list)
 (use srfi-1)
 (use gauche.collection)
+(use gauche.sequence)
 
 (use sendmail)
 
@@ -348,13 +349,17 @@
 (define-entry (unit-list)
   (permission-check-page identity
    (h2/ "ユニット一覧")
-   (table/
+   (table/ (@/ (class "listing"))
+           (thead/
     (tr/ (th/) (th/)
 	 (th/ "ユニット名")
 	 (th/ "概要")
-	 (th/ "ファン"))
-    (map/ (lambda (u)
-	    (tr/ (td/ (a/cont/
+	 (th/ "ファン")))
+           (tbody/
+            (node-set
+    (map-with-index (lambda (idx u)
+	    (tr/ (@/ (class (if (odd? idx) "odd" "even")))
+                       (td/ (a/cont/
 		       (@@/ (cont unit-edit (key-of u)))
 		       "編集"))
 		 (td/ (a/cont/
@@ -368,7 +373,7 @@
 		 (td/ (string-join (filter (lambda (f)
 					     (not (equal? "   " f)))
 					   (fans-of u)) " , "))))
-	  (all-units)))
+	  (all-units)))))
    (hr/)
    (h2/ "新ユニット結成")
    (form/cont/
@@ -658,19 +663,20 @@
 							  (all-musumes unit-id))
 						  (lambda (m1 m2)
 						    (> (mno-of m1) (mno-of m2)))))
-		       (table/
+		       (table/ (@/ (class "listing"))
 			(thead/ (cond ((= 0 (length musumes)) "萌えられる娘。がいません(T^T)")
 				      ((= 1 (length musumes)) "ただひとりの娘。に萌えました")
 				      ((> 100 (length musumes)) #`",(length musumes)人の娘。に萌えました")
 				      ((> 500 (length musumes)) #`",(length musumes)人もの娘。に萌えました(萌えすぎです)")
-				      (else #`"なんと,(length musumes)人もの娘。に萌えまつきました orz")))
-			(tr/ (th/ "No.")
-			     (th/ "タイトル")
-			     (th/ "優先度")
-			     (th/ "ステータス")
-			     (th/ "アサイン")
-			     (th/ "タイプ")
-			     (th/ "登録日"))
+				      (else #`"なんと,(length musumes)人もの娘。に萌えまつきました orz"))
+                                (tr/ (th/ "No.")
+                                     (th/ "タイトル")
+                                     (th/ "優先度")
+                                     (th/ "ステータス")
+                                     (th/ "アサイン")
+                                     (th/ "タイプ")
+                                     (th/ "登録日")))
+                        (tbody/
 			(map/ (lambda (m)
                                 (let1 status (find-kahua-instance
                                               <status> (status-of m))
@@ -694,7 +700,7 @@
 					    <type> (type-of m))))
 				     (td/ (sys-strftime "%Y/%m/%d"
 							(sys-localtime (ref m 'ctime)))))))
-			      musumes))
+			      musumes)))
 		     )))))))
 
 (define-entry (musume-new unit-id)
