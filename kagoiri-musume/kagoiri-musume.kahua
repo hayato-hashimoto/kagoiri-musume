@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.48 2005/09/27 15:00:55 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.49 2005/09/28 00:09:45 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -506,7 +506,10 @@
 			     (th/ "¥¿¥¤¥×")
 			     (th/ "ÅÐÏ¿Æü"))
 			(map/ (lambda (m)
-				(tr/ (td/ (a/cont/
+                                (let1 status (find-kahua-instance
+                                              <status> (status-of m))
+				(tr/ (@/ (class #`"status-,(statusid-of status)"))
+                                     (td/ (a/cont/
 					   (@@/ (cont musume-edit (key-of m)))
 					   (x->string (mno-of m))))
 				     (td/ (a/cont/
@@ -516,18 +519,17 @@
 					   (find-kahua-instance
 					    <priority> (priority-of m))))
 				     (td/ (disp-name-of
-					   (find-kahua-instance
-					    <status> (status-of m))))
+                                           status))
 				     (td/ (fan-name-of
 					   (find-kahua-instance
 					    <fan-property> (assign-of m))))
 				     (td/ (disp-name-of
-					   (find-kahua-instance
+                                          (find-kahua-instance
 					    <type> (type-of m))))
 				     (td/ (sys-strftime "%Y/%m/%d"
-							(sys-localtime (ref m 'ctime))))))
-			      musumes)))
-		     ))))))
+							(sys-localtime (ref m 'ctime)))))))
+			      musumes))
+		     )))))))
 
 (define-entry (musume-new unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)

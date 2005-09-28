@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.1 2005/09/19 12:00:14 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.2 2005/09/28 00:09:45 shibata Exp $ */
 
 /*
  * Common stuff
@@ -169,4 +169,18 @@ div#bottom-pane p {
 
 .comments {
   font-size: 80%;
+}
+
+/*
+ * Status
+ */
+
+.status-completed {
+/*     border:1px dotted rgb(204,204,204); */
+    background-color:rgb(231,231,231);
+}
+
+.status-open {
+/*     border:1px dotted rgb(204,204,204); */
+    background-color:#ffe2e2;
 }
