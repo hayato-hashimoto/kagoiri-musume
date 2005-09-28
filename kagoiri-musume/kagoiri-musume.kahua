@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.59 2005/09/28 14:48:54 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.60 2005/09/28 15:41:10 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -964,15 +964,35 @@
   (permission-check-page identity
     (fieldset/
      (legend/ "TODO")
-     (ul/
-      (node-set
-       (let ((login-name (kahua-current-user-name)))
-         (map
-          (lambda (musume)
-            (if (equal? (assign-of musume) login-name)
-                (li/ (label-of musume))
-              ""))
-          (make-kahua-collection <musume>))))))))
+     (let1 musumes (let1 login-name (kahua-current-user-name)
+                     (filter
+                      (lambda (musume)
+                        (equal? (assign-of musume) login-name))
+                      (make-kahua-collection <musume>)))
+       (format "~a item(s)" (length musumes))
+       (table/ (@/ (class "listing"))
+               (thead/ (tr/ (th/ "タイトル")
+                            (th/ "優先度")
+                            (th/ "ステータス")
+                            (th/ "タイプ")
+                            (th/ "登録日")))
+               (tbody/
+                (map/ (lambda (m)
+                        (let1 status (find-kahua-instance
+                                      <status> (status-of m))
+                          (tr/ (@/ (class #`"status-,(statusid-of status)"))
+                               (td/ (label-of m))
+                               (td/ (disp-name-of
+                                     (find-kahua-instance
+                                      <priority> (priority-of m))))
+                               (td/ (disp-name-of
+                                     status))
+                               (td/ (disp-name-of
+                                     (find-kahua-instance
+                                      <type> (type-of m))))
+                               (td/ (sys-strftime "%Y/%m/%d"
+                                                  (sys-localtime (ref m 'ctime)))))))
+                      musumes)))))))
 
 (define (change-passwd . message)
   (let* ((cuser (kahua-current-user))
