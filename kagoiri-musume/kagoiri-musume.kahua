@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.56 2005/09/28 10:45:59 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.57 2005/09/28 11:55:34 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -142,7 +142,9 @@
 	    (td/ (input/ (@/ (type "password") (name "pass")
 			     (value ""))))))
       (input/ (@/ (type "submit") (name "submit") (value "login")))
-      (h5/ (node-set message))))))
+      (map/ (lambda (m)
+	      (p/ (@/ (class "warning")) m))
+	    message)))))
 
 (define-entry (logout)
   (set! (kahua-current-user) #f)
