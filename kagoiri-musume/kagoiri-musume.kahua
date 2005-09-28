@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.53 2005/09/28 08:58:31 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.54 2005/09/28 10:26:21 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -197,7 +197,7 @@
 		       )
 		 (redirect-page "admin-system"))))
     (table/
-     (thead/ "ユーザ登録一覧")
+     (thead/ "登録ユーザ一覧")
      (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス") (th/ "隠密"))
      (map/ (lambda (f)
 	     (tr/ (td/ (if (member 'admin
@@ -216,9 +216,34 @@
 	  (td/ (input/ (@/ (type "text") (name "email")) ""))
 	  (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
      (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "ファン登録"))))))
-    (div/ (@/ (class "message")) "既存ログイン名で登録するとパスワード以外変更できます")
-    )
-   ))
+    (div/ (@/ (class "message")) "既存ログイン名で登録するとパスワード以外変更できます"))
+
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword id disp delete)
+		   (if (not (find-kahua-instance <status> id))
+		       (make <status>
+			 :statusid id
+			 :disp-name disp
+			 :delete (if (equal? "on" delete) #t #f))
+		       (let1 s (find-kahua-instance <status> id)
+			 (if (not (string-null? disp))
+			     (set! (disp-name-of s) disp))
+			 (set! (delete-of s) (if (equal? "on" delete) #t #f))))
+		 (redirect-page "admin-system"))))
+    (table/
+     (thead/ "登録ステータス一覧")
+     (tr/ (th/ "ステータスID") (th/ "表示名") (th/ "無効"))
+     (map/ (lambda (s)
+	     (tr/ (td/ (statusid-of s)) (td/ (disp-name-of s))
+		  (td/ (if (delete-of s) "＊" ""))))
+	   (map identity
+		(make-kahua-collection <status>))))
+    (table/ (tr/ (th/ "ステータスID") (th/ "表示名") (th/ "無効"))
+	    (tr/ (td/ (input/ (@/ (type "text") (name "id")) ""))
+		 (td/ (input/ (@/ (type "text") (name "disp")) ""))
+		 (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
+	    (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "登録"))))))
+    )))
 
 (define-entry (unit-list)
   (permission-check-page identity
