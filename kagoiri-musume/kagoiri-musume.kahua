@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.49 2005/09/28 00:09:45 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.50 2005/09/28 07:55:34 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -176,7 +176,34 @@
      (if (kahua-user-has-role? u '(admin))
 	 u #f))
    (h2/ "籠入娘。システム設定管理画面")
-   "工事中"
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword login-name passwd email admin)
+		   (if (and (not (string-null? login-name))
+			    (not (string-null? passwd))
+			    (not (string-null? email)))
+		       (if (not (kahua-find-user login-name))
+			   (if (equal? "on" admin)
+			       (add-fan login-name passwd email 'admin 'user)
+			       (add-fan login-name passwd email 'user))))
+		 (redirect-page "admin-system"))))
+    (table/
+     (thead/ "ユーザ登録一覧")
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス"))
+     (map/ (lambda (f)
+	     (tr/ (td/ (if (member 'admin
+				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
+			   "＊" ""))
+		  (td/ (fan-name-of f)) (td/ (email-of f))))
+	   (map identity
+		(make-kahua-collection <fan-property>))))
+    (table/
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス"))
+     (tr/ (td/ (input/ (@/ (type "checkbox") (name "admin")) "off"))
+	  (td/ (input/ (@/ (type "text") (name "login-name")) ""))
+	  (td/ (input/ (@/ (type "password") (name "passwd")) ""))
+	  (td/ (input/ (@/ (type "text") (name "email")) "")))
+     (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "ファン追加"))))))
+    )
    ))
 
 (define-entry (unit-list)
