@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.52 2005/09/28 08:46:38 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.53 2005/09/28 08:58:31 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -198,7 +198,7 @@
 		 (redirect-page "admin-system"))))
     (table/
      (thead/ "ユーザ登録一覧")
-     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス") (th/ "除名"))
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス") (th/ "隠密"))
      (map/ (lambda (f)
 	     (tr/ (td/ (if (member 'admin
 				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
@@ -209,7 +209,7 @@
 		     (not (equal? "   " (fan-name-of f))))
 		   (make-kahua-collection <fan-property>))))
     (table/
-     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス") (th/ "除名"))
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス") (th/ "隠密"))
      (tr/ (td/ (input/ (@/ (type "checkbox") (name "admin")) "off"))
 	  (td/ (input/ (@/ (type "text") (name "login-name")) ""))
 	  (td/ (input/ (@/ (type "password") (name "passwd")) ""))
