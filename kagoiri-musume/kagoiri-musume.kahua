@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.55 2005/09/28 10:35:11 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.56 2005/09/28 10:45:59 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -721,10 +721,14 @@
    "娘。の閲覧"))
 
 (define-entry (musume-edit musume-id)
-  (permission-check-page identity
-   (h3/ #`"『,(mname-of (find-kahua-instance <musume> musume-id)) 』を編集する。")
-   "工事中"
-   ))
+  (let* ((musume (find-kahua-instance <musume> musume-id))
+	 (unit (find-kahua-instance <unit> (unit-id-of musume))))
+    (permission-check-page
+     identity
+     (h3/ #`"『,(unit-name-of unit)』の『,(mname-of musume) 』を編集する。")
+     "工事中"
+     )
+    ))
 
 (define-entry (melody-list unit-id musume-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
