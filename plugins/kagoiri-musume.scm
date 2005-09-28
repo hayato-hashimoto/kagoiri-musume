@@ -6,4 +6,5 @@
 (allow-module srfi-19)
 (allow-module util.list)
 (allow-module gauche.collection)
+(allow-module gauche.sequence)
 
