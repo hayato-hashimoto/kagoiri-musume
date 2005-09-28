@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.50 2005/09/28 07:55:34 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.51 2005/09/28 08:06:09 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -194,7 +194,8 @@
 				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
 			   "＊" ""))
 		  (td/ (fan-name-of f)) (td/ (email-of f))))
-	   (map identity
+	   (filter (lambda (f)
+		     (not (equal? "   " (fan-name-of f))))
 		(make-kahua-collection <fan-property>))))
     (table/
      (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス"))
