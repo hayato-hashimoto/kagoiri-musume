@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.12 2005/09/28 12:45:36 cut-sea Exp $
+;; $Id: class.kahua,v 1.13 2005/09/29 15:32:38 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -44,7 +44,7 @@
 		    :init-thunk sys-time)
    ;; delete flag
    (fallout         :allocation :persistent :init-keyword :fallout
-		    :init-value #f)
+		    :init-value #f :accessor fallout-of)
    ))
 
 ;; comment

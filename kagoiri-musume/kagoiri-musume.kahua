@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.62 2005/09/29 14:09:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.63 2005/09/29 15:32:38 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -225,6 +225,24 @@
 	  (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
      (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "ファン登録"))))))
     (div/ (@/ (class "message")) "既存ログイン名で登録するとパスワード以外変更できます"))
+
+   (hr/)
+
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword u fallout)
+		   (redirect-page "admin-system"))))
+    (table/
+     (thead/ "登録ユニット一覧")
+     (tr/ (th/ "ユニット名") (th/ "概要") (th/ "活動状態"))
+     (node-set
+      (map (lambda (u)
+	     (tr/ (td/ (unit-name-of u))
+		  (td/ (description-of u))
+		  (td/ (a/cont/ (@@/ (cont (lambda ()
+					     (set! (fallout-of u) (not (fallout-of u)))
+					     (redirect-page "admin-system"))))
+				(if (fallout-of u) "休止" "活動")))))
+	   (make-kahua-collection <unit>)))))
 
    (hr/)
 
