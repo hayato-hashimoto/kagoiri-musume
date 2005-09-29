@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.4 2005/09/29 17:02:42 shibata Exp $
+# $Id: Makefile.in,v 1.5 2005/09/29 17:20:25 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -91,11 +91,10 @@ clean:
 
 install: 
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script $(SCRIPTFILES)
-	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)n
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t static --no-overwrite $(STATICFILES)
 	for f in $(PLUGINFILES); do \
-		$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f \
-			$(PLUGINDIR)/$$f
+	  $(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f $(PLUGINDIR)/$$f;\
 	done
 
 	for f in $(SCRIPTS); do \
@@ -105,8 +104,9 @@ install:
 uninstall :
 	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t script $(SCRIPTFILES)
 	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t static $(STATICFILES)
-	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t plugin -r $(PLUGINFILE) \
-                                        $(PLUGINDIR)/$(PLUGINFILE)
+	for f in $(PLUGINFILES); do \
+		$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f $(PLUGINDIR)/$$f;\
+	done
 
 distclean: clean
 	-rm -rf $(CONFIG_GENERATED)
