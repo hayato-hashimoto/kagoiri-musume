@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.3 2005/09/29 16:56:13 shibata Exp $
+# $Id: Makefile.in,v 1.4 2005/09/29 17:02:42 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -52,7 +52,7 @@ STATICFILES = kagoiri-musume/kagoiri-musume.css
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILE  = kagoiri-musume.scm css.scm
+PLUGINFILES  = kagoiri-musume.scm css.scm
 
 
 
@@ -91,10 +91,13 @@ clean:
 
 install: 
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script $(SCRIPTFILES)
-	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)n
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t static --no-overwrite $(STATICFILES)
-	$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $(PLUGINFILE) \
-                                        $(PLUGINDIR)/$(PLUGINFILE)
+	for f in $(PLUGINFILES); do \
+		$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f \
+			$(PLUGINDIR)/$$f
+	done
+
 	for f in $(SCRIPTS); do \
 	  $(INSTALL) -m 555 $$f $(bindir)/$$f;\
 	done
