@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.61 2005/09/29 13:05:27 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.62 2005/09/29 14:09:24 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -95,13 +95,13 @@
 ;
 (define-syntax permission-check-page
   (syntax-rules ()
-    ((_ checker body ...)
+    ((_ checker msg body ...)
      (begin
        (or (and (kahua-current-user)
                 (checker (kahua-current-user)))
            ;; new account set
            (set! (kahua-current-user)
-               (ref (login-pc-page #f checker) 'login-name)))
+               (ref (login-pc-page #f checker msg) 'login-name)))
        (kagoiri-page (node-set (list body ...)))))))
 
 
@@ -110,24 +110,25 @@
 ;
 (define-syntax permission-check-logic
   (syntax-rules ()
-    ((_ checker begin-body)
+    ((_ checker msg begin-body)
      (begin
        (or (and (kahua-current-user)
                 (checker (kahua-current-user)))
            ;; new account set
            (set! (kahua-current-user)
-               (ref (login-pc-page #f checker) 'login-name)))
+               (ref (login-pc-page #f checker msg) 'login-name)))
        begin-body))))
 
 ;
 ; partial continuation login page
 ;
-(define (login-pc-page cont checker . message)
+(define (login-pc-page cont checker message . errmsg)
   (let/pc k
       (if cont
 	  (set! k cont))
     (kagoiri-page
      (h1/ "籠入娘。へようこそ")
+     (h3/ message)
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name pass)
 		     (let1 user (and-let* ((kuser (kahua-check-user name pass)))
@@ -145,7 +146,7 @@
       (input/ (@/ (type "submit") (name "submit") (value "login")))
       (map/ (lambda (m)
 	      (p/ (@/ (class "warning")) m))
-	    message)))))
+	    errmsg)))))
 
 (define-entry (logout)
   (set! (kahua-current-user) #f)
@@ -178,6 +179,7 @@
    (lambda (u)
      (if (kahua-user-has-role? u '(admin))
 	 u #f))
+   "システム管理者のアカウントが必要です"
    (h2/ "籠入娘。システム設定管理画面")
 
    (hr/)
@@ -347,7 +349,7 @@
    ))
 
 (define-entry (unit-list)
-  (permission-check-page identity
+  (permission-check-page identity "ユニット一覧は一般ユーザアカウントが必要です"
    (h2/ "ユニット一覧")
    (table/ (@/ (class "listing"))
            (thead/
@@ -445,6 +447,7 @@
      (lambda (u)
        (if (member (ref u 'login-name) (fans-of unit))
 	   u #f))
+     #`"『,(unit-name-of unit)』のファンとしてのアカウントが必要です"
      (h2/ #`"『,(unit-name-of unit)』ユニット編集")
      (hr/)
      (form/cont/
@@ -540,6 +543,7 @@
 		   (login-pc-page #f checker))
       (permission-check-logic
        checker
+       #`"『,(unit-name-of unit)』のファンとしてのアカウントが必要です"
        (begin
 	 (if (checker user)
 	     (set! (ref unit 'fallout) #t))
@@ -578,6 +582,7 @@
 	 (lambda (u)
 	   (if (member (ref u 'login-name) (fans-of unit))
 	       u #f))
+	 #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
 	 (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	      (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
          (form/cont/
@@ -709,6 +714,7 @@
      (lambda (u)
        (if (member (ref u 'login-name) (fans-of unit))
 	   u #f))
+     #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h2/ (unit-name-of (find-kahua-instance <unit> unit-id)) " - 新しい娘。")
@@ -823,7 +829,7 @@
      )))
 
 (define-entry (musume-view)
-  (permission-check-page identity
+  (permission-check-page identity "ちょいまってや"
    "娘。の閲覧"))
 
 (define-entry (musume-edit musume-id)
@@ -831,6 +837,7 @@
 	 (unit (find-kahua-instance <unit> (unit-id-of musume))))
     (permission-check-page
      identity
+     #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
      (h3/ #`"『,(unit-name-of unit)』の『,(mname-of musume) 』を編集する。")
      "工事中"
      )
@@ -842,6 +849,7 @@
      (lambda (u)
        (if (member (ref u 'login-name) (fans-of unit))
 	   u #f))
+     #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
      (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h3/ (unit-name-of unit) " - "
@@ -978,7 +986,9 @@
      )))
 
 (define-entry (mypage)
-  (permission-check-page identity
+  (permission-check-page
+   identity
+   "マイページは一般ユーザアカウントが必要です"
     (fieldset/
      (legend/ "TODO")
      (let1 musumes (let1 login-name (kahua-current-user-name)
@@ -1016,6 +1026,7 @@
 	 (cuser-name (ref cuser 'login-name)))
     (permission-check-page
      identity
+     #`"パスワード変更には一般ユーザのアカウントが必要です"
      (h3/ #`",|cuser-name| さんのパスワード変更")
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
