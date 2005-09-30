@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.63 2005/09/29 15:32:38 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.64 2005/09/30 15:11:24 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -63,6 +63,10 @@
 		      (@@/ (cont admin-system)) "システム管理"))
 		(td/ (a/cont/
 		      (@@/ (cont unit-list)) "ユニット一覧"))
+                (if (not (kahua-current-user))
+		    (td/
+                     (a/cont/ (@@/ (cont mypage))
+                              "[[login]]"))"")
 		(if (kahua-current-user)
 		    (td/ (a/cont/
 			  (@@/ (cont change-passwd)) "パスワード変更")) "")
@@ -135,7 +139,7 @@
 				  (checker kuser))
 		       (if user
 			   (k user)
-			   (login-pc-page k checker "アカウントが必要です"))))))
+			   (login-pc-page k checker message))))))
       (table/
        (tr/ (th/ "Login Name")
 	    (td/ (input/ (@/ (type "text") (name "name")
@@ -388,7 +392,9 @@
 		       "削除"))
 		 (td/ (a/cont/
 		       (@@/ (cont musume-list (key-of u)))
-		       (unit-name-of u)))
+		       (unit-name-of u))
+                      (format " (~a)"
+                              (- (ref u 'next-musume-no) 1)))
 		 (td/ (description-of u))
 		 (td/ (string-join (filter (lambda (f)
 					     (not (equal? "   " f)))
@@ -570,7 +576,8 @@
 (define-entry (musume-list unit-id :keyword priority status assign type limit)
   (let* ((*default-limit* 200)
 	 (*limits-list* '("" "20" "50" "200" "500" "1000"))
-	 (*limit* (or limit (x->string *default-limit*))))
+	 (*limit* (or limit (x->string *default-limit*)))
+         (*status-dict* (make-hash-table 'string=?)))
     (let* ((p-filter (if (or (not priority)
 			     (equal? "*all*" priority))
 			 identity
@@ -587,10 +594,16 @@
 			     (equal? "*all*" type))
 			 identity
 			 (lambda (m) (equal? (type-of m) type))))
-	   (and-filter (lambda (m) (and (p-filter m)
-					(s-filter m)
-					(a-filter m)
-					(t-filter m))))
+	   (and-filter (lambda (m)
+                         (let1 status (status-of m)
+                           (hash-table-put!
+                            *status-dict*
+                            status
+                            (+ (hash-table-get *status-dict* status 0) 1)))
+                         (and (p-filter m)
+                              (s-filter m)
+                              (a-filter m)
+                              (t-filter m))))
 	   (limiter (if (string-null? *limit*)
 			identity
 			(lambda (ms)
@@ -692,6 +705,12 @@
 				      ((> 100 (length musumes)) #`",(length musumes)人の娘。に萌えました")
 				      ((> 500 (length musumes)) #`",(length musumes)人もの娘。に萌えました(萌えすぎです)")
 				      (else #`"なんと,(length musumes)人もの娘。に萌えまつきました orz"))
+                                (div/ (@/ (id "status-num"))
+                                 (map/ (lambda (s)
+                                         (span/ (a/cont/ (@@/ (cont musume-list unit-id  `(status ,s)))
+                                                         (disp-name-of (find-kahua-instance <status> s)))
+                                                (format "(~a) " (hash-table-get *status-dict* s 0))))
+                                       (statuss-of (find-kahua-instance <unit> unit-id))))
                                 (tr/ (th/ "No.")
                                      (th/ "タイトル")
                                      (th/ "優先度")
@@ -709,7 +728,8 @@
 					   (x->string (mno-of m))))
 				     (td/ (a/cont/
 					   (@@/ (cont melody-list (unit-id-of m) (key-of m)))
-					   (mname-of m)))
+					   (mname-of m))
+                                          (format " (~a)" (length (musics-of  m))))
 				     (td/ (disp-name-of
 					   (find-kahua-instance
 					    <priority> (priority-of m))))
@@ -1082,5 +1102,5 @@
 ;
 ; initialization
 ;
-   
+
 (initialize-main-proc kagoiri)
