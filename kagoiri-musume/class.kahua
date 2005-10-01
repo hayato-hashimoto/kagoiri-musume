@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.19 2005/10/01 12:42:40 cut-sea Exp $
+;; $Id: class.kahua,v 1.20 2005/10/01 13:05:51 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -82,7 +82,7 @@
 	  ))))
 
 (define (active? unit)
-  (not (ref unit 'fallout)))
+  (not (fallout-of unit)))
 
 (define (all-units)
   (filter active?
@@ -154,12 +154,12 @@
 		     (find-kahua-instance <music> id))
 		   (musics-of obj)))))
   (let* ((unit (unit-id-of obj)) ;;DSC *** unit-id-of -> unit-of
-	 (mno (slot-ref unit 'next-musume-no)))
+	 (mno (next-musume-no-of unit)))
     ;; for restart
     (if (not (mno-of obj))
 	(begin
-	  (set! (slot-ref obj 'musume-no) mno)
-	  (set! (slot-ref unit 'next-musume-no) (+ mno 1))))))
+	  (set! (mno-of obj) mno)
+	  (set! (next-musume-no-of unit) (+ mno 1))))))
 
 (define-method next-seq-no ((obj <musume>))
   (+ 1 (length (musics-of obj))))
@@ -257,7 +257,7 @@
 		    :init-value #f :accessor email-of)
    ;; delete flag
    (delete          :allocation :persistent :init-keyword :delete
-		    :init-value #f :accessor get-delete-flag)
+		    :init-value #f :accessor delete-of)
    ))
 
 ;; comment
@@ -266,7 +266,7 @@
 
 
 (define (lucky-fan? fan-prop)
-  (not (ref fan-prop 'delete)))
+  (not (delete-of fan-prop)))
 
 (define (all-fans)
   (map fan-name-of
@@ -313,7 +313,7 @@
 ;;
 (define-class <priority> (<kahua-persistent-base>)
   ((priorityid       :allocation :persistent :init-keyword :priorityid
-		     :accessor id-of)
+		     :accessor code-of)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (level            :allocation :persistent :init-keyword :level
@@ -323,12 +323,12 @@
 
 ;; comment
 (define-method key-of ((self <priority>))
-  (priorityid-of self))
+  (code-of self))
 
 ;; クラス再定義の仕込み
 ;; 以降は使わない
 (define-method priorityid-of ((obj <priority>))
-  (id-of obj))
+  (code-of obj))
 
 (define-method enable? ((obj <priority>))
   (not (delete-of obj)))
@@ -358,7 +358,7 @@
 ;;
 (define-class <status> (<kahua-persistent-base>)
   ((statusid         :allocation :persistent :init-keyword :statusid
-		     :accessor id-of)
+		     :accessor code-of)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
@@ -366,15 +366,15 @@
 
 ;; comment
 (define-method key-of ((self <status>))
-  (statusid-of self))
+  (code-of self))
 
 ;; クラス再定義の仕込み
 ;; 以降は使わない
 (define-method statusid-of ((obj <status>))
-  (id-of obj))
+  (code-of obj))
 
 (define-method enable? ((obj <status>))
-  (not (ref obj 'delete)))
+  (not (delete-of obj)))
 
 (define (all-statuss)
   (filter enable? (make-kahua-collection <status>)))
@@ -400,7 +400,7 @@
 ;;
 (define-class <type> (<kahua-persistent-base>)
   ((typeid           :allocation :persistent :init-keyword :typeid
-		     :accessor id-of)
+		     :accessor code-of)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
@@ -408,15 +408,15 @@
 
 ;; comment
 (define-method key-of ((self <type>))
-  (typeid-of self))
+  (code-of self))
 
 ;; クラス再定義の仕込み
 ;; 以降は使わない
 (define-method typeid-of ((obj <type>))
-  (id-of obj))
+  (code-of obj))
 
 (define-method enable? ((obj <type>))
-  (not (ref obj 'delete)))
+  (not (delete-of obj)))
 
 (define (all-types)
   (filter enable? (make-kahua-collection <type>)))
@@ -442,7 +442,7 @@
 ;;
 (define-class <category> (<kahua-persistent-base>)
   ((categoryid       :allocation :persistent :init-keyword :categoryid
-		     :accessor id-of)
+		     :accessor code-of)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
@@ -450,15 +450,15 @@
 
 ;; comment
 (define-method key-of ((self <category>))
-  (categoryid-of self))
+  (code-of self))
 
 ;; クラス再定義の仕込み
 ;; 以降は使わない
 (define-method categoryid-of ((obj <category>))
-  (id-of obj))
+  (code-of obj))
 
 (define-method enable? ((obj <category>))
-  (not (ref obj 'delete)))
+  (not (delete-of obj)))
 
 (define (all-categories)
   (filter enable? (make-kahua-collection <category>)))

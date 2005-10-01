@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.69 2005/10/01 12:28:13 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.70 2005/10/01 13:05:51 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -73,7 +73,7 @@
 			     (set! (ref fan 'role-alist) (if (equal? "on" admin)
 							     '(admin user)
 							     '(user)))
-			     (set! (get-delete-flag fan-prop) (if (equal? "on" delete) #t #f))
+			     (set! (delete-of fan-prop) (if (equal? "on" delete) #t #f))
 			     ))
 		       )
 		 (redirect-page "admin-system"))))
@@ -85,7 +85,7 @@
 				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
 			   "＊" ""))
 		  (td/ (fan-name-of f)) (td/ (email-of f))
-		  (td/ (if (get-delete-flag f) "＊" ""))))
+		  (td/ (if (delete-of f) "＊" ""))))
 	   (filter (lambda (f)
 		     (not (equal? "   " (fan-name-of f))))
 		   (make-kahua-collection <fan-property>))))
@@ -137,7 +137,7 @@
      (thead/ "登録優先度一覧")
      (tr/ (th/ "優先度ID") (th/ "表示名") (th/ "レベル") (th/ "無効"))
      (map/ (lambda (p)
-	     (tr/ (td/ (priorityid-of p)) (td/ (disp-name-of p))
+	     (tr/ (td/ (code-of p)) (td/ (disp-name-of p))
 		  (td/ (x->string (level-of p)))
 		  (td/ (if (delete-of p) "＊" ""))))
 	   (map identity
@@ -170,7 +170,7 @@
      (thead/ "登録ステータス一覧")
      (tr/ (th/ "ステータスID") (th/ "表示名") (th/ "無効"))
      (map/ (lambda (s)
-	     (tr/ (td/ (statusid-of s)) (td/ (disp-name-of s))
+	     (tr/ (td/ (code-of s)) (td/ (disp-name-of s))
 		  (td/ (if (delete-of s) "＊" ""))))
 	   (map identity
 		(make-kahua-collection <status>))))
@@ -198,7 +198,7 @@
      (thead/ "登録タイプ一覧")
      (tr/ (th/ "タイプID") (th/ "表示名") (th/ "無効"))
      (map/ (lambda (t)
-	     (tr/ (td/ (typeid-of t)) (td/ (disp-name-of t))
+	     (tr/ (td/ (code-of t)) (td/ (disp-name-of t))
 		  (td/ (if (delete-of t) "＊" ""))))
 	   (map identity
 		(make-kahua-collection <type>))))
@@ -226,7 +226,7 @@
      (thead/ "登録カテゴリ一覧")
      (tr/ (th/ "カテゴリID") (th/ "表示名") (th/ "無効"))
      (map/ (lambda (c)
-	     (tr/ (td/ (categoryid-of c)) (td/ (disp-name-of c))
+	     (tr/ (td/ (code-of c)) (td/ (disp-name-of c))
 		  (td/ (if (delete-of c) "＊" ""))))
 	   (map identity
 		(make-kahua-collection <category>))))
@@ -294,25 +294,25 @@
      (tr/ (td/
 	   (select/ (@/ (name "priority") (size "5") (multiple "true"))
 		    (map/ (lambda (p)
-			    (option/ (@/ (value (priorityid-of p)))
+			    (option/ (@/ (value (code-of p)))
 				     (disp-name-of p)))
 			  (all-priorities))))
 	  (td/
 	   (select/ (@/ (name "status") (size "5") (multiple "true"))
 		    (map/ (lambda (s)
-			    (option/ (@/ (value (statusid-of s)))
+			    (option/ (@/ (value (code-of s)))
 				     (disp-name-of s)))
 			  (all-statuss))))
 	  (td/
 	   (select/ (@/ (name "type") (size "5") (multiple "true"))
 		    (map/ (lambda (t)
-			    (option/ (@/ (value (typeid-of t)))
+			    (option/ (@/ (value (code-of t)))
 				     (disp-name-of t)))
 			  (all-types))))
 	  (td/
 	   (select/ (@/ (name "category") (size "5") (multiple "true"))
 		    (map/ (lambda (c)
-			    (option/ (@/ (value (categoryid-of c)))
+			    (option/ (@/ (value (code-of c)))
 				     (disp-name-of c)))
 			  (all-categories))))))
     (table/
@@ -365,28 +365,28 @@
        (tr/ (td/
 	     (select/ (@/ (name "priority") (size "5") (multiple "true"))
 		      (map/ (lambda (p)
-                              (option/ (@/ (value (priorityid-of p))
+                              (option/ (@/ (value (code-of p))
                                            (selected (has-priority? unit p)))
                                        (disp-name-of p)))
 			    (all-priorities))))
 	    (td/
 	     (select/ (@/ (name "status") (size "5") (multiple "true"))
 		      (map/ (lambda (s)
-                              (option/ (@/ (value (statusid-of s))
+                              (option/ (@/ (value (code-of s))
                                            (selected (has-status? unit s)))
                                        (disp-name-of s)))
 			    (all-statuss))))
 	    (td/
 	     (select/ (@/ (name "type") (size "5") (multiple "true"))
 		      (map/ (lambda (t)
-                              (option/ (@/ (value (typeid-of t))
+                              (option/ (@/ (value (code-of t))
                                            (selected (has-type? unit t)))
                                        (disp-name-of t)))
 			    (all-types))))
 	    (td/
 	     (select/ (@/ (name "category") (size "5") (multiple "true"))
 		      (map/ (lambda (c)
-                              (option/ (@/ (value (categoryid-of c))
+                              (option/ (@/ (value (code-of c))
                                            (selected (has-category? unit c)))
                                        (disp-name-of c)))
 			    (all-categories))))))
@@ -442,11 +442,11 @@
     (let* ((p-filter (if (or (not priority)
 			     (equal? "*all*" priority))
 			 identity
-			 (lambda (m) (equal? (priorityid-of (priority-of m)) priority))))
+			 (lambda (m) (equal? (code-of (priority-of m)) priority))))
 	   (s-filter (if (or (not status)
 			     (equal? "*all*" status))
 			 identity
-			 (lambda (m) (equal? (statusid-of (status-of m)) status))))
+			 (lambda (m) (equal? (code-of (status-of m)) status))))
 	   (a-filter (if (or (not assign)
 			     (equal? "   " assign))
 			 identity
@@ -454,9 +454,9 @@
 	   (t-filter (if (or (not type)
 			     (equal? "*all*" type))
 			 identity
-			 (lambda (m) (equal? (typeid-of (type-of m)) type))))
+			 (lambda (m) (equal? (code-of (type-of m)) type))))
 	   (and-filter (lambda (m)
-                         (let1 statusid (statusid-of (status-of m))
+                         (let1 statusid (code-of (status-of m))
                            (hash-table-put!
                             *status-dict*
                             statusid
@@ -497,10 +497,10 @@
 			 (node-set
 			  (cons (option/ (@/ (value "*all*")) "全て")
 				(map (lambda (p)
-				       (if (equal? (priorityid-of p) priority)
-					   (option/ (@/ (value (priorityid-of p)) (selected "true"))
+				       (if (equal? (code-of p) priority)
+					   (option/ (@/ (value (code-of p)) (selected "true"))
 						    (disp-name-of p))
-					   (option/ (@/ (value (priorityid-of p)))
+					   (option/ (@/ (value (code-of p)))
 						    (disp-name-of p))))
                                      (priorities-of unit))))))
 		       (td/
@@ -509,10 +509,10 @@
 			 (node-set
 			  (cons (option/ (@/ (value "*all*")) "全て")
 				(map (lambda (s)
-				       (if (equal? (statusid-of s) status)
-					   (option/ (@/ (value (statusid-of s)) (selected "true"))
+				       (if (equal? (code-of s) status)
+					   (option/ (@/ (value (code-of s)) (selected "true"))
 						    (disp-name-of s))
-					   (option/ (@/ (value (statusid-of s)))
+					   (option/ (@/ (value (code-of s)))
 						    (disp-name-of s))))
                                      (statuss-of unit))))))
 		       (td/
@@ -531,10 +531,10 @@
 			 (node-set
 			  (cons (option/ (@/ (value "*all*")) "全て")
 				(map (lambda (t)
-				       (if (equal? (typeid-of t) type)
-					   (option/ (@/ (value (typeid-of t)) (selected "true"))
+				       (if (equal? (code-of t) type)
+					   (option/ (@/ (value (code-of t)) (selected "true"))
 						    (disp-name-of t))
-					   (option/ (@/ (value (typeid-of t)))
+					   (option/ (@/ (value (code-of t)))
 						    (disp-name-of t))))
                                      (types-of unit))))))
 		       (td/
@@ -560,7 +560,7 @@
 				      (else #`"なんと,(length musumes)人もの娘。に萌えまつきました orz"))
                                 (div/ (@/ (id "status-num"))
                                  (map/ (lambda (s)
-                                         (let1 statusid (statusid-of s)
+                                         (let1 statusid (code-of s)
                                            (span/ (a/cont/ (@@/ (cont musume-list unit-id  `(status ,statusid)))
                                                            (disp-name-of s))
                                                   (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
@@ -575,7 +575,7 @@
                         (tbody/
 			(map/ (lambda (m)
                                 (let1 status (status-of m)
-				(tr/ (@/ (class #`"status-,(statusid-of status)"))
+				(tr/ (@/ (class #`"status-,(code-of status)"))
                                      (td/ (a/cont/
 					   (@@/ (cont musume-edit (key-of m)))
 					   (x->string (mno-of m))))
@@ -666,25 +666,25 @@
 	(td/
 	 (select/ (@/ (name "priority"))
 		  (map/ (lambda (p)
-			  (option/ (@/ (value (priorityid-of p)))
+			  (option/ (@/ (value (code-of p)))
 				   (disp-name-of p)))
                         (priorities-of unit))))
 	(td/
 	 (select/ (@/ (name "status"))
 		  (map/ (lambda (s)
-			  (option/ (@/ (value (statusid-of s)))
+			  (option/ (@/ (value (code-of s)))
 				   (disp-name-of s)))
                         (statuss-of unit))))
 	(td/
 	 (select/ (@/ (name "type"))
 		  (map/ (lambda (t)
-			  (option/ (@/ (value (typeid-of t)))
+			  (option/ (@/ (value (code-of t)))
 				   (disp-name-of t)))
                         (types-of unit))))
 	(td/
 	 (select/ (@/ (name "category"))
 		  (map/ (lambda (c)
-			  (option/ (@/ (value (categoryid-of c)))
+			  (option/ (@/ (value (code-of c)))
 				   (disp-name-of c)))
                         (categories-of unit))))
 	(td/
@@ -800,10 +800,10 @@
 		      (map/ (lambda (p)
 			      (if (eq? p
                                        (priority-of musume))
-				  (option/ (@/ (value (priorityid-of p))
+				  (option/ (@/ (value (code-of p))
 					       (selected "true"))
 					   (disp-name-of p))
-				  (option/ (@/ (value (priorityid-of p)))
+				  (option/ (@/ (value (code-of p)))
 					   (disp-name-of p))))
 			    ;; sequencial for time.
                             (priorities-of unit))))
@@ -812,10 +812,10 @@
 		      (map/ (lambda (s)
 			      (if (eq? s
                                        (status-of musume))
-				  (option/ (@/ (value (statusid-of s))
+				  (option/ (@/ (value (code-of s))
 					       (selected "true"))
 					   (disp-name-of s))
-				  (option/ (@/ (value (statusid-of s)))
+				  (option/ (@/ (value (code-of s)))
 					   (disp-name-of s))))
 			    ;; sequencial for time.
                             (statuss-of unit))))
@@ -824,10 +824,10 @@
 		      (map/ (lambda (t)
 			      (if (eq? t
                                        (type-of musume))
-				  (option/ (@/ (value (typeid-of t))
+				  (option/ (@/ (value (code-of t))
 					       (selected "true"))
 					   (disp-name-of t))
-				  (option/ (@/ (value (typeid-of t)))
+				  (option/ (@/ (value (code-of t)))
 					   (disp-name-of t))))
                             (types-of unit))))
 	    (td/
@@ -870,7 +870,7 @@
                (tbody/
                 (map/ (lambda (m)
                         (let1 status (status-of m)
-                          (tr/ (@/ (class #`"status-,(statusid-of status)"))
+                          (tr/ (@/ (class #`"status-,(code-of status)"))
                                (td/ (label-of m))
                                (td/ (disp-name-of (priority-of m)))
                                (td/ (disp-name-of status))
