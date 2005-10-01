@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.20 2005/10/01 13:05:51 cut-sea Exp $
+;; $Id: class.kahua,v 1.21 2005/10/01 16:12:21 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -321,6 +321,34 @@
    (delete           :allocation :persistent :init-keyword :delete
 		     :init-value #f :accessor delete-of)))
 
+#|
+;; クラス再定義用
+;; どうやって切替えるか
+;; 走行中にreplにつないで以下を実行するか
+;; いまだ試行中
+(map identity (make-kahua-collection <priority>))
+(is-a? (car (map identity (make-kahua-collection <priority>))) <priority>)
+(define $$priority$$ (map (cut key-of <>) (make-kahua-collection <priority>)))
+
+(define <old-priority> <priority>)
+
+(define-class <priority> (<kahua-persistent-base>)
+  ((code             :allocation :persistent :init-keyword :code
+		     :accessor code-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (level            :allocation :persistent :init-keyword :level
+		     :init-value 0 :accessor level-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f :accessor delete-of)))
+
+(define-method change-class ((obj <old-priority>) (new-class <class>))
+  (let ((id (slot-ref-using-class <old-priority> obj 'priorityid)))
+    (next-method)
+    (slot-set-using-class! new-class obj 'code id)))
+|#
+
+
 ;; comment
 (define-method key-of ((self <priority>))
   (code-of self))
@@ -343,7 +371,7 @@
     (if include? #t #f)))
 
 ;; 新データ向け
-(define-method has-priority? ((unit <unit>) priority)
+(define-method has? ((unit <unit>) (priority <priority>))
   (if (memq priority (priorities-of unit)) #t #f))
 
 
@@ -386,7 +414,7 @@
     (if include? #t #f)))
 
 ;; 新データ向け
-(define-method has-status? ((unit <unit>) status)
+(define-method has? ((unit <unit>) (status <status>))
   (if (memq status (statuss-of unit)) #t #f))
 
 #|
@@ -428,7 +456,7 @@
     (if include? #t #f)))
 
 ;; 新データ向け
-(define-method has-type? ((unit <unit>) type)
+(define-method has? ((unit <unit>) (type <type>))
   (if (memq type (types-of unit)) #t #f))
 
 #|
@@ -470,7 +498,7 @@
     (if include? #t #f)))
 
 ;; 新データ向け
-(define-method has-category? ((unit <unit>) category)
+(define-method has? ((unit <unit>) (category <category>))
   (if (memq category (categories-of unit)) #t #f))
 
 (define (id-list->obj-list class ids)

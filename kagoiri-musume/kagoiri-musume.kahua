@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.70 2005/10/01 13:05:51 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.71 2005/10/01 16:12:21 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -50,6 +50,10 @@
 
    ;;暫定コード
    (a/cont/ (@@/ (cont (lambda ()
+			 (make-kahua-collection <priority>)
+			 (make-kahua-collection <status>)
+			 (make-kahua-collection <type>)
+			 (make-kahua-collection <category>)
 			 (make-kahua-collection <unit>)
 			 (make-kahua-collection <musume>)
 			 (make-kahua-collection <music>)
@@ -291,30 +295,14 @@
 	  (th/ "ステータス")
 	  (th/ "タイプ")
 	  (th/ "カテゴリ"))
-     (tr/ (td/
-	   (select/ (@/ (name "priority") (size "5") (multiple "true"))
-		    (map/ (lambda (p)
-			    (option/ (@/ (value (code-of p)))
-				     (disp-name-of p)))
-			  (all-priorities))))
-	  (td/
-	   (select/ (@/ (name "status") (size "5") (multiple "true"))
-		    (map/ (lambda (s)
-			    (option/ (@/ (value (code-of s)))
-				     (disp-name-of s)))
-			  (all-statuss))))
-	  (td/
-	   (select/ (@/ (name "type") (size "5") (multiple "true"))
-		    (map/ (lambda (t)
-			    (option/ (@/ (value (code-of t)))
-				     (disp-name-of t)))
-			  (all-types))))
-	  (td/
-	   (select/ (@/ (name "category") (size "5") (multiple "true"))
-		    (map/ (lambda (c)
-			    (option/ (@/ (value (code-of c)))
-				     (disp-name-of c)))
-			  (all-categories))))))
+     (tr/ (map/ (lambda (n items)
+		  (td/ (select/ (@/ (name n) (size "5") (multiple "true"))
+				(map/ (lambda (item)
+					(option/ (@/ (value (code-of item)))
+						 (disp-name-of item)))
+				      items))))
+		(list "priority" "status" "type" "category")
+		(list (all-priorities) (all-statuss) (all-types) (all-categories)))))
     (table/
      (tr/ (td/ "ユニット名")
 	  (td/
@@ -362,34 +350,15 @@
 	    (th/ "ステータス")
 	    (th/ "タイプ")
 	    (th/ "カテゴリ"))
-       (tr/ (td/
-	     (select/ (@/ (name "priority") (size "5") (multiple "true"))
-		      (map/ (lambda (p)
-                              (option/ (@/ (value (code-of p))
-                                           (selected (has-priority? unit p)))
-                                       (disp-name-of p)))
-			    (all-priorities))))
-	    (td/
-	     (select/ (@/ (name "status") (size "5") (multiple "true"))
-		      (map/ (lambda (s)
-                              (option/ (@/ (value (code-of s))
-                                           (selected (has-status? unit s)))
-                                       (disp-name-of s)))
-			    (all-statuss))))
-	    (td/
-	     (select/ (@/ (name "type") (size "5") (multiple "true"))
-		      (map/ (lambda (t)
-                              (option/ (@/ (value (code-of t))
-                                           (selected (has-type? unit t)))
-                                       (disp-name-of t)))
-			    (all-types))))
-	    (td/
-	     (select/ (@/ (name "category") (size "5") (multiple "true"))
-		      (map/ (lambda (c)
-                              (option/ (@/ (value (code-of c))
-                                           (selected (has-category? unit c)))
-                                       (disp-name-of c)))
-			    (all-categories))))))
+       (tr/ (map/ (lambda (n items)
+		    (td/ (select/ (@/ (name n) (size "5") (multiple "true"))
+				  (map/ (lambda (item)
+					  (option/ (@/ (value (code-of item))
+						       (selected (has? unit item)))
+						   (disp-name-of item)))
+					items))))
+		  (list "priority" "status" "type" "category")
+		  (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
       (table/
        (tr/ (td/ "ユニット名")
 	    (td/
