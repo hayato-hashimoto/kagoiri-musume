@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.66 2005/10/01 08:56:04 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.67 2005/10/01 09:21:47 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -505,42 +505,30 @@
        (tr/ (td/
 	     (select/ (@/ (name "priority") (size "5") (multiple "true"))
 		      (map/ (lambda (p)
-			      (if (has-priority? unit-id p)
-				  (option/ (@/ (value (priorityid-of p))
-					       (selected "true"))
-					   (disp-name-of p))
-				  (option/ (@/ (value (priorityid-of p)))
-					   (disp-name-of p))))
+                              (option/ (@/ (value (priorityid-of p))
+                                           (selected (has-priority? unit p)))
+                                       (disp-name-of p)))
 			    (all-priorities))))
 	    (td/
 	     (select/ (@/ (name "status") (size "5") (multiple "true"))
 		      (map/ (lambda (s)
-			      (if (has-status? unit-id  s)
-				  (option/ (@/ (value (statusid-of s))
-					       (selected "true"))
-					   (disp-name-of s))
-				  (option/ (@/ (value (statusid-of s)))
-					   (disp-name-of s))))
+                              (option/ (@/ (value (statusid-of s))
+                                           (selected (has-status? unit s)))
+                                       (disp-name-of s)))
 			    (all-statuss))))
 	    (td/
 	     (select/ (@/ (name "type") (size "5") (multiple "true"))
 		      (map/ (lambda (t)
-			      (if (has-type? unit-id t)
-				  (option/ (@/ (value (typeid-of t))
-					       (selected "true"))
-					   (disp-name-of t))
-				  (option/ (@/ (value (typeid-of t)))
-					   (disp-name-of t))))
+                              (option/ (@/ (value (typeid-of t))
+                                           (selected (has-type? unit t)))
+                                       (disp-name-of t)))
 			    (all-types))))
 	    (td/
 	     (select/ (@/ (name "category") (size "5") (multiple "true"))
 		      (map/ (lambda (c)
-			      (if (has-category? unit-id c)
-				  (option/ (@/ (value (categoryid-of c))
-					       (selected "true"))
-					   (disp-name-of c))
-				  (option/ (@/ (value (categoryid-of c)))
-					   (disp-name-of c))))
+                              (option/ (@/ (value (categoryid-of c))
+                                           (selected (has-category? unit c)))
+                                       (disp-name-of c)))
 			    (all-categories))))))
       (table/
        (tr/ (td/ "ユニット名")
@@ -557,10 +545,12 @@
 	    (td/
 	     (select/ (@/ (name "fans") (size "5") (multiple "true"))
 		      (map/ (lambda (f)
-                              (let1 f (fan-name-of f)
-                                (option/ (@/ (value f) (selected "true")) f)
-                                (option/ (@/ (value f)) f)))
-			    (fans-of unit)))))
+                              (let1 fan-name (fan-name-of f)
+                                (option/ (@/ (value fan-name)
+                                             (selected (fan-to? unit f)))
+                                         fan-name)))
+                            (filter lucky-fan?
+                                    (make-kahua-collection <fan-property>))))))
        )
       (input/ (@/ (type "submit") (name "submit") (value "確定"))))
      )))
