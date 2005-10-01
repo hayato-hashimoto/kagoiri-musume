@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.72 2005/10/01 16:19:28 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.73 2005/10/01 16:44:09 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -636,30 +636,15 @@
 	    (th/ "カテゴリ")
 	    (th/ "アサイン"))
        (tr/
-	(td/
-	 (select/ (@/ (name "priority"))
-		  (map/ (lambda (p)
-			  (option/ (@/ (value (code-of p)))
-				   (disp-name-of p)))
-                        (priorities-of unit))))
-	(td/
-	 (select/ (@/ (name "status"))
-		  (map/ (lambda (s)
-			  (option/ (@/ (value (code-of s)))
-				   (disp-name-of s)))
-                        (statuss-of unit))))
-	(td/
-	 (select/ (@/ (name "type"))
-		  (map/ (lambda (t)
-			  (option/ (@/ (value (code-of t)))
-				   (disp-name-of t)))
-                        (types-of unit))))
-	(td/
-	 (select/ (@/ (name "category"))
-		  (map/ (lambda (c)
-			  (option/ (@/ (value (code-of c)))
-				   (disp-name-of c)))
-                        (categories-of unit))))
+	(map/ (lambda (n refer)
+		(td/ (select/ (@/ (name n))
+			      (map/ (lambda (item)
+				      (option/ (@/ (value (code-of item)))
+					       (disp-name-of item)))
+				    (refer unit)))))
+	      (list "priority" "status" "type" "category")
+	      (list priorities-of statuss-of types-of categories-of))
+
 	(td/
 	 (select/ (@/ (name "assign"))
 		  (map/ (lambda (a)
@@ -768,41 +753,20 @@
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
-       (tr/ (td/
-	     (select/ (@/ (name "priority"))
-		      (map/ (lambda (p)
-			      (if (eq? p
-                                       (priority-of musume))
-				  (option/ (@/ (value (code-of p))
-					       (selected "true"))
-					   (disp-name-of p))
-				  (option/ (@/ (value (code-of p)))
-					   (disp-name-of p))))
-			    ;; sequencial for time.
-                            (priorities-of unit))))
-	    (td/
-	     (select/ (@/ (name "status"))
-		      (map/ (lambda (s)
-			      (if (eq? s
-                                       (status-of musume))
-				  (option/ (@/ (value (code-of s))
-					       (selected "true"))
-					   (disp-name-of s))
-				  (option/ (@/ (value (code-of s)))
-					   (disp-name-of s))))
-			    ;; sequencial for time.
-                            (statuss-of unit))))
-	    (td/
-	     (select/ (@/ (name "type"))
-		      (map/ (lambda (t)
-			      (if (eq? t
-                                       (type-of musume))
-				  (option/ (@/ (value (code-of t))
-					       (selected "true"))
-					   (disp-name-of t))
-				  (option/ (@/ (value (code-of t)))
-					   (disp-name-of t))))
-                            (types-of unit))))
+       (tr/ (map/ (lambda (n refer items-of)
+		    (td/ (select/ (@/ (name n))
+				  (map/ (lambda (item)
+					  (if (eq? item (refer musume))
+					      (option/ (@/ (value (code-of item))
+							   (selected "true"))
+						       (disp-name-of item))
+					      (option/ (@/ (value (code-of item)))
+						       (disp-name-of item))))
+					(items-of unit)))))
+		  (list "priority" "status" "type")
+		  (list priority-of status-of type-of)
+		  (list priorities-of statuss-of types-of))
+
 	    (td/
 	     (select/ (@/ (name "assign"))
 		      (map/ (lambda (a)
