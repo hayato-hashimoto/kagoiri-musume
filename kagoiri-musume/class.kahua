@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.14 2005/10/01 05:18:15 cut-sea Exp $
+;; $Id: class.kahua,v 1.15 2005/10/01 05:42:14 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -56,8 +56,13 @@
 ;; データ移行向け
 (define-method initialize ((obj <unit>) initargs)
   (next-method)
-  (let1 f (car (fans-of obj))
-    (if (is-a? f <string>)
+  (let ((attr (append (fans-of obj)
+		      (priorities-of obj)
+		      (statuss-of obj)
+		      (types-of obj)
+		      (categories-of obj))))
+    (if (and (not (null? attr))
+	     (is-a? (car attr) <string>))
 	(begin
 	  (set! (fans-of obj) (map (lambda (f)
 				     (find-kahua-instance <fan-property> f))
