@@ -1,0 +1,148 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: page.kahua,v 1.1 2005/10/01 12:11:32 cut-sea Exp $
+;;
+
+;
+; page base
+;
+(define (page-base . body)
+  (html/
+   (head/ (title/ *kagoiri-musume-title*)
+	  (meta/ (@/ (http-equiv "Content-type")
+		     (content "text/html; charset=euc-jp")))
+	  (link/ (@/ (rel "stylesheet") (type "text/css")
+		     (href (kahua-static-document-url
+			    "kagoiri-musume/kagoiri-musume.css")))))
+   (body/
+    (node-set body))))
+
+;
+; simple page for no permission check
+;
+(define (simple-page . body)
+  (page-base
+   (h1/ *kagoiri-musume-title*)
+   (hr/)
+   (node-set body)))
+
+;
+; kagoiri-musume-page-template
+;
+(define (kagoiri-page . body)
+  (page-base
+   ;; navi-link
+   (table/ (tr/ (td/ (h1/ *kagoiri-musume-title*))
+		(td/ (a/cont/
+		      (@@/ (cont kagoiri)) "トップ"))
+		(td/ (a/cont/
+		      (@@/ (cont admin-system)) "システム管理"))
+		(td/ (a/cont/
+		      (@@/ (cont unit-list)) "ユニット一覧"))
+                (if (not (kahua-current-user))
+		    (td/
+                     (a/cont/ (@@/ (cont mypage))
+                              "[[login]]"))"")
+		(if (kahua-current-user)
+		    (td/ (a/cont/
+			  (@@/ (cont change-passwd)) "パスワード変更")) "")
+		(if (kahua-current-user)
+		    (td/ (a/cont/
+			  (@@/ (cont logout)) "[[Logout]]")) "")
+                (if (kahua-current-user)
+                    (td/ (form/cont/
+                        (@@/ (cont search))
+                        "検索:"
+                        (input/ (@/ (type "text") (name "word") (size 10))))) "")
+		(if (kahua-current-user)
+		    (td/
+                     " Now login:"
+                     (a/cont/ (@@/ (cont mypage))
+                              (ref (kahua-current-user) 'login-name))) "")
+                ))
+   (hr/)
+   (node-set body)))
+
+;
+; permission check page
+;
+; [checker]
+; checker is a predicate for <kahua-user> object.
+; return value is #f or <kahua-user> object.
+; So, at default, this template check whether kahua-user or not,
+; therefore, you write additional check.
+; If you care only kahua-user or not, you set identity as checker.
+;
+(define-syntax permission-check-page
+  (syntax-rules ()
+    ((_ checker msg body ...)
+     (begin
+       (or (and (kahua-current-user)
+                (checker (kahua-current-user)))
+           ;; new account set
+           (set! (kahua-current-user)
+               (ref (login-pc-page #f checker msg) 'login-name)))
+       (kagoiri-page (node-set (list body ...)))))))
+
+
+;
+; maybe, redirect-page will called at the end of begin-body.
+;
+(define-syntax permission-check-logic
+  (syntax-rules ()
+    ((_ checker msg begin-body)
+     (begin
+       (or (and (kahua-current-user)
+                (checker (kahua-current-user)))
+           ;; new account set
+           (set! (kahua-current-user)
+               (ref (login-pc-page #f checker msg) 'login-name)))
+       begin-body))))
+
+;
+; partial continuation login page
+;
+(define (login-pc-page cont checker message . errmsg)
+  (let/pc k
+      (if cont
+	  (set! k cont))
+    (kagoiri-page
+     (h1/ "籠入娘。へようこそ")
+     (h3/ message)
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword name pass)
+		     (let1 user (and-let* ((kuser (kahua-check-user name pass)))
+				  (checker kuser))
+		       (if user
+			   (k user)
+			   (login-pc-page k checker message))))))
+      (table/
+       (tr/ (th/ "Login Name")
+	    (td/ (input/ (@/ (type "text") (name "name")
+			     (value "")))))
+       (tr/ (th/ "Password")
+	    (td/ (input/ (@/ (type "password") (name "pass")
+			     (value ""))))))
+      (input/ (@/ (type "submit") (name "submit") (value "login")))
+      (map/ (lambda (m)
+	      (p/ (@/ (class "warning")) m))
+	    errmsg)))))
+
+(define-entry (logout)
+  (set! (kahua-current-user) #f)
+  (redirect-page))
+
+;
+; redirect page
+;
+(define (redirect-page . path)
+  (let1 path (get-optional path "")
+    (html/ (extra-header/
+	    (@/ (name "Status") (value "302 Moved")))
+	   (extra-header/
+	    (@/ (name "Location")
+		(value (string-append (kahua-self-uri-full) path)))))))
+
