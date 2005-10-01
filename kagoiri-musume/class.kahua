@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.13 2005/09/29 15:32:38 cut-sea Exp $
+;; $Id: class.kahua,v 1.14 2005/10/01 05:18:15 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -53,6 +53,29 @@
   (unit-name-of self))
 |#
 
+;; データ移行向け
+(define-method initialize ((obj <unit>) initargs)
+  (next-method)
+  (let1 f (car (fans-of obj))
+    (if (is-a? f <string>)
+	(begin
+	  (set! (fans-of obj) (map (lambda (f)
+				     (find-kahua-instance <fan-property> f))
+				   (fans-of obj)))
+	  (set! (priorities-of obj) (map (lambda (p)
+					   (find-kahua-instance <priority> p))
+					 (priorities-of obj)))
+	  (set! (statuss-of obj) (map (lambda (s)
+					(find-kahua-instance <status> s))
+				      (statuss-of obj)))
+	  (set! (types-of obj) (map (lambda (t)
+				      (find-kahua-instance <type> t))
+				    (types-of obj)))
+	  (set! (categories-of obj) (map (lambda (c)
+					   (find-kahua-instance <category> c))
+					 (categories-of obj)))
+	  ))))
+
 (define (active? unit)
   (not (ref unit 'fallout)))
 
@@ -68,6 +91,7 @@
 (define-class <musume> (<kahua-persistent-base>)
   (
    ;; back pointer for unit
+   ;; DSC *** unit-id->unit ***
    (unit-id         :allocation :persistent :init-keyword :unit-id
 		    :accessor unit-id-of)
    ;; musume-no means issue number.
@@ -105,7 +129,26 @@
 
 (define-method initialize ((obj <musume>) initargs)
   (next-method)
-  (let* ((unit (find-kahua-instance <unit> (unit-id-of obj)))
+  ;; データ移行用
+  (if (is-a? (unit-id-of obj) <string>)
+      (begin
+	(set! (unit-id-of obj)
+	      (find-kahua-instance <unit> (unit-id-of obj)))
+	(set! (priority-of obj)
+	      (find-kahua-instance <priority> (priority-of obj)))
+	(set! (status-of obj)
+	      (find-kahua-instance <status> (status-of obj)))
+	(set! (type-of obj)
+	      (find-kahua-instance <type> (type-of obj)))
+	(set! (category-of obj)
+	      (find-kahua-instance <category> (category-of obj)))
+	(set! (assign-of obj)
+	      (find-kahua-instance <fan-property> (assign-of obj)))
+	(set! (musics-of obj)
+	      (map (lambda (id)
+		     (find-kahua-instance <music> id))
+		   (musics-of obj)))))
+  (let* ((unit (unit-id-of obj)) ;;DSC *** unit-id-of -> unit-of
 	 (mno (slot-ref unit 'next-musume-no)))
     ;; for restart
     (if (not (mno-of obj))
@@ -116,24 +159,42 @@
 (define-method next-seq-no ((obj <musume>))
   (+ 1 (length (musics-of obj))))
 
-(define (all-musumes unit-id)
+;; 旧データ向け
+(define-method all-musumes ((unit-id <string>))
   (filter (lambda (m)
 	    (equal? unit-id (unit-id-of m)))
 	  (make-kahua-collection <musume>)))
 
+;; 新データ対応
+(define-method all-musumes ((unit <unit>))
+  (filter (lambda (m)
+	    (equal? (key-of unit) (unit-id-of m)))
+	  (make-kahua-collection <musume>)))
+
+
+#|
+(define (all-musumes unit-id)
+  (filter (lambda (m)
+	    (equal? unit-id (unit-id-of m)))
+	  (make-kahua-collection <musume>)))
+|#
+
 ;; music means one of issue.
 ;;
 (define-class <music> (<kahua-persistent-base>)
-  ((music-id        :allocation :persistent :init-keyword :music-id
+  (;; music-idは不要になる
+   (music-id        :allocation :persistent :init-keyword :music-id
 		    :init-value #f :accessor music-id-of)
    (seq-no          :allocation :persistent :init-keyword :seq-no
 		    :init-value #f :accessor seq-no-of)
    ;; back pointer
    ;; which is value of (key-of <musume>)
+   ;; DSC *** musume-id -> musume
    (musume-id       :allocation :persistent :init-keyword :musume-id
 		    :accessor musume-id-of)
    (melody          :allocation :persistent :init-keyword :melody
 		    :accessor melody-of)
+   ;; DSC *** fan-id->fan
    (fan-id          :allocation :persistent :init-keyword :fan-id
 		    :init-value #f :accessor fan-id-of)
    (ctime           :allocation :persistent :init-keyword :ctime
@@ -142,8 +203,16 @@
 
 (define-method initialize ((obj <music>) initargs)
   (next-method)
-  (let* ((musume (find-kahua-instance <musume> (musume-id-of obj)))
+  ;; データ移行向け
+  (if (is-a? (musume-id-of obj) <string>)
+      (begin
+	(set! (musume-id-of obj)
+	      (find-kahua-instance <musume> (musume-id-of obj)))
+	(set! (fan-id-of obj)
+	      (find-kahua-instance <fan-property> (fan-id-of obj)))))
+  (let* ((musume (musume-id-of obj))
 	 (musics (musics-of musume)))
+    ;; for restart
     (if (not (music-id-of obj))
 	(begin
 	  (set! (music-id-of obj) (key-of obj))
@@ -151,11 +220,25 @@
 	  (set! (musics-of musume)
 		(cons (key-of obj) musics))))))
 
+;; 旧データ向け
+(define-method all-musics ((musume-id <string>))
+  (and-let* ((musume (find-kahua-instance <musume> musume-id)))
+    (map (lambda (id)
+	   (find-kahua-instance <music> id))
+	 (musics-of musume))))
+
+;; 新データ向け
+(define-method all-musics ((musume <musume>))
+  (musics-of musume))
+  
+
+#|
 (define (all-musics musume-id)
   (and-let* ((musume (find-kahua-instance <musume> musume-id)))
     (map (lambda (id)
 	   (find-kahua-instance <music> id))
 	 (musics-of musume))))
+|#
 
 ;; fans means developer
 ;;
@@ -193,10 +276,23 @@
     (set! (ref user 'role-alist) roles)
     user))
 
+;; 旧データ向け
+(define-method fan-to? ((unit-id <string>) (fan-name <string>))
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member fan-name (fans-of unit))))
+    (if include? #t #f)))
+
+;; 新データ向け
+(define-method fan-to? ((unit <unit>) (fan <fan-property>))
+  (if (member fan (fans-of unit)) #t #f))
+
+
+#|
 (define (fan-to? unit-id fan-name)
   (and-let* ((unit (find-kahua-instance <unit> unit-id))
 	     (include? (member fan-name (fans-of unit))))
     (if include? #t #f)))
+|#
 
 ;; priority property
 ;;
@@ -221,10 +317,23 @@
 (define (all-priorities)
   (filter enable? (make-kahua-collection <priority>)))
 
+;; 旧データ向け
+(define-method has-priority? ((unit-id <string>) priority)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member priority (priorities-of unit))))
+    (if include? #t #f)))
+
+;; 新データ向け
+(define-method has-priority? ((unit <unit>) priority)
+  (if (member priority (priorities-of unit)) #t #f))
+
+
+#|
 (define (has-priority? unit-id priority)
   (and-let* ((unit (find-kahua-instance <unit> unit-id))
 	     (include? (member priority (priorities-of unit))))
     (if include? #t #f)))
+|#
 
 ;; status property
 ;;
@@ -247,10 +356,22 @@
 (define (all-statuss)
   (filter enable? (make-kahua-collection <status>)))
 
+;; 旧データ向け
+(define-method has-status? ((unit-id <string>) status)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member status (statuss-of unit))))
+    (if include? #t #f)))
+
+;; 新データ向け
+(define-method has-status? ((unit <unit>) status)
+  (if (member status (statuss-of unit)) #t #f))
+
+#|
 (define (has-status? unit-id status)
   (and-let* ((unit (find-kahua-instance <unit> unit-id))
 	     (include? (member status (statuss-of unit))))
     (if include? #t #f)))
+|#
 
 ;; type property
 ;;
@@ -273,10 +394,22 @@
 (define (all-types)
   (filter enable? (make-kahua-collection <type>)))
 
+;; 旧データ向け
+(define-method has-type? ((unit-id <string>) type)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member type (types-of unit))))
+    (if include? #t #f)))
+
+;; 新データ向け
+(define-method has-type? ((unit <unit>) type)
+  (if (member type (types-of unit)) #t #f))
+
+#|
 (define (has-type? unit-id type)
   (and-let* ((unit (find-kahua-instance <unit> unit-id))
 	     (include? (member type (types-of unit))))
     (if include? #t #f)))
+|#
 
 ;; categories property
 ;;
@@ -299,7 +432,19 @@
 (define (all-categories)
   (filter enable? (make-kahua-collection <category>)))
 
+;; 旧データ向け
+(define-method has-category? ((unit-id <string>) category)
+  (and-let* ((unit (find-kahua-instance <unit> unit-id))
+	     (include? (member category (categories-of unit))))
+    (if include? #t #f)))
+
+;; 新データ向け
+(define-method has-category? ((unit <unit>) category)
+  (if (member category (categories-of unit)) #t #f))
+
+#|
 (define (has-category? unit-id category)
   (and-let* ((unit (find-kahua-instance <unit> unit-id))
 	     (include? (member category (categories-of unit))))
     (if include? #t #f)))
+|#
