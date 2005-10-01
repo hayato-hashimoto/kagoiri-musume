@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.71 2005/10/01 16:12:21 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.72 2005/10/01 16:19:28 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -540,10 +540,12 @@
                                      (th/ "ステータス")
                                      (th/ "アサイン")
                                      (th/ "タイプ")
-                                     (th/ "登録日")))
+                                     (th/ "登録日")
+                                     (th/ "更新日")))
                         (tbody/
 			(map/ (lambda (m)
-                                (let1 status (status-of m)
+                                (let ((status (status-of m))
+                                      (musics (musics-of m)))
 				(tr/ (@/ (class #`"status-,(code-of status)"))
                                      (td/ (a/cont/
 					   (@@/ (cont musume-edit (key-of m)))
@@ -551,7 +553,7 @@
 				     (td/ (a/cont/
 					   (@@/ (cont melody-list (key-of (unit-id-of m)) (key-of m)))
 					   (mname-of m))
-                                          (format " (~a)" (length (musics-of m))))
+                                          (format " (~a)" (length musics)))
 				     (td/ (disp-name-of
                                            (priority-of m)))
 				     (td/ (disp-name-of
@@ -560,8 +562,10 @@
                                            (assign-of m)))
 				     (td/ (disp-name-of
                                            (type-of m)))
-				     (td/ (sys-strftime "%Y/%m/%d"
-							(sys-localtime (ctime-of m)))))))
+				     (td/ (sys-strftime "%Y/%m/%d %H:%M"
+							(sys-localtime (ctime-of m))))
+                                     (td/ (sys-strftime "%Y/%m/%d %H:%M"
+							(sys-localtime (ctime-of (car musics))))))))
 			      musumes)))
 		     )))))))
 
