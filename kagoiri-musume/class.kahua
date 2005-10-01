@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.21 2005/10/01 16:12:21 cut-sea Exp $
+;; $Id: class.kahua,v 1.22 2005/10/01 17:28:01 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -46,12 +46,6 @@
    (fallout         :allocation :persistent :init-keyword :fallout
 		    :init-value #f :accessor fallout-of)
    ))
-
-;; comment
-#|
-(define-method key-of ((self <unit>))
-  (unit-name-of self))
-|#
 
 ;; データ移行向け
 (define-method initialize ((obj <unit>) initargs)
@@ -176,14 +170,6 @@
 	    (eq? unit (unit-id-of m)))
 	  (make-kahua-collection <musume>)))
 
-
-#|
-(define (all-musumes unit-id)
-  (filter (lambda (m)
-	    (equal? unit-id (unit-id-of m)))
-	  (make-kahua-collection <musume>)))
-|#
-
 ;; music means one of issue.
 ;;
 (define-class <music> (<kahua-persistent-base>)
@@ -236,15 +222,6 @@
 (define-method all-musics ((musume <musume>))
   (musics-of musume))
   
-
-#|
-(define (all-musics musume-id)
-  (and-let* ((musume (find-kahua-instance <musume> musume-id)))
-    (map (lambda (id)
-	   (find-kahua-instance <music> id))
-	 (musics-of musume))))
-|#
-
 ;; fans means developer
 ;;
 (define-class <fan-property> (<kahua-persistent-base>)
@@ -301,13 +278,6 @@
                       (kahua-add-user)
                     (car user)) 'login-name))
     (memq fan (fans-of unit))))
-
-#|
-(define (fan-to? unit-id fan-name)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member fan-name (fans-of unit))))
-    (if include? #t #f)))
-|#
 
 ;; priority property
 ;;
@@ -374,14 +344,6 @@
 (define-method has? ((unit <unit>) (priority <priority>))
   (if (memq priority (priorities-of unit)) #t #f))
 
-
-#|
-(define (has-priority? unit-id priority)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member priority (priorities-of unit))))
-    (if include? #t #f)))
-|#
-
 ;; status property
 ;;
 (define-class <status> (<kahua-persistent-base>)
@@ -417,13 +379,6 @@
 (define-method has? ((unit <unit>) (status <status>))
   (if (memq status (statuss-of unit)) #t #f))
 
-#|
-(define (has-status? unit-id status)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member status (statuss-of unit))))
-    (if include? #t #f)))
-|#
-
 ;; type property
 ;;
 (define-class <type> (<kahua-persistent-base>)
@@ -458,13 +413,6 @@
 ;; 新データ向け
 (define-method has? ((unit <unit>) (type <type>))
   (if (memq type (types-of unit)) #t #f))
-
-#|
-(define (has-type? unit-id type)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member type (types-of unit))))
-    (if include? #t #f)))
-|#
 
 ;; categories property
 ;;
@@ -508,10 +456,3 @@
 
 (define (id->obj class id)
   (find-kahua-instance class id))
-
-#|
-(define (has-category? unit-id category)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member category (categories-of unit))))
-    (if include? #t #f)))
-|#
