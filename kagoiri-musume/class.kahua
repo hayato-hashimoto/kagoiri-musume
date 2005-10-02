@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.22 2005/10/01 17:28:01 cut-sea Exp $
+;; $Id: class.kahua,v 1.23 2005/10/02 07:52:59 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -237,7 +237,6 @@
 		    :init-value #f :accessor delete-of)
    ))
 
-;; comment
 (define-method key-of ((self <fan-property>))
   (fan-name-of self))
 
@@ -282,44 +281,26 @@
 ;; priority property
 ;;
 (define-class <priority> (<kahua-persistent-base>)
-  ((priorityid       :allocation :persistent :init-keyword :priorityid
-		     :accessor code-of)
-   (disp-name        :allocation :persistent :init-keyword :disp-name
-		     :accessor disp-name-of)
-   (level            :allocation :persistent :init-keyword :level
-		     :init-value 0 :accessor level-of)
-   (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)))
-
-#|
-;; クラス再定義用
-;; どうやって切替えるか
-;; 走行中にreplにつないで以下を実行するか
-;; いまだ試行中
-(map identity (make-kahua-collection <priority>))
-(is-a? (car (map identity (make-kahua-collection <priority>))) <priority>)
-(define $$priority$$ (map (cut key-of <>) (make-kahua-collection <priority>)))
-
-(define <old-priority> <priority>)
-
-(define-class <priority> (<kahua-persistent-base>)
+  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
   ((code             :allocation :persistent :init-keyword :code
-		     :accessor code-of)
+		     :init-value #f)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (level            :allocation :persistent :init-keyword :level
 		     :init-value 0 :accessor level-of)
    (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)))
+		     :init-value #f :accessor delete-of)
+   ;; 廃棄予定
+   (priorityid       :allocation :persistent :init-keyword :priorityid
+		     :accessor code-of)))
 
-(define-method change-class ((obj <old-priority>) (new-class <class>))
-  (let ((id (slot-ref-using-class <old-priority> obj 'priorityid)))
-    (next-method)
-    (slot-set-using-class! new-class obj 'code id)))
-|#
+;; データ移行のための暫定
+;; codeへデータ移行後は廃棄予定
+(define-method initialize ((obj <priority>) initargs)
+  (next-method)
+  (if (not (ref obj 'code))
+      (set! (ref obj 'code) (code-of obj))))
 
-
-;; comment
 (define-method key-of ((self <priority>))
   (code-of self))
 
@@ -347,14 +328,24 @@
 ;; status property
 ;;
 (define-class <status> (<kahua-persistent-base>)
-  ((statusid         :allocation :persistent :init-keyword :statusid
-		     :accessor code-of)
+  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
+  ((code             :allocation :persistent :init-keyword :code
+		     :init-value #f)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)))
+		     :init-value #f :accessor delete-of)
+   ;; 廃棄予定
+   (statusid         :allocation :persistent :init-keyword :statusid
+		     :accessor code-of)))
 
-;; comment
+;; データ移行のための暫定
+;; codeへデータ移行後は廃棄予定
+(define-method initialize ((obj <status>) initargs)
+  (next-method)
+  (if (not (ref obj 'code))
+      (set! (ref obj 'code) (code-of obj))))
+
 (define-method key-of ((self <status>))
   (code-of self))
 
@@ -382,14 +373,24 @@
 ;; type property
 ;;
 (define-class <type> (<kahua-persistent-base>)
-  ((typeid           :allocation :persistent :init-keyword :typeid
-		     :accessor code-of)
+  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
+  ((code             :allocation :persistent :init-keyword :code
+		     :init-value #f)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)))
+		     :init-value #f :accessor delete-of)
+   ;; 廃棄予定
+   (typeid           :allocation :persistent :init-keyword :typeid
+		     :accessor code-of)))
 
-;; comment
+;; データ移行のための暫定
+;; codeへデータ移行後は廃棄予定
+(define-method initialize ((obj <type>) initargs)
+  (next-method)
+  (if (not (ref obj 'code))
+      (set! (ref obj 'code) (code-of obj))))
+
 (define-method key-of ((self <type>))
   (code-of self))
 
@@ -417,14 +418,24 @@
 ;; categories property
 ;;
 (define-class <category> (<kahua-persistent-base>)
-  ((categoryid       :allocation :persistent :init-keyword :categoryid
-		     :accessor code-of)
+  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
+  ((code             :allocation :persistent :init-keyword :code
+		     :init-value #f)
    (disp-name        :allocation :persistent :init-keyword :disp-name
 		     :accessor disp-name-of)
    (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)))
+		     :init-value #f :accessor delete-of)
+   ;; 廃棄予定
+   (categoryid       :allocation :persistent :init-keyword :categoryid
+		     :accessor code-of)))
 
-;; comment
+;; データ移行のための暫定
+;; codeへデータ移行後は廃棄予定
+(define-method initialize ((obj <category>) initargs)
+  (next-method)
+  (if (not (ref obj 'code))
+      (set! (ref obj 'code) (code-of obj))))
+
 (define-method key-of ((self <category>))
   (code-of self))
 
