@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.76 2005/10/03 11:53:56 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.77 2005/10/03 16:09:43 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -375,7 +375,8 @@
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h2/ (unit-name-of unit) " - 新しい娘。")
      (form/cont/
-      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody)
+      (@/ (enctype "multipart/form-data"))
+      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
 		     (if (not (string-null? name))
 			 (begin
 			   (if (string-null? melody) (set! melody name))
@@ -425,11 +426,7 @@
 					     fans)))))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
-       (tr/ (th/ "優先度")
-	    (th/ "ステータス")
-	    (th/ "タイプ")
-	    (th/ "カテゴリ")
-	    (th/ "アサイン"))
+       (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "カテゴリ") (th/ "アサイン"))
        (tr/
 	(map/ (lambda (n refer)
 		(td/ (select/ (@/ (name n))
@@ -445,7 +442,9 @@
 				       (rows 1) (cols 32)) "")))
 	      (tr/ (td/ "内容")
 		   (td/ (textarea/ (@/ (type "text") (name "melody")
-				       (rows 20) (cols 80)) ""))))
+				       (rows 20) (cols 80)) "")))
+	      (tr/ (td/ "ファイル")
+		   (td/ (input/ (@/ (type "file") (name "file"))) (b/ "まだファイルアップできません"))))
       (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))
      )))
 
@@ -488,20 +487,9 @@
 	     (map (lambda (m) (fan-id-of m)) musics)
 	     (map (lambda (m) (ctime-of m)) musics)
 	     (map melody-of musics)))
-     ;; file upload
-     (form/cont/ (@/ (enctype "multipart/form-data"))
-		 (@@/ (cont (entry-lambda (:keyword file)
-				#|
-				(and file
-				     (save-uploaded-file
-				      file #`",|*kagoiri-musume-upload-path*|/,(get-original-name file)"))
-			      |#
-				(redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
-		 (input/ (@/ (type "file") (name "file")))
-		 (input/ (@/ (type "submit") (name "submit") (value "アップロード")))
-		 (p/ (@/ (class "warning"))"まだファイルアップロードできないよ"))
      (form/cont/
-      (@@/ (cont (entry-lambda (:keyword melody priority status type assign)
+      (@/ (enctype "multipart/form-data"))
+      (@@/ (cont (entry-lambda (:keyword melody priority status type assign file)
 		   (if (not (string-null? melody))
 		       (begin
 			 (set! melody (string-join (string-split melody "\r\n") "\n"))
@@ -567,9 +555,14 @@
 		  (list priorities-of statuss-of types-of fans-of))
 	    (td/ (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
 	    ))
-
-      (textarea/ (@/ (type "text") (name "melody")
-		     (rows 20) (cols 80)) "")
+      (table/
+       (tr/
+	(td/ "内容")
+	(td/ (textarea/ (@/ (type "text") (name "melody")
+			    (rows 20) (cols 80)) ""))
+	(tr/
+	 (td/ "ファイル")
+	 (td/ (input/ (@/ (type "file") (name "file"))) (b/ "まだファイルアップできません")))))
       (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
      )))
 
