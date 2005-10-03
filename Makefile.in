@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.7 2005/10/01 17:47:58 cut-sea Exp $
+# $Id: Makefile.in,v 1.8 2005/10/03 11:53:56 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -56,7 +56,7 @@ STATICFILES = kagoiri-musume/kagoiri-musume.css
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILES  = kagoiri-musume.scm css.scm
+PLUGINFILES  = kagoiri-musume.scm css.scm upload.scm
 
 
 
