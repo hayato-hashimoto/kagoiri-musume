@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.23 2005/10/02 07:52:59 cut-sea Exp $
+;; $Id: class.kahua,v 1.24 2005/10/03 01:11:06 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -89,8 +89,12 @@
 ;;
 (define-class <musume> (<kahua-persistent-base>)
   (
+   ;; new slot
+   (unit            :allocation :persistent :init-keyword :unit
+		    :accessor unit-of :init-value #f) ;; init-value ¤Ïºï½üÍ½Äê
    ;; back pointer for unit
    ;; DSC *** unit-id->unit ***
+   ;; ÇÑ´þÍ½Äê
    (unit-id         :allocation :persistent :init-keyword :unit-id
 		    :accessor unit-id-of)
    ;; musume-no means issue number.
@@ -149,6 +153,8 @@
 		   (musics-of obj)))))
   (let* ((unit (unit-id-of obj)) ;;DSC *** unit-id-of -> unit-of
 	 (mno (next-musume-no-of unit)))
+    (if (not (unit-of obj))
+	(set! (unit-of obj) (unit-id-of obj))) ;; °Ü¹Ô
     ;; for restart
     (if (not (mno-of obj))
 	(begin
@@ -178,9 +184,13 @@
 		    :init-value #f :accessor music-id-of)
    (seq-no          :allocation :persistent :init-keyword :seq-no
 		    :init-value #f :accessor seq-no-of)
+   ;; new slot
+   (musume          :allocation :persistent :init-keyword :musume
+		    :accessor musume-of :init-value #f) ;; init-value ¤Ïºï½üÍ½Äê
    ;; back pointer
    ;; which is value of (key-of <musume>)
    ;; DSC *** musume-id -> musume
+   ;; ÇÑ´þÍ½Äê
    (musume-id       :allocation :persistent :init-keyword :musume-id
 		    :accessor musume-id-of)
    (melody          :allocation :persistent :init-keyword :melody
@@ -203,6 +213,8 @@
 	      (find-kahua-instance <fan-property> (fan-id-of obj)))))
   (let* ((musume (musume-id-of obj))
 	 (musics (musics-of musume)))
+    (if (not (musume-of obj))
+	(set! (musume-of obj) (musume-id-of obj))) ;; ¥Ç¡¼¥¿°Ü¹Ô
     ;; for restart
     (if (not (music-id-of obj))
 	(begin
