@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.74 2005/10/01 17:47:58 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.75 2005/10/03 02:24:03 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -405,13 +405,13 @@
 						  "?="))
 				       (body  (string-join
 					       (list
-						#`"ポスト: ,(fan-id-of music)"
+						#`"ポスト: ,(fan-name-of (fan-id-of music))"
 						#`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of music)))"
 						#`"ステータス: ,(disp-name-of (status-of musume))"
 						#`"優先度: ,(disp-name-of (priority-of musume))"
 						#`"タイプ: ,(disp-name-of (type-of musume))"
 						#`"カテゴリ: ,(disp-name-of (category-of musume))"
-						#`"アサイン: ,(assign-of musume)"
+						#`"アサイン: ,(fan-name-of (assign-of musume))"
 						#`"コメント:,|melody|"
 						""
 						#`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
@@ -436,16 +436,8 @@
 				      (option/ (@/ (value (code-of item)))
 					       (disp-name-of item)))
 				    (refer unit)))))
-	      (list "priority" "status" "type" "category")
-	      (list priorities-of statuss-of types-of categories-of))
-
-	(td/
-	 (select/ (@/ (name "assign"))
-		  (map/ (lambda (a)
-			  (option/ (@/ (value (fan-name-of a)))
-				   (fan-name-of a)))
-                        (fans-of unit))))
-
+	      (list "priority" "status" "type" "category" "assign")
+	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))))
       (table/ (tr/ (td/ "タイトル")
 		   (td/ (textarea/ (@/ (type "text") (name "name")
@@ -557,21 +549,9 @@
 					      (option/ (@/ (value (code-of item)))
 						       (disp-name-of item))))
 					(items-of unit)))))
-		  (list "priority" "status" "type")
-		  (list priority-of status-of type-of)
-		  (list priorities-of statuss-of types-of))
-
-	    (td/
-	     (select/ (@/ (name "assign"))
-		      (map/ (lambda (a)
-			      (if (eq? a
-                                       (assign-of musume))
-				  (option/ (@/ (value (fan-name-of a))
-					       (selected "true"))
-					   (fan-name-of a))
-				  (option/ (@/ (value (fan-name-of a)))
-					   (fan-name-of a))))
-                            (fans-of unit))))
+		  (list "priority" "status" "type" "assign")
+		  (list priority-of status-of type-of assign-of)
+		  (list priorities-of statuss-of types-of fans-of))
 	    (td/ (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
 	    ))
 
