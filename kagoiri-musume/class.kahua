@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.25 2005/10/03 02:24:03 cut-sea Exp $
+;; $Id: class.kahua,v 1.26 2005/10/05 15:23:09 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -195,6 +195,8 @@
 		    :accessor musume-id-of)
    (melody          :allocation :persistent :init-keyword :melody
 		    :accessor melody-of)
+   (files           :allocation :persistent :init-keyword :files
+		    :init-value '() :accessor files-of)
    ;; DSC *** fan-id->fan
    (fan-id          :allocation :persistent :init-keyword :fan-id
 		    :init-value #f :accessor fan-id-of)
@@ -233,7 +235,20 @@
 ;; 新データ向け
 (define-method all-musics ((musume <musume>))
   (musics-of musume))
-  
+
+;; file
+;;
+(define-class <file> (<kahua-persistent-base>)
+  ((file-name       :allocation :persistent :init-keyword :file-name
+		    :accessor name-of)
+   (path            :allocation :persistent :init-keyword :path
+		    :init-value "" :accessor path-of)
+;  (type            :allocation :persistent :init-keyword :type
+;		    :init-value "" :accessor type-of)
+;  (size            :allocation :persistent :init-keyword :size
+;		    :init-value "" :accessor size-of)
+   ))
+
 ;; fans means developer
 ;;
 (define-class <fan-property> (<kahua-persistent-base>)
