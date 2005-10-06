@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: local.kahua,v 1.7 2005/10/03 11:53:56 cut-sea Exp $
+;; $Id: local.kahua,v 1.8 2005/10/06 02:35:17 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -35,3 +35,5 @@
 ;;
 (define-if-not-bound *kagoiri-musume-upload-path*
   (kahua-static-document-path "kagoiri-musume/upload"))
+(define-if-not-bound *kagoiri-musume-upload-uri*
+  (kahua-static-document-url "kagoiri-musume/upload"))
