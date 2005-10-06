@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.80 2005/10/06 10:24:22 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.81 2005/10/06 10:50:28 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -506,7 +506,8 @@
 				   ;; now, just one file upload support, but...
 				   (set! (files-of music)
 					 (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
-			     (sendmail-lite unit musume music))))
+			     (if (not (string-null? melody))
+				 (sendmail-lite unit musume music)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
