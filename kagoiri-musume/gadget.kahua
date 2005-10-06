@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.2 2005/10/05 15:23:09 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.3 2005/10/06 10:24:22 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -21,14 +21,14 @@
     (let ((subject  (encode-subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)"))
 	  (body  (string-join
 		  (list
-		   #`"ポスト: ,(fan-name-of (fan-id-of music))"
-		   #`"日時: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of music)))"
-		   #`"ステータス: ,(disp-name-of (status-of musume))"
-		   #`"優先度: ,(disp-name-of (priority-of musume))"
-		   #`"タイプ: ,(disp-name-of (type-of musume))"
-		   #`"カテゴリ: ,(disp-name-of (category-of musume))"
-		   #`"アサイン: ,(fan-name-of (assign-of musume))"
-		   #`"コメント:,(melody-of music)"
+		   #`"【ポスト】 ,(fan-name-of (fan-id-of music))"
+		   #`"【日時】 ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of music)))"
+		   #`"【ステータス】 ,(disp-name-of (status-of musume))"
+		   #`"【優先度】 ,(disp-name-of (priority-of musume))"
+		   #`"【タイプ】 ,(disp-name-of (type-of musume))"
+		   #`"【カテゴリ】 ,(disp-name-of (category-of musume))"
+		   #`"【アサイン】 ,(fan-name-of (assign-of musume))"
+		   #`"【コメント】\n\n,(melody-of music)"
 		   ""
 		   #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
 		  "\n")))

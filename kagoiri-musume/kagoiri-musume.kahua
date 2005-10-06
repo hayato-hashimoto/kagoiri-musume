@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.79 2005/10/06 02:35:17 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.80 2005/10/06 10:24:22 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -377,34 +377,34 @@
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
-		     ;; save file and make file object.
-		     (if file
-			 (let* ((tmp-path (car file))
-				(file-name (cadr file))
-				(file-path #`",|*kagoiri-musume-upload-path*|/,|file-name|")
-				(file-uri #`",|*kagoiri-musume-upload-uri*|/,|file-name|"))
-			   (sys-rename tmp-path file-path)
-			   ;; now, just one file upload support, but...
-			   (set! file (list (make <file> :file-name file-name :path file-path :uri file-uri))))
-			 (set! file '()))
-		   (if (not (string-null? name))
-		       (begin
-			 (if (string-null? melody) (set! melody name))
-			 (set! melody (string-join (string-split melody "\r\n") "\n"))
-			 (let1 musume (make <musume>
-					:unit-id unit
-					:musume-name name
-					:priority (id->obj <priority> priority)
-					:status (id->obj <status> status)
-					:assign (id->obj <fan-property> assign)
-					:type (id->obj <type> type)
-					:category (id->obj <category> category))
-			   (let1 music (make <music>
-					 :musume-id musume
-					 :melody melody
-					 :fan-id (id->obj <fan-property> (kahua-current-user-name))
-					 :files file)
-			     (sendmail-lite unit musume music)))))
+		     (if (not (string-null? name))
+			 (begin
+			   (if (string-null? melody) (set! melody name))
+			   (set! melody (string-join (string-split melody "\r\n") "\n"))
+			   (let1 musume (make <musume>
+					  :unit-id unit
+					  :musume-name name
+					  :priority (id->obj <priority> priority)
+					  :status (id->obj <status> status)
+					  :assign (id->obj <fan-property> assign)
+					  :type (id->obj <type> type)
+					  :category (id->obj <category> category))
+			     (let1 music (make <music>
+					   :musume-id musume
+					   :melody melody
+					   :fan-id (id->obj <fan-property> (kahua-current-user-name)))
+			       ;; save file and make file object.
+			       (if file
+				   (let* ((tmp-path (car file))
+					  (file-name (cadr file))
+					  (real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
+					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
+					  (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
+				     (sys-rename tmp-path file-path)
+				     ;; now, just one file upload support, but...
+				     (set! (files-of music)
+					   (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
+			       (sendmail-lite unit musume music)))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "カテゴリ") (th/ "アサイン"))
@@ -478,35 +478,35 @@
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword melody priority status type assign file)
-		     ;; save file and make file object.
-		     (if file
-			 (let* ((tmp-path (car file))
-				(file-name (cadr file))
-				(file-path #`",|*kagoiri-musume-upload-path*|/,|file-name|")
-				(file-uri #`",|*kagoiri-musume-upload-uri*|/,|file-name|"))
-			   (sys-rename tmp-path file-path)
-			   ;; now, just one file upload support, but...
-			   (set! file (list (make <file> :file-name file-name :path file-path :uri file-uri))))
-			 (set! file '()))
-		   (if (or (not (string-null? melody))
-			   (not (null? file)))
-		       (begin
-			 (set! melody (string-join (string-split melody "\r\n") "\n"))
-			 (let1 music (make <music>
-				       :musume-id musume
-				       :melody melody
-				       :fan-id (current-fan)
-				       :files file)
+		     (if (and (string-null? melody)
+			      (not file))
+			 (begin
 			   (set! (priority-of musume) (id->obj <priority> priority))
 			   (set! (status-of musume) (id->obj <status> status))
 			   (set! (type-of musume) (id->obj <type> type))
-			   (set! (assign-of musume) (id->obj <fan-property> assign))
-			   (sendmail-lite unit musume music)))
-		       (begin
-			 (set! (priority-of musume) (id->obj <priority> priority))
-			 (set! (status-of musume) (id->obj <status> status))
-			 (set! (type-of musume) (id->obj <type> type))
-			 (set! (assign-of musume) (id->obj <fan-property> assign))))
+			   (set! (assign-of musume) (id->obj <fan-property> assign)))
+			 (begin
+			   (set! melody (string-join (string-split melody "\r\n") "\n"))
+			   (let1 music (make <music>
+					 :musume-id musume
+					 :melody melody
+					 :fan-id (current-fan))
+			     (set! (priority-of musume) (id->obj <priority> priority))
+			     (set! (status-of musume) (id->obj <status> status))
+			     (set! (type-of musume) (id->obj <type> type))
+			     (set! (assign-of musume) (id->obj <fan-property> assign))
+			     ;; save file and make file object.
+			     (if file
+				 (let* ((tmp-path (car file))
+					(file-name (cadr file))
+					(real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
+					(file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
+					(file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
+				   (sys-rename tmp-path file-path)
+				   ;; now, just one file upload support, but...
+				   (set! (files-of music)
+					 (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
+			     (sendmail-lite unit musume music))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
