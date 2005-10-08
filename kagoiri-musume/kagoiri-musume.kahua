@@ -3,12 +3,13 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.81 2005/10/06 10:50:28 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.82 2005/10/08 04:07:41 cut-sea Exp $
 ;;
 ;; include
 ;; use
 (use gauche.charconv)
 (use gauche.logger)
+(use file.util)
 (use rfc.base64)
 (use srfi-13)
 (use srfi-19)
@@ -400,7 +401,7 @@
 					  (real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
 					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					  (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
-				     (sys-rename tmp-path file-path)
+				     (copy-file tmp-path file-path)
 				     ;; now, just one file upload support, but...
 				     (set! (files-of music)
 					   (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
@@ -502,7 +503,7 @@
 					(real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
 					(file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					(file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
-				   (sys-rename tmp-path file-path)
+				   (copy-file tmp-path file-path)
 				   ;; now, just one file upload support, but...
 				   (set! (files-of music)
 					 (list (make <file> :file-name file-name :path file-path :uri file-uri)))))

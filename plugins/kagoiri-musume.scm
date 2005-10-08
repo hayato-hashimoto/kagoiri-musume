@@ -1,5 +1,6 @@
 (allow-module gauche.charconv)
 (allow-module gauche.logger)
+(allow-module file.util)
 (allow-module rfc.base64)
 (allow-module srfi-1)
 (allow-module srfi-13)
