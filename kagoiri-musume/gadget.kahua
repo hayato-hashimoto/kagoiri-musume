@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.5 2005/10/06 10:55:45 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.6 2005/10/08 16:53:45 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -23,7 +23,7 @@
 	   (body  (string-join
 		   (list
 		    #`"¡Ú ¥¿¥¤¥È¥ë ¡Û,raw-subject"
-		    #`"¡Ú  ¥Ý¥¹¥È  ¡Û ,(fan-name-of (fan-id-of music))"
+		    #`"¡Ú  ¥Ý¥¹¥È  ¡Û ,(fan-name-of (fan-of music))"
 		    #`"¡Ú   Æü»þ   ¡Û ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of music)))"
 		    #`"¡Ú¥¹¥Æ¡¼¥¿¥¹¡Û ,(disp-name-of (status-of musume))"
 		    #`"¡Ú  Í¥ÀèÅÙ  ¡Û ,(disp-name-of (priority-of musume))"

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.83 2005/10/08 05:48:19 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.84 2005/10/08 16:53:45 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -473,7 +473,7 @@
 				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
 		     ))
 	     (map (lambda (m) (seq-no-of m)) musics)
-	     (map (lambda (m) (fan-id-of m)) musics)
+	     (map (lambda (m) (fan-of m)) musics)
 	     (map (lambda (m) (ctime-of m)) musics)
 	     (map melody-of musics)
 	     (map files-of musics)))
