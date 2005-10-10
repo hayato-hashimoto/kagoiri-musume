@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.6 2005/10/08 16:53:45 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.7 2005/10/10 05:55:05 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -14,7 +14,7 @@
       (ces-convert subject "eucjp" "iso2022jp")) #\newline) "")
    "?="))
 
-(define (sendmail-lite unit musume music)
+(define (sendmail-lite unit musume song)
   (and-let* ((fans (filter (lambda (fan)
 			     (not (equal? "   " (fan-name-of fan))))
 			   (fans-of unit))))
@@ -23,14 +23,14 @@
 	   (body  (string-join
 		   (list
 		    #`"¡Ú ¥¿¥¤¥È¥ë ¡Û,raw-subject"
-		    #`"¡Ú  ¥Ý¥¹¥È  ¡Û ,(fan-name-of (fan-of music))"
-		    #`"¡Ú   Æü»þ   ¡Û ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of music)))"
+		    #`"¡Ú  ¥Ý¥¹¥È  ¡Û ,(fan-name-of (fan-of song))"
+		    #`"¡Ú   Æü»þ   ¡Û ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of song)))"
 		    #`"¡Ú¥¹¥Æ¡¼¥¿¥¹¡Û ,(disp-name-of (status-of musume))"
 		    #`"¡Ú  Í¥ÀèÅÙ  ¡Û ,(disp-name-of (priority-of musume))"
 		    #`"¡Ú  ¥¿¥¤¥×  ¡Û ,(disp-name-of (type-of musume))"
 		    #`"¡Ú ¥«¥Æ¥´¥ê ¡Û ,(disp-name-of (category-of musume))"
 		    #`"¡Ú ¥¢¥µ¥¤¥ó ¡Û ,(fan-name-of (assign-of musume))"
-		    #`"¡Ú ¥³¥á¥ó¥È ¡Û\n\n,(melody-of music)"
+		    #`"¡Ú ¥³¥á¥ó¥È ¡Û\n\n,(melody-of song)"
 		    ""
 		    #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
 		   "\n")))

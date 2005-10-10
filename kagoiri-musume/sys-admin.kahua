@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.2 2005/10/02 07:52:59 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.3 2005/10/10 05:55:05 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -18,20 +18,6 @@
 
    (hr/)
 
-   ;;暫定コード
-   (a/cont/ (@@/ (cont (lambda ()
-			 (make-kahua-collection <priority>)
-			 (make-kahua-collection <status>)
-			 (make-kahua-collection <type>)
-			 (make-kahua-collection <category>)
-			 (make-kahua-collection <unit>)
-			 (make-kahua-collection <musume>)
-			 (make-kahua-collection <music>)
-			 (redirect-page "admin-system"))))
-	    "クラス変更初期化ボタン")
-
-   (hr/)
-
    (form/cont/
     (@@/ (cont (entry-lambda (:keyword login-name passwd email admin delete)
 		   (if (not (string-null? login-name))
@@ -41,14 +27,14 @@
 			       (add-fan login-name passwd email 'admin 'user)
 			       (add-fan login-name passwd email 'user))
 			   ;; modify user
-			   (let ((fan-prop (find-kahua-instance <fan-property> login-name))
-				 (fan (find-kahua-instance <kahua-user> login-name)))
+			   (let* ((fan  (find-kahua-instance <fan> login-name))
+				  (user (login-user-of fan)))
 			     (if (not (string-null? email))
-				 (set! (email-of fan-prop) email))
-			     (set! (ref fan 'role-alist) (if (equal? "on" admin)
-							     '(admin user)
-							     '(user)))
-			     (set! (delete-of fan-prop) (if (equal? "on" delete) #t #f))
+				 (set! (email-of fan) email))
+			     (set! (ref user 'role-alist) (if (equal? "on" admin)
+							      '(admin user)
+							      '(user)))
+			     (set! (delete-of fan) (if (equal? "on" delete) #t #f))
 			     ))
 		       )
 		 (redirect-page "admin-system"))))
@@ -63,7 +49,7 @@
 		  (td/ (if (delete-of f) "＊" ""))))
 	   (filter (lambda (f)
 		     (not (equal? "   " (fan-name-of f))))
-		   (make-kahua-collection <fan-property>))))
+		   (make-kahua-collection <fan>))))
     (table/
      (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス") (th/ "隠密"))
      (tr/ (td/ (input/ (@/ (type "checkbox") (name "admin")) "off"))
@@ -98,7 +84,7 @@
     (@@/ (cont (entry-lambda (:keyword id disp level delete)
 		   (if (not (find-kahua-instance <priority> id))
 		       (make <priority>
-			 :priorityid id
+			 :code id
 			 :disp-name disp
 			 :level (x->integer level)
 			 :delete (if (equal? "on" delete) #t #f))
@@ -117,13 +103,13 @@
 		  (td/ (if (delete-of p) "＊" ""))))
 	   (map identity
 		(make-kahua-collection <priority>))))
-    (table/ (tr/ (th/ "優先度ID") (th/ "表示名") (th/ "無効"))
+    (table/ (tr/ (th/ "優先度ID") (th/ "表示名") (th/ "レベル") (th/ "無効"))
 	    (tr/ (td/ (input/ (@/ (type "text") (name "id")) ""))
 		 (td/ (input/ (@/ (type "text") (name "disp")) ""))
 		 (td/ (select/ (@/ (name "level"))
 			       (map/ (lambda (l)
 				       (option/ (@/ (value l)) l))
-				     '("1" "2" "3" "4" "5"))))
+				     (map x->string (iota 5 1)))))
 		 (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
 	    (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "登録")))))))
 
@@ -133,7 +119,7 @@
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <status> id))
 		       (make <status>
-			 :statusid id
+			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
 		       (let1 s (find-kahua-instance <status> id)
@@ -161,7 +147,7 @@
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <type> id))
 		       (make <type>
-			 :typeid id
+			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
 		       (let1 t (find-kahua-instance <type> id)
@@ -189,7 +175,7 @@
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <category> id))
 		       (make <category>
-			 :categoryid id
+			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
 		       (let1 c (find-kahua-instance <category> id)

@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.4 2005/10/01 06:19:33 shibata Exp $
+;; $Id: search.kahua,v 1.5 2005/10/10 05:55:05 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -14,19 +14,19 @@
 (define-method searchable-text ((obj <musume>))
   (cons (cons "タイトル" (ref obj 'musume-name))
         (map
-         (lambda (music)
+         (lambda (song)
            (cons
             (sys-strftime
              "%Y/%m/%d %H:%M:%S"
-             (sys-localtime (ref music 'ctime)))
-            (melody-of music)))
-         (reverse (ref obj 'musics)))))
+             (sys-localtime (ref song 'ctime)))
+            (melody-of song)))
+         (reverse (ref obj 'songs)))))
 
 (define-method label-of ((obj <unit>))
   (a/cont/ (@@/ (cont musume-list (key-of obj))) (ref obj 'unit-name)))
 
 (define-method label-of ((obj <musume>))
-  (let ((unit (unit-id-of obj)))
+  (let ((unit (unit-of obj)))
     (span/
      (a/cont/ (@@/ (cont musume-list (key-of unit)))
               (ref unit 'unit-name))
@@ -38,7 +38,7 @@
 ;; search page
 (define-entry (search :keyword word unit-id)
   (let* ((word-len (string-length word))
-         (fan (find-kahua-instance <fan-property> (kahua-current-user-name)))
+         (fan (find-kahua-instance <fan> (kahua-current-user-name)))
          (units (if unit-id
                     (cons (find-kahua-instance <unit> unit-id) '())
                   (filter

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.28 2005/10/08 16:53:45 cut-sea Exp $
+;; $Id: class.kahua,v 1.29 2005/10/10 05:55:05 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -47,34 +47,6 @@
 		    :init-value #f :accessor fallout-of)
    ))
 
-;; データ移行向け
-(define-method initialize ((obj <unit>) initargs)
-  (next-method)
-  (let ((attr (append (fans-of obj)
-		      (priorities-of obj)
-		      (statuss-of obj)
-		      (types-of obj)
-		      (categories-of obj))))
-    (if (and (not (null? attr))
-	     (is-a? (car attr) <string>))
-	(begin
-	  (set! (fans-of obj) (map (lambda (f)
-				     (find-kahua-instance <fan-property> f))
-				   (fans-of obj)))
-	  (set! (priorities-of obj) (map (lambda (p)
-					   (find-kahua-instance <priority> p))
-					 (priorities-of obj)))
-	  (set! (statuss-of obj) (map (lambda (s)
-					(find-kahua-instance <status> s))
-				      (statuss-of obj)))
-	  (set! (types-of obj) (map (lambda (t)
-				      (find-kahua-instance <type> t))
-				    (types-of obj)))
-	  (set! (categories-of obj) (map (lambda (c)
-					   (find-kahua-instance <category> c))
-					 (categories-of obj)))
-	  ))))
-
 (define (active? unit)
   (not (fallout-of unit)))
 
@@ -82,21 +54,13 @@
   (filter active?
 	  (make-kahua-collection <unit>)))
 
-(define (unit-exist? unit-id)
-  (if (find-kahua-instance <unit> unit-id) #t #f))
-
 ;; Musume means issue.
 ;;
 (define-class <musume> (<kahua-persistent-base>)
   (
    ;; new slot
    (unit            :allocation :persistent :init-keyword :unit
-		    :accessor unit-of :init-value #f) ;; init-value は削除予定
-   ;; back pointer for unit
-   ;; DSC *** unit-id->unit ***
-   ;; 廃棄予定
-   (unit-id         :allocation :persistent :init-keyword :unit-id
-		    :accessor unit-id-of)
+		    :accessor unit-of)
    ;; musume-no means issue number.
    (musume-no       :allocation :persistent :init-keyword :musume-no
 		    :init-value #f :accessor mno-of)
@@ -122,9 +86,9 @@
    ;; assign
    (assign          :allocation :persistent :init-keyword :assign
 		    :init-value #f :accessor assign-of)
-   ;; musics
-   (musics          :allocation :persistent :init-keyword :musics
-		    :init-value '() :accessor musics-of)
+   ;; songs
+   (songs           :allocation :persistent :init-keyword :songs
+		    :init-value '() :accessor songs-of)
    ;; create time
    (ctime           :allocation :persistent :init-keyword :ctime
 		    :init-thunk sys-time :accessor ctime-of)
@@ -132,29 +96,8 @@
 
 (define-method initialize ((obj <musume>) initargs)
   (next-method)
-  ;; データ移行用
-  (if (is-a? (unit-id-of obj) <string>)
-      (begin
-	(set! (unit-id-of obj)
-	      (find-kahua-instance <unit> (unit-id-of obj)))
-	(set! (priority-of obj)
-	      (find-kahua-instance <priority> (priority-of obj)))
-	(set! (status-of obj)
-	      (find-kahua-instance <status> (status-of obj)))
-	(set! (type-of obj)
-	      (find-kahua-instance <type> (type-of obj)))
-	(set! (category-of obj)
-	      (find-kahua-instance <category> (category-of obj)))
-	(set! (assign-of obj)
-            (find-kahua-instance <fan-property> (assign-of obj)))
-	(set! (musics-of obj)
-	      (map (lambda (id)
-		     (find-kahua-instance <music> id))
-		   (musics-of obj)))))
-  (let* ((unit (unit-id-of obj)) ;;DSC *** unit-id-of -> unit-of
+  (let* ((unit (unit-of obj))
 	 (mno (next-musume-no-of unit)))
-    (if (not (unit-of obj))
-	(set! (unit-of obj) (unit-id-of obj))) ;; 移行
     ;; for restart
     (if (not (mno-of obj))
 	(begin
@@ -162,83 +105,42 @@
 	  (set! (next-musume-no-of unit) (+ mno 1))))))
 
 (define-method next-seq-no ((obj <musume>))
-  (+ 1 (length (musics-of obj))))
+  (+ 1 (length (songs-of obj))))
 
-;; 旧データ向け
-(define-method all-musumes ((unit-id <string>))
-  (filter (lambda (m)
-	    (equal? unit-id (unit-id-of m)))
-	  (make-kahua-collection <musume>)))
-
-;; 新データ対応
 (define-method all-musumes ((unit <unit>))
   (filter (lambda (m)
-	    (eq? unit (unit-id-of m)))
+	    (eq? unit (unit-of m)))
 	  (make-kahua-collection <musume>)))
 
-;; music means one of issue.
+;; song means one of issue.
 ;;
-(define-class <music> (<kahua-persistent-base>)
-  (;; music-idは不要になる
-   (music-id        :allocation :persistent :init-keyword :music-id
-		    :init-value #f :accessor music-id-of)
-   (seq-no          :allocation :persistent :init-keyword :seq-no
+(define-class <song> (<kahua-persistent-base>)
+  ((seq-no          :allocation :persistent :init-keyword :seq-no
 		    :init-value #f :accessor seq-no-of)
-   ;; new slot
    (musume          :allocation :persistent :init-keyword :musume
-		    :accessor musume-of :init-value #f) ;; init-value は削除予定
-   ;; back pointer
-   ;; which is value of (key-of <musume>)
-   ;; DSC *** musume-id -> musume
-   ;; 廃棄予定
-   (musume-id       :allocation :persistent :init-keyword :musume-id
-		    :accessor musume-id-of)
+		    :accessor musume-of)
    (melody          :allocation :persistent :init-keyword :melody
 		    :accessor melody-of)
    (files           :allocation :persistent :init-keyword :files
 		    :init-value '() :accessor files-of)
    (fan             :allocation :persistent :init-keyword :fan
-		    :init-value #f) ;; fan-id削除とともにaccessorをfan-ofに差し替え
-   ;; DSC *** fan-id->fan
-   (fan-id          :allocation :persistent :init-keyword :fan-id
 		    :init-value #f :accessor fan-of)
    (ctime           :allocation :persistent :init-keyword :ctime
 		    :init-thunk sys-time :accessor ctime-of)
    ))
 
-(define-method initialize ((obj <music>) initargs)
+(define-method initialize ((obj <song>) initargs)
   (next-method)
-  ;; データ移行向け
-  (if (not (ref obj 'fan))
-      (set! (ref obj 'fan) (ref obj 'fan-id)))
-  (if (is-a? (musume-id-of obj) <string>)
-      (begin
-	(set! (musume-id-of obj)
-	      (find-kahua-instance <musume> (musume-id-of obj)))
-	(set! (ref obj 'fan-id)
-	      (find-kahua-instance <fan-property> (ref obj 'fan-id)))))
-  (let* ((musume (musume-id-of obj))
-	 (musics (musics-of musume)))
-    (if (not (musume-of obj))
-	(set! (musume-of obj) (musume-id-of obj))) ;; データ移行
+  (let* ((musume (musume-of obj))
+	 (songs (songs-of musume)))
     ;; for restart
-    (if (not (music-id-of obj))
+    (if (not (seq-no-of obj))
 	(begin
-	  (set! (music-id-of obj) (key-of obj))
 	  (set! (seq-no-of obj) (next-seq-no musume))
-	  (set! (musics-of musume)
-		(cons obj musics))))))
+	  (set! (songs-of musume) (cons obj songs))))))
 
-;; 旧データ向け
-(define-method all-musics ((musume-id <string>))
-  (and-let* ((musume (find-kahua-instance <musume> musume-id)))
-    (map (lambda (id)
-	   (find-kahua-instance <music> id))
-	 (musics-of musume))))
-
-;; 新データ向け
-(define-method all-musics ((musume <musume>))
-  (musics-of musume))
+(define-method all-songs ((musume <musume>))
+  (songs-of musume))
 
 ;; file
 ;;
@@ -257,12 +159,10 @@
 
 ;; fans means developer
 ;;
-(define-class <fan-property> (<kahua-persistent-base>)
+(define-class <fan> (<kahua-persistent-base>)
   (
-   ;; fan-name equal <kahua-user> login-name
-   ;; so, this property needs a instance of <kahua-user>.
-   (fan-name        :allocation :persistent :init-keyword :fan-name
-		    :init-value #f :accessor fan-name-of)
+   (login-user      :allocation :persistent :init-keyword :login-user
+		    :init-value #f :accessor login-user-of)
    (email           :allocation :persistent :init-keyword :email
 		    :init-value #f :accessor email-of)
    ;; delete flag
@@ -270,232 +170,107 @@
 		    :init-value #f :accessor delete-of)
    ))
 
-(define-method key-of ((self <fan-property>))
+(define-method fan-name-of ((self <fan>))
+  (ref (login-user-of self) 'login-name))
+
+(define-method key-of ((self <fan>))
   (fan-name-of self))
 
-
-(define (lucky-fan? fan-prop)
-  (not (delete-of fan-prop)))
+(define (lucky-fan? fan)
+  (not (delete-of fan)))
 
 (define (all-fans)
-  (map fan-name-of
-       (filter lucky-fan?
-	       (make-kahua-collection <fan-property>))))
+  (filter lucky-fan?
+	  (make-kahua-collection <fan>)))
+
+(define (all-fan-names)
+  (map fan-name-of (all-fans)))
 
 (define (add-fan name passwd email . roles)
   (and-let* ((user (kahua-add-user name passwd))
-	     (fanp (make <fan-property>
-		     :fan-name name :email email)))
-    ; In fact, admin role only supported.
+	     (fan  (make <fan> :login-user user :email email)))
     (set! (ref user 'role-alist) roles)
     user))
 
 (define (current-fan)
-  (find-kahua-instance <fan-property> (kahua-current-user-name)))
+  (find-kahua-instance <fan> (kahua-current-user-name)))
 
-;; 旧データ向け
-(define-method fan-to? ((unit-id <string>) (fan-name <string>))
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member fan-name (fans-of unit))))
-    (if include? #t #f)))
-
-;; 新データ向け
-(define-method fan-to? ((unit <unit>) (fan <fan-property>))
+(define-method fan-to? ((unit <unit>) (fan <fan>))
   (if (memq fan (fans-of unit)) #t #f))
 
 (define-method viewable? ((unit <unit>) . user)
   (let1 fan (find-kahua-instance
-             <fan-property>
+	     <fan>
              (ref (if (null? user)
                       (kahua-add-user)
-                    (car user)) 'login-name))
+		      (car user)) 'login-name))
     (memq fan (fans-of unit))))
 
 ;; alias methods for convenient.
-(define-method code-of ((obj <fan-property>))
+(define-method code-of ((obj <fan>))
   (fan-name-of obj))
-(define-method disp-name-of ((obj <fan-property>))
+(define-method disp-name-of ((obj <fan>))
   (fan-name-of obj))
+
+;; property base
+(define-class <property-base> (<kahua-persistent-base>)
+  ((code             :allocation :persistent :init-keyword :code
+		     :init-value #f :accessor code-of)
+   (disp-name        :allocation :persistent :init-keyword :disp-name
+		     :accessor disp-name-of)
+   (delete           :allocation :persistent :init-keyword :delete
+		     :init-value #f :accessor delete-of)
+   ))
+
+(define-method key-of ((self <property-base>))
+  (code-of self))
+
+(define-method enable? ((obj <property-base>))
+  (not (delete-of obj)))
 
 ;; priority property
 ;;
-(define-class <priority> (<kahua-persistent-base>)
-  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
-  ((code             :allocation :persistent :init-keyword :code
-		     :init-value #f)
-   (disp-name        :allocation :persistent :init-keyword :disp-name
-		     :accessor disp-name-of)
-   (level            :allocation :persistent :init-keyword :level
+(define-class <priority> (<property-base>)
+  ((level            :allocation :persistent :init-keyword :level
 		     :init-value 0 :accessor level-of)
-   (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)
-   ;; 廃棄予定
-   (priorityid       :allocation :persistent :init-keyword :priorityid
-		     :accessor code-of)))
-
-;; データ移行のための暫定
-;; codeへデータ移行後は廃棄予定
-(define-method initialize ((obj <priority>) initargs)
-  (next-method)
-  (if (not (ref obj 'code))
-      (set! (ref obj 'code) (code-of obj))))
-
-(define-method key-of ((self <priority>))
-  (code-of self))
-
-;; クラス再定義の仕込み
-;; 以降は使わない
-(define-method priorityid-of ((obj <priority>))
-  (code-of obj))
-
-(define-method enable? ((obj <priority>))
-  (not (delete-of obj)))
+   ))
 
 (define (all-priorities)
   (filter enable? (make-kahua-collection <priority>)))
 
-;; 旧データ向け
-(define-method has-priority? ((unit-id <string>) priority)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member priority (priorities-of unit))))
-    (if include? #t #f)))
-
-;; 新データ向け
 (define-method has? ((unit <unit>) (priority <priority>))
   (if (memq priority (priorities-of unit)) #t #f))
 
 ;; status property
 ;;
-(define-class <status> (<kahua-persistent-base>)
-  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
-  ((code             :allocation :persistent :init-keyword :code
-		     :init-value #f)
-   (disp-name        :allocation :persistent :init-keyword :disp-name
-		     :accessor disp-name-of)
-   (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)
-   ;; 廃棄予定
-   (statusid         :allocation :persistent :init-keyword :statusid
-		     :accessor code-of)))
-
-;; データ移行のための暫定
-;; codeへデータ移行後は廃棄予定
-(define-method initialize ((obj <status>) initargs)
-  (next-method)
-  (if (not (ref obj 'code))
-      (set! (ref obj 'code) (code-of obj))))
-
-(define-method key-of ((self <status>))
-  (code-of self))
-
-;; クラス再定義の仕込み
-;; 以降は使わない
-(define-method statusid-of ((obj <status>))
-  (code-of obj))
-
-(define-method enable? ((obj <status>))
-  (not (delete-of obj)))
+(define-class <status> (<property-base>)
+  ())
 
 (define (all-statuss)
   (filter enable? (make-kahua-collection <status>)))
 
-;; 旧データ向け
-(define-method has-status? ((unit-id <string>) status)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member status (statuss-of unit))))
-    (if include? #t #f)))
-
-;; 新データ向け
 (define-method has? ((unit <unit>) (status <status>))
   (if (memq status (statuss-of unit)) #t #f))
 
 ;; type property
 ;;
-(define-class <type> (<kahua-persistent-base>)
-  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
-  ((code             :allocation :persistent :init-keyword :code
-		     :init-value #f)
-   (disp-name        :allocation :persistent :init-keyword :disp-name
-		     :accessor disp-name-of)
-   (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)
-   ;; 廃棄予定
-   (typeid           :allocation :persistent :init-keyword :typeid
-		     :accessor code-of)))
-
-;; データ移行のための暫定
-;; codeへデータ移行後は廃棄予定
-(define-method initialize ((obj <type>) initargs)
-  (next-method)
-  (if (not (ref obj 'code))
-      (set! (ref obj 'code) (code-of obj))))
-
-(define-method key-of ((self <type>))
-  (code-of self))
-
-;; クラス再定義の仕込み
-;; 以降は使わない
-(define-method typeid-of ((obj <type>))
-  (code-of obj))
-
-(define-method enable? ((obj <type>))
-  (not (delete-of obj)))
+(define-class <type> (<property-base>)
+  ())
 
 (define (all-types)
   (filter enable? (make-kahua-collection <type>)))
 
-;; 旧データ向け
-(define-method has-type? ((unit-id <string>) type)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member type (types-of unit))))
-    (if include? #t #f)))
-
-;; 新データ向け
 (define-method has? ((unit <unit>) (type <type>))
   (if (memq type (types-of unit)) #t #f))
 
 ;; categories property
 ;;
-(define-class <category> (<kahua-persistent-base>)
-  ;; 移行後init-valueを廃棄し:accessor code-ofを復活し*idスロットを廃棄
-  ((code             :allocation :persistent :init-keyword :code
-		     :init-value #f)
-   (disp-name        :allocation :persistent :init-keyword :disp-name
-		     :accessor disp-name-of)
-   (delete           :allocation :persistent :init-keyword :delete
-		     :init-value #f :accessor delete-of)
-   ;; 廃棄予定
-   (categoryid       :allocation :persistent :init-keyword :categoryid
-		     :accessor code-of)))
-
-;; データ移行のための暫定
-;; codeへデータ移行後は廃棄予定
-(define-method initialize ((obj <category>) initargs)
-  (next-method)
-  (if (not (ref obj 'code))
-      (set! (ref obj 'code) (code-of obj))))
-
-(define-method key-of ((self <category>))
-  (code-of self))
-
-;; クラス再定義の仕込み
-;; 以降は使わない
-(define-method categoryid-of ((obj <category>))
-  (code-of obj))
-
-(define-method enable? ((obj <category>))
-  (not (delete-of obj)))
+(define-class <category> (<property-base>)
+  ())
 
 (define (all-categories)
   (filter enable? (make-kahua-collection <category>)))
 
-;; 旧データ向け
-(define-method has-category? ((unit-id <string>) category)
-  (and-let* ((unit (find-kahua-instance <unit> unit-id))
-	     (include? (member category (categories-of unit))))
-    (if include? #t #f)))
-
-;; 新データ向け
 (define-method has? ((unit <unit>) (category <category>))
   (if (memq category (categories-of unit)) #t #f))
 

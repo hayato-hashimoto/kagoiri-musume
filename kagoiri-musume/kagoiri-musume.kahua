@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.84 2005/10/08 16:53:45 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.85 2005/10/10 05:55:05 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -68,7 +68,8 @@
 		 (td/ (string-join (filter-map (lambda (f)
                                                  (and (not (equal? "   " f))
                                                       (fan-name-of f)))
-					   (fans-of u)) " , "))))
+					       (fans-of u)) " , "))
+		 ))
 	  (all-units)))))
    (hr/)
    (h2/ "新ユニット結成")
@@ -79,7 +80,7 @@
 			    (make <unit>
 			      :unit-name name
 			      :description desc
-			      :fans (id-list->obj-list <fan-property> (kahua-context-ref* "fans"))
+			      :fans (id-list->obj-list <fan> (kahua-context-ref* "fans"))
 			      :priorities (id-list->obj-list <priority> (kahua-context-ref* "priority"))
 			      :statuss (id-list->obj-list <status> (kahua-context-ref* "status"))
 			      :types (id-list->obj-list <type> (kahua-context-ref* "type"))
@@ -113,7 +114,7 @@
 	   (select/ (@/ (name "fans") (size "5") (multiple "true"))
 		    (map/ (lambda (f)
 			    (option/ (@/ (value f)) f))
-			  (all-fans)))))
+			  (all-fan-names)))))
      )
     (input/ (@/ (type "submit") (name "submit") (value "新ユニット結成"))))
    ))
@@ -134,7 +135,7 @@
 		       (if (not (string-null? name))
 			   (set! (unit-name-of unit) name))
 		       (set! (description-of unit) desc)
-		       (set! (fans-of unit) (id-list->obj-list <fan-property> (kahua-context-ref* "fans")))
+		       (set! (fans-of unit) (id-list->obj-list <fan> (kahua-context-ref* "fans")))
 		       (set! (priorities-of unit) (id-list->obj-list <priority> (kahua-context-ref* "priority")))
 		       (set! (statuss-of unit) (id-list->obj-list <status> (kahua-context-ref* "status")))
 		       (set! (types-of unit) (id-list->obj-list <type> (kahua-context-ref* "type")))
@@ -175,7 +176,7 @@
                                              (selected (fan-to? unit f)))
                                          fan-name)))
                             (filter lucky-fan?
-                                    (make-kahua-collection <fan-property>))))))
+                                    (make-kahua-collection <fan>))))))
        )
       (input/ (@/ (type "submit") (name "submit") (value "確定"))))
      )))
@@ -185,7 +186,7 @@
 (define-entry (unit-fallout unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
     (define checker (lambda (u)
-		      (if (memq (find-kahua-instance <fan-property> (ref u 'login-name))
+		      (if (memq (find-kahua-instance <fan> (ref u 'login-name))
                                 (fans-of unit))
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
@@ -341,15 +342,15 @@
                         (tbody/
 			(map/ (lambda (m)
                                 (let ((status (status-of m))
-                                      (musics (musics-of m)))
+                                      (songs (songs-of m)))
 				(tr/ (@/ (class #`"status-,(code-of status)"))
                                      (td/ (a/cont/
 					   (@@/ (cont musume-edit (key-of m)))
 					   (x->string (mno-of m))))
 				     (td/ (a/cont/
-					   (@@/ (cont melody-list (key-of (unit-id-of m)) (key-of m)))
+					   (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
 					   (mname-of m))
-                                          (format " (~a)" (length musics)))
+                                          (format " (~a)" (length songs)))
 				     (td/ (disp-name-of
                                            (priority-of m)))
 				     (td/ (disp-name-of
@@ -361,7 +362,7 @@
 				     (td/ (sys-strftime "%Y/%m/%d %H:%M"
 							(sys-localtime (ctime-of m))))
                                      (td/ (sys-strftime "%Y/%m/%d %H:%M"
-							(sys-localtime (ctime-of (car musics))))))))
+							(sys-localtime (ctime-of (car songs))))))))
 			      musumes)))
 		     )))))))
 
@@ -383,30 +384,30 @@
 			   (if (string-null? melody) (set! melody name))
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
 			   (let1 musume (make <musume>
-					  :unit-id unit
+					  :unit unit
 					  :musume-name name
 					  :priority (id->obj <priority> priority)
 					  :status (id->obj <status> status)
-					  :assign (id->obj <fan-property> assign)
+					  :assign (id->obj <fan> assign)
 					  :type (id->obj <type> type)
 					  :category (id->obj <category> category))
-			     (let1 music (make <music>
-					   :musume-id musume
+			     (let1 song (make <song>
+					   :musume musume
 					   :melody melody
-					   :fan-id (id->obj <fan-property> (kahua-current-user-name)))
+					   :fan (id->obj <fan> (kahua-current-user-name)))
 			       ;; save file and make file object.
 			       (if file
 				   (let* ((tmp-path (car file))
 					  (file-name (cadr file))
-					  (real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
+					  (real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)")
 					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					  (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
 				     (make-directory* *kagoiri-musume-upload-path* #o775)
 				     (copy-file tmp-path file-path)
 				     ;; now, just one file upload support, but...
-				     (set! (files-of music)
+				     (set! (files-of song)
 					   (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
-			       (sendmail-lite unit musume music)))))
+			       (sendmail-lite unit musume song)))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "カテゴリ") (th/ "アサイン"))
@@ -437,7 +438,7 @@
 
 (define-entry (musume-edit musume-id)
   (let* ((musume (find-kahua-instance <musume> musume-id))
-	 (unit (unit-id-of musume)))
+	 (unit (unit-of musume)))
     (permission-check-page
      identity
      #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
@@ -461,7 +462,7 @@
 	  (mname-of musume) " - "
 	  (disp-name-of
            (status-of musume)))
-     (let1 musics (reverse (all-musics musume))
+     (let1 songs (reverse (all-songs musume))
        (map/ (lambda (n f t m u)
 	       (dl/
 		(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
@@ -472,11 +473,11 @@
 				 (br/)
 				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
 		     ))
-	     (map (lambda (m) (seq-no-of m)) musics)
-	     (map (lambda (m) (fan-of m)) musics)
-	     (map (lambda (m) (ctime-of m)) musics)
-	     (map melody-of musics)
-	     (map files-of musics)))
+	     (map (lambda (m) (seq-no-of m)) songs)
+	     (map (lambda (m) (fan-of m)) songs)
+	     (map (lambda (m) (ctime-of m)) songs)
+	     (map melody-of songs)
+	     (map files-of songs)))
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword melody priority status type assign file)
@@ -486,31 +487,31 @@
 			   (set! (priority-of musume) (id->obj <priority> priority))
 			   (set! (status-of musume) (id->obj <status> status))
 			   (set! (type-of musume) (id->obj <type> type))
-			   (set! (assign-of musume) (id->obj <fan-property> assign)))
+			   (set! (assign-of musume) (id->obj <fan> assign)))
 			 (begin
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
-			   (let1 music (make <music>
-					 :musume-id musume
+			   (let1 song (make <song>
+					 :musume musume
 					 :melody melody
-					 :fan-id (current-fan))
+					 :fan (current-fan))
 			     (set! (priority-of musume) (id->obj <priority> priority))
 			     (set! (status-of musume) (id->obj <status> status))
 			     (set! (type-of musume) (id->obj <type> type))
-			     (set! (assign-of musume) (id->obj <fan-property> assign))
+			     (set! (assign-of musume) (id->obj <fan> assign))
 			     ;; save file and make file object.
 			     (if file
 				 (let* ((tmp-path (car file))
 					(file-name (cadr file))
-					(real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref music 'id)")
+					(real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)")
 					(file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					(file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
 				   (make-directory* *kagoiri-musume-upload-path* #o775)
 				   (copy-file tmp-path file-path)
 				   ;; now, just one file upload support, but...
-				   (set! (files-of music)
+				   (set! (files-of song)
 					 (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
 			     (if (not (string-null? melody))
-				 (sendmail-lite unit musume music)))))
+				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
