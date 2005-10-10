@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.30 2005/10/10 06:51:41 cut-sea Exp $
+;; $Id: class.kahua,v 1.31 2005/10/10 13:37:52 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -200,7 +200,7 @@
 	     (email (make <email> :address mail-address))
 	     (fan  (make <fan> :login-user user :email email)))
     (set! (ref user 'role-alist) roles)
-    user))
+    fan))
 
 (define (current-fan)
   (find-kahua-instance <fan> (kahua-current-user-name)))
