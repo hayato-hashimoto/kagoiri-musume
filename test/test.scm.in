@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test.scm.in,v 1.1 2005/09/19 12:00:14 cut-sea Exp $
+;; $Id: test.scm.in,v 1.2 2005/10/10 11:59:59 cut-sea Exp $
 
 (use gauche.test)
 (use file.util)
@@ -17,13 +17,37 @@
 
 (sys-system "rm -rf _tmp _work")
 (sys-mkdir "_tmp" #o755)
+(sys-mkdir "_db" #o755)
 (sys-mkdir "_work" #o755)
 (sys-mkdir "_work/plugins" #o755)
 
-(copy-file "../plugins/kagoiri-musume.scm"  "_work/plugins/kagoiri-musume.scm")
+(for-each (lambda (f)
+	    (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
+	  (list "css.scm" "kagoiri-musume.scm" "sendmail.scm" "upload.scm"))
 
-(define *config* "../kagoiri-musume.conf")
+(define *config* "test.conf")
 (kahua-init *config*)
+
+(define *dbname* "_db")
+
+(define-class <session-state-dummy> ()
+  ((user :init-value #f)))
+
+(define with-testenv
+  (case-lambda
+   ((thunk)
+    (parameterize (kahua-current-context
+		   `(("session-state" ,(make <session-state-dummy>))))
+      (with-db (db *dbname*) (thunk))))
+   ((login-name thunk)
+    (with-testenv
+     (lambda ()
+       (or (kahua-user-exists? login-name)
+	   (kahua-add-user login-name ""))
+
+       ;; make user environment and set as as current user.
+       (set! (kahua-current-user) login-name)
+       (thunk))))))
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
@@ -34,7 +58,40 @@
             "../kagoiri-musume/kagoiri-musume.kahua"))
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
+
+ (test* "kagoiri-musume top"
+	'(html
+	  (head (title ?_) (meta ?@) (link ?@))
+	  (body (table
+		 (tr (td (h1 ?_))
+		     (td (a (@ (href ?&)) "トップ"))
+		     (td (a ?@ "システム管理"))
+		     (td (a ?@ "ユニット一覧"))
+		     (td (a ?@ "[[login]]"))))
+		(hr)
+		(h2 ?_)
+		(ul 
+		 (li (a ?@ "システム設定管理画面"))
+		 (li (a ?@ "ユニット一覧")))))
+        (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test* "kagoiri-musume top link click"
+	'(html
+	  (head (title ?_) (meta ?@) (link ?@))
+	  (body (table
+		 (tr (td (h1 ?_))
+		     (td (a ?@ "トップ"))
+		     (td (a (@ (href ?&)) "システム管理"))
+		     (td (a ?@ "ユニット一覧"))
+		     (td (a ?@ "[[login]]"))))
+		(hr)
+		(h2 ?_)
+		(ul 
+		 (li (a ?@ "システム設定管理画面"))
+		 (li (a ?@ "ユニット一覧")))))
+        (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
+        (make-match&pick w))
  )
 
 (test-end)
-
