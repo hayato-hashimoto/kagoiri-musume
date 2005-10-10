@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.5 2005/10/10 05:55:05 cut-sea Exp $
+;; $Id: search.kahua,v 1.6 2005/10/10 09:47:08 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -41,78 +41,75 @@
          (fan (find-kahua-instance <fan> (kahua-current-user-name)))
          (units (if unit-id
                     (cons (find-kahua-instance <unit> unit-id) '())
-                  (filter
-                   (lambda (unit)
-                     (memq fan (fans-of unit)))
-                   (all-units)))))
+		    (filter
+		     (lambda (unit)
+		       (memq fan (fans-of unit)))
+		     (all-units)))))
     
-     (define (find-all context word)
+    (define (find-all context word)
 
-       (define (highlight line)
-         (let ((idx (string-contains-ci line word)))
-           (if idx
-               (node-set
-                (list (string-take line idx)
-                      (span/ (@/ (class "highlight")
-                                 (style "background-color:yellow"))
-                             (substring/shared line idx (+ idx word-len)))
-                      (highlight
-                       (string-drop line (+ idx word-len)))))
-             (node-set (list line "\n")))))
-       (define (iter list acc)
-         (if (<= (length list) 1)
-             (reverse acc)
-           (if (string-contains-ci (cadr list) word)
-               (iter (cddr list)
-                     (cons
-                      (pre/
-                       (node-set
-                        (map highlight
-                             (take* list 3))))
-                      acc))
-             (iter (cdr list) acc))))
+      (define (highlight line)
+	(let ((idx (string-contains-ci line word)))
+	  (if idx
+	      (node-set
+	       (list (string-take line idx)
+		     (span/ (@/ (class "highlight")
+				(style "background-color:yellow"))
+			    (substring/shared line idx (+ idx word-len)))
+		     (highlight
+		      (string-drop line (+ idx word-len)))))
+	      (node-set (list line "\n")))))
+      (define (iter list acc)
+	(if (<= (length list) 1)
+	    (reverse acc)
+	    (if (string-contains-ci (cadr list) word)
+		(iter (cddr list)
+		      (cons
+		       (pre/
+			(map/ highlight
+			      (take* list 3)))
+		       acc))
+		(iter (cdr list) acc))))
 
-       (iter (cons "" (call-with-input-string context port->string-list)) '()))
+      (iter (cons "" (call-with-input-string context port->string-list)) '()))
 
-     (define (search-result)
+    (define (search-result)
 
-       (define (sorter x y)
-         (> (ref x 'mtime) (ref y 'mtime)))
-       (define (contain? item)
-         (let ((s (searchable-text item)))
-           (and (find (lambda (t&v)
-                        (string-contains-ci (cdr t&v) word))
-                      s)
-                (cons (label-of item)
-                      s))))
+      (define (sorter x y)
+	(> (ref x 'mtime) (ref y 'mtime)))
+      (define (contain? item)
+	(let ((s (searchable-text item)))
+	  (and (find (lambda (t&v)
+		       (string-contains-ci (cdr t&v) word))
+		     s)
+	       (cons (label-of item)
+		     s))))
 
-       (if (< 1 word-len)
-           (let* ((hits (filter-map
-                         contain?
-                         (fold
-                          (lambda (x y)
-                            (append (cons x
-                                          (all-musumes x))
-                                    y))
-                          '()
-                          units))))
-             (div/
-              (h1/ (format "search key: ~a (~a items)\n" word (length hits)))
-              (node-set
-               (map (lambda (hit)
-                      (fieldset/
-                       (legend/ (car hit))
-                       (node-set
-                        (map (lambda (item)
-                               (let1 match (find-all (cdr item) word)
-                                 (if (null? match)
-                                     ""
-                                   (div/
-                                    (strong/ (car item))
-                                    (node-set
-                                     match)))))
-                             (cdr hit)))))
-                    hits))))
-         (h1/ "Keyword is too short: " word)))
+      (if (< 1 word-len)
+	  (let* ((hits (filter-map
+			contain?
+			(fold
+			 (lambda (x y)
+			   (append (cons x
+					 (all-musumes x))
+				   y))
+			 '()
+			 units))))
+	    (div/
+	     (h1/ (format "search key: ~a (~a items)\n" word (length hits)))
+	     (map/ (lambda (hit)
+		     (fieldset/
+		      (legend/ (car hit))
+		      (map/ (lambda (item)
+			      (let1 match (find-all (cdr item) word)
+				(if (null? match)
+				    ""
+				    (div/
+				     (strong/ (car item))
+				     (node-set
+				      match)))))
+			    (cdr hit))))
+		   hits)))
+	  (h1/ "Keyword is too short: " word)))
 
-     (kagoiri-page (search-result))))
+    (kagoiri-page (search-result))))
