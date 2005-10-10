@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.29 2005/10/10 05:55:05 cut-sea Exp $
+;; $Id: class.kahua,v 1.30 2005/10/10 06:51:41 cut-sea Exp $
 ;;
 ;; include
 ;;(load "kagoiri-musume/version.kahua")
@@ -157,6 +157,12 @@
 ;		    :init-value "" :accessor size-of)
    ))
 
+;; email
+;;
+(define-class <email> (<kahua-persistent-base>)
+  ((address         :allocation :persistent :init-keyword :address
+		    :accessor address-of)))
+
 ;; fans means developer
 ;;
 (define-class <fan> (<kahua-persistent-base>)
@@ -169,6 +175,9 @@
    (delete          :allocation :persistent :init-keyword :delete
 		    :init-value #f :accessor delete-of)
    ))
+
+(define-method email-address-of ((self <fan>))
+  (address-of (email-of self)))
 
 (define-method fan-name-of ((self <fan>))
   (ref (login-user-of self) 'login-name))
@@ -186,8 +195,9 @@
 (define (all-fan-names)
   (map fan-name-of (all-fans)))
 
-(define (add-fan name passwd email . roles)
+(define (add-fan name passwd mail-address . roles)
   (and-let* ((user (kahua-add-user name passwd))
+	     (email (make <email> :address mail-address))
 	     (fan  (make <fan> :login-user user :email email)))
     (set! (ref user 'role-alist) roles)
     user))

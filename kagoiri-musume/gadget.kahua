@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.7 2005/10/10 05:55:05 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.8 2005/10/10 06:51:41 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -35,7 +35,7 @@
 		    #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
 		   "\n")))
       (for-each (lambda (fan)
-		  (sendmail (email-of fan)
+		  (sendmail (email-address-of fan)
 			    *kagoiri-musume-email*
 			    subject
 			    body))
