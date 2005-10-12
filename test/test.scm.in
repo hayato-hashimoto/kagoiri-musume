@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test.scm.in,v 1.5 2005/10/10 16:48:29 cut-sea Exp $
+;; $Id: test.scm.in,v 1.6 2005/10/12 14:54:08 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -49,6 +49,7 @@
        (set! (kahua-current-user) login-name)
        (thunk))))))
 
+#|
 ;;------------------------------------------------------------
 ;; Setting Up kagoiri-musume
 (test-section "setting up classes")
@@ -347,6 +348,7 @@
 	   (length (all-categories)))
 
   )
+|#
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
@@ -406,7 +408,7 @@
 	   (hr)
 	   (h1 ?_)
 	   (h3 "システム管理者のアカウントが必要です")
-	   (form ?@
+	   (form (@ (action ?&) ?*)
 		 (table
 		  (tr 
 		   (th "Login Name")
@@ -425,6 +427,32 @@
 			    (type "submit")
 			    (name "submit")))))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test* "kagoiri-musume system admin link click with login"
+	'(html
+	  (head ?*)
+	  (body
+	   (table ?*) (hr) (h2 "籠入娘。システム設定管理画面") (hr)
+	   (form ?@
+		 (table
+		  (thead "登録ユーザ一覧")
+		  (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
+		  ?*)
+		 (table
+		  (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		  (tr (td (input (@ (!permute (type "checkbox") (name "admin")))))
+		      (td (input (@ (!permute (type "text") (name "login-name")))))
+		      (td (input (@ (!permute (type "password") (name "passwd")))))
+		      (td (input (@ (!permute (type "text") (name "mail-address")))))
+		      (td (input (@ (!permute (type "checkbox") (name "delete"))))))
+		  (tr (td (input (@ (!permute (value "ファン登録") (type "submit") (name "submit"))))))))
+	   ?*))
+        (call-worker/gsid
+	 w
+	 '()
+	 '(("name" "kago") ("pass" "kago"))
+	 (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
  )
