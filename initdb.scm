@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.6 2005/10/10 05:55:05 cut-sea Exp $
+;; $Id: initdb.scm,v 1.7 2005/10/12 17:49:01 cut-sea Exp $
 ;;
 ;; include
 (use kahua)
@@ -17,8 +17,8 @@
 (define (main args)
   (with-db (db *kagoiri-musume-database-name*)
     (add-fan "   " "anybody" "anybody@kagoiri.org")
-    (add-fan "kago" "kago" "cut-sea@kahua.org" 'admin 'user)
-    (add-fan "cut-sea" "cutsea" "cut-sea@kahua.org" 'admin 'user)
+    (add-fan "kago" "kago" "cut-sea@kagoiri.org" 'admin 'user)
+    (add-fan "cut-sea" "cutsea" "cut-sea@kagoiri.org" 'user)
 
     (make <priority> :code "normal" :disp-name "ÉáÄÌ" :level 3)
     (make <priority> :code "low" :disp-name "Äã" :level 2)
