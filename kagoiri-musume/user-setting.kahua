@@ -3,28 +3,29 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: user-setting.kahua,v 1.2 2005/10/15 01:57:13 cut-sea Exp $
+;; $Id: user-setting.kahua,v 1.3 2005/10/15 05:23:14 cut-sea Exp $
 ;;
 ;; include
 (load "kagoiri-musume/util.kahua")
 
 ;; DB Setting.
 ;;
-(define *kagoiri-musume-title*
-  "äÆÆþÌ¼¡£ - Groupie System")
+;;(define *kagoiri-musume-title*
+;;  "äÆÆþÌ¼¡£ - Groupie System")
 
-(define *kagoiri-musume-database-name*
-  "mysql:cut-sea::db=kagoiri")
+;;(define *kagoiri-musume-database-name*
+;;  "mysql:cut-sea::db=kagoiri")
 
 ;; mail address
 ;;
-(define *kagoiri-musume-email*
-  "cut-sea@kahua.org")
+;;(define *kagoiri-musume-email*
+;;  "cut-sea@kahua.org")
 
 ;; file upload path
 ;;
-(define *kagoiri-musume-upload-path*
-  (kahua-static-document-path "kagoiri-musume/upload"))
-(define *kagoiri-musume-upload-uri*
-  (kahua-static-document-url "kagoiri-musume/upload"))
-
+;;(define *kagoiri-musume-upload-path*
+;;  (kahua-static-document-path "kagoiri-musume/upload"))
+;;(define *kagoiri-musume-upload-uri*
+;;  (kahua-static-document-url "kagoiri-musume/upload"))
+;;
+;;

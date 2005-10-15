@@ -3,15 +3,31 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.8 2005/10/15 01:12:57 cut-sea Exp $
+;; $Id: initdb.scm,v 1.9 2005/10/15 05:23:14 cut-sea Exp $
 ;;
 ;; include
+(use file.util)
 (use kahua)
 (use kahua-server)
 
 (load "kagoiri-musume/version.kahua")
 (load "kagoiri-musume/user-setting.kahua")
 (load "kagoiri-musume/class.kahua")
+
+;; for test
+(if (symbol-bound? 'config-file)
+    (kahua-init config-file))
+
+;; DB Setting.
+;;
+(define-if-not-bound *kagoiri-musume-database-name*
+  (let1 dbpath
+      (build-path (ref (kahua-config) 'working-directory)
+		  "kagoiri-musume"
+		  "db")
+    (if (file-exists? dbpath)
+        (sys-system #`"rm -rf ,dbpath"))
+    dbpath))
 
 ;;
 (define (main args)
@@ -44,6 +60,7 @@
     (make <category> :code "infra" :disp-name "インフラ")
     (make <category> :code "master" :disp-name "マスタ")
     )
-  (format #t "done~%")
+  (format #t "database initialize done~%")
+  (exit 0)
   )
 

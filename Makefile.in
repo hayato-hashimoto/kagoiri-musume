@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.10 2005/10/15 03:03:57 cut-sea Exp $
+# $Id: Makefile.in,v 1.11 2005/10/15 05:23:14 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -94,6 +94,9 @@ check:  all
 
 clean:
 	rm -rf core *~ kagoiri-musume/*~ test/*~ test/test.log $(SCRIPTS) checkout
+
+dbinit:
+	$(GOSH) -I$(KAHUA_LIB) -I./ initdb.scm;
 
 install: 
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script $(SCRIPTFILES)

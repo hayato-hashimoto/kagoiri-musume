@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.89 2005/10/15 03:03:57 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.90 2005/10/15 05:23:14 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -35,19 +35,26 @@
   "äÆÆþÌ¼¡£ - Groupie System")
 
 (define-if-not-bound *kagoiri-musume-database-name*
-  (build-path (ref (kahua-config) 'working-directory)
-	      "kagoiri-musume"
-	      "db"))
+  (let1 dbpath
+      (build-path (ref (kahua-config) 'working-directory)
+		  "kagoiri-musume"
+		  "db")
+    dbpath))
 
 ;; mail address
 ;;
 (define-if-not-bound *kagoiri-musume-email*
-  "kagoiri-support@kagoiri-musume.org")
+  "support@your.domain")
 
 ;; file upload path
 ;;
 (define-if-not-bound *kagoiri-musume-upload-path*
-  (kahua-static-document-path "kagoiri-musume/upload"))
+  (let1 upload-path (build-path (ref (kahua-config) 'working-directory)
+				"kagoiri-musume"
+				"upload")
+    (make-directory* upload-path)
+    upload-path))
+    
 (define-if-not-bound *kagoiri-musume-upload-uri*
   (kahua-static-document-url "kagoiri-musume/upload"))
 

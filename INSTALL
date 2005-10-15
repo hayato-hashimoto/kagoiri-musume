@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.3 2005/10/15 01:12:57 cut-sea Exp $
+$Id: INSTALL,v 1.4 2005/10/15 05:23:14 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
@@ -28,8 +28,8 @@ And then
 
   % make
   % make check
+  % make dbinit
   % make install
-  % gosh initdb.scm
 
 Then, edit app-servers in the Kahua working directory to add "kagoiri-musume" entry.
 
