@@ -1,0 +1,14 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: util.kahua,v 1.1 2005/10/15 01:12:58 cut-sea Exp $
+;;
+;;
+
+(define-syntax define-if-not-bound
+  (syntax-rules ()
+    ((_ var expr)
+     (define var (if (symbol-bound? 'var) var expr)))))
+

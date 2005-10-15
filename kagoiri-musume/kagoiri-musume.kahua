@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.86 2005/10/10 09:17:56 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.87 2005/10/15 01:12:57 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -22,13 +22,40 @@
 (use upload)
 
 (load "kagoiri-musume/version.kahua")
-(load "kagoiri-musume/local.kahua")
+(load "kagoiri-musume/user-setting.kahua")
 (load "kagoiri-musume/class.kahua")
 (load "kagoiri-musume/search.kahua")
 (load "kagoiri-musume/page.kahua")
 (load "kagoiri-musume/gadget.kahua")
 (load "kagoiri-musume/parts-collection.kahua")
 (load "kagoiri-musume/sys-admin.kahua")
+
+;; DB Setting.
+;;
+(define-if-not-bound *kagoiri-musume-title*
+  "äÆÆþÌ¼¡£ - Groupie System")
+
+(define-if-not-bound *kagoiri-musume-database-name*
+  (build-path (ref (kahua-config) 'working-directory)
+	      "kagoiri-musume"
+	      "db"))
+
+;; mail address
+;;
+(define-if-not-bound *kagoiri-musume-email*
+  "kagoiri-support@kagoiri-musume.org")
+
+;; file upload path
+;;
+(define-if-not-bound *kagoiri-musume-upload-path*
+  (kahua-static-document-path "kagoiri-musume/upload"))
+(define-if-not-bound *kagoiri-musume-upload-uri*
+  (kahua-static-document-url "kagoiri-musume/upload"))
+
+;; primary database
+;;
+(primary-database-name *kagoiri-musume-database-name*)
+
 
 ; main page
 ;

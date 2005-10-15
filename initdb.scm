@@ -3,14 +3,14 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.7 2005/10/12 17:49:01 cut-sea Exp $
+;; $Id: initdb.scm,v 1.8 2005/10/15 01:12:57 cut-sea Exp $
 ;;
 ;; include
 (use kahua)
 (use kahua-server)
 
 (load "kagoiri-musume/version.kahua")
-(load "kagoiri-musume/local.kahua")
+(load "kagoiri-musume/user-setting.kahua")
 (load "kagoiri-musume/class.kahua")
 
 ;;

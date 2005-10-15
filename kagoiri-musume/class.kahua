@@ -3,15 +3,11 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.31 2005/10/10 13:37:52 cut-sea Exp $
+;; $Id: class.kahua,v 1.32 2005/10/15 01:12:57 cut-sea Exp $
 ;;
 ;; include
-;;(load "kagoiri-musume/version.kahua")
-(load "kagoiri-musume/local.kahua")
-;;
-;(use srfi-13)
-;(use util.list)
-;(use gauche.collection)
+
+(load "kagoiri-musume/user-setting.kahua")
 
 ;; Unit means Project.
 ;;
