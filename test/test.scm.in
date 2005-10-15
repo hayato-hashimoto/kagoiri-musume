@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test.scm.in,v 1.7 2005/10/12 17:49:02 cut-sea Exp $
+;; $Id: test.scm.in,v 1.8 2005/10/15 03:03:58 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -23,7 +23,7 @@
 
 (for-each (lambda (f)
 	    (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
-	  (list "css.scm" "kagoiri-musume.scm" "sendmail.scm" "upload.scm"))
+	  (list "css.scm" "kagoiri-musume.scm" "sendmail.scm"))
 
 (define *config* "test.conf")
 (kahua-init *config*)

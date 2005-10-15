@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.9 2005/10/15 01:12:57 cut-sea Exp $
+# $Id: Makefile.in,v 1.10 2005/10/15 03:03:57 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -57,7 +57,7 @@ STATICFILES = kagoiri-musume/kagoiri-musume.css
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILES  = kagoiri-musume.scm css.scm upload.scm
+PLUGINFILES  = kagoiri-musume.scm css.scm
 
 
 
@@ -89,7 +89,8 @@ kagoiri-musume.conf: kagoiri-musume.conf.in
 
 check:  all
 	rm -f test/test.log
-	cd test; $(GOSH) -I$(KAHUA_LIB) ./test.scm > test.log
+	cd test; $(GOSH) -I$(KAHUA_LIB) ./test.scm > test.log; \
+	         $(GOSH) -I$(KAHUA_LIB) ./test.scm >> test.log; \
 
 clean:
 	rm -rf core *~ kagoiri-musume/*~ test/*~ test/test.log $(SCRIPTS) checkout
