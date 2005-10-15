@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.87 2005/10/15 01:12:57 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.88 2005/10/15 01:57:13 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -428,15 +428,24 @@
 			       ;; save file and make file object.
 			       (if file
 				   (let* ((tmp-path (car file))
-					  (file-name (cadr file))
-					  (real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)")
+					  (file-name (sys-basename (cadr file)))
+					  (file-xtnsn (let1 body+ext (string-split file-name ".")
+							(if (= (length body+ext) 1)
+							    "" (last body+ext))))
+					  (real-name (if (equal? file-xtnsn "") 
+							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)"
+							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id).,file-xtnsn"))
 					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					  (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
 				     (make-directory* *kagoiri-musume-upload-path* #o775)
 				     (copy-file tmp-path file-path)
 				     ;; now, just one file upload support, but...
 				     (set! (files-of song)
-					   (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
+					   (list (make <file>
+						   :file-name file-name
+						   :extension file-xtnsn
+						   :path file-path
+						   :uri file-uri)))))
 			       (sendmail-lite unit musume song)))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
@@ -532,14 +541,23 @@
 			     (if file
 				 (let* ((tmp-path (car file))
 					(file-name (cadr file))
-					(real-name #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)")
+					(file-xtnsn (let1 body+ext (string-split file-name ".")
+						      (if (= (length body+ext) 1)
+							  "" (last body+ext))))
+					(real-name (if (equal? file-xtnsn "")
+						       #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)"
+						       #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id).,file-xtnsn"))
 					(file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
 					(file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
 				   (make-directory* *kagoiri-musume-upload-path* #o775)
 				   (copy-file tmp-path file-path)
 				   ;; now, just one file upload support, but...
 				   (set! (files-of song)
-					 (list (make <file> :file-name file-name :path file-path :uri file-uri)))))
+					 (list (make <file>
+						 :file-name file-name
+						 :extension file-xtnsn
+						 :path file-path
+						 :uri file-uri)))))
 			     (if (not (string-null? melody))
 				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))

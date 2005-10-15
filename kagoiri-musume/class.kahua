@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.32 2005/10/15 01:12:57 cut-sea Exp $
+;; $Id: class.kahua,v 1.33 2005/10/15 01:57:13 cut-sea Exp $
 ;;
 ;; include
 
@@ -145,6 +145,8 @@
 		    :accessor name-of)
    (path            :allocation :persistent :init-keyword :path
 		    :init-value "" :accessor path-of)
+   (extension       :allocation :persistent :init-keyword :extension
+		    :init-value "" :accessor extension-of)
    (uri             :allocation :persistent :init-keyword :uri
 		    :init-value "" :accessor uri-of)
 ;  (type            :allocation :persistent :init-keyword :type
