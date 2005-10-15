@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.12 2005/10/15 09:05:12 cut-sea Exp $
+# $Id: Makefile.in,v 1.13 2005/10/15 10:24:17 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -66,7 +66,7 @@ CONFIG_GENERATED = Makefile kagoiri-musume.conf test/test1.scm test/test2.scm co
 .PHONY: all check clean distclean install maintainer-clean
 
 all:	test/test1.scm test/test2.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
-	-rm -rf tmp
+	-rm -rf tmp checkout
 	mkdir tmp
 	ln -s . checkout
 

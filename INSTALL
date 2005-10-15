@@ -1,18 +1,18 @@
-$Id: INSTALL,v 1.4 2005/10/15 05:23:14 cut-sea Exp $
+$Id: INSTALL,v 1.5 2005/10/15 10:24:17 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
 [Requirements]
 
 Gauche-0.8.5
-Kahua-0.3.3
+Kahua-0.3.4
 
 [Installation]
 
   % autoconf
   % ./configure [any options if you need]
 
-You may modify to your environment for DB setting.
+You may modify to fit for your environment about DB setting.
 Which modify point is in the file kagoiri-musume/user-setting.kahua.
 
   % vi kagoiri-musume/user-setting.kahua
@@ -31,6 +31,13 @@ And then
   % make dbinit
   % make install
 
+NOTE: When you do 'make dbinit', initialize Database.
+      But, at current version, this correctly work for only fsdb.
+      I mean 'correctly work' equal 'delete database, create database and insert
+      initial parameters.
+      If you never do 'make dbinit', then you NEED to 'make dbinit'.
+      Because, administrater's user account is created by this.
+
 Then, edit app-servers in the Kahua working directory to add "kagoiri-musume" entry.
 
   (kagoiri-musume :argument () :run-by-default 0)
@@ -39,6 +46,14 @@ If you want to allow non registered user to edit page,
 give 'non-member-edit as a argument.
 
   (kagoiri-musume :argument (non-member-edit) :run-by-default 0)
+
+[Task at First Contact]
+At first conntact for Kagoiri-Musume, you can login by only 'kago' account.
+The 'kago' account is system administrater level account.
+And then, you enter to system administrater's page with this account.
+The kago account's user name is 'kago' and password is 'kago'.
+Next, you change kago's password, and add normal user's.
+After that, you enjoy to play with Kagoiri-Musume.
 
 [Invoke kagoiri-musume in place]
 
@@ -55,5 +70,3 @@ Sorry, it is now not updated.  Please participate and post your questions
 to the kahua-dev mailing list.
 
 http://www.kahua.org/cgi-bin/kahua.cgi/kahua-web/show/info/Mailing%20List
-
-
