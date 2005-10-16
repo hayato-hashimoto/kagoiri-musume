@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.14 2005/10/16 01:08:36 cut-sea Exp $
+# $Id: Makefile.in,v 1.15 2005/10/16 02:57:48 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -61,11 +61,11 @@ PLUGINFILES  = kagoiri-musume.scm css.scm
 
 
 
-CONFIG_GENERATED = Makefile kagoiri-musume.conf test/test1.scm test/test2.scm config.log config.status autom4*.cache
+CONFIG_GENERATED = Makefile kagoiri-musume.conf test/test1.scm test/test2.scm test/test3.scm config.log config.status autom4*.cache
 
 .PHONY: all check clean distclean install maintainer-clean
 
-all:	test/test1.scm test/test2.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
+all:	test/test1.scm test/test2.scm test/test3.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
 	-rm -rf tmp checkout
 	mkdir tmp
 	ln -s . checkout
@@ -84,6 +84,9 @@ test/test1.scm:	test/test1.scm.in
 test/test2.scm:	test/test2.scm.in
 	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
 
+test/test3.scm:	test/test3.scm.in
+	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
+
 kagoiri-musume/version.kahua: kagoiri-musume/version.kahua.in
 	sed -e "s@###KAGOIRI_MUSUME_VERSION###@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
 
@@ -94,6 +97,7 @@ check:  all
 	rm -f test/test.log
 	cd test; $(GOSH) -I$(KAHUA_LIB) ./test1.scm > test1.log; \
 	         $(GOSH) -I$(KAHUA_LIB) ./test2.scm > test2.log; \
+	         $(GOSH) -I$(KAHUA_LIB) ./test3.scm > test3.log; \
 
 clean:
 	rm -rf core *~ kagoiri-musume/*~ test/*~ test/test*.log $(SCRIPTS) checkout
