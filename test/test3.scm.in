@@ -1,0 +1,111 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;; test kagoiri-musume script.
+;; $Id: test3.scm.in,v 1.1 2005/10/16 02:58:21 cut-sea Exp $
+
+(use gauche.test)
+(use gauche.collection)
+(use file.util)
+(use text.tree)
+(use sxml.ssax)
+(use sxml.sxpath)
+(use kahua)
+(use kahua.test.xml)
+(use kahua.test.worker)
+
+(test-start "kagoiri-musume operate admin-system parameters")
+
+(define GOSH "##GOSH##")
+
+(sys-system "rm -rf _tmp _work")
+(sys-mkdir "_tmp" #o755)
+(sys-mkdir "_work" #o755)
+(sys-mkdir "_work/plugins" #o755)
+
+(for-each (lambda (f)
+	    (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
+	  (list "css.scm" "kagoiri-musume.scm" "sendmail.scm"))
+
+(define *config* "test.conf")
+(kahua-init *config*)
+
+(define *dbname*
+  (build-path (ref (kahua-config) 'working-directory) "db"))
+
+(sys-system #`",GOSH -I../ -e'(define config-file \"test.conf\")' ../initdb.scm")
+
+;;------------------------------------------------------------
+;; Run kagoiri-musume
+(test-section "kahua-server kagoiri-musume.kahua")
+
+(with-worker
+ (w `(,GOSH "-I.." "-I##KAHUA_LIB##" "kahua-server.scm" "-c" ,*config*
+	    "../kagoiri-musume/kagoiri-musume.kahua"))
+
+ (test* "run kagoiri-musume.kahua" #t (worker-running? w))
+
+ (test* "kagoiri-musume top link click"
+	'(html
+	  (head (title ?_) (meta ?@) (link ?@))
+	  (body (table
+		 (tr (td (h1 ?_))
+		     (td (a ?@ "トップ"))
+		     (td (a (@ (href ?&)) "システム管理"))
+		     (td (a ?@ "ユニット一覧"))
+		     (td (a ?@ "[[login]]"))))
+		(hr)
+		(h2 ?_)
+		(ul 
+		 (li (a ?@ "システム設定管理画面"))
+		 (li (a ?@ "ユニット一覧")))))
+        (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test* "kagoiri-musume admin-system link click"
+	'(*TOP*
+	   (form (@ (action ?&) ?*)
+		 (table
+		  (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name")))))
+		  (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
+		 (input (@ (value "login") (type "submit") (name "submit")))))
+        (call-worker/gsid->sxml w '() '() '(// form))
+        (make-match&pick w))
+
+  (test* "kagoiri-musume system admin link click with login"
+	 '(*TOP*
+	   ?*
+	   (form (@ (action ?&) ?*)
+		 (table
+		  (thead "登録ユーザ一覧")
+		  (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
+		  (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
+		  (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td)))
+		 (table
+		  (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		  (tr (td (input (@ (type "checkbox") (name "admin"))))
+		      (td (input (@ (type "text") (name "login-name"))))
+		      (td (input (@ (type "password") (name "passwd"))))
+		      (td (input (@ (type "text") (name "mail-address"))))
+		      (td (input (@ (type "checkbox") (name "delete")))))
+		  (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
+	   ?*)
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '(("name" "kago") ("pass" "kago"))
+	 '(// form))
+        (make-match&pick w))
+
+  (test* "kagoiri-musume add new normal fan"
+	 '(("Status" "302 Moved"))
+	 (call-worker/gsid
+	  w
+	  '()
+	  '(("login-name" "shibata") ("passwd" "sh1b4t4") ("mail-address" "shibata@kagoiri-musume.org"))
+	  (lambda (h b)
+	    (filter
+	     (lambda (c) (equal? "Status" (car c)))
+	     h))))
+
+  )
+
+(test-end)
