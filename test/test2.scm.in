@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm.in,v 1.1 2005/10/15 09:06:58 cut-sea Exp $
+;; $Id: test2.scm.in,v 1.2 2005/10/16 01:08:36 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -12,7 +12,7 @@
 (use kahua.test.xml)
 (use kahua.test.worker)
 
-(test-start "kagoiri-musume2")
+(test-start "kagoiri-musume unit-list enter check")
 
 (define GOSH "##GOSH##")
 
@@ -32,25 +32,6 @@
   (build-path (ref (kahua-config) 'working-directory) "db"))
 
 (sys-system #`",GOSH -I../ -e'(define config-file \"test.conf\")' ../initdb.scm")
-
-(define-class <session-state-dummy> ()
-  ((user :init-value #f)))
-
-(define with-testenv
-  (case-lambda
-   ((thunk)
-    (parameterize (kahua-current-context
-		   `(("session-state" ,(make <session-state-dummy>))))
-      (with-db (db *dbname*) (thunk))))
-   ((login-name thunk)
-    (with-testenv
-     (lambda ()
-       (or (kahua-user-exists? login-name)
-	   (kahua-add-user login-name ""))
-
-       ;; make user environment and set as as current user.
-       (set! (kahua-current-user) login-name)
-       (thunk))))))
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
@@ -110,7 +91,7 @@
 		(td (a ?@ "トップ"))
 		(td (a ?@ "システム管理"))
 		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "パスワード変更"))
+		(td (a (@ (href ?&)) "パスワード変更"))
 		(td (a ?@ "[[Logout]]"))
 		(td (form ?@ "検索:" (input ?@)))
 		(td " Now login:" (a ?@ "cut-sea"))))
@@ -174,6 +155,134 @@
 			  '(("name" "cut-sea") ("pass" "cutsea"))
 			  (lambda (h b) (tree->string b)))
         (make-match&pick w))
+
+(test* "kagoiri-musume click change password"
+       '(html
+	 (head
+	  (title ?_) (meta ?@) (link ?@))
+	 (body
+	  (table
+	   (tr
+	    (td (h1 "籠入娘。 - Groupie System"))
+	    (td (a ?@ "トップ"))
+	    (td (a ?@ "システム管理"))
+	    (td (a ?@ "ユニット一覧"))
+	    (td (a ?@ "パスワード変更"))
+	    (td (a ?@ "[[Logout]]"))
+	    (td (form ?@ "検索:" (input ?@)))
+	    (td " Now login:" (a ?@ "cut-sea"))))
+	  (hr)
+	  (h3 "cut-sea さんのパスワード変更")
+	  (form (@ (action ?&) ?*)
+		(table
+		 (tr (th "旧パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		 (tr (th "新パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
+		 (tr (th "新パスワード(確認)")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-again-pw")))))))
+		(input (@ (!permute (value "変更") (type "submit") (name "submit"))))
+		(p (@ (class "warning")) ?*))))
+        (call-worker/gsid w
+			  '()
+			  '(("name" "cut-sea") ("pass" "cutsea"))
+			  (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+(test* "kagoiri-musume change password with bad new-password"
+       '(*TOP*
+	 ?*
+	 (form (@ (action ?&) ?*)
+	       (table
+		(tr (th "旧パスワード")
+		    (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		(tr (th "新パスワード")
+		    (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
+		(tr (th "新パスワード(確認)")
+		    (td (input (@ (!permute (value "") (type "password") (name "new-again-pw")))))))
+	       (input (@ (!permute (value "変更") (type "submit") (name "submit"))))
+	       (p (@ (class "warning")) "新パスワードが不正です"))
+	 ?*
+	 )
+       (call-worker/gsid->sxml w
+			       '()
+			       '(("old-pw" "cutsea") ("new-pw" "badsea") ("new-again-pw" "newsea"))
+			       '(// form))
+       (make-match&pick w))
+
+(test* "kagoiri-musume change password with bad old-password"
+       '(*TOP*
+	 ?*
+	 (form (@ (action ?&) ?*)
+		(table
+		 (tr (th "旧パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		 (tr (th "新パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
+		 (tr (th "新パスワード(確認)")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-again-pw")))))))
+		(input (@ (!permute (value "変更") (type "submit") (name "submit"))))
+		(p (@ (class "warning")) "旧パスワードが不正です"))
+	 ?*
+	 )
+        (call-worker/gsid->sxml w
+			       '()
+			       '(("old-pw" "badsea") ("new-pw" "newsea") ("new-again-pw" "newsea"))
+			       '(// form))
+        (make-match&pick w))
+
+(test* "kagoiri-musume change password with good password"
+       '(html
+	 (head (title ?_) (meta ?@) (link ?@))
+	 (body
+	  (table
+	   (tr 
+	    (td (h1 ?_))
+	    (td (a ?@ "トップ"))
+	    (td (a ?@ "システム管理"))
+	    (td (a ?@ "ユニット一覧"))
+	    (td (a (@ (href ?&)) "パスワード変更"))
+	    (td (a ?@ "[[Logout]]"))
+	    (td (form ?@ "検索:" (input ?@)))
+	    (td " Now login:" (a ?@ "cut-sea"))))
+	  (hr)
+	  (div ?@ (h3 "cut-sea さんのパスワードを変更しました"))))
+       (call-worker/gsid w
+			 '()
+			 '(("old-pw" "cutsea") ("new-pw" "goodsea") ("new-again-pw" "goodsea"))
+			 (lambda (h b) (tree->string b)))
+       (make-match&pick w))
+
+(test* "kagoiri-musume change password again"
+       '(*TOP*
+	 ?*
+	 (form (@ (action ?&) ?*)
+		(table
+		 (tr (th "旧パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		 (tr (th "新パスワード")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
+		 (tr (th "新パスワード(確認)")
+		     (td (input (@ (!permute (value "") (type "password") (name "new-again-pw")))))))
+		(input (@ (!permute (value "変更") (type "submit") (name "submit"))))
+		(p (@ (class "warning"))))
+	 ?*
+	 )
+        (call-worker/gsid->sxml w
+			       '()
+			       '(("old-pw" "badsea") ("new-pw" "newsea") ("new-again-pw" "newsea"))
+			       '(// form))
+        (make-match&pick w))
+
+(test* "kagoiri-musume change password back to original password"
+       '(*TOP*
+	 (div ?@ (h3 "cut-sea さんのパスワードを変更しました")))
+       (call-worker/gsid->sxml w
+			       '()
+			       '(("old-pw" "goodsea") ("new-pw" "cutsea") ("new-again-pw" "cutsea"))
+			       '(// div))
+       (make-match&pick w))
+
 
  )
 

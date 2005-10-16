@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test1.scm.in,v 1.1 2005/10/15 09:06:58 cut-sea Exp $
+;; $Id: test1.scm.in,v 1.2 2005/10/16 01:08:36 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -12,7 +12,7 @@
 (use kahua.test.xml)
 (use kahua.test.worker)
 
-(test-start "kagoiri-musume1")
+(test-start "kagoiri-musume admin-system enter check")
 
 (define GOSH "##GOSH##")
 
@@ -32,25 +32,6 @@
   (build-path (ref (kahua-config) 'working-directory) "db"))
 
 (sys-system #`",GOSH -I../ -e'(define config-file \"test.conf\")' ../initdb.scm")
-
-(define-class <session-state-dummy> ()
-  ((user :init-value #f)))
-
-(define with-testenv
-  (case-lambda
-   ((thunk)
-    (parameterize (kahua-current-context
-		   `(("session-state" ,(make <session-state-dummy>))))
-      (with-db (db *dbname*) (thunk))))
-   ((login-name thunk)
-    (with-testenv
-     (lambda ()
-       (or (kahua-user-exists? login-name)
-	   (kahua-add-user login-name ""))
-
-       ;; make user environment and set as as current user.
-       (set! (kahua-current-user) login-name)
-       (thunk))))))
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
