@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm.in,v 1.1 2005/10/16 02:58:21 cut-sea Exp $
+;; $Id: test3.scm.in,v 1.2 2005/10/16 03:54:52 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -105,6 +105,136 @@
 	    (filter
 	     (lambda (c) (equal? "Status" (car c)))
 	     h))))
+
+  (test* "kagoiri-musume system admin page direct access"
+	 '(html
+	   (head
+	    (title ?_) (meta ?@) (link ?@))
+	   (body
+	    (table
+	     (tr (td (h1 ?_))
+		 (td (a ?@ "トップ"))
+		 (td (a ?@ "システム管理"))
+		 (td (a ?@ "ユニット一覧"))
+		 (td (a ?@ "[[login]]"))))
+	    (hr)
+	    (h1 ?_)
+	    (h3 "システム管理者のアカウントが必要です")
+	    (form (@ (action ?&) ?*)
+		  (table
+		   (tr (th "Login Name")
+		       (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+		   (tr (th "Password")
+		       (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+		  (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+	 (call-worker
+	  w
+	  '(("x-kahua-worker" "kagoiri-musume")
+	    ("x-kahua-cgsid" "admin-system")
+	    ("x-kahua-path-info"
+	     ("kagoiri-musume" "admin-system")))
+	  '()
+	  (lambda (h b) (tree->string b)))
+	 (make-match&pick w))
+
+  (test* "kagoiri-musume confirm to added new fan"
+	 '(*TOP*
+	   ?*
+	   (form (@ (action ?&) ?*)
+		 (table
+		  (thead "登録ユーザ一覧")
+		  (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
+		  (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
+		  (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td))
+		  (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td)))
+		 (table
+		  (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		  (tr (td (input (@ (type "checkbox") (name "admin"))))
+		      (td (input (@ (type "text") (name "login-name"))))
+		      (td (input (@ (type "password") (name "passwd"))))
+		      (td (input (@ (type "text") (name "mail-address"))))
+		      (td (input (@ (type "checkbox") (name "delete")))))
+		  (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
+	   ?*)
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '(("name" "kago") ("pass" "kago"))
+	 '(// form))
+        (make-match&pick w))
+
+  (test* "kagoiri-musume change normal fan to admin role and hide him"
+	 '(("Status" "302 Moved"))
+	 (call-worker/gsid
+	  w
+	  '()
+	  '(("admin" "on")
+	    ("login-name" "shibata")
+	    ("passwd" "")
+	    ("mail-address" "shibata@kagoiri.org")
+	    ("delete" "on"))
+	  (lambda (h b)
+	    (filter
+	     (lambda (c) (equal? "Status" (car c)))
+	     h))))
+
+  (test* "kagoiri-musume system admin page direct access"
+	 '(html
+	   (head
+	    (title ?_) (meta ?@) (link ?@))
+	   (body
+	    (table
+	     (tr (td (h1 ?_))
+		 (td (a ?@ "トップ"))
+		 (td (a ?@ "システム管理"))
+		 (td (a ?@ "ユニット一覧"))
+		 (td (a ?@ "[[login]]"))))
+	    (hr)
+	    (h1 ?_)
+	    (h3 "システム管理者のアカウントが必要です")
+	    (form (@ (action ?&) ?*)
+		  (table
+		   (tr (th "Login Name")
+		       (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+		   (tr (th "Password")
+		       (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+		  (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+	 (call-worker
+	  w
+	  '(("x-kahua-worker" "kagoiri-musume")
+	    ("x-kahua-cgsid" "admin-system")
+	    ("x-kahua-path-info"
+	     ("kagoiri-musume" "admin-system")))
+	  '()
+	  (lambda (h b) (tree->string b)))
+	 (make-match&pick w))
+
+  (test* "kagoiri-musume confirm to change user account"
+	 '(*TOP*
+	   ?*
+	   (form (@ (action ?&) ?*)
+		 (table
+		  (thead "登録ユーザ一覧")
+		  (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
+		  (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
+		  (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td))
+		  (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td "＊")))
+		 (table
+		  (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		  (tr (td (input (@ (type "checkbox") (name "admin"))))
+		      (td (input (@ (type "text") (name "login-name"))))
+		      (td (input (@ (type "password") (name "passwd"))))
+		      (td (input (@ (type "text") (name "mail-address"))))
+		      (td (input (@ (type "checkbox") (name "delete")))))
+		  (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
+	   ?*)
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '(("name" "kago") ("pass" "kago"))
+	 '(// form))
+        (make-match&pick w))
+
 
   )
 
