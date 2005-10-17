@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.5 2005/10/15 10:24:17 cut-sea Exp $
+$Id: INSTALL,v 1.6 2005/10/17 09:25:04 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
@@ -16,6 +16,9 @@ You may modify to fit for your environment about DB setting.
 Which modify point is in the file kagoiri-musume/user-setting.kahua.
 
   % vi kagoiri-musume/user-setting.kahua
+
+NOTE: If you change *kagoiri-musume-database-name* to mysql or pgsql,
+      You setting up these database and create database.
 
 You have to give some options to specify the same install directories 
 as Kahua installed. For example if you gave --prefix=$HOME to 
