@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.90 2005/10/15 05:23:14 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.91 2005/10/17 15:49:12 shibata Exp $
 ;;
 ;; include
 ;; use
@@ -367,7 +367,8 @@
                                                            (disp-name-of s))
                                                   (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
                                        (statuss-of unit)))
-                                (tr/ (th/ "No.")
+                                (tr/ (@/ (onclick "sort_table(event);return false"))
+                                     (th/ "No.")
                                      (th/ "タイトル")
                                      (th/ "優先度")
                                      (th/ "ステータス")
@@ -380,25 +381,41 @@
                                 (let ((status (status-of m))
                                       (songs (songs-of m)))
 				(tr/ (@/ (class #`"status-,(code-of status)"))
-                                     (td/ (a/cont/
-					   (@@/ (cont musume-edit (key-of m)))
-					   (x->string (mno-of m))))
-				     (td/ (a/cont/
-					   (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
-					   (mname-of m))
-                                          (format " (~a)" (length songs)))
-				     (td/ (disp-name-of
-                                           (priority-of m)))
-				     (td/ (disp-name-of
-                                           status))
-				     (td/ (fan-name-of
-                                           (assign-of m)))
-				     (td/ (disp-name-of
-                                           (type-of m)))
-				     (td/ (sys-strftime "%Y/%m/%d %H:%M"
-							(sys-localtime (ctime-of m))))
-                                     (td/ (sys-strftime "%Y/%m/%d %H:%M"
-							(sys-localtime (ctime-of (car songs))))))))
+                                     (let1 val (mno-of m)
+                                       (td/ (@/ (value val))
+                                            (a/cont/
+                                             (@@/ (cont musume-edit (key-of m)))
+                                             (x->string val))))
+                                     (let1 val (mname-of m)
+                                       (td/ (@/ (value val))
+                                            (a/cont/
+                                             (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
+                                             val)
+                                            (format " (~a)" (length songs))))
+
+                                     (let1 val (priority-of m)
+                                       (td/ (@/ (value (level-of val)))
+                                            (disp-name-of
+                                             val)))
+                                     (let1 val (code-of status)
+                                       (td/ (@/ (value val))
+                                            (disp-name-of
+                                             status)))
+                                     (let1 val (fan-name-of (assign-of m))
+                                       (td/ (@/ (value val))
+                                            val))
+                                     (let1 val (type-of m)
+                                       (td/ (@/ (value (code-of val)))
+                                            (disp-name-of
+                                             val)))
+				     (let1 val (ctime-of m)
+                                       (td/ (@/ (value val))
+                                            (sys-strftime "%Y/%m/%d %H:%M"
+                                                          (sys-localtime val))))
+                                     (let1 val (ctime-of (car songs))
+                                       (td/ (@/ (value val))
+                                            (sys-strftime "%Y/%m/%d %H:%M"
+                                                          (sys-localtime val)))))))
 			      musumes)))
 		     )))))))
 
