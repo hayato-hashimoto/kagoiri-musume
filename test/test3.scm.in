@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm.in,v 1.5 2005/10/18 15:22:44 shibata Exp $
+;; $Id: test3.scm.in,v 1.6 2005/10/18 15:40:02 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -181,7 +181,7 @@
  (test* "kagoiri-musume system admin page direct access"
 	'(html
 	  (head
-	   (title ?_) (meta ?@) (link ?@))
+	   (title ?_) (meta ?@) (link ?@) (script ?@))
 	  (body
 	   (table
 	    (tr (td (h1 ?_))
@@ -253,7 +253,7 @@
  (test* "kagoiri-musume system admin page direct access"
 	'(html
 	  (head
-	   (title ?_) (meta ?@) (link ?@))
+	   (title ?_) (meta ?@) (link ?@) (script ?@))
 	  (body
 	   (table
 	    (tr (td (h1 ?_))
