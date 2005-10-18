@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm.in,v 1.2 2005/10/16 01:08:36 cut-sea Exp $
+;; $Id: test2.scm.in,v 1.3 2005/10/18 15:22:44 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -45,7 +45,7 @@
 
  (test* "kagoiri-musume top2"
 	'(html
-	  (head (title ?_) (meta ?@) (link ?@))
+	  (head (title ?_) (meta ?@) (link ?@) (script ?@))
 	  (body (table
 		 (tr (td (h1 ?_))
 		     (td (a ?@ "トップ"))
@@ -63,7 +63,7 @@
  (test* "kagoiri-musume unit-list link click without login"
 	'(html
 	  (head
-	   (title ?_) (meta ?@) (link ?@))
+	   (title ?_) (meta ?@) (link ?@) (script ?@))
 	  (body
 	   (table
 	    (tr (td (h1 ?_))
@@ -84,7 +84,7 @@
 
  (test* "kagoiri-musume unit-list link click with login"
 	'(html
-	  (head (title ?_) (meta ?@) (link ?@))
+	  (head (title ?_) (meta ?@) (link ?@) (script ?@))
 	  (body
 	   (table
 	    (tr (td (h1 ?_))
@@ -159,7 +159,7 @@
 (test* "kagoiri-musume click change password"
        '(html
 	 (head
-	  (title ?_) (meta ?@) (link ?@))
+	  (title ?_) (meta ?@) (link ?@) (script ?@))
 	 (body
 	  (table
 	   (tr
@@ -233,7 +233,7 @@
 
 (test* "kagoiri-musume change password with good password"
        '(html
-	 (head (title ?_) (meta ?@) (link ?@))
+	 (head (title ?_) (meta ?@) (link ?@) (script ?@))
 	 (body
 	  (table
 	   (tr 
