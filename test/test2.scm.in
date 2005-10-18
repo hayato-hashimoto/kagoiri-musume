@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm.in,v 1.3 2005/10/18 15:22:44 shibata Exp $
+;; $Id: test2.scm.in,v 1.4 2005/10/18 16:11:01 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -31,14 +31,14 @@
 (define *dbname*
   (build-path (ref (kahua-config) 'working-directory) "db"))
 
-(sys-system #`",GOSH -I../ -e'(define config-file \"test.conf\")' ../initdb.scm")
+(sys-system #`",GOSH -I../ -I. -I##KAHUA_LIB## -e'(define config-file \"test.conf\")' ../initdb.scm")
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
 (test-section "kahua-server kagoiri-musume.kahua")
 
 (with-worker
- (w `(,GOSH "-I.." "-I##KAHUA_LIB##" "kahua-server.scm" "-c" ,*config*
+ (w `(,GOSH "-I." "-I.." "-I##KAHUA_LIB##" "kahua-server.scm" "-c" ,*config*
 	    "../kagoiri-musume/kagoiri-musume.kahua"))
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
