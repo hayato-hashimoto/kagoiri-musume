@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.9 2005/10/15 05:23:14 cut-sea Exp $
+;; $Id: initdb.scm,v 1.10 2005/10/19 14:55:46 cut-sea Exp $
 ;;
 ;; include
 (use file.util)
@@ -29,36 +29,47 @@
         (sys-system #`"rm -rf ,dbpath"))
     dbpath))
 
+
+;; tip
+(define-macro (new class key . args)
+  `(if (not (find-kahua-instance ,class ,key))
+       (make ,class :code ,key ,@args)))
+
+;; tip
+(define-macro (new-fan key . args)
+  `(if (not (find-kahua-instance <fan> ,key))
+       (add-fan ,key ,@args)))
+
 ;;
 (define (main args)
   (with-db (db *kagoiri-musume-database-name*)
-    (add-fan "   " "anybody" "anybody@kagoiri.org")
-    (add-fan "kago" "kago" "cut-sea@kagoiri.org" 'admin 'user)
-    (add-fan "cut-sea" "cutsea" "cut-sea@kagoiri.org" 'user)
+    (new-fan "   " "anybody" "anybody@kagoiri.org")
+    (new-fan "kago" "kago" "cut-sea@kagoiri.org" 'admin 'user)
+    (new-fan "cut-sea" "cutsea" "cut-sea@kagoiri.org" 'user)
 
-    (make <priority> :code "normal" :disp-name "普通" :level 3)
-    (make <priority> :code "low" :disp-name "低" :level 2)
-    (make <priority> :code "high" :disp-name "高" :level 4)
-    (make <priority> :code "super" :disp-name "超高" :level 5)
+    (new <priority> "normal" :disp-name "普通" :level 3)
+    (new <priority> "low" :disp-name "低" :level 2)
+    (new <priority> "high" :disp-name "高" :level 4)
+    (new <priority> "super" :disp-name "超高" :level 5)
 
-    (make <status> :code "open" :disp-name "OPEN")
-    (make <status> :code "completed" :disp-name "COMPLETED")
-    (make <status> :code "on-hold" :disp-name "ON HOLD")
-    (make <status> :code "taken" :disp-name "TAKEN")
-    (make <status> :code "rejected" :disp-name "REJECTED")
+    (new <status> "open" :disp-name "OPEN")
+    (new <status> "completed" :disp-name "COMPLETED")
+    (new <status> "on-hold" :disp-name "ON HOLD")
+    (new <status> "taken" :disp-name "TAKEN")
+    (new <status> "rejected" :disp-name "REJECTED")
 
-    (make <type> :code "bug" :disp-name "バグ")
-    (make <type> :code "task" :disp-name "タスク")
-    (make <type> :code "request" :disp-name "変更要望")
-    (make <type> :code "discuss" :disp-name "議論")
-    (make <type> :code "report" :disp-name "報告")
-    (make <type> :code "term" :disp-name "用語")
-    (make <type> :code "etc" :disp-name "その他")
+    (new <type> "bug" :disp-name "バグ")
+    (new <type> "task" :disp-name "タスク")
+    (new <type> "request" :disp-name "変更要望")
+    (new <type> "discuss" :disp-name "議論")
+    (new <type> "report" :disp-name "報告")
+    (new <type> "term" :disp-name "用語")
+    (new <type> "etc" :disp-name "その他")
 
-    (make <category> :code "section" :disp-name "セクション")
-    (make <category> :code "global" :disp-name "全体")
-    (make <category> :code "infra" :disp-name "インフラ")
-    (make <category> :code "master" :disp-name "マスタ")
+    (new <category> "section" :disp-name "セクション")
+    (new <category> "global" :disp-name "全体")
+    (new <category> "infra" :disp-name "インフラ")
+    (new <category> "master" :disp-name "マスタ")
     )
   (format #t "database initialize done~%")
   (exit 0)

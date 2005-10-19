@@ -1,4 +1,4 @@
-$Id: INSTALL,v 1.6 2005/10/17 09:25:04 cut-sea Exp $
+$Id: INSTALL,v 1.7 2005/10/19 14:55:46 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
@@ -31,15 +31,7 @@ And then
 
   % make
   % make check
-  % make dbinit
   % make install
-
-NOTE: When you do 'make dbinit', initialize Database.
-      But, at current version, this correctly work for only fsdb.
-      I mean 'correctly work' equal 'delete database, create database and insert
-      initial parameters.
-      If you never do 'make dbinit', then you NEED to 'make dbinit'.
-      Because, administrater's user account is created by this.
 
 Then, edit app-servers in the Kahua working directory to add "kagoiri-musume" entry.
 
