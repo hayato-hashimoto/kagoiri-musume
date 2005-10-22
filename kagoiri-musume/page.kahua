@@ -3,9 +3,10 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.4 2005/10/18 15:22:45 shibata Exp $
+;; $Id: page.kahua,v 1.5 2005/10/22 15:32:06 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
+(load "kagoiri-musume/version.kahua")
 
 (define-if-not-bound *kagoiri-musume-title*
   "äÆÆþÌ¼¡£ - Groupie System")
@@ -25,7 +26,10 @@
                        (src (kahua-static-document-url
                              "kagoiri-musume/kagoiri-musume.js")))))
    (body/
-    (node-set body))))
+    (node-set body)
+    (hr/)
+    (div/ (@/ (id "bottom-pane"))
+	  (p/ #`"Copyright(C) 2005 Kahua Project    Kagoiri Musume ver ,*kagoiri-musume-version*")))))
 
 ;
 ; simple page for no permission check

@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test1.scm.in,v 1.5 2005/10/18 16:11:01 shibata Exp $
+;; $Id: test1.scm.in,v 1.6 2005/10/22 15:32:07 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -56,7 +56,9 @@
 		(h2 ?_)
 		(ul 
 		 (li (a ?@ "システム設定管理画面"))
-		 (li (a ?@ "ユニット一覧")))))
+		 (li (a ?@ "ユニット一覧")))
+		(hr)
+		(div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -73,7 +75,9 @@
 		(h2 ?_)
 		(ul 
 		 (li (a ?@ "システム設定管理画面"))
-		 (li (a ?@ "ユニット一覧")))))
+		 (li (a ?@ "ユニット一覧")))
+		(hr)
+		(div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -108,7 +112,9 @@
 		 (input (@ (!permute
 			    (value "login")
 			    (type "submit")
-			    (name "submit")))))))
+			    (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -143,7 +149,9 @@
 		 (input (@ (!permute
 			    (value "login")
 			    (type "submit")
-			    (name "submit")))))))
+			    (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
         (call-worker/gsid
 	 w
 	 '()
@@ -255,7 +263,8 @@
 		      (td (input (@ (type "text") (name "disp"))))
 		      (td (input (@ (type "checkbox") (name "delete")))))
 		  (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
-	   (hr)))
+	   (hr)
+	   (div ?@ (p ?_))))
         (call-worker/gsid
 	 w
 	 '()

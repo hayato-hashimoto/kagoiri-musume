@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm.in,v 1.4 2005/10/18 16:11:01 shibata Exp $
+;; $Id: test2.scm.in,v 1.5 2005/10/22 15:32:07 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -56,7 +56,9 @@
 		(h2 ?_)
 		(ul 
 		 (li (a ?@ "システム設定管理画面"))
-		 (li (a ?@ "ユニット一覧")))))
+		 (li (a ?@ "ユニット一覧")))
+		(hr)
+		(div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -78,7 +80,9 @@
 		 (table
 		  (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name")))))
 		  (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
-		 (input (@ (value "login") (type "submit") (name "submit"))))))
+		 (input (@ (value "login") (type "submit") (name "submit"))))
+	   (hr)
+	   (div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -149,7 +153,9 @@
 		 (input (@ (!permute
 			    (value "新ユニット結成")
 			    (type "submit")
-			    (name "submit")))))))
+			    (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
         (call-worker/gsid w
 			  '()
 			  '(("name" "cut-sea") ("pass" "cutsea"))
@@ -182,7 +188,9 @@
 		 (tr (th "新パスワード(確認)")
 		     (td (input (@ (!permute (value "") (type "password") (name "new-again-pw")))))))
 		(input (@ (!permute (value "変更") (type "submit") (name "submit"))))
-		(p (@ (class "warning")) ?*))))
+		(p (@ (class "warning")) ?*))
+	  (hr)
+	  (div ?@ (p ?_))))
         (call-worker/gsid w
 			  '()
 			  '(("name" "cut-sea") ("pass" "cutsea"))
@@ -246,7 +254,9 @@
 	    (td (form ?@ "検索:" (input ?@)))
 	    (td " Now login:" (a ?@ "cut-sea"))))
 	  (hr)
-	  (div ?@ (h3 "cut-sea さんのパスワードを変更しました"))))
+	  (div ?@ (h3 "cut-sea さんのパスワードを変更しました"))
+	  (hr)
+	  (div ?@ (p ?_))))
        (call-worker/gsid w
 			 '()
 			 '(("old-pw" "cutsea") ("new-pw" "goodsea") ("new-again-pw" "goodsea"))
@@ -276,7 +286,9 @@
 
 (test* "kagoiri-musume change password back to original password"
        '(*TOP*
-	 (div ?@ (h3 "cut-sea さんのパスワードを変更しました")))
+	 ?*
+	 (div ?@ (h3 "cut-sea さんのパスワードを変更しました"))
+	 ?*)
        (call-worker/gsid->sxml w
 			       '()
 			       '(("old-pw" "goodsea") ("new-pw" "cutsea") ("new-again-pw" "cutsea"))

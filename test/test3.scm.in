@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm.in,v 1.7 2005/10/18 16:11:01 shibata Exp $
+;; $Id: test3.scm.in,v 1.8 2005/10/22 15:32:07 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -56,7 +56,9 @@
 		(h2 ?_)
 		(ul 
 		 (li (a ?@ "システム設定管理画面"))
-		 (li (a ?@ "ユニット一覧")))))
+		 (li (a ?@ "ユニット一覧")))
+		(hr)
+		(div ?@ (p ?_))))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -126,7 +128,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -198,7 +202,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -270,7 +276,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -362,7 +370,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -439,7 +449,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -516,7 +528,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -608,7 +622,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -679,7 +695,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -750,7 +768,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -839,7 +859,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -912,7 +934,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -985,7 +1009,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1073,7 +1099,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1143,7 +1171,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1213,7 +1243,9 @@
 		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
 		  (tr (th "Password")
 		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))))
+		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
+	   (hr)
+	   (div ?@ (p ?_))))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
