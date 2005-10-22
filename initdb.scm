@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.10 2005/10/19 14:55:46 cut-sea Exp $
+;; $Id: initdb.scm,v 1.11 2005/10/22 14:54:51 cut-sea Exp $
 ;;
 ;; include
 (use file.util)
@@ -25,8 +25,6 @@
       (build-path (ref (kahua-config) 'working-directory)
 		  "kagoiri-musume"
 		  "db")
-    (if (file-exists? dbpath)
-        (sys-system #`"rm -rf ,dbpath"))
     dbpath))
 
 
