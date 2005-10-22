@@ -3,7 +3,8 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.11 2005/10/22 14:54:51 cut-sea Exp $
+;; $Id: initdb.scm,v 1.12 2005/10/22 14:57:03 shibata Exp $
+
 ;;
 ;; include
 (use file.util)
