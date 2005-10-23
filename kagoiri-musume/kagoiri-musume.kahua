@@ -3,7 +3,8 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.94 2005/10/23 05:20:05 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.95 2005/10/23 12:01:20 shibata Exp $
+
 ;;
 ;; include
 ;; use
@@ -66,7 +67,8 @@
 (define-entry (kagoiri)
   (kagoiri-page
    (h2/ "籠入娘。へようこそ！")
-   (ul/ (li/ (a/cont/ (@@/ (cont admin-system)) "システム設定管理画面"))
+   (ul/ (@/ (class "menu"))
+        (li/ (a/cont/ (@@/ (cont admin-system)) "システム設定管理画面"))
 	(li/ (a/cont/ (@@/ (cont unit-list)) "ユニット一覧")))
    ))
 
@@ -224,7 +226,7 @@
 	     (set! (fallout-of unit) #t))
 	 (redirect-page "unit-list"))))))
 
-(define-entry (musume-list unit-id :keyword priority status assign type limit)
+(define-entry (musume-list unit-id :keyword priority status assign type category limit)
   (let* ((*default-limit* 200)
 	 (*limits-list* '("" "20" "50" "200" "500" "1000"))
 	 (*limit* (or limit (x->string *default-limit*)))
@@ -238,13 +240,17 @@
 			 identity
 			 (lambda (m) (equal? (code-of (status-of m)) status))))
 	   (a-filter (if (or (not assign)
-			     (equal? "   " assign))
+			     (equal? "*all*" assign))
 			 identity
 			 (lambda (m) (equal? (fan-name-of (assign-of m)) assign))))
 	   (t-filter (if (or (not type)
 			     (equal? "*all*" type))
 			 identity
 			 (lambda (m) (equal? (code-of (type-of m)) type))))
+           (c-filter (if (or (not type)
+			     (equal? "*all*" category))
+			 identity
+			 (lambda (m) (equal? (code-of (category-of m)) category))))
 	   (and-filter (lambda (m)
                          (let1 statusid (code-of (status-of m))
                            (hash-table-put!
@@ -254,7 +260,8 @@
                          (and (p-filter m)
                               (s-filter m)
                               (a-filter m)
-                              (t-filter m))))
+                              (t-filter m)
+                              (c-filter m))))
 	   (limiter (if (string-null? *limit*)
 			identity
 			(lambda (ms)
@@ -265,84 +272,79 @@
 	   (if (viewable? unit u)
 	       u #f))
 	 #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
-	 (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+	 (ul/ (@/ (class "menu"))
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	      (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-         (form/cont/
-          (@@/ (cont search `(unit-id ,unit-id)))
-          "ユニット内検索:"
-          (input/ (@/ (type "text") (name "word") (size 10)))
-          (input/ (@/ (type "submit") (value "検索"))))
+         (div/
+          (@/ (id "search-box"))
+          (form/cont/
+           (@@/ (cont search `(unit-id ,unit-id)))
+           "ユニット内検索:"
+           (input/ (@/ (type "text") (name "word") (size 10)))
+           (input/ (@/ (type "submit") (value "検索")))))
 	 (h2/ (unit-name-of unit) " - 娘。一覧")
 	 (form/cont/ (@@/ (cont musume-list unit-id))
-		     (table/
-		      (tr/ (th/ "優先度")
-			   (th/ "ステータス")
-			   (th/ "アサイン")
-			   (th/ "タイプ")
+		     (table/ (@/ (class "table-filter"))
+		      (tr/ (@/ (onclick "toggle_select_mode(event)"))
+                           (th/ (clickable "優先度"))
+			   (th/ (clickable "ステータス"))
+			   (th/ (clickable "アサイン"))
+                           (th/ (clickable "タイプ"))
+                           (th/ (clickable "カテゴリ"))
 			   (th/ "表示上限"))
-		      (tr/
-		       (td/
-			(select/
-			 (@/ (name "priority"))
-			 (node-set
-			  (cons (option/ (@/ (value "*all*")) "全て")
-				(map (lambda (p)
-				       (if (equal? (code-of p) priority)
-					   (option/ (@/ (value (code-of p)) (selected "true"))
-						    (disp-name-of p))
-					   (option/ (@/ (value (code-of p)))
-						    (disp-name-of p))))
-                                     (priorities-of unit))))))
-		       (td/
-			(select/
-			 (@/ (name "status"))
-			 (node-set
-			  (cons (option/ (@/ (value "*all*")) "全て")
-				(map (lambda (s)
-				       (if (equal? (code-of s) status)
-					   (option/ (@/ (value (code-of s)) (selected "true"))
-						    (disp-name-of s))
-					   (option/ (@/ (value (code-of s)))
-						    (disp-name-of s))))
-                                     (statuss-of unit))))))
-		       (td/
-			(select/
-			 (@/ (name "assign"))
-			 (map/ (lambda (a)
-				 (if (equal? (fan-name-of a) assign)
-				     (option/ (@/ (value (fan-name-of a)) (selected "true"))
-					      (fan-name-of a))
-				     (option/ (@/ (value (fan-name-of a)))
-					      (fan-name-of a))))
-				    (fans-of unit))))
-		       (td/
-			(select/
-			 (@/ (name "type"))
-			 (node-set
-			  (cons (option/ (@/ (value "*all*")) "全て")
-				(map (lambda (t)
-				       (if (equal? (code-of t) type)
-					   (option/ (@/ (value (code-of t)) (selected "true"))
-						    (disp-name-of t))
-					   (option/ (@/ (value (code-of t)))
-						    (disp-name-of t))))
-                                     (types-of unit))))))
-		       (td/
-			(select/
-			 (@/ (name "limit"))
-			 (map/ (lambda (l)
-				 (if (equal? *limit* l)
-				     (option/ (@/ (value l) (selected "true")) l)
+                      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
+                        (tr/ (@/ (valign "top"))
+                         (td/
+                          (select/
+                           (@/ (onchange (filter-row 2))
+                               (name "priority"))
+                           (node-set
+                            (cons (option/ (@/ (value "*all*")) "全て")
+                                  (options (priorities-of unit) priority)))))
+                         (td/
+                          (select/
+                           (@/ (onchange (filter-row 3))
+                               (name "status"))
+                           (node-set
+                            (cons (option/ (@/ (value "*all*")) "全て")
+                                  (options (statuss-of unit) status)))))
+                         (td/
+                          (select/
+                           (@/ (onchange (filter-row 4))
+                               (name "assign"))
+                           (node-set
+                            (cons (option/ (@/ (value "*all*")) "全て")
+                                  (options (fans-of unit) assign)))))
+                         (td/
+                          (select/
+                           (@/ (onchange (filter-row 5))
+                               (name "type"))
+                           (node-set
+                            (cons (option/ (@/ (value "*all*")) "全て")
+                                  (options (types-of unit) type)))))
+                         (td/
+                          (select/
+                           (@/ (onchange (filter-row 6))
+                               (name "category"))
+                           (node-set
+                            (cons (option/ (@/ (value "*all*")) "全て")
+                                  (options (categories-of unit) category)))))
+                         (td/
+                          (select/
+                           (@/ (name "limit"))
+                           (map/ (lambda (l)
+                                   (if (equal? *limit* l)
+                                       (option/ (@/ (value l) (selected "true")) l)
 				     (option/ (@/ (value l)) l)))
-			       *limits-list*)))
-		       (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
-		       ))
+                                 *limits-list*)))
+                         (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
+                         )))
 		     ;; data table
 		     (let1 musumes (limiter (sort (filter and-filter
 							  (all-musumes unit))
 						  (lambda (m1 m2)
 						    (> (mno-of m1) (mno-of m2)))))
-		       (table/ (@/ (class "listing"))
+		       (table/ (@/ (class "listing") (id "musume_list"))
 			(thead/ (cond ((= 0 (length musumes)) "萌えられる娘。がいません(T^T)")
 				      ((= 1 (length musumes)) "ただひとりの娘。に萌えました")
 				      ((> 100 (length musumes)) #`",(length musumes)人の娘。に萌えました")
@@ -362,6 +364,7 @@
                                      (th/ "ステータス")
                                      (th/ "アサイン")
                                      (th/ "タイプ")
+                                     (th/ "カテゴリ")
                                      (th/ "登録日")
                                      (th/ "更新日")))
                         (tbody/
@@ -396,6 +399,10 @@
                                        (td/ (@/ (value (code-of val)))
                                             (disp-name-of
                                              val)))
+                                     (let1 val (category-of m)
+                                       (td/ (@/ (value (code-of val)))
+                                            (disp-name-of
+                                             val)))
 				     (let1 val (ctime-of m)
                                        (td/ (@/ (value val))
                                             (sys-strftime "%Y/%m/%d %H:%M"
@@ -414,7 +421,8 @@
        (if (viewable? unit u)
 	   u #f))
      #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
-     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+     (ul/ (@/ (class "menu"))
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h2/ (unit-name-of unit) " - 新しい娘。")
      (form/cont/
@@ -516,7 +524,8 @@
        (if (viewable? unit u)
 	   u #f))
      #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
-     (ul/ (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
+     (ul/ (@/ (class "menu"))
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
      (h3/ (unit-name-of unit) " - "
 	  (x->string (mno-of musume)) "："
@@ -682,7 +691,9 @@
    (div/ (@/ (class "msgbox"))
 	 (h3/ (node-set message)))))
 
-
+(define (clickable text)
+  (span/ (@/ (class "clickable"))
+         text))
 
 ;
 ; initialization

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.5 2005/10/22 15:32:06 cut-sea Exp $
+;; $Id: page.kahua,v 1.6 2005/10/23 12:01:20 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -27,7 +27,6 @@
                              "kagoiri-musume/kagoiri-musume.js")))))
    (body/
     (node-set body)
-    (hr/)
     (div/ (@/ (id "bottom-pane"))
 	  (p/ #`"Copyright(C) 2005 Kahua Project    Kagoiri Musume ver ,*kagoiri-musume-version*")))))
 
@@ -46,36 +45,35 @@
 (define (kagoiri-page . body)
   (page-base
    ;; navi-link
-   (table/ (tr/ (td/ (h1/ *kagoiri-musume-title*))
-		(td/ (a/cont/
-		      (@@/ (cont kagoiri)) "トップ"))
-		(td/ (a/cont/
-		      (@@/ (cont admin-system)) "システム管理"))
-		(td/ (a/cont/
-		      (@@/ (cont unit-list)) "ユニット一覧"))
-                (if (not (kahua-current-user))
-		    (td/
-                     (a/cont/ (@@/ (cont mypage))
-                              "[[login]]"))"")
-		(if (kahua-current-user)
-		    (td/ (a/cont/
-			  (@@/ (cont change-passwd)) "パスワード変更")) "")
-		(if (kahua-current-user)
-		    (td/ (a/cont/
-			  (@@/ (cont logout)) "[[Logout]]")) "")
-                (if (kahua-current-user)
-                    (td/ (form/cont/
-                        (@@/ (cont search))
-                        "検索:"
-                        (input/ (@/ (type "text") (name "word") (size 10))))) "")
-		(if (kahua-current-user)
-		    (td/
-                     " Now login:"
-                     (a/cont/ (@@/ (cont mypage))
-                              (ref (kahua-current-user) 'login-name))) "")
-                ))
-   (hr/)
-   (node-set body)))
+   (div/ (@/ (id "header"))
+         (h1/ (@/ (class "title")) *kagoiri-musume-title*)
+         (a/cont/
+          (@@/ (cont kagoiri)) "トップ")
+         (a/cont/
+          (@@/ (cont admin-system)) "システム管理")
+         (a/cont/
+          (@@/ (cont unit-list)) "ユニット一覧")
+         (if (not (kahua-current-user))
+             (a/cont/ (@@/ (cont mypage))
+                      "Login")"")
+         (if (kahua-current-user)
+             (a/cont/
+              (@@/ (cont change-passwd)) "パスワード変更") "")
+         (if (kahua-current-user)
+             (span/ " Now login:"
+                  (a/cont/ (@@/ (cont mypage))
+                           (ref (kahua-current-user) 'login-name))) "")
+         (if (kahua-current-user)
+             (a/cont/
+              (@@/ (cont logout)) "Logout") "")
+         (if (kahua-current-user)
+             (form/cont/ (@/ (class "searchbox"))
+              (@@/ (cont search))
+              "検索:"
+              (input/ (@/ (type "text") (name "word") (size 10)))) "")
+         )
+   (div/ (@/ (id "body"))
+   (node-set body))))
 
 ;
 ; permission check page

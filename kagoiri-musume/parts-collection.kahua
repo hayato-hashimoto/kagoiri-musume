@@ -3,5 +3,13 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.1 2005/10/01 12:11:32 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.2 2005/10/23 12:01:20 shibata Exp $
 ;;
+(define (options option-list . selected-value)
+  (let1 selected (and (not (null? selected-value))
+                      (car selected-value))
+    (map (lambda (p)
+         (option/ (@/ (value (code-of p))
+                      (selected (equal? (code-of p) selected)))
+                  (disp-name-of p)))
+       option-list)))

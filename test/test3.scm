@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm.in,v 1.8 2005/10/22 15:32:07 cut-sea Exp $
+;; $Id: test3.scm,v 1.2 2005/10/23 12:01:19 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -12,53 +12,36 @@
 (use kahua.test.xml)
 (use kahua.test.worker)
 
+(load "common.scm")
+
 (test-start "kagoiri-musume operate admin-system parameters")
 
-(define GOSH "##GOSH##")
-
-(sys-system "rm -rf _tmp _work")
-(sys-mkdir "_tmp" #o755)
-(sys-mkdir "_work" #o755)
-(sys-mkdir "_work/plugins" #o755)
-
-(for-each (lambda (f)
-	    (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
-	  (list "css.scm" "kagoiri-musume.scm" "sendmail.scm"))
-
-(define *config* "test.conf")
-(kahua-init *config*)
-
-(define *dbname*
-  (build-path (ref (kahua-config) 'working-directory) "db"))
-
-(sys-system #`",GOSH -I../ -I. -I##KAHUA_LIB## -e'(define config-file \"test.conf\")' ../initdb.scm")
+(*setup*)
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
 (test-section "kahua-server kagoiri-musume.kahua")
 
 (with-worker
- (w `(,GOSH "-I." "-I.." "-I##KAHUA_LIB##" "kahua-server.scm" "-c" ,*config*
-	    "../kagoiri-musume/kagoiri-musume.kahua"))
+ (w *worker-command*)
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
  (test* "kagoiri-musume top link click"
-	'(html
-	  (head (title ?_) (meta ?@) (link ?@) (script ?@))
-	  (body (table
-		 (tr (td (h1 ?_))
-		     (td (a ?@ "トップ"))
-		     (td (a (@ (href ?&)) "システム管理"))
-		     (td (a ?@ "ユニット一覧"))
-		     (td (a ?@ "[[login]]"))))
-		(hr)
-		(h2 ?_)
-		(ul 
-		 (li (a ?@ "システム設定管理画面"))
-		 (li (a ?@ "ユニット一覧")))
-		(hr)
-		(div ?@ (p ?_))))
+	`(html
+	  ,*head*
+	  (body (div ?@
+                     (h1 ?@ ?_)
+		     (a ?@ "トップ")
+		     (a (@ (href ?&)) "システム管理")
+                     (a ?@ "ユニット一覧")
+		     (a ?@ "Login"))
+                ,(*make-body*
+                  (h2 ?_)
+                  (ul ?@
+                   (li (a ?@ "システム設定管理画面"))
+                   (li (a ?@ "ユニット一覧"))))
+                ,*footer*))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -109,28 +92,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -183,28 +159,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -257,28 +226,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -351,28 +313,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -430,28 +385,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -509,28 +457,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -603,28 +544,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+          ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -676,28 +610,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+          ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -749,28 +676,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -840,28 +760,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -915,28 +828,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -990,28 +896,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1080,28 +979,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1152,28 +1044,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+	   ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")
@@ -1224,28 +1109,21 @@
 	    h))))
 
  (test* "kagoiri-musume system admin page direct access"
-	'(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	`(html
+	  ,*head*
 	  (body
-	   (table
-	    (tr (td (h1 ?_))
-		(td (a ?@ "トップ"))
-		(td (a ?@ "システム管理"))
-		(td (a ?@ "ユニット一覧"))
-		(td (a ?@ "[[login]]"))))
-	   (hr)
-	   (h1 ?_)
-	   (h3 "システム管理者のアカウントが必要です")
-	   (form (@ (action ?&) ?*)
-		 (table
-		  (tr (th "Login Name")
-		      (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-		  (tr (th "Password")
-		      (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-		 (input (@ (!permute (value "login") (type "submit") (name "submit")))))
-	   (hr)
-	   (div ?@ (p ?_))))
+	   ,*header*
+           ,(*make-body*
+             (h1 ?_)
+             (h3 "システム管理者のアカウントが必要です")
+             (form (@ (action ?&) ?*)
+                   (table
+                    (tr (th "Login Name")
+                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
+                    (tr (th "Password")
+                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
+                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
+           ,*footer*))
 	(call-worker
 	 w
 	 '(("x-kahua-worker" "kagoiri-musume")

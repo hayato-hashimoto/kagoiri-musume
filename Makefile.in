@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.18 2005/10/19 14:55:46 cut-sea Exp $
+# $Id: Makefile.in,v 1.19 2005/10/23 12:01:20 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -53,8 +53,8 @@ SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/util.kahua \
 	      kagoiri-musume/version.kahua
 
-STATICFILES = kagoiri-musume/kagoiri-musume.css \
-	      kagoiri-musume/kagoiri-musume.js
+STATICFILES = kagoiri-musume/kagoiri-musume.css
+JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
@@ -62,11 +62,11 @@ PLUGINFILES  = kagoiri-musume.scm css.scm
 
 
 
-CONFIG_GENERATED = Makefile kagoiri-musume.conf test/test1.scm test/test2.scm test/test3.scm config.log config.status autom4*.cache
+CONFIG_GENERATED = Makefile kagoiri-musume.conf test/common.scm config.log config.status autom4*.cache
 
 .PHONY: all check clean distclean install maintainer-clean
 
-all:	test/test1.scm test/test2.scm test/test3.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
+all:	test/common.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
 	-rm -rf tmp checkout
 	mkdir tmp
 	ln -s . checkout
@@ -79,13 +79,7 @@ kagoiri-musume-stop: kagoiri-musume-stop.in
 	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
 	chmod +x $@
 
-test/test1.scm:	test/test1.scm.in
-	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
-
-test/test2.scm:	test/test2.scm.in
-	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
-
-test/test3.scm:	test/test3.scm.in
+test/common.scm: test/common.scm.in
 	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
 
 kagoiri-musume/version.kahua: kagoiri-musume/version.kahua.in
@@ -110,6 +104,7 @@ install: dbinit
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script $(SCRIPTFILES)
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t script --no-overwrite $(LOCALSCRIPTFILES)
 	$(KAHUA_INSTALL) $(KAHUACONFIG) -t static --no-overwrite $(STATICFILES)
+	$(KAHUA_INSTALL) $(KAHUACONFIG) -t static $(JAVASCRIPTFILES)
 	for f in $(PLUGINFILES); do \
 	  $(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f $(PLUGINDIR)/$$f;\
 	done
@@ -121,6 +116,7 @@ install: dbinit
 uninstall :
 	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t script $(SCRIPTFILES)
 	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t static $(STATICFILES)
+	$(KAHUA_INSTALL) -U $(KAHUACONFIG) -t static $(JAVASCRIPTFILES)
 	for f in $(PLUGINFILES); do \
 		$(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f $(PLUGINDIR)/$$f;\
 	done

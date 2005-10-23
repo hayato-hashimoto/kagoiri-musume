@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.3 2005/09/28 14:47:21 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.4 2005/10/23 12:01:20 shibata Exp $ */
 
 /*
  * Common stuff
@@ -226,4 +226,94 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 .status-open {
     background-color:rgb(255, 225, 225);
+}
+
+#header {
+    position:fixed;
+    background-color:white;
+    border-bottom:1px dotted gray;
+    width:100%;
+    padding-top:5px;
+    height:30px;
+    top:0px
+}
+
+#body {
+    margin-top:35px;
+}
+
+#header h1 {
+    margin-top:10px;
+    padding:10px 20px;
+}
+
+#header a {
+    text-decoration:none;
+    margin-left:3px;
+    padding:1px 2px 1px 2px;
+    border:1px solid #e8e8e8;
+    color:black;
+/*     background-color:#e4ffe4; */
+}
+
+#header a:hover {
+    border:1px solid black;
+}
+
+.table-filter {
+    margin: 0 auto;
+}
+
+.title {
+    display:inline;
+}
+
+.searchbox {
+    display:inline;
+    position:absolute;
+    right:10px;
+    background-color:white;
+}
+
+.clickable
+{
+/*     background-color: #eef8ff; */
+    color: inherit;
+    border: 1px solid #e8e8e8;
+    padding:2px 3px;
+    margin:0px;
+    cursor: pointer;
+}
+
+.menu {
+    padding-top:10px;
+    padding-left:0px;
+}
+
+.menu li{
+    display:inline;
+}
+
+.menu li a{
+    text-decoration:none;
+    margin-left:3px;
+    padding:2px 3px;
+    border:1px solid #e8e8e8;
+    color:black;
+/*     background-color:#f0f9ff; */
+}
+
+.menu li a:hover {
+    border:1px solid black;
+}
+
+#search-box {
+/*     margin: 0 auto; */
+    position:absolute;
+    right:10px;
+/*     margin-left: 20px; */
+}
+
+#musume_list thead {
+    cursor: pointer;
 }
