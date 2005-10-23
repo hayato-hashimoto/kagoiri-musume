@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.8 2005/10/10 06:51:41 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.9 2005/10/23 04:06:21 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -40,3 +40,36 @@
 			    subject
 			    body))
 		fans))))
+
+(define (create-new-unit name desc)
+  (and (not (string-null? name))
+       (or (find-kahua-instance <unit> name)
+	   (make <unit>
+	     :unit-name name
+	     :description desc
+	     :fans (id-list->obj-list <fan> (kahua-context-ref* "fans"))
+	     :priorities (id-list->obj-list <priority> (kahua-context-ref* "priority"))
+	     :statuss (id-list->obj-list <status> (kahua-context-ref* "status"))
+	     :types (id-list->obj-list <type> (kahua-context-ref* "type"))
+	     :categories (id-list->obj-list <category> (kahua-context-ref* "category"))
+	     ))))
+
+(define (create-new-musume unit name priority status assign type category)
+  (make <musume> :unit unit
+	:musume-name name
+	:priority (id->obj <priority> priority)
+	:status (id->obj <status> status)
+	:assign (id->obj <fan> assign)
+	:type (id->obj <type> type)
+	:category (id->obj <category> category)))
+
+(define (create-new-song musume melody fan)
+  (make <song> :musume musume
+	:melody melody
+	:fan fan))
+
+(define (create-new-file name ext path uri)
+  (make <file> :file-name name
+	:extension ext
+	:path path
+	:uri uri))

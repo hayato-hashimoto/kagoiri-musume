@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.92 2005/10/22 19:46:50 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.93 2005/10/23 04:06:21 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -111,17 +111,7 @@
    (h2/ "新ユニット結成")
    (form/cont/
     (@@/ (cont (entry-lambda (:keyword name desc)
-		   (and (not (string-null? name))
-			(or (find-kahua-instance <unit> name)
-			    (make <unit>
-			      :unit-name name
-			      :description desc
-			      :fans (id-list->obj-list <fan> (kahua-context-ref* "fans"))
-			      :priorities (id-list->obj-list <priority> (kahua-context-ref* "priority"))
-			      :statuss (id-list->obj-list <status> (kahua-context-ref* "status"))
-			      :types (id-list->obj-list <type> (kahua-context-ref* "type"))
-			      :categories (id-list->obj-list <category> (kahua-context-ref* "category"))
-			      )))
+		   (create-new-unit name desc)
 		 (redirect-page "unit-list"))))
     (table/
      (tr/ (th/ "優先度")
@@ -436,18 +426,12 @@
 			 (begin
 			   (if (string-null? melody) (set! melody name))
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
-			   (let1 musume (make <musume>
-					  :unit unit
-					  :musume-name name
-					  :priority (id->obj <priority> priority)
-					  :status (id->obj <status> status)
-					  :assign (id->obj <fan> assign)
-					  :type (id->obj <type> type)
-					  :category (id->obj <category> category))
-			     (let1 song (make <song>
+			   (let1 musume (create-new-musume unit name priority status assign type category)
+			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
+			       #|(make <song>
 					   :musume musume
 					   :melody melody
-					   :fan (id->obj <fan> (kahua-current-user-name)))
+					   :fan (id->obj <fan> (kahua-current-user-name)))|#
 			       ;; save file and make file object.
 			       (if file
 				   (let* ((tmp-path (car file))
@@ -464,11 +448,13 @@
 				     (copy-file tmp-path file-path)
 				     ;; now, just one file upload support, but...
 				     (set! (files-of song)
-					   (list (make <file>
+					   (list (create-new-file file-name file-xtnsn file-path file-uri)
+						 #|(make <file>
 						   :file-name file-name
 						   :extension file-xtnsn
 						   :path file-path
-						   :uri file-uri)))))
+						   :uri file-uri)|#
+					   ))))
 			       (sendmail-lite unit musume song)))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
       (table/
@@ -567,10 +553,11 @@
 			   (set! (assign-of musume) (id->obj <fan> assign)))
 			 (begin
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
-			   (let1 song (make <song>
+			   (let1 song (create-new-song musume melody (current-fan))
+			     #|(make <song>
 					 :musume musume
 					 :melody melody
-					 :fan (current-fan))
+					 :fan (current-fan))|#
 			     (set! (priority-of musume) (id->obj <priority> priority))
 			     (set! (status-of musume) (id->obj <status> status))
 			     (set! (type-of musume) (id->obj <type> type))
@@ -591,11 +578,13 @@
 				   (copy-file tmp-path file-path)
 				   ;; now, just one file upload support, but...
 				   (set! (files-of song)
-					 (list (make <file>
+					 (list (create-new-file file-name file-xtnsn file-path file-uri)
+					       #|(make <file>
 						 :file-name file-name
 						 :extension file-xtnsn
 						 :path file-path
-						 :uri file-uri)))))
+						 :uri file-uri)|#
+					 ))))
 			     (if (not (string-null? melody))
 				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
