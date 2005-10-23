@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.93 2005/10/23 04:06:21 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.94 2005/10/23 05:20:05 cut-sea Exp $
 ;;
 ;; include
 ;; use
@@ -49,9 +49,7 @@
 ;; file upload path
 ;;
 (define-if-not-bound *kagoiri-musume-upload-path*
-  (let1 upload-path (build-path (ref (kahua-config) 'working-directory)
-				"kagoiri-musume"
-				"upload")
+  (let1 upload-path (kahua-static-document-path "kagoiri-musume/upload")
     (make-directory* upload-path)
     upload-path))
     
