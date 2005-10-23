@@ -1,3 +1,7 @@
+2005-10-22  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+
+	* support to generate link of http/https/ftp string.
+
 2005-09-25  SHIBATA Tomohisa  <shibata@kahua.org>
 
 	* add search.
