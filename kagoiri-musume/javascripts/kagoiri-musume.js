@@ -127,14 +127,14 @@ function find_parent(ele, tagname){
 function toggle_select_mode(e){
      var target = e.target;
      if (target.className != 'clickable')
-          return false
-     target = find_parent(target, 'TH')
+          return false;
+     target = find_parent(target, 'TH');
      var pos = target.cellIndex;
      var td = target.parentNode.nextSibling.cells.item(pos);
      var select = td.getElementsByTagName('SELECT').item(0);
      select.multiple = select.size>0?false:true;
      select.size = select.size>0?-1:5;
-
+     return false;
 }
 
 function has_item(array, value){
@@ -144,4 +144,54 @@ function has_item(array, value){
           }
      }
      return false;
+}
+
+function up_select(button,id){
+     var select = document.getElementById(id);
+     // var select =find_parent(find_parent(button,'TD').parentNode,'TD').getElementsByTagName('SELECT').item(0);
+     var options = select.options;
+     var prev = options.item(0);
+     var opt;
+     for (var i=0; i<options.length; i++) {
+          opt = options.item(i);
+          if (opt.selected) {
+               select.insertBefore(opt,prev);
+          }
+          else {
+               prev = opt;
+          }
+     }
+}
+
+function down_select(button,id){
+     var select = document.getElementById(id);
+     var options = select.options;
+     var prev = options.item(options.length-1);
+     var opt;
+     for (var i=options.length-1; i>=0; i--) {
+          opt = options.item(i);
+          if (opt.selected) {
+               select.insertBefore(prev,opt);
+          }
+          else {
+               prev = opt;
+          }
+     }
+}
+
+function toggle_fulllist(e){
+     var target = e.target;
+     if (target.className != 'clickable')
+          return false;
+     target = find_parent(target, 'TH');
+     var pos = target.cellIndex;
+     var td = target.parentNode.nextSibling.cells.item(pos*2);
+     var select = td.getElementsByTagName('SELECT').item(0);
+     if (select.prev_size != undefined) {
+          select.size = select.prev_size;
+          select.prev_size = undefined;
+     } else {
+          select.prev_size = select.size;
+          select.size = select.length;
+     }
 }
