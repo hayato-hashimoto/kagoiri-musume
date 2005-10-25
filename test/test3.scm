@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm,v 1.2 2005/10/23 12:01:19 shibata Exp $
+;; $Id: test3.scm,v 1.3 2005/10/25 16:55:09 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -39,8 +39,8 @@
                 ,(*make-body*
                   (h2 ?_)
                   (ul ?@
-                   (li (a ?@ "システム設定管理画面"))
-                   (li (a ?@ "ユニット一覧"))))
+                      (li (a ?@ "システム設定管理画面"))
+                      (li (a ?@ "ユニット一覧"))))
                 ,*footer*))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
@@ -54,7 +54,7 @@
 		(input (@ (value "login") (type "submit") (name "submit")))))
         (call-worker/gsid->sxml w '() '() '(// form))
         (make-match&pick w))
-
+ 
  (test* "kagoiri-musume system admin link click with login"
 	'(*TOP*
 	  ?*
@@ -80,43 +80,12 @@
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume add new normal fan"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("login-name" "shibata") ("passwd" "sh1b4t4") ("mail-address" "shibata@kagoiri-musume.org"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
-
+ (test/send&pick "kagoiri-musume add new normal fan"
+                 w
+                 '(("login-name" "shibata")
+                   ("passwd" "sh1b4t4")
+                   ("mail-address" "shibata@kagoiri-musume.org")))
+ 
  (test* "kagoiri-musume confirm to added new fan"
 	'(*TOP*
 	  ?*
@@ -139,50 +108,17 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change normal fan to admin role and hide him"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("admin" "on")
-	   ("login-name" "shibata")
-	   ("passwd" "")
-	   ("mail-address" "shibata@kagoiri.org")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume change normal fan to admin role and hide him"
+                 w
+                 '(("admin" "on")
+                   ("login-name" "shibata")
+                   ("passwd" "")
+                   ("mail-address" "shibata@kagoiri.org")
+                   ("delete" "on")))
 
  (test* "kagoiri-musume confirm to change user account"
 	'(*TOP*
@@ -206,51 +142,18 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change admin fan to normal and hide him"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("admin" "off")
-	   ("login-name" "shibata")
-	   ("passwd" "")
-	   ("mail-address" "")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
-
+ (test/send&pick "kagoiri-musume change admin fan to normal and hide him"
+                 w
+                 '(("admin" "off")
+                   ("login-name" "shibata")
+                   ("passwd" "")
+                   ("mail-address" "")
+                   ("delete" "on")))
+ 
  (test* "kagoiri-musume confirm to change user account"
 	'(*TOP*
 	  ?*
@@ -294,49 +197,16 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume add new precedence item"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テストレベル")
-	   ("level" "3")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume add new precedence item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストレベル")
+                   ("level" "3")
+                   ("delete" "off")))
 
  (test* "kagoiri-musume confirm to added precedence item"
 	'(*TOP*
@@ -366,49 +236,16 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change precedence item disp and hide"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テスト")
-	   ("level" "4")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume change normal fan to admin role and hide him"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("level" "4")
+                   ("delete" "on")))
 
  (test* "kagoiri-musume confirm to added precedence item"
 	'(*TOP*
@@ -438,49 +275,17 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change precedence item values"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "")
-	   ("level" "2")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume change precedence item values"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("level" "2")
+                   ("delete" "off")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
 
  (test* "kagoiri-musume confirm to added precedence item"
 	'(*TOP*
@@ -526,48 +331,16 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume add new status item"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テストステータス")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume add new status item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストステータス")
+                   ("delete" "off")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-          ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
 
  (test* "kagoiri-musume confirm to added status item"
 	'(*TOP*
@@ -592,48 +365,16 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change status item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テスト")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume change status item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-          ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
 
  (test* "kagoiri-musume confirm to added status item"
 	'(*TOP*
@@ -658,48 +399,15 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change status item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume change status item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
 
  (test* "kagoiri-musume confirm to added status item"
 	'(*TOP*
@@ -742,48 +450,15 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume add new type item"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テストタイプ")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume add new type item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストタイプ")
+                   ("delete" "off")))
 
  (test* "kagoiri-musume confirm to added type item"
 	'(*TOP*
@@ -810,48 +485,15 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change type item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テスト")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
+ (test/send&pick "kagoiri-musume change type item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
 
  (test* "kagoiri-musume confirm to added type item"
 	'(*TOP*
@@ -878,48 +520,16 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change type item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume change type item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
 
  (test* "kagoiri-musume confirm to added type item"
 	'(*TOP*
@@ -961,50 +571,18 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume add new category item"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テストカテゴリ")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume add new category item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストカテゴリ")
+                   ("delete" "off")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
 
- (test* "kagoiri-musume confirm to added category item"
+ (test* "kagoiri-musume confirm to added category item 1"
 	'(*TOP*
 	  ?*
 	  (form (@ (action ?&) ?*)
@@ -1026,50 +604,17 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change category item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "テスト")
-	   ("delete" "on"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
-
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-	   ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
-
- (test* "kagoiri-musume confirm to added category item"
+ (test/send&pick "kagoiri-musume change category item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
+ 
+ (test* "kagoiri-musume confirm to added category item 2"
 	'(*TOP*
 	  ?*
 	  (form (@ (action ?&) ?*)
@@ -1091,76 +636,41 @@
         (call-worker/gsid->sxml
 	 w
 	 '()
-	 '(("name" "kago") ("pass" "kago"))
+	 '()
 	 '(// form))
         (make-match&pick w))
 
- (test* "kagoiri-musume change category item value"
-	'(("Status" "302 Moved"))
-	(call-worker/gsid
-	 w
-	 '()
-	 '(("id" "test")
-	   ("disp" "")
-	   ("delete" "off"))
-	 (lambda (h b)
-	   (filter
-	    (lambda (c) (equal? "Status" (car c)))
-	    h))))
+ (test/send&pick "kagoiri-musume change category item value"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
 
- (test* "kagoiri-musume system admin page direct access"
-	`(html
-	  ,*head*
-	  (body
-	   ,*header*
-           ,(*make-body*
-             (h1 ?_)
-             (h3 "システム管理者のアカウントが必要です")
-             (form (@ (action ?&) ?*)
-                   (table
-                    (tr (th "Login Name")
-                        (td (input (@ (!permute (value "") (type "text") (name "name"))))))
-                    (tr (th "Password")
-                        (td (input (@ (!permute (value "") (type "password") (name "pass")))))))
-                   (input (@ (!permute (value "login") (type "submit") (name "submit"))))))
-           ,*footer*))
-	(call-worker
-	 w
-	 '(("x-kahua-worker" "kagoiri-musume")
-	   ("x-kahua-cgsid" "admin-system")
-	   ("x-kahua-path-info"
-	    ("kagoiri-musume" "admin-system")))
-	 '()
-	 (lambda (h b) (tree->string b)))
-	(make-match&pick w))
-
- (test* "kagoiri-musume confirm to added category item"
-	'(*TOP*
-	  ?*
-	  (form (@ (action ?&) ?*)
-		(table
-		 (thead "登録カテゴリ一覧")
-		 (tr (th "カテゴリID") (th "表示名") (th "無効"))
-		 (tr (td "global") (td "全体") (td))
-		 (tr (td "infra") (td "インフラ") (td))
-		 (tr (td "master") (td "マスタ") (td))
-		 (tr (td "section") (td "セクション") (td))
-		 (tr (td "test") (td "テスト") (td)))
-		(table
-		 (tr (th "カテゴリID") (th "表示名") (th "無効"))
-		 (tr (td (input (@ (type "text") (name "id"))))
-		     (td (input (@ (type "text") (name "disp"))))
-		     (td (input (@ (type "checkbox") (name "delete")))))
-		 (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
-	  ?*)
+ (test* "kagoiri-musume confirm to added category item 3"
+        '(*TOP*
+          ?*
+          (form (@ (action ?&) ?*)
+                (table
+                 (thead "登録カテゴリ一覧")
+                 (tr (th "カテゴリID") (th "表示名") (th "無効"))
+                 (tr (td "global") (td "全体") (td))
+                 (tr (td "infra") (td "インフラ") (td))
+                 (tr (td "master") (td "マスタ") (td))
+                 (tr (td "section") (td "セクション") (td))
+                 (tr (td "test") (td "テスト") (td)))
+                (table
+                 (tr (th "カテゴリID") (th "表示名") (th "無効"))
+                 (tr (td (input (@ (type "text") (name "id"))))
+                     (td (input (@ (type "text") (name "disp"))))
+                     (td (input (@ (type "checkbox") (name "delete")))))
+                 (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+          ?*)
         (call-worker/gsid->sxml
-	 w
-	 '()
-	 '(("name" "kago") ("pass" "kago"))
-	 '(// form))
+         w
+         '()
+         '()
+         '(// form))
         (make-match&pick w))
-
-
  )
 
 (test-end)

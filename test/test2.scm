@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.2 2005/10/23 12:01:19 shibata Exp $
+;; $Id: test2.scm,v 1.3 2005/10/25 16:55:09 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -85,24 +85,31 @@
              (h2 "新ユニット結成")
              (form ?@
                    (table
-                    (tr (th "優先度") (th "ステータス") (th "タイプ") (th "カテゴリ"))
+                    (tr ?@
+                        (th ?@ (span ?@ "優先度"))
+                        (th ?@ (span ?@ "ステータス"))
+                        (th ?@ (span ?@ "タイプ"))
+                        (th ?@ (span ?@ "カテゴリ")))
                     (tr
                      (td (select (@ (size "5")
                                     (name "priority")
-                                    (multiple "true"))
+                                    (multiple "true")
+                                    (id "priority"))
                                  (!permute
                                   (option (@ (value "high")) "高")
                                   (option (@ (value "low")) "低")
                                   (option (@ (value "normal")) "普通")
                                   (option (@ (value "super")) "超高"))))
-                     (td (select (@ (size "5") (name "status") (multiple "true"))
+                     (td ?*)
+                     (td (select (@ (size "5") (name "status") (multiple "true") (id "status"))
                                  (!permute
                                   (option (@ (value "completed")) "COMPLETED")
                                   (option (@ (value "on-hold")) "ON HOLD")
                                   (option (@ (value "open")) "OPEN")
                                   (option (@ (value "rejected")) "REJECTED")
                                   (option (@ (value "taken")) "TAKEN"))))
-                     (td (select (@ (size "5") (name "type") (multiple "true"))
+                     (td ?*)
+                     (td (select (@ (size "5") (name "type") (multiple "true") (id "type"))
                                  (!permute
                                   (option (@ (value "bug")) "バグ")
                                   (option (@ (value "discuss")) "議論")
@@ -111,21 +118,26 @@
                                   (option (@ (value "request")) "変更要望")
                                   (option (@ (value "task")) "タスク")
                                   (option (@ (value "term")) "用語"))))
-                     (td (select (@ (size "5") (name "category") (multiple "true"))
+                     (td ?*)
+                     (td (select (@ (size "5") (name "category") (multiple "true") (id "category"))
                                  (!permute
                                   (option (@ (value "global")) "全体")
                                   (option (@ (value "infra")) "インフラ")
                                   (option (@ (value "master")) "マスタ")
-                                  (option (@ (value "section")) "セクション"))))))
+                                  (option (@ (value "section")) "セクション"))))
+                     (td ?*)))
                    (table
                     (tr (td "ユニット名") (td (textarea ?@)))
-                    (tr (td "概要") (td (textarea ?@)))
-                    (tr (td "ファン")
+                    (tr (td "概要") (td (@ (colspan "2")) (textarea ?@)))
+                    (tr (@ (align "left"))
+                        (td "ファン")
                         (td
-                         (select ?@
-                                 (option (@ (value "   ")))
-                                 (option (@ (value "cut-sea")) "cut-sea")
-                                 (option (@ (value "kago")) "kago")))))
+                         (table (tr (td
+                                     (select ?@
+                                             (option (@ (value "   ")))
+                                             (option (@ (value "cut-sea")) "cut-sea")
+                                             (option (@ (value "kago")) "kago")))
+                                    (td ?*))))))
                    (input (@ (!permute
                               (value "新ユニット結成")
                               (type "submit")

@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test1.scm,v 1.2 2005/10/23 12:01:19 shibata Exp $
+;; $Id: test1.scm,v 1.3 2005/10/25 16:55:09 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -233,17 +233,13 @@
         (make-match&pick w))
 
  (test* "kagoiri-musume logout"
-	`(("Status" "302 Moved")
-	  ("x-kahua-cgsid" "logout"))
-	(call-worker/gsid w 
-			  '()
-			  '(("name" "kago") ("pass" "kago"))
-			  (lambda (h b)
-			    (filter
-			     (lambda (c) (or (equal? "Status" (car c))
-					     (equal? "x-kahua-cgsid" (car c))))
-			     h))))
-
-  )
+	(header `((!contain ("Status" "302 Moved") (x-kahua-cgsid "logout"))))
+	(call-worker/gsid
+         w
+         '()
+         '(("name" "kago") ("pass" "kago"))
+         header->sxml)
+        test-sxml-match?)
+ )
 
 (test-end)
