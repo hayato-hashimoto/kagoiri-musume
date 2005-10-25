@@ -31,3 +31,50 @@
      `(div (@ (id "body"))
            b1 ...))))
 
+
+;; check 'http header' and save 'continuation session id' to worker.
+;;
+;; (test* "kagoiri-musume add new normal fan"
+;;        (header '((!contain ("Status" "302 Moved")
+;;                            ("Location" ?&))))
+;;        (call-worker/gsid
+;;         w
+;;         '()
+;;         '(("login-name" "shibata") ("passwd" "sh1b4t4"))
+;;         header->sxml)
+;;        (make-match&pick w))
+
+
+;; '((!contain ("Status" "302 Moved") ("Location" ?&)))
+;; =>  '(header (!contain (Status "302 Moved") (Location ?&)))
+(define (header headers)
+  (define (iter item)
+    (cond ((not (pair? item))
+           item)
+          ((string? (car item))
+           (cons (string->symbol (car item))
+                 (map iter (cdr item))))
+          (else
+           (map iter item))))
+  `(header ,@(iter headers)))
+
+;; '(("Status" "302 Moved") ("Location" "http://localho.."))
+;; => '(header (Status "302 Moved") (Location "http://localho.."))
+(define (header->sxml h b)
+  (cons 'header
+        (map (lambda (item)
+               (cons (string->symbol (car item)) (cdr item)))
+             h)))
+
+
+
+(define (test/send&pick label w send-data)
+  (test* label
+         (header '((!contain ("Status" "302 Moved")
+                             ("Location" ?&))))
+	(call-worker/gsid
+	 w
+	 '()
+         send-data
+         header->sxml)
+        (make-match&pick w)))
