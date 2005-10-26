@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.3 2005/10/26 16:17:43 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.4 2005/10/26 18:26:59 cut-sea Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -33,4 +33,18 @@
 	      new-tags-list
 	      tags-list))))
 
+;; イマイチ
+;;
+(define-checker-tags admin: (lambda () (admin? (kahua-current-user)))
+  (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
+      input/ li/ pre/ select/ table/ tbody/ textarea/ thead/ ul/))
+(define-checker-tags common: (lambda () (common? (kahua-current-user)))
+  (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
+      input/ li/ pre/ select/ table/ tbody/ textarea/ thead/ ul/))
+(define-checker-tags devel: (lambda () (developer? (kahua-current-user)))
+  (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
+      input/ li/ pre/ select/ table/ tbody/ textarea/ thead/ ul/))
+(define-checker-tags client: (lambda () (client? (kahua-current-user)))
+  (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
+      input/ li/ pre/ select/ table/ tbody/ textarea/ thead/ ul/))
 

@@ -3,6 +3,7 @@
 (allow-module file.util)
 (allow-module rfc.base64)
 (allow-module srfi-1)
+(allow-module srfi-10)
 (allow-module srfi-13)
 (allow-module srfi-19)
 (allow-module util.list)

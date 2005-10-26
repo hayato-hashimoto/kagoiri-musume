@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.96 2005/10/25 16:52:37 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.97 2005/10/26 18:26:59 cut-sea Exp $
 
 ;;
 ;; include
@@ -12,6 +12,7 @@
 (use gauche.logger)
 (use file.util)
 (use rfc.base64)
+(use srfi-10)
 (use srfi-13)
 (use srfi-19)
 (use util.list)
