@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.6 2005/10/22 15:32:06 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.7 2005/10/27 16:26:01 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -19,13 +19,18 @@
    (hr/)
 
    (form/cont/
-    (@@/ (cont (entry-lambda (:keyword login-name passwd mail-address admin delete)
+    (@@/ (cont (entry-lambda (:keyword login-name passwd mail-address admin devel client delete)
 		   (if (not (string-null? login-name))
 		       (if (not (kahua-find-user login-name))
 			   ;; new creation
-			   (if (equal? "on" admin)
-			       (add-fan login-name passwd mail-address 'admin 'user)
-			       (add-fan login-name passwd mail-address 'user))
+			   (let1 roles '(user)
+			     (if (equal? "on" admin)
+				 (set! roles (cons 'admin roles)))
+			     (if (equal? "on" devel)
+				 (set! roles (cons 'developer roles)))
+			     (if (equal? "on" client)
+				 (set! roles (cons 'client roles)))
+			     (apply add-fan login-name passwd mail-address roles))
 			   ;; modify user
 			   (let* ((fan  (find-kahua-instance <fan> login-name))
 				  (user (login-user-of fan)))
@@ -34,31 +39,44 @@
 			     (if (not (string-null? mail-address))
 				 (let1 email (make <email> :address mail-address)
 				   (set! (email-of fan) email)))
-			     (set! (ref user 'role-alist) (if (equal? "on" admin)
-							      '(admin user)
-							      '(user)))
+			     (let1 roles '(user)
+			       (if (equal? "on" admin)
+				   (set! roles (cons 'admin roles)))
+			       (if (equal? "on" devel)
+				   (set! roles (cons 'developer roles)))
+			       (if (equal? "on" client)
+				   (set! roles (cons 'client roles)))
+			       (set! (ref user 'role-alist) roles))
 			     (set! (delete-of fan) (if (equal? "on" delete) #t #f))
 			     ))
 		       )
 		 (redirect-page "admin-system"))))
     (table/
      (thead/ "登録ユーザ一覧")
-     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス") (th/ "隠密"))
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "メールアドレス") (th/ "開発") (th/ "顧客") (th/ "隠密"))
      (map/ (lambda (f)
 	     (tr/ (td/ (if (member 'admin
 				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
 			   "＊" ""))
 		  (td/ (fan-name-of f)) (td/ (email-address-of f))
+		  (td/ (if (member 'developer
+				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
+			   "＊" ""))
+		  (td/ (if (member 'client
+				   (ref (kahua-find-user (fan-name-of f)) 'role-alist))
+			   "＊" ""))
 		  (td/ (if (delete-of f) "＊" ""))))
 	   (filter (lambda (f)
 		     (not (equal? "   " (fan-name-of f))))
 		   (make-kahua-collection <fan>))))
     (table/
-     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス") (th/ "隠密"))
+     (tr/ (th/ "管理者権限") (th/ "ログイン名") (th/ "パスワード") (th/ "メールアドレス") (th/ "開発") (th/ "顧客") (th/ "隠密"))
      (tr/ (td/ (input/ (@/ (type "checkbox") (name "admin")) "off"))
 	  (td/ (input/ (@/ (type "text") (name "login-name")) ""))
 	  (td/ (input/ (@/ (type "password") (name "passwd")) ""))
 	  (td/ (input/ (@/ (type "text") (name "mail-address")) ""))
+	  (td/ (input/ (@/ (type "checkbox") (name "devel")) "off"))
+	  (td/ (input/ (@/ (type "checkbox") (name "client")) "off"))
 	  (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
      (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value "ファン登録")))))))
 

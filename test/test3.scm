@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm,v 1.3 2005/10/25 16:55:09 shibata Exp $
+;; $Id: test3.scm,v 1.4 2005/10/27 16:26:01 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -61,15 +61,17 @@
 	  (form (@ (action ?&) ?*)
 		(table
 		 (thead "登録ユーザ一覧")
-		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td)))
+		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td)))
 		(table
-		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td (input (@ (type "checkbox") (name "admin"))))
 		     (td (input (@ (type "text") (name "login-name"))))
 		     (td (input (@ (type "password") (name "passwd"))))
 		     (td (input (@ (type "text") (name "mail-address"))))
+		     (td (input (@ (type "checkbox") (name "devel"))))
+		     (td (input (@ (type "checkbox") (name "client"))))
 		     (td (input (@ (type "checkbox") (name "delete")))))
 		 (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
 	  ?*)
@@ -92,16 +94,18 @@
 	  (form (@ (action ?&) ?*)
 		(table
 		 (thead "登録ユーザ一覧")
-		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td)))
+		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td)))
 		(table
-		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td (input (@ (type "checkbox") (name "admin"))))
 		     (td (input (@ (type "text") (name "login-name"))))
 		     (td (input (@ (type "password") (name "passwd"))))
 		     (td (input (@ (type "text") (name "mail-address"))))
+		     (td (input (@ (type "checkbox") (name "devel"))))
+		     (td (input (@ (type "checkbox") (name "client"))))
 		     (td (input (@ (type "checkbox") (name "delete")))))
 		 (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
 	  ?*)
@@ -126,16 +130,18 @@
 	  (form (@ (action ?&) ?*)
 		(table
 		 (thead "登録ユーザ一覧")
-		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td "＊")))
+		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
-		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td (input (@ (type "checkbox") (name "admin"))))
 		     (td (input (@ (type "text") (name "login-name"))))
 		     (td (input (@ (type "password") (name "passwd"))))
 		     (td (input (@ (type "text") (name "mail-address"))))
+		     (td (input (@ (type "checkbox") (name "devel"))))
+		     (td (input (@ (type "checkbox") (name "client"))))
 		     (td (input (@ (type "checkbox") (name "delete")))))
 		 (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
 	  ?*)
@@ -160,16 +166,18 @@
 	  (form ?@
 		(table
 		 (thead "登録ユーザ一覧")
-		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td))
-		 (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td "＊")))
+		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
-		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "隠密"))
+		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td (input (@ (type "checkbox") (name "admin"))))
 		     (td (input (@ (type "text") (name "login-name"))))
 		     (td (input (@ (type "password") (name "passwd"))))
 		     (td (input (@ (type "text") (name "mail-address"))))
+		     (td (input (@ (type "checkbox") (name "devel"))))
+		     (td (input (@ (type "checkbox") (name "client"))))
 		     (td (input (@ (type "checkbox") (name "delete")))))
 		 (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
 	  ?*

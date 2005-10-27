@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.35 2005/10/27 15:46:55 cut-sea Exp $
+;; $Id: class.kahua,v 1.36 2005/10/27 16:26:01 cut-sea Exp $
 ;;
 ;; include
 
@@ -226,11 +226,11 @@
 (define (admin?)
   (kahua-user-has-role? (kahua-current-user) '(admin)))
 (define (common?)
-  (kahua-user-has-role? (kahua-current-user) '(admin)))
+  (kahua-user-has-role? (kahua-current-user) '(user)))
 (define (developer?)
-  (kahua-user-has-role? (kahua-current-user) '(admin)))
+  (kahua-user-has-role? (kahua-current-user) '(developer)))
 (define (client?)
-  (kahua-user-has-role? (kahua-current-user) '(admin)))
+  (kahua-user-has-role? (kahua-current-user) '(client)))
 
 ;; property base
 (define-class <property-base> (<kahua-persistent-base>)
