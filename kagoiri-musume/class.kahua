@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.34 2005/10/26 18:26:59 cut-sea Exp $
+;; $Id: class.kahua,v 1.35 2005/10/27 15:46:55 cut-sea Exp $
 ;;
 ;; include
 
@@ -223,30 +223,14 @@
 
 ;; convenient method
 ;;
-(define-method admin? ((user <kahua-user>))
-  (if (kahua-user-has-role? user '(admin)) #t #f))
-
-(define-method admin? ((fan <fan>))
-  (if (kahua-user-has-role? (login-user-of fan) '(admin)) #t #f))
-
-(define-method common? ((user <kahua-user>))
-  (if (kahua-user-has-role? user '(user)) #t #f))
-
-(define-method common? ((fan <fan>))
-  (if (kahua-user-has-role? (login-user-of fan) '(user)) #t #f))
-
-(define-method developer? ((user <kahua-user>))
-  (if (kahua-user-has-role? user '(developer)) #t #f))
-
-(define-method developer? ((fan <fan>))
-  (if (kahua-user-has-role? (login-user-of fan) '(developer)) #t #f))
-
-(define-method client? ((user <kahua-user>))
-  (if (kahua-user-has-role? user '(client)) #t #f))
-
-(define-method client? ((fan <fan>))
-  (if (kahua-user-has-role? (login-user-of fan) '(client)) #t #f))
-
+(define (admin?)
+  (kahua-user-has-role? (kahua-current-user) '(admin)))
+(define (common?)
+  (kahua-user-has-role? (kahua-current-user) '(admin)))
+(define (developer?)
+  (kahua-user-has-role? (kahua-current-user) '(admin)))
+(define (client?)
+  (kahua-user-has-role? (kahua-current-user) '(admin)))
 
 ;; property base
 (define-class <property-base> (<kahua-persistent-base>)
