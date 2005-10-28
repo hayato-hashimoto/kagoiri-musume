@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.36 2005/10/27 16:26:01 cut-sea Exp $
+;; $Id: class.kahua,v 1.37 2005/10/28 18:15:42 cut-sea Exp $
 ;;
 ;; include
 
@@ -294,6 +294,27 @@
 (define-method has? ((unit <unit>) (category <category>))
   (if (memq category (categories-of unit)) #t #f))
 
+;; errorlog class
+;;
+(define-class <errorlog> (<kahua-persistent-base>)
+  ((ctime            :allocation :persistent :init-keyword :ctime
+		     :init-thunk sys-time :accessor ctime-of)
+   (category         :allocation :persistent :init-keyword :category
+		     :init-value "" :accessor category-of)
+   (level            :allocation :persistent :init-keyword :level
+		     :init-value 0 :accessor level-of)
+   (message          :allocation :persistent :init-keyword :message
+		     :init-value "" :accessor message-of)
+   ))
+
+(define (error-log-write cat lev msg)
+  (make <errorlog>
+    :category cat
+    :level lev
+    :message msg))
+
+;;
+;;
 (define (id-list->obj-list class ids)
   (map (lambda (id)
          (find-kahua-instance class id))
