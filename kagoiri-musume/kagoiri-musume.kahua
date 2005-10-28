@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.99 2005/10/28 15:18:08 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.100 2005/10/28 16:01:27 cut-sea Exp $
 
 ;;
 ;; include
@@ -79,7 +79,7 @@
    (h2/ "ユニット一覧")
    (table/ (@/ (class "listing"))
 	   (thead/
-	    (tr/ (th/) (th/)
+	    (tr/ (devel:th/) (devel:th/)
 		 (th/ "ユニット名")
 		 (th/ "概要")
 		 (th/ "ファン")))
@@ -88,13 +88,15 @@
 	     (map-with-index
 	      (lambda (idx u)
 		(tr/ (@/ (class (if (odd? idx) "odd" "even")))
-		     (td/ (a/cont/
-			   (@@/ (cont unit-edit (key-of u)))
-			   "編集"))
-		     (td/ (a/cont/
-			   (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
-			   (@@/ (cont unit-fallout (key-of u)))
-			   "削除"))
+		     (devel:td/
+		      (a/cont/
+		       (@@/ (cont unit-edit (key-of u)))
+		       "編集"))
+		     (devel:td/
+		      (a/cont/
+		       (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
+		       (@@/ (cont unit-fallout (key-of u)))
+		       "削除"))
 		     (td/ (a/cont/
 			   (@@/ (cont musume-list (key-of u)))
 			   (unit-name-of u))
@@ -238,16 +240,27 @@
 	     (textarea/ (@/ (type "text") (name "desc")
 			    (rows 10) (cols 80))
 			(description-of unit))))
-       (tr/ (td/ "ファン")
+       (tr/ (@/ (align "left"))
+	    (td/ "ファン")
 	    (td/
-	     (select/ (@/ (name "fans") (size "5") (multiple "true"))
-		      (map/ (lambda (f)
-                              (let1 fan-name (fan-name-of f)
-                                (option/ (@/ (value fan-name)
-                                             (selected (fan-to? unit f)))
-                                         fan-name)))
-                            (filter lucky-fan?
-                                    (make-kahua-collection <fan>))))))
+	     (table/
+	      (tr/
+	       (td/
+		(select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
+			 (map/ (lambda (f)
+				 (let1 fan-name (fan-name-of f)
+				   (option/ (@/ (value fan-name)
+						(selected (fan-to? unit f)))
+					    fan-name)))
+			       (append (fans-of unit)
+				       (lset-difference eq? (all-fans)
+							(fans-of unit))))))
+	       (td/ (div/ (@/ (class "clickable")
+			      (onclick "up_select(this, 'fans')"))
+			  "↑")
+		    (div/ (@/ (class "clickable")
+			      (onclick "down_select(this, 'fans')"))
+			  "↓"))))))
        )
       (input/ (@/ (type "submit") (name "submit") (value "確定"))))
      )))
