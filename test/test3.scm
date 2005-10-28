@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm,v 1.4 2005/10/27 16:26:01 cut-sea Exp $
+;; $Id: test3.scm,v 1.5 2005/10/28 13:26:09 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -62,8 +62,8 @@
 		(table
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td)))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td)))
 		(table
 		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td (input (@ (type "checkbox") (name "admin"))))
@@ -95,8 +95,8 @@
 		(table
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td)))
 		(table
 		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
@@ -131,8 +131,8 @@
 		(table
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
 		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
@@ -167,8 +167,8 @@
 		(table
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
-		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td) (td) (td))
-		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td) (td) (td))
+		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
 		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
