@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.98 2005/10/28 13:43:49 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.99 2005/10/28 15:18:08 cut-sea Exp $
 
 ;;
 ;; include
@@ -192,19 +192,41 @@
 		       (redirect-page "unit-list"))
 		   (redirect-page "unit-list"))))
       (table/
-       (tr/ (th/ "優先度")
-	    (th/ "ステータス")
-	    (th/ "タイプ")
-	    (th/ "カテゴリ"))
-       (tr/ (map/ (lambda (n items)
-		    (td/ (select/ (@/ (name n) (size "5") (multiple "true"))
-				  (map/ (lambda (item)
-					  (option/ (@/ (value (code-of item))
-						       (selected (has? unit item)))
-						   (disp-name-of item)))
-					items))))
-		  (list "priority" "status" "type" "category")
-		  (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
+       (tr/ (@/ (onclick "toggle_fulllist(event)"))
+	    (th/ (@/ (colspan 2)) (clickable "優先度"))
+	    (th/ (@/ (colspan 2)) (clickable "ステータス"))
+	    (th/ (@/ (colspan 2)) (clickable "タイプ"))
+	    (th/ (@/ (colspan 2)) (clickable "カテゴリ")))
+       (tr/
+	(map/ (lambda (n items)
+		(node-set
+		 (list
+		  (td/
+		   (select/ (@/ (id n) (name n) (size "5") (multiple "true"))
+			    (map/ (lambda (item)
+				    (option/ (@/ (value (code-of item))
+						 (selected (has? unit item)))
+					     (disp-name-of item)))
+				  items)))
+		  (td/ (div/ (@/ (class "clickable")
+				 (onclick #`"up_select(this\, ',|n|')"))
+			     "↑")
+		       (div/ (@/ (class "clickable")
+				 (onclick #`"down_select(this\, ',|n|')"))
+			     "↓")))))
+	      (list "priority" "status" "type" "category")
+	      (list (append (priorities-of unit)
+			    (lset-difference eq? (all-priorities)
+					     (priorities-of unit)))
+		    (append (statuss-of unit)
+			    (lset-difference eq? (all-statuss)
+					     (statuss-of unit)))
+		    (append (types-of unit)
+			    (lset-difference eq? (all-types)
+					     (types-of unit)))
+		    (append (categories-of unit)
+			    (lset-difference eq? (all-categories)
+					     (categories-of unit)))))))
       (table/
        (tr/ (td/ "ユニット名")
 	    (td/
