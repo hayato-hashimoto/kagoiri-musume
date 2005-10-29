@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.7 2005/10/28 16:01:27 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.8 2005/10/29 02:01:25 shibata Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -51,3 +51,26 @@
   (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
       hr/ input/ li/ pre/ select/ table/ tbody/ td/ textarea/ th/ thead/ ul/))
 
+
+;;;; define-checker creates checker macro
+;;;
+;; [syntax] define-checker (name args ...) condition
+;;
+;; (define-checker (<node n)
+;;      (< 0 n))
+;;;
+;; [syntax] <node args ... body
+;;
+;; (<node 1 "yes")
+;; -> "yes"
+;; (<node -1 "yes")
+;; -> ""
+(define-macro (define-checker name&args condition)
+  (let ((name (car name&args))
+        (args (cdr name&args)))
+    `(define-macro (,name ,@args body)
+       `(if ((lambda ,',args
+               ,',condition)
+             ,@,(cons 'list args))
+            ,body
+          ""))))
