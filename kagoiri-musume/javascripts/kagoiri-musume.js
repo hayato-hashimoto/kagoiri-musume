@@ -1,17 +1,30 @@
+function init(){
+     if (onload_func)
+          onload_func();
+     win = document.all?true:false;
+     textContent = win?'innerText':'textContent';
+}
+var win = false;
+var textContent = 'textContent'
+
+onload_func = window.onload;
+window.onload = init;
+
 function sort_table(e){
-     var target = e.target;
+     e = win?window.event:e;
+     var target = win?e.srcElement:e.target;
      var rev = false;
      if (target.style.backgroundColor){
-          target.style.backgroundColor = null;
+          target.style.backgroundColor = '';
           rev = true;
      } else {
           var brothers = target.parentNode.childNodes;
           for (var i = 0; i < brothers.length; i++){
-               brothers[i].style.backgroundColor = null;
+               brothers[i].style.backgroundColor = '';
           }
           target.style.backgroundColor = 'pink';
      }
-     var table = find_parent(e.target, 'TABLE');
+     var table = find_parent(target, 'TABLE');
      var headers = table.rows.item(0).cells;
 
      var pos = target.cellIndex;
@@ -39,7 +52,7 @@ function sort_table(e){
      for (var i = 0; i<rows_.length; i++) {
           newbody.appendChild(rows_[i]);
      }
-     tbody.parentNode.replaceChild(newbody, tbody);
+     table.replaceChild(newbody, tbody);
 }
 
 function filter_table(select, id, all_text, pos){
@@ -63,7 +76,7 @@ function filter_table(select, id, all_text, pos){
      var prev_options = select.prev_options;
      if (prev_options != undefined)
           for (var i=0; i<prev_options.length; i++) {
-               prev_options[i].style.backgroundColor = null;
+               prev_options[i].style.backgroundColor = '';
           }
      for (var i=0; i<option_list.length; i++) {
           option_list[i].style.backgroundColor = 'lightblue';
@@ -71,7 +84,6 @@ function filter_table(select, id, all_text, pos){
      select.prev_options = option_list;
 
      var all = has_item(select_text_list,all_text)?true:false;
-     var tbody = table.getElementsByTagName('TBODY').item(0);
 
      var row;
      /* reset previous filter */
@@ -84,6 +96,10 @@ function filter_table(select, id, all_text, pos){
      var cell;
      var rows = table.rows;
      var filterd_rows = new Array;
+
+     var tbody = table.getElementsByTagName('TBODY').item(0);
+     var newbody = document.createElement('tbody');
+     table.style.display='none'
      /* filter loop */
      for (var i = 1; i < rows.length; i++) {
           row = rows.item(i);
@@ -93,7 +109,7 @@ function filter_table(select, id, all_text, pos){
                row.filterd = 0;
           }
           /* count up */
-          if (!all && !has_item(select_text_list, cell.textContent)) {
+          if (!all && !has_item(select_text_list, cell[textContent])) {
                filterd_rows.push(row)
                row.filterd += 1;
           }
@@ -102,16 +118,40 @@ function filter_table(select, id, all_text, pos){
           if (!all && row.filterd > 0) {
                row.style.display = "none";
           } else if (row.filterd == 0) {
-               row.style.display = null;
+               row.style.display = '';
           }
      }
+     table.style.display=''
      /* save filterd_rows for next select */
      select.filterd_rows = filterd_rows;
-     find_parent(select, 'TABLE').rows.item(0).cells.item(select.parentNode.cellIndex).style.color = all?null:'red';
+     find_parent(select, 'TABLE').rows.item(0).cells.item(select.parentNode.cellIndex).style.color = all?'':'red';
 
 
      return true;
 }
+
+function filter_this(e){
+     e = win?window.event:e;
+     var target = win?e.srcElement:e.target;
+     var target_text = target[textContent];
+     var table = find_parent(target,'TABLE');
+     var head = table.tHead.rows.item(0).cells.item(target.cellIndex);
+     var pos = head.getAttribute('for');
+     var filter = document.getElementById('table_filter');
+     var select = filter.rows.item(1).cells.item(pos).getElementsByTagName('SELECT').item(0);
+     var opt;
+     for (var i=0; i<select.options.length; i++) {
+          opt = select.options[i];
+          if (opt[textContent] == target_text) {
+               opt.selected = true;
+          }
+     }
+     select.onchange()
+
+//      var rows = table.rows;
+//      var filterd_rows = new Array;
+}
+
 
 function find_parent(ele, tagname){
      while (ele.tagName != tagname) {
@@ -125,15 +165,16 @@ function find_parent(ele, tagname){
 
 
 function toggle_select_mode(e){
-     var target = e.target;
+     e = win?window.event:e;
+     var target = win?e.srcElement:e.target;
      if (target.className != 'clickable')
           return false;
      target = find_parent(target, 'TH');
      var pos = target.cellIndex;
      var td = target.parentNode.nextSibling.cells.item(pos);
      var select = td.getElementsByTagName('SELECT').item(0);
-     select.multiple = select.size>0?false:true;
-     select.size = select.size>0?-1:5;
+     select.multiple = select.size>1?false:true;
+     select.size = select.size>1?1:5;
      return false;
 }
 
@@ -148,7 +189,6 @@ function has_item(array, value){
 
 function up_select(button,id){
      var select = document.getElementById(id);
-     // var select =find_parent(find_parent(button,'TD').parentNode,'TD').getElementsByTagName('SELECT').item(0);
      var options = select.options;
      var prev = options.item(0);
      var opt;
@@ -180,7 +220,8 @@ function down_select(button,id){
 }
 
 function toggle_fulllist(e){
-     var target = e.target;
+     e = win?window.event:e;
+     var target = win?e.srcElement:e.target;
      if (target.className != 'clickable')
           return false;
      target = find_parent(target, 'TH');
