@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.4 2005/10/23 12:01:20 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.5 2005/10/29 22:34:52 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -40,6 +40,11 @@ pre {
 }
 
 p.warning {
+  color: #ff0000;
+}
+
+span.warning {
+  font-size: 70%;
   color: #ff0000;
 }
 

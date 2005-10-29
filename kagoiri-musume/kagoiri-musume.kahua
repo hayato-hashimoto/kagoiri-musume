@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.101 2005/10/28 17:28:32 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.102 2005/10/29 22:34:52 cut-sea Exp $
 
 ;;
 ;; include
@@ -142,7 +142,7 @@
             (list "priority" "status" "type" "category")
             (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
     (table/
-     (tr/ (td/ "ユニット名")
+     (tr/ (td/ "ユニット名" (span/ (@/ (class "warning")) "(※)"))
 	  (td/
 	   (textarea/ (@/ (type "text") (name "name")
 			  (rows 1) (cols 32)) "")))
@@ -152,7 +152,7 @@
 	   (textarea/ (@/ (type "text") (name "desc")
 			  (rows 10) (cols 80)) "")))
      (tr/ (@/ (align "left"))
-          (td/ "ファン")
+          (td/ "ファン" (span/ (@/ (class "warning")) "(※)"))
           (td/
            (table/
             (tr/
@@ -230,7 +230,7 @@
 			    (lset-difference eq? (all-categories)
 					     (categories-of unit)))))))
       (table/
-       (tr/ (td/ "ユニット名")
+       (tr/ (td/ "ユニット名" (span/ (@/ (class "warning")) "(※)"))
 	    (td/
 	     (textarea/ (@/ (type "text") (name "name")
 			    (rows 1) (cols 32))
@@ -241,7 +241,7 @@
 			    (rows 10) (cols 80))
 			(description-of unit))))
        (tr/ (@/ (align "left"))
-	    (td/ "ファン")
+	    (td/ "ファン" (span/ (@/ (class "warning")) "(※)"))
 	    (td/
 	     (table/
 	      (tr/
