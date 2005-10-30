@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.104 2005/10/30 06:14:12 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.105 2005/10/30 06:40:32 cut-sea Exp $
 
 ;;
 ;; include
@@ -497,7 +497,10 @@
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
-		     (if (not (string-null? name))
+		     (if (string-null? name)
+			 (begin
+			   (set-error-message "タイトルを入力してください。")
+			   (redirect-page #`"musume-new/,unit-id"))
 			 (begin
 			   (if (string-null? melody) (set! melody name))
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
@@ -519,10 +522,9 @@
 				     (copy-file tmp-path file-path)
 				     ;; now, just one file upload support, but...
 				     (set! (files-of song)
-					   (list (create-new-file file-name file-xtnsn file-path file-uri)
-					   ))))
-			       (sendmail-lite unit musume song)))))
-		   (redirect-page #`"musume-list/,|unit-id|"))))
+					   (list (create-new-file file-name file-xtnsn file-path file-uri)))))
+			       (sendmail-lite unit musume song)
+			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (table/
        (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "カテゴリ") (th/ "アサイン"))
        (tr/
@@ -535,9 +537,10 @@
 	      (list "priority" "status" "type" "category" "assign")
 	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))))
-      (table/ (tr/ (td/ "タイトル")
+      (table/ (tr/ (td/ "タイトル" (span/ (@/ (class "warning")) "(※)"))
 		   (td/ (textarea/ (@/ (type "text") (name "name")
-				       (rows 1) (cols 32)) "")))
+				       (rows 1) (cols 32)) "")
+			(error:span/ (@/ (class "warning")) (set-error-message #f))))
 	      (tr/ (td/ "内容")
 		   (td/ (textarea/ (@/ (type "text") (name "melody")
 				       (rows 20) (cols 80)) "")))
