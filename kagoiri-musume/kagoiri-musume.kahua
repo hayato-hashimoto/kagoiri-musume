@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.102 2005/10/29 22:34:52 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.103 2005/10/30 05:57:25 cut-sea Exp $
 
 ;;
 ;; include
@@ -19,6 +19,7 @@
 (use srfi-1)
 (use gauche.collection)
 (use gauche.sequence)
+(use gauche.parameter)
 
 (use sendmail)
 
@@ -114,8 +115,12 @@
    (devel:h2/ "新ユニット結成")
    (devel:form/cont/
     (@@/ (cont (entry-lambda (:keyword name desc)
+		   (if (string-null? name)
+		       (set-error-message "ユニット名を入力してください。")
+		       (set-error-message #f))
+		 (begin
 		   (create-new-unit name desc)
-		 (redirect-page "unit-list"))))
+		   (redirect-page "unit-list")))))
     (table/
      (tr/ (@/ (onclick "toggle_fulllist(event)"))
           (th/ (@/ (colspan 2)) (clickable "優先度"))
@@ -145,7 +150,8 @@
      (tr/ (td/ "ユニット名" (span/ (@/ (class "warning")) "(※)"))
 	  (td/
 	   (textarea/ (@/ (type "text") (name "name")
-			  (rows 1) (cols 32)) "")))
+			  (rows 1) (cols 32)) "")
+	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
      (tr/
           (td/ "概要")
 	  (td/ (@/ (colspan 2))
@@ -182,6 +188,9 @@
      (hr/)
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name desc)
+		     (if (string-null? name)
+			 (set-error-message "ユニット名を入力してください。")
+			 (set-error-message #f))
 		     (begin
 		       (if (not (string-null? name))
 			   (set! (unit-name-of unit) name))
@@ -190,9 +199,8 @@
 		       (set! (priorities-of unit) (id-list->obj-list <priority> (kahua-context-ref* "priority")))
 		       (set! (statuss-of unit) (id-list->obj-list <status> (kahua-context-ref* "status")))
 		       (set! (types-of unit) (id-list->obj-list <type> (kahua-context-ref* "type")))
-		       (set! (categories-of unit) (id-list->obj-list <category> (kahua-context-ref* "category")))
-		       (redirect-page "unit-list"))
-		   (redirect-page "unit-list"))))
+		       (set! (categories-of unit) (id-list->obj-list <category> (kahua-context-ref* "category"))))
+		     (redirect-page #`"unit-edit/,unit-id"))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
 	    (th/ (@/ (colspan 2)) (clickable "優先度"))
@@ -234,7 +242,8 @@
 	    (td/
 	     (textarea/ (@/ (type "text") (name "name")
 			    (rows 1) (cols 32))
-			(unit-name-of unit))))
+			(unit-name-of unit))
+	     (error:span/ (@/ (class "warning")) (set-error-message #f))))
        (tr/ (td/ "概要")
 	    (td/
 	     (textarea/ (@/ (type "text") (name "desc")
@@ -332,7 +341,7 @@
 	 #`"『,(unit-name-of unit)』のファンであるアカウントが必要です"
 	 (ul/ (@/ (class "menu"))
           (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	      (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
          (div/
           (@/ (id "search-box"))
           (form/cont/
@@ -492,10 +501,6 @@
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
 			   (let1 musume (create-new-musume unit name priority status assign type category)
 			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
-			       #|(make <song>
-					   :musume musume
-					   :melody melody
-					   :fan (id->obj <fan> (kahua-current-user-name)))|#
 			       ;; save file and make file object.
 			       (if file
 				   (let* ((tmp-path (car file))
@@ -513,11 +518,6 @@
 				     ;; now, just one file upload support, but...
 				     (set! (files-of song)
 					   (list (create-new-file file-name file-xtnsn file-path file-uri)
-						 #|(make <file>
-						   :file-name file-name
-						   :extension file-xtnsn
-						   :path file-path
-						   :uri file-uri)|#
 					   ))))
 			       (sendmail-lite unit musume song)))))
 		   (redirect-page #`"musume-list/,|unit-id|"))))
@@ -605,7 +605,7 @@
 		      (dd/ (pre/ m
 				 (br/)
 				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
-		     ))
+		))
 	     (map (lambda (m) (seq-no-of m)) songs)
 	     (map (lambda (m) (fan-of m)) songs)
 	     (map (lambda (m) (ctime-of m)) songs)
@@ -624,10 +624,6 @@
 			 (begin
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
 			   (let1 song (create-new-song musume melody (current-fan))
-			     #|(make <song>
-					 :musume musume
-					 :melody melody
-					 :fan (current-fan))|#
 			     (set! (priority-of musume) (id->obj <priority> priority))
 			     (set! (status-of musume) (id->obj <status> status))
 			     (set! (type-of musume) (id->obj <type> type))
@@ -649,12 +645,7 @@
 				   ;; now, just one file upload support, but...
 				   (set! (files-of song)
 					 (list (create-new-file file-name file-xtnsn file-path file-uri)
-					       #|(make <file>
-						 :file-name file-name
-						 :extension file-xtnsn
-						 :path file-path
-						 :uri file-uri)|#
-					 ))))
+					       ))))
 			     (if (not (string-null? melody))
 				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))

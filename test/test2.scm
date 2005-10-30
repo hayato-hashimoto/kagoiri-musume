@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.4 2005/10/29 22:34:53 cut-sea Exp $
+;; $Id: test2.scm,v 1.5 2005/10/30 05:57:26 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -127,7 +127,7 @@
                                   (option (@ (value "section")) "セクション"))))
                      (td ?*)))
                    (table
-                    (tr (td "ユニット名" ?_) (td (textarea ?@)))
+                    (tr (td "ユニット名" ?_) (td (textarea ?@) ?*))
                     (tr (td "概要") (td (@ (colspan "2")) (textarea ?@)))
                     (tr (@ (align "left"))
                         (td "ファン" ?_)

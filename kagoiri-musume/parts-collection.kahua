@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.8 2005/10/29 02:01:25 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.9 2005/10/30 05:57:25 cut-sea Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -50,6 +50,9 @@
 (define-checker-tags client: client?
   (a/ a/cont/ dd/ div/ dt/ form/ form/cont/ h1/ h2/ h3/ h4/ h5/ h6/
       hr/ input/ li/ pre/ select/ table/ tbody/ td/ textarea/ th/ thead/ ul/))
+
+(define-checker-tags error: error?
+  (span/))
 
 
 ;;;; define-checker creates checker macro
