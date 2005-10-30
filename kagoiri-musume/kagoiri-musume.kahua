@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.103 2005/10/30 05:57:25 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.104 2005/10/30 06:14:12 cut-sea Exp $
 
 ;;
 ;; include
@@ -189,18 +189,20 @@
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name desc)
 		     (if (string-null? name)
-			 (set-error-message "ユニット名を入力してください。")
-			 (set-error-message #f))
-		     (begin
-		       (if (not (string-null? name))
-			   (set! (unit-name-of unit) name))
-		       (set! (description-of unit) desc)
-		       (set! (fans-of unit) (id-list->obj-list <fan> (kahua-context-ref* "fans")))
-		       (set! (priorities-of unit) (id-list->obj-list <priority> (kahua-context-ref* "priority")))
-		       (set! (statuss-of unit) (id-list->obj-list <status> (kahua-context-ref* "status")))
-		       (set! (types-of unit) (id-list->obj-list <type> (kahua-context-ref* "type")))
-		       (set! (categories-of unit) (id-list->obj-list <category> (kahua-context-ref* "category"))))
-		     (redirect-page #`"unit-edit/,unit-id"))))
+			 (begin
+			   (set-error-message "ユニット名を入力してください。")
+			   (redirect-page #`"unit-edit/,unit-id"))
+			 (begin
+			   (set-error-message #f)
+			   (if (not (string-null? name))
+			       (set! (unit-name-of unit) name))
+			   (set! (description-of unit) desc)
+			   (set! (fans-of unit) (id-list->obj-list <fan> (kahua-context-ref* "fans")))
+			   (set! (priorities-of unit) (id-list->obj-list <priority> (kahua-context-ref* "priority")))
+			   (set! (statuss-of unit) (id-list->obj-list <status> (kahua-context-ref* "status")))
+			   (set! (types-of unit) (id-list->obj-list <type> (kahua-context-ref* "type")))
+			   (set! (categories-of unit) (id-list->obj-list <category> (kahua-context-ref* "category")))
+			   (redirect-page "unit-list"))))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
 	    (th/ (@/ (colspan 2)) (clickable "優先度"))
