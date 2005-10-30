@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.19 2005/10/23 12:01:20 shibata Exp $
+# $Id: Makefile.in,v 1.20 2005/10/30 15:01:27 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -93,6 +93,7 @@ check:  all
 	cd test; $(GOSH) -I. -I$(KAHUA_LIB) ./test1.scm > test1.log; \
 	         $(GOSH) -I. -I$(KAHUA_LIB) ./test2.scm > test2.log; \
 	         $(GOSH) -I. -I$(KAHUA_LIB) ./test3.scm > test3.log; \
+	         $(GOSH) -I. -I$(KAHUA_LIB) ./test4.scm > test4.log; \
 
 clean:
 	rm -rf core *~ kagoiri-musume/*~ test/*~ test/test*.log $(SCRIPTS) checkout

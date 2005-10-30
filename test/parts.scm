@@ -27,7 +27,7 @@
 
 (define-syntax *make-body*
   (syntax-rules ()
-    ((*mke-body* b1 ...)
+    ((_ b1 ...)
      `(div (@ (id "body"))
            b1 ...))))
 
