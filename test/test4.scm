@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test4.scm,v 1.2 2005/11/01 13:27:46 cut-sea Exp $
+;; $Id: test4.scm,v 1.3 2005/11/01 14:06:43 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -155,7 +155,7 @@
 	  (table ?@
 		 (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン")))
 		 (tbody (tr ?@
-			    (td (a ?@ "編集"))
+			    (td (a (@ (href ?&)) "編集"))
 			    (td (a ?@ "削除"))
 			    (td (a ?@ "籠入娘。Test Proj.") " (0)")
 			    (td "籠入娘。のバグトラッキングを行うユニット")
@@ -165,6 +165,84 @@
 	 '()
 	 '()
 	 '(// body div table))
+        (make-match&pick w))
+
+ (test* "kagoiri-musume edit unit"
+	`(html
+	  ,*head*
+	  (body
+	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+		(a ?@ "トップ")
+		(a ?@ "システム管理")
+		(a ?@ "ユニット一覧")
+		(a ?@ "パスワード変更")
+		(span " Now login:" (a ?@ "cut-sea"))
+		(a ?@ "Logout")
+		(form ?@ "検索:" (input ?@)))
+	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット編集")
+		(hr)
+		(form ?@
+		      (table
+		       (tr ?@
+			   (th ?@ (span ?@ "優先度"))
+			   (th ?@ (span ?@ "ステータス"))
+			   (th ?@ (span ?@ "タイプ"))
+			   (th ?@ (span ?@ "カテゴリ")))
+		       (tr
+			(td (select ?@
+				    (option (@ (value "normal") (selected "#t")) "普通")
+				    (option (@ (value "low") (selected "#t")) "低")
+				    (option (@ (value "high") (selected "#t")) "高")
+				    (option (@ (value "super")) "超高")))
+			(td (div ?@ "↑")
+			    (div ?@ "↓"))
+			(td (select ?@
+				    (option (@ (value "open") (selected "#t")) "OPEN")
+				    (option (@ (value "completed") (selected "#t")) "COMPLETED")
+				    (option (@ (value "on-hold")) "ON HOLD")
+				    (option (@ (value "rejected")) "REJECTED")
+				    (option (@ (value "taken")) "TAKEN")))
+			(td (div ?@ "↑")
+			    (div ?@ "↓"))
+			(td (select ?@
+				    (option (@ (value "bug") (selected "#t")) "バグ")
+				    (option (@ (value "task") (selected "#t")) "タスク")
+				    (option (@ (value "request") (selected "#t")) "変更要望")
+				    (option (@ (value "discuss")) "議論")
+				    (option (@ (value "etc")) "その他")
+				    (option (@ (value "report")) "報告")
+				    (option (@ (value "term")) "用語")))
+			(td (div ?@ "↑")
+			    (div ?@ "↓"))
+			(td (select ?@
+				    (option (@ (value "global") (selected "#t")) "全体")
+				    (option (@ (value "section") (selected "#t")) "セクション")
+				    (option (@ (value "infra")) "インフラ")
+				    (option (@ (value "master")) "マスタ")))
+			(td (div ?@ "↑")
+			    (div ?@ "↓"))))
+		      (table
+		       (tr (td "ユニット名" (span ?@ "(※)"))
+			   (td (textarea ?@ "籠入娘。Test Proj.")))
+		       (tr (td "概要")
+			   (td (textarea ?@ "籠入娘。のバグトラッキングを行うユニット")))
+		       (tr ?@
+			   (td "ファン" (span ?@ "(※)"))
+			   (td
+			    (table
+			     (tr (td (select ?@
+					     (option (@ (value "   ") (selected "#t")))
+					     (option (@ (value "cut-sea") (selected "#t")) "cut-sea")
+					     (option (@ (value "kago")) "kago")))
+				 (td (div ?@ "↑")
+				     (div ?@ "↓")))))))
+		      (input ?@)))
+	   ,*footer*))
+        (call-worker/gsid
+	 w
+	 '()
+	 '()
+	 (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
  )
