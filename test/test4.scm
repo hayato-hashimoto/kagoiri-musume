@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test4.scm,v 1.1 2005/10/30 15:01:27 cut-sea Exp $
+;; $Id: test4.scm,v 1.2 2005/11/01 13:27:46 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -75,7 +75,7 @@
 			    (tbody))
 		     (hr)
 		     (h2 "新ユニット結成")
-		     (form ?@
+		     (form (@ (action ?&) ?*)
 			   (table
 			    (tr ?@
 				(th ?@ (span ?@ "優先度"))
@@ -139,6 +139,33 @@
 			  '(("name" "cut-sea") ("pass" "cutsea"))
 			  (lambda (h b) (tree->string b)))
 	(make-match&pick w))
+
+ (test/send&pick "kagoiri-musume add new unit"
+                 w
+                 '(("priority" "normal" "low" "high")
+		   ("status" "open" "completed")
+		   ("type" "bug" "task" "request")
+		   ("category" "global" "section")
+		   ("name" "籠入娘。Test Proj.")
+		   ("desc" "籠入娘。のバグトラッキングを行うユニット")
+		   ("fans" "   " "cut-sea")))
+
+ (test* "kagoiri-musume check new unit"
+	`(*TOP*
+	  (table ?@
+		 (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン")))
+		 (tbody (tr ?@
+			    (td (a ?@ "編集"))
+			    (td (a ?@ "削除"))
+			    (td (a ?@ "籠入娘。Test Proj.") " (0)")
+			    (td "籠入娘。のバグトラッキングを行うユニット")
+			    (td "cut-sea")))))
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '()
+	 '(// body div table))
+        (make-match&pick w))
 
  )
 
