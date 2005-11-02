@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: messages.kahua,v 1.1 2005/11/02 18:31:29 cut-sea Exp $
+;; $Id: messages.kahua,v 1.2 2005/11/02 18:32:44 cut-sea Exp $
 (define %hello-kagoiri% "籠入娘。へようこそ！")
 
 (define %entry-sys-admin-page% "システム設定管理画面")
@@ -132,3 +132,11 @@
 
 (define %password-change-button% "変更")
 
+;;;;;;;;;;;;;;;;
+;; 以下は。。。
+;;;;;;;;;;;;;;;;
+(define %now-no-support% "ちょいまってや")
+
+(define %view-musume% "娘。の閲覧")
+
+(define %now-working% "工事中")
