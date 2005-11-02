@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.9 2005/10/30 05:57:25 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.10 2005/11/02 16:52:27 cut-sea Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -77,3 +77,7 @@
              ,@,(cons 'list args))
             ,body
           ""))))
+
+(define-checker (unit-member? unit)
+  (memq (current-fan) (ref unit 'fans)))
+
