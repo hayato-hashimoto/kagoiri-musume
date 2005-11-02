@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.106 2005/11/02 12:41:21 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.107 2005/11/02 15:43:04 cut-sea Exp $
 
 ;;
 ;; include
@@ -88,29 +88,28 @@
 	    (node-set
 	     (map-with-index
 	      (lambda (idx u)
-		(unit-member? u
-			      (tr/ (@/ (class (if (odd? idx) "odd" "even")))
-				   (devel:td/
-				    (a/cont/
-				     (@@/ (cont unit-edit (key-of u)))
-				     "編集"))
-				   (devel:td/
-				    (a/cont/
-				     (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
-				     (@@/ (cont unit-fallout (key-of u)))
-				     "削除"))
-				   (td/ (a/cont/
-					 (@@/ (cont musume-list (key-of u)))
-					 (unit-name-of u))
-					(format " (~a)"
-						(- (next-musume-no-of u) 1)))
-				   (td/ (description-of u))
-				   (td/ (string-join
-					 (filter-map (lambda (f)
-						       (and (not (equal? "   " (code-of f)))
-							    (fan-name-of f)))
-						     (fans-of u)) " , "))
-				   )))
+		(tr/ (@/ (class (if (odd? idx) "odd" "even")))
+		     (devel:td/
+		      (a/cont/
+		       (@@/ (cont unit-edit (key-of u)))
+		       "編集"))
+		     (devel:td/
+		      (a/cont/
+		       (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
+		       (@@/ (cont unit-fallout (key-of u)))
+		       "削除"))
+		     (td/ (a/cont/
+			   (@@/ (cont musume-list (key-of u)))
+			   (unit-name-of u))
+			  (format " (~a)"
+				  (- (next-musume-no-of u) 1)))
+		     (td/ (description-of u))
+		     (td/ (string-join
+			   (filter-map (lambda (f)
+					 (and (not (equal? "   " (code-of f)))
+					      (fan-name-of f)))
+				       (fans-of u)) " , "))
+		     ))
 	      (all-units)))))
    (devel:hr/)
    (devel:h2/ "新ユニット結成")
@@ -287,7 +286,7 @@
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
-		   (login-pc-page #f checker))
+		   (login-pc-page #f checker #`"『,(unit-name-of unit)』のファンとしてのアカウントが必要です"))
       (permission-check-logic
        checker
        #`"『,(unit-name-of unit)』のファンとしてのアカウントが必要です"
