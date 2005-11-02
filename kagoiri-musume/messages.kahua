@@ -1,0 +1,134 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: messages.kahua,v 1.1 2005/11/02 18:31:29 cut-sea Exp $
+(define %hello-kagoiri% "籠入娘。へようこそ！")
+
+(define %entry-sys-admin-page% "システム設定管理画面")
+
+(define %entry-unit-list-page% "ユニット一覧")
+
+(define %need-kahua-user-account% "ユニット一覧は一般ユーザアカウントが必要です")
+
+(define %unit-name% "ユニット名")
+
+(define %description%  "概要")
+
+(define %fan% "ファン")
+
+(define %edit-link% "編集")
+
+(define %delete-link% "削除")
+
+(define %new-unit-create-button% "新ユニット結成")
+
+(define %new-musume-create-button% "新しい娘。加入")
+
+(define %need-to-input-unit-name% "ユニット名を入力してください。")
+
+(define %need-to-input-musume-title% "タイトルを入力してください。")
+
+(define %priority% "優先度")
+
+(define %status% "ステータス")
+
+(define %template-need-fan-account-of-unit% "『~a』のファンとしてのアカウントが必要です")
+
+(define %template-edit-musume-title% "『~a』の『~a 』を編集する。")
+
+(define %template-edit-unit% "『~a』ユニット編集")
+
+(define %assign% "アサイン")
+
+(define %type% "タイプ")
+
+(define %category% "カテゴリ")
+
+(define %created-date% "登録日")
+
+(define %mark-of-need% "(※)")
+
+(define %commit-button% "確定")
+
+(define %sing-commit-button% "コミット")
+
+(define %up-arrow% "↑")
+
+(define %down-arrow% "↓")
+
+(define %entry-of-musume-list% "娘。一覧")
+
+(define %entry-of-musume-new% "新しい娘。")
+
+(define %inter-unit-search% "ユニット内検索:")
+
+(define %search% "検索")
+
+(define %template-of-musume-list-title% "~a - 娘。一覧")
+
+(define %template-of-musume-new-title% " - 新しい娘。")
+
+(define %limits-of-musume-list% "表示上限")
+
+(define %dropdown-item-all% "全て")
+
+(define %search-refinement% "絞り込み")
+
+(define %no-musume-message% "萌えられる娘。がいません(T^T)")
+
+(define %only-one-musume-message% "ただひとりの娘。に萌えました")
+
+(define %template-normal-number-of-musume-message% "~a人の娘。に萌えました")
+
+(define %template-heatup-number-of-musume-message%  "~a人もの娘。に萌えました(萌えすぎです)")
+
+(define %template-overheat-number-of-musume-message%  "なんと~a人もの娘。に萌えまつきました orz")
+
+(define %column-musume-number% "No.")
+
+(define %column-musume-title% "タイトル")
+
+(define %column-musume-priority% "優先度")
+
+(define %column-musume-status% "ステータス")
+
+(define %column-musume-assign% "アサイン")
+
+(define %column-musume-type% "タイプ")
+
+(define %column-musume-category% "カテゴリ")
+
+(define %column-musume-created-date% "登録日")
+
+(define %column-musume-updated-date% "更新日")
+
+(define %musume-title% "タイトル")
+
+(define %musumes-first-melody% "内容")
+
+(define %upload-file-box% "ファイル")
+
+(define %neet-account-for-mypage% "マイページは一般ユーザアカウントが必要です")
+
+(define %todo-legend% "TODO")
+
+(define %need-account-for-change-passwd% "パスワード変更には一般ユーザのアカウントが必要です")
+
+(define %illegal-new-passwd% "新パスワードが不正です")
+
+(define %illegal-old-passwd% "旧パスワードが不正です")
+
+(define %template-change-passwd-title% "~a さんのパスワード変更")
+
+(define %template-change-passwd-message% "~a さんのパスワードを変更しました")
+
+(define %old-password% "旧パスワード")
+
+(define %new-password% "新パスワード")
+
+(define %new-password-again% "新パスワード(確認)")
+
+(define %password-change-button% "変更")
+

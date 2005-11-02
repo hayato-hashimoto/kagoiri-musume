@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.20 2005/10/30 15:01:27 cut-sea Exp $
+# $Id: Makefile.in,v 1.21 2005/11/02 18:31:29 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -43,6 +43,7 @@ KAGOIRI_MUSUMECONFIG = -c $(KAGOIRI_MUSUME_INPLACE)/kagoiri-musume.conf
 SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
 
 SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
+	      kagoiri-musume/messages.kahua \
 	      kagoiri-musume/user-setting.kahua \
 	      kagoiri-musume/class.kahua \
 	      kagoiri-musume/search.kahua \

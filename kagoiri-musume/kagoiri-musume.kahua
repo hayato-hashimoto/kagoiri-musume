@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.109 2005/11/02 17:01:31 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.110 2005/11/02 18:31:29 cut-sea Exp $
 
 ;;
 ;; include
@@ -25,6 +25,8 @@
 
 (load "kagoiri-musume/version.kahua")
 (load "kagoiri-musume/user-setting.kahua")
+(load "kagoiri-musume/messages.kahua")
+
 (load "kagoiri-musume/class.kahua")
 (load "kagoiri-musume/search.kahua")
 (load "kagoiri-musume/page.kahua")
@@ -68,22 +70,22 @@
 ;
 (define-entry (kagoiri)
   (kagoiri-page
-   (h2/ "籠入娘。へようこそ！")
+   (h2/ %hello-kagoiri%)
    (ul/ (@/ (class "menu"))
-        (li/ (a/cont/ (@@/ (cont admin-system)) "システム設定管理画面"))
-	(li/ (a/cont/ (@@/ (cont unit-list)) "ユニット一覧")))
+        (li/ (a/cont/ (@@/ (cont admin-system)) %entry-sys-admin-page%))
+	(li/ (a/cont/ (@@/ (cont unit-list)) %entry-unit-list-page%)))
    ))
 
 (define-entry (unit-list)
   (permission-check-page
-   identity "ユニット一覧は一般ユーザアカウントが必要です"
-   (h2/ "ユニット一覧")
+   identity %need-kahua-user-account%
+   (h2/ %entry-unit-list-page%)
    (table/ (@/ (class "listing"))
 	   (thead/
 	    (tr/ (devel:th/) (devel:th/)
-		 (th/ "ユニット名")
-		 (th/ "概要")
-		 (th/ "ファン")))
+		 (th/ %unit-name%)
+		 (th/ %description%)
+		 (th/ %fan%)))
 	   (tbody/
 	    (node-set
 	     (map-with-index
@@ -94,12 +96,12 @@
 		      (devel:td/
 		       (a/cont/
 			(@@/ (cont unit-edit (key-of u)))
-			"編集"))
+			%edit-link%))
 		      (devel:td/
 		       (a/cont/
 			(@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
 			(@@/ (cont unit-fallout (key-of u)))
-			"削除"))
+			%delete-link%))
 		      (td/ (a/cont/
 			    (@@/ (cont musume-list (key-of u)))
 			    (unit-name-of u))
@@ -114,21 +116,21 @@
 		      )))
 	      (all-units)))))
    (devel:hr/)
-   (devel:h2/ "新ユニット結成")
+   (devel:h2/ %new-unit-create-button%)
    (devel:form/cont/
     (@@/ (cont (entry-lambda (:keyword name desc)
 		   (if (string-null? name)
-		       (set-error-message "ユニット名を入力してください。")
+		       (set-error-message %need-to-input-unit-name%)
 		       (set-error-message #f))
 		 (begin
 		   (create-new-unit name desc)
 		   (redirect-page "unit-list")))))
     (table/
      (tr/ (@/ (onclick "toggle_fulllist(event)"))
-          (th/ (@/ (colspan 2)) (clickable "優先度"))
-          (th/ (@/ (colspan 2)) (clickable "ステータス"))
-	  (th/ (@/ (colspan 2)) (clickable "タイプ"))
-	  (th/ (@/ (colspan 2)) (clickable "カテゴリ")))
+          (th/ (@/ (colspan 2)) (clickable %priority%))
+          (th/ (@/ (colspan 2)) (clickable %status%))
+	  (th/ (@/ (colspan 2)) (clickable %type%))
+	  (th/ (@/ (colspan 2)) (clickable %category%)))
      (tr/
       (map/ (lambda (n items)
               (node-set
@@ -149,18 +151,18 @@
             (list "priority" "status" "type" "category")
             (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
     (table/
-     (tr/ (td/ "ユニット名" (span/ (@/ (class "warning")) "(※)"))
+     (tr/ (td/ %unit-name% (span/ (@/ (class "warning")) "(※)"))
 	  (td/
 	   (textarea/ (@/ (type "text") (name "name")
 			  (rows 1) (cols 32)) "")
 	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
      (tr/
-      (td/ "概要")
+      (td/ %description%)
       (td/ (@/ (colspan 2))
 	   (textarea/ (@/ (type "text") (name "desc")
 			  (rows 10) (cols 80)) "")))
      (tr/ (@/ (align "left"))
-          (td/ "ファン" (span/ (@/ (class "warning")) "(※)"))
+          (td/ %fan% (span/ (@/ (class "warning")) "(※)"))
           (td/
            (table/
             (tr/
@@ -175,7 +177,7 @@
                   (div/ (@/ (class "clickable")
                             (onclick "down_select(this, 'fans')"))
                         "↓")))))))
-    (input/ (@/ (type "submit") (name "submit") (value "新ユニット結成"))))
+    (input/ (@/ (type "submit") (name "submit") (value %new-unit-create-button%))))
    ))
 
 
@@ -185,14 +187,14 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format "『~a』のファンとしてのアカウントが必要です" (unit-name-of unit))
-     (h2/ (format "『~a』ユニット編集" (unit-name-of unit)))
+     (format %template-need-fan-account-of-unit% (unit-name-of unit))
+     (h2/ (format %template-edit-unit% (unit-name-of unit)))
      (hr/)
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name desc)
 		     (if (string-null? name)
 			 (begin
-			   (set-error-message "ユニット名を入力してください。")
+			   (set-error-message %need-to-input-unit-name%)
 			   (redirect-page #`"unit-edit/,unit-id"))
 			 (begin
 			   (set-error-message #f)
@@ -207,10 +209,10 @@
 			   (redirect-page "unit-list"))))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
-	    (th/ (@/ (colspan 2)) (clickable "優先度"))
-	    (th/ (@/ (colspan 2)) (clickable "ステータス"))
-	    (th/ (@/ (colspan 2)) (clickable "タイプ"))
-	    (th/ (@/ (colspan 2)) (clickable "カテゴリ")))
+	    (th/ (@/ (colspan 2)) (clickable %priority%))
+	    (th/ (@/ (colspan 2)) (clickable %status%))
+	    (th/ (@/ (colspan 2)) (clickable %type%))
+	    (th/ (@/ (colspan 2)) (clickable %category%)))
        (tr/
 	(map/ (lambda (n items)
 		(node-set
@@ -242,19 +244,19 @@
 			    (lset-difference eq? (all-categories)
 					     (categories-of unit)))))))
       (table/
-       (tr/ (td/ "ユニット名" (span/ (@/ (class "warning")) "(※)"))
+       (tr/ (td/ %unit-name% (span/ (@/ (class "warning")) %mark-of-need%))
 	    (td/
 	     (textarea/ (@/ (type "text") (name "name")
 			    (rows 1) (cols 32))
 			(unit-name-of unit))
 	     (error:span/ (@/ (class "warning")) (set-error-message #f))))
-       (tr/ (td/ "概要")
+       (tr/ (td/ %description%)
 	    (td/
 	     (textarea/ (@/ (type "text") (name "desc")
 			    (rows 10) (cols 80))
 			(description-of unit))))
        (tr/ (@/ (align "left"))
-	    (td/ "ファン" (span/ (@/ (class "warning")) "(※)"))
+	    (td/ %fan% (span/ (@/ (class "warning")) %mark-of-need%))
 	    (td/
 	     (table/
 	      (tr/
@@ -270,12 +272,12 @@
 							(fans-of unit))))))
 	       (td/ (div/ (@/ (class "clickable")
 			      (onclick "up_select(this, 'fans')"))
-			  "↑")
+			  %up-arrow%)
 		    (div/ (@/ (class "clickable")
 			      (onclick "down_select(this, 'fans')"))
-			  "↓"))))))
+			  %down-arrow%))))))
        )
-      (input/ (@/ (type "submit") (name "submit") (value "確定"))))
+      (input/ (@/ (type "submit") (name "submit") (value %commit-button%))))
      )))
 
 ; TODO: check account
@@ -288,10 +290,10 @@
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
-		   (login-pc-page #f checker (format "『~a』のファンとしてのアカウントが必要です" (unit-name-of unit))))
+		   (login-pc-page #f checker (format %template-need-fan-account-of-unit% (unit-name-of unit))))
       (permission-check-logic
        checker
-       (format "『~a』のファンとしてのアカウントが必要です" (unit-name-of unit))
+       (format %template-need-fan-account-of-unit% (unit-name-of unit))
        (begin
 	 (if (checker user)
 	     (set! (fallout-of unit) #t))
@@ -342,27 +344,27 @@
 	 (lambda (u)
 	   (if (viewable? unit u)
 	       u #f))
-	 (format "『~a』のファンであるアカウントが必要です" (unit-name-of unit))
+	 (format %template-need-fan-account-of-unit% (unit-name-of unit))
 	 (ul/ (@/ (class "menu"))
-          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) %entry-of-musume-list%))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) %entry-of-musume-new%)))
          (div/
           (@/ (id "search-box"))
           (form/cont/
            (@@/ (cont search `(unit-id ,unit-id)))
-           "ユニット内検索:"
+	   %inter-unit-search%
            (input/ (@/ (type "text") (name "word") (size 10)))
-           (input/ (@/ (type "submit") (value "検索")))))
-	 (h2/ (unit-name-of unit) " - 娘。一覧")
+           (input/ (@/ (type "submit") (value %search%)))))
+	 (h2/ (format %template-of-musume-list-title% (unit-name-of unit)))
 	 (form/cont/ (@@/ (cont musume-list unit-id))
 		     (table/ (@/ (class "table-filter"))
 		      (tr/ (@/ (onclick "toggle_select_mode(event)"))
-                           (th/ (clickable "優先度"))
-			   (th/ (clickable "ステータス"))
-			   (th/ (clickable "アサイン"))
-                           (th/ (clickable "タイプ"))
-                           (th/ (clickable "カテゴリ"))
-			   (th/ "表示上限"))
+                           (th/ (clickable %priority%))
+			   (th/ (clickable %status%))
+			   (th/ (clickable %assign%))
+                           (th/ (clickable %type%))
+                           (th/ (clickable %category%))
+			   (th/ %limits-of-musume-list%))
                       (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
                         (tr/ (@/ (valign "top"))
                          (td/
@@ -370,35 +372,35 @@
                            (@/ (onchange (filter-row 2))
                                (name "priority"))
                            (node-set
-                            (cons (option/ (@/ (value "*all*")) "全て")
+                            (cons (option/ (@/ (value "*all*")) %dropdown-item-all%)
                                   (options (priorities-of unit) priority)))))
                          (td/
                           (select/
                            (@/ (onchange (filter-row 3))
                                (name "status"))
                            (node-set
-                            (cons (option/ (@/ (value "*all*")) "全て")
+                            (cons (option/ (@/ (value "*all*")) %dropdown-item-all%)
                                   (options (statuss-of unit) status)))))
                          (td/
                           (select/
                            (@/ (onchange (filter-row 4))
                                (name "assign"))
                            (node-set
-                            (cons (option/ (@/ (value "*all*")) "全て")
+                            (cons (option/ (@/ (value "*all*")) %dropdown-item-all%)
                                   (options (fans-of unit) assign)))))
                          (td/
                           (select/
                            (@/ (onchange (filter-row 5))
                                (name "type"))
                            (node-set
-                            (cons (option/ (@/ (value "*all*")) "全て")
+                            (cons (option/ (@/ (value "*all*")) %dropdown-item-all%)
                                   (options (types-of unit) type)))))
                          (td/
                           (select/
                            (@/ (onchange (filter-row 6))
                                (name "category"))
                            (node-set
-                            (cons (option/ (@/ (value "*all*")) "全て")
+                            (cons (option/ (@/ (value "*all*")) %dropdown-item-all%)
                                   (options (categories-of unit) category)))))
                          (td/
                           (select/
@@ -408,7 +410,7 @@
                                        (option/ (@/ (value l) (selected "true")) l)
 				     (option/ (@/ (value l)) l)))
                                  *limits-list*)))
-                         (td/ (input/ (@/ (type "submit") (name "submit") (value "絞り込み"))))
+                         (td/ (input/ (@/ (type "submit") (name "submit") (value %search-refinement%))))
                          )))
 		     ;; data table
 		     (let1 musumes (limiter (sort (filter and-filter
@@ -416,11 +418,11 @@
 						  (lambda (m1 m2)
 						    (> (mno-of m1) (mno-of m2)))))
 		       (table/ (@/ (class "listing") (id "musume_list"))
-			(thead/ (cond ((= 0 (length musumes)) "萌えられる娘。がいません(T^T)")
-				      ((= 1 (length musumes)) "ただひとりの娘。に萌えました")
-				      ((> 100 (length musumes)) (format "~a人の娘。に萌えました" (length musumes)))
-				      ((> 500 (length musumes)) (format "~a人もの娘。に萌えました(萌えすぎです)" (length musumes)))
-				      (else (format "なんと~a人もの娘。に萌えまつきました orz" (length musumes))))
+			(thead/ (cond ((= 0 (length musumes)) %no-musume-message%)
+				      ((= 1 (length musumes)) %only-one-musume-message%)
+				      ((> 100 (length musumes)) (format %template-normal-number-of-musume-message% (length musumes)))
+				      ((> 500 (length musumes)) (format %template-heatup-number-of-musume-message% (length musumes)))
+				      (else (format %template-overheat-number-of-musume-message% (length musumes))))
                                 (div/ (@/ (id "status-num"))
                                  (map/ (lambda (s)
                                          (let1 statusid (code-of s)
@@ -429,15 +431,15 @@
                                                   (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
                                        (statuss-of unit)))
                                 (tr/ (@/ (onclick "sort_table(event);return false"))
-                                     (th/ "No.")
-                                     (th/ "タイトル")
-                                     (th/ "優先度")
-                                     (th/ "ステータス")
-                                     (th/ "アサイン")
-                                     (th/ "タイプ")
-                                     (th/ "カテゴリ")
-                                     (th/ "登録日")
-                                     (th/ "更新日")))
+                                     (th/ %column-musume-number%)
+                                     (th/ %column-musume-title%)
+                                     (th/ %column-musume-priority%)
+                                     (th/ %column-musume-status%)
+                                     (th/ %column-musume-assign%)
+                                     (th/ %column-musume-type%)
+                                     (th/ %column-musume-category%)
+                                     (th/ %column-musume-created-date%)
+                                     (th/ %column-musume-updated-date%)))
                         (tbody/
 			(map/ (lambda (m)
                                 (let ((status (status-of m))
@@ -491,17 +493,17 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format "『~a』のファンであるアカウントが必要です" (unit-name-of unit))
+     (format %template-need-fan-account-of-unit% (unit-name-of unit))
      (ul/ (@/ (class "menu"))
-          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-     (h2/ (unit-name-of unit) " - 新しい娘。")
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) %entry-of-musume-list%))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) %entry-of-musume-new%)))
+     (h2/ (format %template-of-musume-new-title% (unit-name-of unit)))
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
 		     (if (string-null? name)
 			 (begin
-			   (set-error-message "タイトルを入力してください。")
+			   (set-error-message %need-to-input-musume-title%)
 			   (redirect-page #`"musume-new/,unit-id"))
 			 (begin
 			   (if (string-null? melody) (set! melody name))
@@ -528,7 +530,7 @@
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (table/
-       (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "カテゴリ") (th/ "アサイン"))
+       (tr/ (th/ %priority%) (th/ %status%) (th/ %type%) (th/ %category%) (th/ %assign%))
        (tr/
 	(map/ (lambda (n refer)
 		(td/ (select/ (@/ (name n))
@@ -538,36 +540,35 @@
 				    (refer unit)))))
 	      (list "priority" "status" "type" "category" "assign")
 	      (list priorities-of statuss-of types-of categories-of fans-of))
-	(td/ (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))))
-      (table/ (tr/ (td/ "タイトル" (span/ (@/ (class "warning")) "(※)"))
+	(td/ (input/ (@/ (type "submit") (name "submit") (value %new-musume-create-button%))))))
+      (table/ (tr/ (td/ %musume-title% (span/ (@/ (class "warning")) %mark-of-need%))
 		   (td/ (textarea/ (@/ (type "text") (name "name")
 				       (rows 1) (cols 32)) "")
 			(error:span/ (@/ (class "warning")) (set-error-message #f))))
-	      (tr/ (td/ "内容")
+	      (tr/ (td/ %musumes-first-melody%)
 		   (td/ (textarea/ (@/ (type "text") (name "melody")
 				       (rows 20) (cols 80)) "")))
-	      (tr/ (td/ "ファイル")
+	      (tr/ (td/ %upload-file-box%)
 		   (td/ (input/ (@/ (type "file") (name "file"))))))
-      (input/ (@/ (type "submit") (name "submit") (value "新しい娘。加入"))))
+      (input/ (@/ (type "submit") (name "submit") (value %new-musume-create-button%))))
      )))
 
 (define-entry (musume-view)
-  (permission-check-page identity "ちょいまってや"
-   "娘。の閲覧"))
+  (permission-check-page
+   identity %now-no-support%
+   %view-musume%))
 
 (define-entry (musume-edit musume-id)
   (let* ((musume (find-kahua-instance <musume> musume-id))
 	 (unit (unit-of musume)))
     (permission-check-page
      identity
-     (format "『~a』のファンであるアカウントが必要です" (unit-name-of unit))
-     (h3/ (format "『~a』の『~a 』を編集する。" (unit-name-of unit) (mname-of musume)))
-     "工事中"
+     (format %template-need-fan-account-of-unit% (unit-name-of unit))
+     (h3/ (format %template-edit-musume-title% (unit-name-of unit) (mname-of musume)))
+     %now-working%
      )
     ))
 
-;; パースしてhttp/https/mailtoをリンクに置き換える
-;;
 (define (melody-format melody)
   (define (parse melody)
     (let lp ((result '())
@@ -593,15 +594,16 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format "『~a』のファンであるアカウントが必要です" (unit-name-of unit))
+     (format %template-need-fan-account-of-unit% (unit-name-of unit))
      (ul/ (@/ (class "menu"))
-          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) "娘。一覧"))
-	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) "新しい娘。")))
-     (h3/ (unit-name-of unit) " - "
-	  (x->string (mno-of musume)) "："
-	  (mname-of musume) " - "
-	  (disp-name-of
-           (status-of musume)))
+          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) %entry-of-musume-list%))
+	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) %entry-of-musume-new%)))
+     (h3/ (format "~a - ~a：~a - ~a"
+		  (unit-name-of unit)
+		  (mno-of musume)
+		  (mname-of musume)
+		  (disp-name-of
+		   (status-of musume))))
      (let1 songs (reverse (all-songs musume))
        (map/ (lambda (n f t m u)
 	       (dl/
@@ -657,7 +659,7 @@
 				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
-       (tr/ (th/ "優先度") (th/ "ステータス") (th/ "タイプ") (th/ "アサイン"))
+       (tr/ (th/ %priority%) (th/ %status%) (th/ %type%) (th/ %assign%))
        (tr/ (map/ (lambda (n refer items-of)
 		    (td/ (select/ (@/ (name n))
 				  (map/ (lambda (item)
@@ -671,7 +673,7 @@
 		  (list "priority" "status" "type" "assign")
 		  (list priority-of status-of type-of assign-of)
 		  (list priorities-of statuss-of types-of fans-of))
-	    (td/ (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
+	    (td/ (input/ (@/ (type "submit") (name "submit") (value %sing-commit-button%))))
 	    ))
       (table/
        (tr/
@@ -679,17 +681,17 @@
 	(td/ (textarea/ (@/ (type "text") (name "melody")
 			    (rows 20) (cols 80)) ""))
 	(tr/
-	 (td/ "ファイル")
+	 (td/ %upload-file-box%)
 	 (td/ (input/ (@/ (type "file") (name "file")))))))
-      (input/ (@/ (type "submit") (name "submit") (value "コミット"))))
+      (input/ (@/ (type "submit") (name "submit") (value %sing-commit-button%))))
      )))
 
 (define-entry (mypage)
   (permission-check-page
    identity
-   "マイページは一般ユーザアカウントが必要です"
+   %neet-account-for-mypage%
     (fieldset/
-     (legend/ "TODO")
+     (legend/ %todo-legend%)
      (let1 musumes (let1 fan (current-fan)
                      (filter
                       (lambda (musume)
@@ -697,11 +699,11 @@
                       (make-kahua-collection <musume>)))
        (format "~a item(s)" (length musumes))
        (table/ (@/ (class "listing"))
-               (thead/ (tr/ (th/ "タイトル")
-                            (th/ "優先度")
-                            (th/ "ステータス")
-                            (th/ "タイプ")
-                            (th/ "登録日")))
+               (thead/ (tr/ (th/ %musume-title%)
+                            (th/ %priority%)
+                            (th/ %status%)
+                            (th/ %type%)
+                            (th/ %created-date%)))
                (tbody/
                 (map/ (lambda (m)
                         (let1 status (status-of m)
@@ -719,30 +721,30 @@
 	 (cuser-name (ref cuser 'login-name)))
     (permission-check-page
      identity
-     #`"パスワード変更には一般ユーザのアカウントが必要です"
-     (h3/ #`",|cuser-name| さんのパスワード変更")
+     %need-account-for-change-passwd%
+     (h3/ (format %template-change-passwd-title% cuser-name))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
 		   (cond ((or (equal? "" new-pw)
 			      (equal? "" new-again-pw)
 			      (not (equal? new-pw new-again-pw)))
-			  (change-passwd "新パスワードが不正です"))
+			  (change-passwd %illegal-new-passwd%))
 			 ((not (kahua-check-user cuser-name old-pw))
-			  (change-passwd "旧パスワードが不正です"))
+			  (change-passwd %illegal-old-passwd%))
 			 (else
 			  (kahua-user-password-change-force cuser new-pw)
-			  (message-only-page #`",|cuser-name| さんのパスワードを変更しました"))))))
+			  (message-only-page (format %template-change-passwd-message% cuser-name)))))))
       (table/
-       (tr/ (th/ "旧パスワード")
+       (tr/ (th/ %old-password%)
 	    (td/ (input/ (@/ (type "password") (name "old-pw")
 			     (value "")) "")))
-       (tr/ (th/ "新パスワード")
+       (tr/ (th/ %new-password%)
 	    (td/ (input/ (@/ (type "password") (name "new-pw")
 			     (value "")) "")))
-       (tr/ (th/ "新パスワード(確認)")
+       (tr/ (th/ %new-password-again%)
 	    (td/ (input/ (@/ (type "password") (name "new-again-pw")
 			     (value "")) ""))))
-      (input/ (@/ (type "submit") (name "submit") (value "変更")))
+      (input/ (@/ (type "submit") (name "submit") (value %password-change-button%)))
       (p/ (@/ (class "warning")) (node-set message))
       ))))
 
