@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.5 2005/10/30 05:57:26 cut-sea Exp $
+;; $Id: test2.scm,v 1.6 2005/11/02 19:34:43 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -51,7 +51,7 @@
 	  (body
            ,*header*
            ,(*make-body*
-             (h1 "籠入娘。へようこそ")
+             (h1 "籠入娘。へようこそ！")
              (h3 "ユニット一覧は一般ユーザアカウントが必要です")
              (form (@ (action ?&) ?*)
                    (table
