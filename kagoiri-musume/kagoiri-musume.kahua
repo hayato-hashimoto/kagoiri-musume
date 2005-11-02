@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.105 2005/10/30 06:40:32 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.106 2005/11/02 12:41:21 cut-sea Exp $
 
 ;;
 ;; include
@@ -88,28 +88,29 @@
 	    (node-set
 	     (map-with-index
 	      (lambda (idx u)
-		(tr/ (@/ (class (if (odd? idx) "odd" "even")))
-		     (devel:td/
-		      (a/cont/
-		       (@@/ (cont unit-edit (key-of u)))
-		       "編集"))
-		     (devel:td/
-		      (a/cont/
-		       (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
-		       (@@/ (cont unit-fallout (key-of u)))
-		       "削除"))
-		     (td/ (a/cont/
-			   (@@/ (cont musume-list (key-of u)))
-			   (unit-name-of u))
-			  (format " (~a)"
-				  (- (next-musume-no-of u) 1)))
-		     (td/ (description-of u))
-		     (td/ (string-join
-			   (filter-map (lambda (f)
-					 (and (not (equal? "   " (code-of f)))
-					      (fan-name-of f)))
-				       (fans-of u)) " , "))
-		     ))
+		(unit-member? u
+			      (tr/ (@/ (class (if (odd? idx) "odd" "even")))
+				   (devel:td/
+				    (a/cont/
+				     (@@/ (cont unit-edit (key-of u)))
+				     "編集"))
+				   (devel:td/
+				    (a/cont/
+				     (@/ (onClick "return confirm('本当に削除しますか？')?true:false"))
+				     (@@/ (cont unit-fallout (key-of u)))
+				     "削除"))
+				   (td/ (a/cont/
+					 (@@/ (cont musume-list (key-of u)))
+					 (unit-name-of u))
+					(format " (~a)"
+						(- (next-musume-no-of u) 1)))
+				   (td/ (description-of u))
+				   (td/ (string-join
+					 (filter-map (lambda (f)
+						       (and (not (equal? "   " (code-of f)))
+							    (fan-name-of f)))
+						     (fans-of u)) " , "))
+				   )))
 	      (all-units)))))
    (devel:hr/)
    (devel:h2/ "新ユニット結成")
@@ -153,8 +154,8 @@
 			  (rows 1) (cols 32)) "")
 	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
      (tr/
-          (td/ "概要")
-	  (td/ (@/ (colspan 2))
+      (td/ "概要")
+      (td/ (@/ (colspan 2))
 	   (textarea/ (@/ (type "text") (name "desc")
 			  (rows 10) (cols 80)) "")))
      (tr/ (@/ (align "left"))
