@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: messages.kahua,v 1.2 2005/11/02 18:32:44 cut-sea Exp $
+;; $Id: messages.kahua,v 1.3 2005/11/02 19:23:25 cut-sea Exp $
 (define %hello-kagoiri% "籠入娘。へようこそ！")
 
 (define %entry-sys-admin-page% "システム設定管理画面")
@@ -112,6 +112,10 @@
 
 (define %neet-account-for-mypage% "マイページは一般ユーザアカウントが必要です")
 
+(define %neet-account-for-system-admin-page% "システム管理者のアカウントが必要です")
+
+(define %system-admin-title% "籠入娘。システム設定管理画面")
+
 (define %todo-legend% "TODO")
 
 (define %need-account-for-change-passwd% "パスワード変更には一般ユーザのアカウントが必要です")
@@ -131,6 +135,74 @@
 (define %new-password-again% "新パスワード(確認)")
 
 (define %password-change-button% "変更")
+
+(define %admin-users-table-title% "登録ユーザ一覧")
+
+(define %admin-permission% "管理者権限")
+
+(define %column-login-name% "ログイン名")
+
+(define %column-password% "パスワード")
+
+(define %column-mail-address% "メールアドレス")
+
+(define %column-developer-permission% "開発")
+
+(define %column-client-permission% "顧客")
+
+(define %column-secret-permission% "隠密")
+
+(define %new-fan-button% "ファン登録")
+
+(define %admin-unit-table-title% "登録ユニット一覧")
+
+(define %column-unit-name% "ユニット名")
+
+(define %column-unit-description% "概要")
+
+(define %column-unit-activity% "活動状態")
+
+(define %unit-inactive-link% "休止")
+
+(define %unit-active-link% "活動")
+
+(define %admin-priority-table-title% "登録優先度一覧")
+
+(define %column-priority-id% "優先度ID")
+
+(define %column-priority-display-name% "表示名")
+
+(define %column-priority-level% "レベル")
+
+(define %column-priority-delete% "無効")
+
+(define %property-commit-button% "登録")
+
+(define %admin-status-table-title% "登録ステータス一覧")
+
+(define %column-statsuy-id% "ステータスID")
+
+(define %column-status-display-name% "表示名")
+
+(define %column-status-delete% "無効")
+
+(define %admin-type-table-title% "登録タイプ一覧")
+
+(define %column-type-id% "タイプID")
+
+(define %column-type-display-name% "表示名")
+
+(define %column-type-delete% "無効")
+
+(define %admin-category-table-title% "登録カテゴリ一覧")
+
+(define %column-category-id% "カテゴリID")
+
+(define %column-category-display-name% "表示名")
+
+(define %column-category-delete% "無効")
+
+(define %checkbox-mark% "＊")
 
 ;;;;;;;;;;;;;;;;
 ;; 以下は。。。
