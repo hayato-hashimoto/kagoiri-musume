@@ -1,3 +1,16 @@
+2005-11-04  SHIBATA Tomohisa  <shibata@kahua.org>
+
+	* kagoiri-musume/gadget.kahua:
+	* kagoiri-musume/kagoiri-musume.js:
+	* kagoiri-musume/kagoiri-musume.kahua:
+	* kagoiri-musume/page.kahua:
+	* test/test1.scm:
+	* test/test2.scm:
+	* test/test3.scm:
+	* test/test4.scm:
+	added auto focusing javascript function.
+	auto focus on main input box.
+
 2005-11-03  cut-sea  <cut-sea@ipadev>
 
 	* ChangeLog: add check to select fan when create new unit.

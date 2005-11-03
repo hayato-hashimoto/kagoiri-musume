@@ -285,3 +285,6 @@ function search_musume(value)
      search_delay = null;
 }
 
+function focus_focus(){
+     document.getElementById('focus').focus();
+}

@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test1.scm,v 1.5 2005/10/28 13:26:09 cut-sea Exp $
+;; $Id: test1.scm,v 1.6 2005/11/03 16:15:51 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -70,6 +70,7 @@
            ,*header*
            ,(*make-body*
              (h1 ?_)
+             (script ?*)
              (h3 "システム管理者のアカウントが必要です")
              (form (@ (action ?&) ?*)
 		 (table
@@ -78,7 +79,8 @@
 		   (td (input (@ (!permute
 				  (value "")
 				  (type "text")
-				  (name "name"))))))
+				  (name "name")
+                                  (id "focus"))))))
 		  (tr
 		   (th "Password")
 		   (td (input (@ (!permute
@@ -101,6 +103,7 @@
            ,*header*
            ,(*make-body*
              (h1 ?_)
+             (script ?*)
              (h3 "システム管理者のアカウントが必要です")
              (form (@ (action ?&) ?*)
                    (table
@@ -109,7 +112,8 @@
                      (td (input (@ (!permute
                                     (value "")
                                     (type "text")
-                                    (name "name"))))))
+                                    (name "name")
+                                    (id "focus"))))))
                     (tr
                      (th "Password")
                      (td (input (@ (!permute

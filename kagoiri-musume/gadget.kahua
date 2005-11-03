@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.13 2005/11/03 14:14:44 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.14 2005/11/03 16:15:52 shibata Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -82,3 +82,7 @@
 ;; (define (get-error-message) (or (%error%) ""))
 (define (set-error-message msg) (%error% msg))
 
+
+(define (focus_focus)
+  (script/ (@/ (type "text/javascript"))
+           "window.onload = focus_focus"))

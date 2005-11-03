@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.6 2005/11/02 19:34:43 cut-sea Exp $
+;; $Id: test2.scm,v 1.7 2005/11/03 16:15:51 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -52,10 +52,11 @@
            ,*header*
            ,(*make-body*
              (h1 "籠入娘。へようこそ！")
+             (script ?*)
              (h3 "ユニット一覧は一般ユーザアカウントが必要です")
              (form (@ (action ?&) ?*)
                    (table
-                    (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name")))))
+                    (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name") (id "focus")))))
                     (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
                    (input (@ (value "login") (type "submit") (name "submit")))))
            ,*footer*))
@@ -155,11 +156,12 @@
 	 (body
 	  ,(*header-logedin* "cut-sea")
           ,(*make-body*
+            (script ?*)
             (h3 "cut-sea さんのパスワード変更")
             (form (@ (action ?&) ?*)
                   (table
                    (tr (th "旧パスワード")
-                       (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+                       (td (input (@ (!permute (value "") (type "password") (name "old-pw") (id "focus"))))))
                    (tr (th "新パスワード")
                        (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
                    (tr (th "新パスワード(確認)")
@@ -179,7 +181,7 @@
 	 (form (@ (action ?&) ?*)
 	       (table
 		(tr (th "旧パスワード")
-		    (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		    (td (input (@ (!permute (value "") (type "password") (name "old-pw") (id "focus"))))))
 		(tr (th "新パスワード")
 		    (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
 		(tr (th "新パスワード(確認)")
@@ -200,7 +202,7 @@
 	 (form (@ (action ?&) ?*)
 		(table
 		 (tr (th "旧パスワード")
-		     (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		     (td (input (@ (!permute (value "") (type "password") (name "old-pw") (id "focus"))))))
 		 (tr (th "新パスワード")
 		     (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
 		 (tr (th "新パスワード(確認)")
@@ -243,7 +245,7 @@
 	 (form (@ (action ?&) ?*)
 		(table
 		 (tr (th "旧パスワード")
-		     (td (input (@ (!permute (value "") (type "password") (name "old-pw"))))))
+		     (td (input (@ (!permute (value "") (type "password") (name "old-pw") (id "focus"))))))
 		 (tr (th "新パスワード")
 		     (td (input (@ (!permute (value "") (type "password") (name "new-pw"))))))
 		 (tr (th "新パスワード(確認)")

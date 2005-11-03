@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test3.scm,v 1.5 2005/10/28 13:26:09 cut-sea Exp $
+;; $Id: test3.scm,v 1.6 2005/11/03 16:15:51 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -49,7 +49,7 @@
 	'(*TOP*
 	  (form (@ (action ?&) ?*)
 		(table
-		 (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name")))))
+		 (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name") (id "focus")))))
 		 (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
 		(input (@ (value "login") (type "submit") (name "submit")))))
         (call-worker/gsid->sxml w '() '() '(// form))

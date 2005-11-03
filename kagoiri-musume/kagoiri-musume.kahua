@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.120 2005/11/03 14:14:44 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.121 2005/11/03 16:15:52 shibata Exp $
 
 ;;
 ;; include
@@ -682,14 +682,14 @@
 		  (list priorities-of statuss-of types-of fans-of))
 	    (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "コミット")))))
 	    ))
-      (table/
-       (tr/
-	(td/ "内容")
-	(td/ (textarea/ (@/ (type "text") (name "melody")
-			    (rows 10) (cols 80)) ""))
-	(tr/
-	 (td/ ($$ "ファイル"))
-	 (td/ (input/ (@/ (type "file") (name "file"))))))))
+      (table/ (@/ (class "extension"))
+               (tr/
+                (td/ "内容")
+                (td/ (textarea/ (@/ (type "text") (name "melody")
+                                    (rows 10) (cols 80)) ""))
+                (tr/
+                 (td/ ($$ "ファイル"))
+                 (td/ (input/ (@/ (type "file") (name "file"))))))))
      (let1 songs (all-songs musume)
        (map/ (lambda (n f t m u)
 	       (dl/
@@ -778,6 +778,7 @@
     (permission-check-page
      identity
      ($$ "パスワード変更には一般ユーザのアカウントが必要です")
+     (focus_focus)
      (h3/ (format ($$ "~a さんのパスワード変更") cuser-name))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
@@ -792,7 +793,7 @@
 			  (message-only-page (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
       (table/
        (tr/ (th/ ($$ "旧パスワード"))
-	    (td/ (input/ (@/ (type "password") (name "old-pw")
+	    (td/ (input/ (@/ (type "password") (name "old-pw") (id "focus")
 			     (value "")) "")))
        (tr/ (th/ ($$ "新パスワード"))
 	    (td/ (input/ (@/ (type "password") (name "new-pw")
