@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: messages.kahua,v 1.4 2005/11/02 19:34:43 cut-sea Exp $
+;; $Id: messages.kahua,v 1.5 2005/11/03 02:35:51 cut-sea Exp $
 (define %hello-kagoiri% "籠入娘。へようこそ！")
 
 (define %entry-sys-admin-page% "システム設定管理画面")
@@ -219,6 +219,10 @@
 (define %header-logout-link% "Logout")
 
 (define %global-search% "検索:")
+
+(define %template-search-key% "search key: ~a (~a items)\n")
+
+(define %template-short-search-key% "Keyword is too short: ~a")
 
 ;;;;;;;;;;;;;;;;
 ;; 以下は。。。

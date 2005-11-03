@@ -4,15 +4,15 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.6 2005/10/10 09:47:08 cut-sea Exp $
+;; $Id: search.kahua,v 1.7 2005/11/03 02:35:51 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
-  (list (cons "ユニット名" (ref obj 'unit-name))
-        (cons "概要" (ref obj 'description))))
+  (list (cons %unit-name% (ref obj 'unit-name))
+        (cons %description% (ref obj 'description))))
 
 (define-method searchable-text ((obj <musume>))
-  (cons (cons "タイトル" (ref obj 'musume-name))
+  (cons (cons %musume-title% (ref obj 'musume-name))
         (map
          (lambda (song)
            (cons
@@ -96,7 +96,7 @@
 			 '()
 			 units))))
 	    (div/
-	     (h1/ (format "search key: ~a (~a items)\n" word (length hits)))
+	     (h1/ (format %template-search-key% word (length hits)))
 	     (map/ (lambda (hit)
 		     (fieldset/
 		      (legend/ (car hit))
@@ -110,6 +110,6 @@
 				      match)))))
 			    (cdr hit))))
 		   hits)))
-	  (h1/ "Keyword is too short: " word)))
+	  (h1/ (format %template-short-search-key% word))))
 
     (kagoiri-page (search-result))))
