@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.110 2005/11/02 18:31:29 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.111 2005/11/03 03:58:12 shibata Exp $
 
 ;;
 ;; include
@@ -590,6 +590,13 @@
 (define-entry (melody-list unit-id musume-id)
   (let ((unit (find-kahua-instance <unit> unit-id))
         (musume (find-kahua-instance <musume> musume-id)))
+
+    (define (move dist)
+      (let* ((musumes (all-musumes unit))
+             (pos (find-index (cut eq? musume <>) musumes))
+             (musume (list-ref  musumes (+ pos dist) musume)))
+        (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)")))
+
     (permission-check-page
      (lambda (u)
        (if (viewable? unit u)
@@ -598,6 +605,14 @@
      (ul/ (@/ (class "menu"))
           (li/ (a/cont/ (@@/ (cont musume-list unit-id)) %entry-of-musume-list%))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) %entry-of-musume-new%)))
+     (div/
+      (a/cont/ (@/ (class "clickable"))
+               (@@/ (cont (cut move -1)))
+               "<<" )
+      (a/cont/ (@/ (class "clickable"))
+               (@@/ (cont (cut move +1)))
+               ">>"))
+
      (h3/ (format "~a - ~a¡§~a - ~a"
 		  (unit-name-of unit)
 		  (mno-of musume)
