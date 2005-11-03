@@ -10,4 +10,4 @@
 (allow-module gauche.collection)
 (allow-module gauche.sequence)
 (allow-module gauche.parameter)
-
+(allow-module text.gettext)
