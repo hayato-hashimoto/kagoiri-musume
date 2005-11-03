@@ -1,46 +1,195 @@
+2005-11-03  cut-sea  <cut-sea@ipadev>
 
-2005-11-03  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+	* ChangeLog: add check to select fan when create new unit.
 
-	* When we create new unit, add to check select fan.
+	* ChangeLog: write ChangeLog 0.0.2_pre1.
+	after now, we write ChangeLog each time.
 
-2005-11-03  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+	* VERSION, configure.ac: cvs tag 0.0.2_pre1.
 
-	* 0.0.2_pre1
+2005-11-03  shibata  <shibata@ipadev>
 
-2005-10-22  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+	* Makefile.in:
+	added '--no-overwrite' option to 'user-setting.kahua' rule.
 
-	* support to generate link of http/https/ftp string.
+2005-11-03  cut-sea  <cut-sea@ipadev>
 
-2005-09-25  SHIBATA Tomohisa  <shibata@kahua.org>
+	* Makefile.in: use text.gettext.
+	and translate messages in order to prepare gettext.
 
-	* add search.
+	* Makefile.in: add message.kahua,which message catalog for default.
+	and separete messages into this file.
 
-2005-09-23  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+2005-10-31  cut-sea  <cut-sea@ipadev>
 
-	* supprt sendmail, when posted.
+	* Makefile.in:
+	add test/test4.scm and construct test code for unit-list.
 
-2005-09-22  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+2005-10-28  cut-sea  <cut-sea@ipadev>
 
-	* modify checker predicate which is first argument
-	  of permission-check-page template, and a similer
-	  template permission-check-logic.
-	* Improve display, a little.
+	* initdb.scm: test modify.
 
-2005-09-21  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+2005-10-23  shibata  <shibata@ipadev>
 
-	* rewrite page template.
-	  add permission check into page template,
-	  which is impletented by means of partial continuation.
+	* Makefile.in: marged for 'for-mysql_marge-1'.
 
-	* kagoiri-musume allow only kahua-user who has admin role,
-	  to access system-admin page.
+2005-10-23  cut-sea  <cut-sea@ipadev>
 
-2005-09-19  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+	* ChangeLog: write ChangeLog.
 
-	* construct pages, musume-list,musume-edit.
+2005-10-22  shibata  <shibata@ipadev>
 
-2005-09-17  Katsutoshi Itoh  <cut-sea@master.email.ne.jp>
+	* initdb.scm: merged from "for-mysql".
 
-	* Release 0.0.0
+2005-10-22  cut-sea  <cut-sea@ipadev>
 
-	
+	* initdb.scm: delete rm command from initdb.scm
+
+2005-10-22  shibata  <shibata@ipadev>
+
+	* initdb.scm: removed "rm -rf dbpath".
+
+	* Makefile.in: add rule for test/common.scm.in.
+	remove rule for test/test*.scm.in.
+
+2005-10-20  cut-sea  <cut-sea@ipadev>
+
+	* VERSION, configure.ac: cvs tag 0.0.1.
+
+2005-10-19  cut-sea  <cut-sea@ipadev>
+
+	* INSTALL, Makefile.in, initdb.scm: remove 'make dbinit' step.
+	So,in initdb.scm,check find-kahua-instance instances.
+
+2005-10-19  shibata  <shibata@ipadev>
+
+	* Makefile.in: add '.' and 'KAHUALIB' to load-path for test.
+
+2005-10-18  shibata  <shibata@ipadev>
+
+	* Makefile.in: add javascript file.
+
+2005-10-17  cut-sea  <cut-sea@ipadev>
+
+	* INSTALL, VERSION, configure.ac: change 0.0.1_pre1 tag.
+	and add comment for INSTALL.
+
+2005-10-16  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in: construct test.
+
+2005-10-15  cut-sea  <cut-sea@ipadev>
+
+	* INSTALL, Makefile.in: Edit INSTALL.
+
+	* Makefile.in: construct test.
+
+	* INSTALL, Makefile.in, initdb.scm: we go into fsdb world.
+	and improve build process.
+	we just do.
+	% ./DIST tgz
+	% cd ../kagoiri-musume-0.0.0
+	% ./configure --prefix=$HOME/kahua
+	% make check
+	% make dbinit
+	% make install
+	see INSTALL
+
+	* Makefile.in: remove plugins/upload.scm
+
+	* INSTALL, Makefile.in, initdb.scm: remove kagoiri-musume/local.kahua.
+	instead of it, i add kagoiri-musume/user-setting.kahua, kagoiri-musume/util.kahua.
+
+2005-10-13  cut-sea  <cut-sea@ipadev>
+
+	* initdb.scm: construct test code.
+	when lougout, then test redirect header "Moved 302".
+
+2005-10-10  cut-sea  <cut-sea@ipadev>
+
+	* initdb.scm: *** WARNING ***
+	change class music to song.
+	change fan class structure, which has slot of kahua-user.
+	most of changes are incompatible for before.
+
+2005-10-03  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in: add plugin/upload.scm written by bizen.
+	and add only upload design into melody-list.
+
+2005-10-02  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in: create new file kagoiri-musume/sys-admin.kahua.
+	this is a page of admin-system only.
+	the other pages are kept on kagoiri-musume/kagoiri-musume.kahua.
+
+2005-10-01  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in:
+	sepalate kagoiri-musume.kahua into page.kahua, gadget.kahua,
+	parts-collection.kahua and it.
+
+2005-09-30  shibata  <shibata@ipadev>
+
+	* Makefile.in: fix.
+
+	* Makefile.in: fix rule.
+
+	* Makefile.in: add interp-css.
+
+2005-09-26  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in: add search.kahua into Makefile.in.
+
+2005-09-25  shibata  <shibata@ipadev>
+
+	* ChangeLog: add search entry.
+
+2005-09-23  cut-sea  <cut-sea@ipadev>
+
+	* initdb.scm: mail address modify for shibata.
+
+	* initdb.scm: bug fix for using of sendmail, To: addresses.
+
+	* ChangeLog: bug fix for mail contents.
+
+	* initdb.scm: bug fix.
+
+2005-09-22  cut-sea  <cut-sea@ipadev>
+
+	* INSTALL: add sequence number slot into music class.
+	and display that # on melody-list.
+
+	* ChangeLog: improve display.
+
+	* ChangeLog:
+	modify checker predicate which is first argument of a template
+	permission-check-page and permission-check-logic.
+
+	* ChangeLog, initdb.scm: Rewrite page template.
+	And add permission checker for page template.
+	only admin role kahua-user can access system-admin page.
+
+2005-09-19  cut-sea  <cut-sea@ipadev>
+
+	* ChangeLog, DIST_EXCLUDE_X: construct pages.
+
+	* VERSION, initdb.scm: Kagoiri-Musume - Bug Tracking System.
+	Project start.
+
+	* VERSION, initdb.scm: New file.
+
+	* COPYING, ChangeLog, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in:
+	Kagoiri-Musume - Bug Tracking System.
+	Project start.
+
+	* COPYING, ChangeLog, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in:
+	New file.
+
+	* AUTHORS, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, app-servers, configure.ac, kagoiri-musume.conf.in:
+	Kagoiri-Musume - Bug Tracking System.
+	Project start.
+
+	* AUTHORS, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, app-servers, configure.ac, kagoiri-musume.conf.in:
+	New file.
+
