@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.115 2005/11/03 09:27:50 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.116 2005/11/03 10:08:55 shibata Exp $
 
 ;;
 ;; include
@@ -503,7 +503,7 @@
      (ul/ (@/ (class "menu"))
           (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
-     (h2/ (format ($$ " - 新しい娘。") (unit-name-of unit)))
+     (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
