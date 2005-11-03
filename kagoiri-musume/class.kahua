@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.39 2005/11/03 05:50:37 shibata Exp $
+;; $Id: class.kahua,v 1.40 2005/11/03 10:26:29 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -103,6 +103,10 @@
   (filter (lambda (m)
 	    (eq? unit (unit-of m)))
 	  (make-kahua-collection <musume>)))
+
+(define-method object-compare ((obj1 <musume>) (obj2 <musume>))
+  (compare (ctime-of obj1) (ctime-of obj2)))
+
 
 ;; song means one of issue.
 ;;
