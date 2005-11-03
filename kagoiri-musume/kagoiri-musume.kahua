@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.111 2005/11/03 03:58:12 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.112 2005/11/03 05:51:22 shibata Exp $
 
 ;;
 ;; include
@@ -701,10 +701,9 @@
       (input/ (@/ (type "submit") (name "submit") (value %sing-commit-button%))))
      )))
 
-(define-entry (mypage)
-  (permission-check-page
-   identity
-   %neet-account-for-mypage%
+(define-entry (mypage type)
+
+  (define (todo)
     (fieldset/
      (legend/ %todo-legend%)
      (let1 musumes (let1 fan (current-fan)
@@ -729,7 +728,43 @@
                                (td/ (disp-name-of (type-of m)))
                                (td/ (sys-strftime "%Y/%m/%d"
                                                   (sys-localtime (ctime-of m)))))))
-                      musumes)))))))
+                      musumes))))))
+
+  (define (recent)
+    (fieldset/
+     (legend/ %recent-legend%)
+     (let* ((units (filter (cut fan-to? <> (current-fan))
+                           (all-units)))
+            (musumes (append-map all-musumes units))
+            (songs (append-map songs-of  musumes))
+            (songs (reverse! (sort! songs)))
+            (songs (take* songs 20)))
+       (format "~a item(s)" (length songs))
+       (map/ (lambda (s)
+               (let1 m (musume-of s)
+                 (div/
+                  (fieldset/
+                   (legend/ (label-of m))
+                   (dt/ #`"#,(seq-no-of s). ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of s)))[,(fan-name-of (fan-of s)))]")
+                   (pre/ (melody-format (melody-of s)))))))
+             songs))))
+
+
+  (permission-check-page
+   identity
+   %neet-account-for-mypage%
+   (let1 type (and type (string->symbol type))
+     (div/ (ul/ (@/ (class "menu"))
+                (li/ (a/cont/ (@@/ (cont mypage 'todo)) %todo-legend%))
+                (li/ (a/cont/ (@@/ (cont mypage 'recent)) %recent-legend%)))
+           (case type
+             ((todo)
+              (todo))
+             ((recent)
+              (recent))
+             (else
+              (todo)))))))
+
 
 (define (change-passwd . message)
   (let* ((cuser (kahua-current-user))
