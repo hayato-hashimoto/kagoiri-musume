@@ -1,9 +1,9 @@
 dnl
 dnl Configuring kagoiri-musume
 dnl  process this file with "autoconf" to generate 'configure'.
-dnl $Id: configure.ac,v 1.3 2005/10/19 15:01:13 cut-sea Exp $
+dnl $Id: configure.ac,v 1.4 2005/11/03 13:52:15 cut-sea Exp $
 AC_PREREQ(2.59)
-AC_INIT(kagoiri-musume, 0.0.1, cut-sea@master.email.ne.jp)
+AC_INIT(kagoiri-musume, 0.0.2_pre1, cut-sea@master.email.ne.jp)
 
 dnl Check for programs.  Set up PATH according to prefix.
 if test "$prefix" != NONE; then
