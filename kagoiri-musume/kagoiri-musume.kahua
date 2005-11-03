@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.114 2005/11/03 07:34:38 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.115 2005/11/03 09:27:50 shibata Exp $
 
 ;;
 ;; include
@@ -451,7 +451,7 @@
                                 (let ((status (status-of m))
                                       (songs (songs-of m)))
 				(tr/ (@/ (class #`"status-,(code-of status)"))
-                                     (let1 val (mno-of m)
+                                     (let1 val (format "~3,'0d" (mno-of m))
                                        (td/ (@/ (value val))
                                             (a/cont/
                                              (@@/ (cont musume-edit (key-of m)))
