@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: messages.kahua,v 1.5 2005/11/03 02:35:51 cut-sea Exp $
+;; $Id: messages.kahua,v 1.6 2005/11/03 05:51:45 shibata Exp $
 (define %hello-kagoiri% "籠入娘。へようこそ！")
 
 (define %entry-sys-admin-page% "システム設定管理画面")
@@ -117,6 +117,8 @@
 (define %system-admin-title% "籠入娘。システム設定管理画面")
 
 (define %todo-legend% "TODO")
+
+(define %recent-legend% "最近の更新")
 
 (define %need-account-for-change-passwd% "パスワード変更には一般ユーザのアカウントが必要です")
 
