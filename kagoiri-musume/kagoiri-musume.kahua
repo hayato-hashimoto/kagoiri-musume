@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.118 2005/11/03 12:36:06 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.119 2005/11/03 12:44:03 shibata Exp $
 
 ;;
 ;; include
@@ -692,19 +692,18 @@
      (let1 songs (all-songs musume)
        (map/ (lambda (n f t m u)
 	       (dl/
-		(dt/ (#`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
+		(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
 		(if (null? u)
 		    (dd/ (pre/ (melody-format m)))
 		    (let1 upfile (car u)
 		      (dd/ (pre/ m
 				 (br/)
-				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
-		))
+				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))
 	     (map (lambda (m) (seq-no-of m)) songs)
 	     (map (lambda (m) (fan-of m)) songs)
 	     (map (lambda (m) (ctime-of m)) songs)
 	     (map melody-of songs)
-	     (map files-of songs)))
+	     (map files-of songs))
      ))))
 
 (define-entry (mypage type)
