@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.119 2005/11/03 12:44:03 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.120 2005/11/03 14:14:44 cut-sea Exp $
 
 ;;
 ;; include
@@ -125,8 +125,9 @@
    (devel:h2/ ($$ "新ユニット結成"))
    (devel:form/cont/
     (@@/ (cont (entry-lambda (:keyword name desc)
-		   (if (string-null? name)
-		       (set-error-message ($$ "ユニット名を入力してください。"))
+		   (if (or (string-null? name)
+			   (null? (kahua-context-ref* "fans")))
+		       (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
 		       (set-error-message #f))
 		 (begin
 		   (create-new-unit name desc)
