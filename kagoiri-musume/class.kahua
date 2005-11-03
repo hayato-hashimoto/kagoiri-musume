@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.38 2005/10/30 17:05:02 shibata Exp $
+;; $Id: class.kahua,v 1.39 2005/11/03 05:50:37 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -130,6 +130,9 @@
 	(begin
 	  (set! (seq-no-of obj) (next-seq-no musume))
 	  (set! (songs-of musume) (cons obj songs))))))
+
+(define-method object-compare ((obj1 <song>) (obj2 <song>))
+  (compare (ctime-of obj1) (ctime-of obj2)))
 
 (define-method all-songs ((musume <musume>))
   (songs-of musume))
