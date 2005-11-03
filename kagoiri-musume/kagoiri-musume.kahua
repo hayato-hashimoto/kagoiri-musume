@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.117 2005/11/03 10:26:29 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.118 2005/11/03 12:36:06 shibata Exp $
 
 ;;
 ;; include
@@ -359,7 +359,8 @@
           (form/cont/
            (@@/ (cont search `(unit-id ,unit-id)))
 	   ($$ "ユニット内検索:")
-           (input/ (@/ (type "text") (name "word") (size 10)))
+           (input/ (@/ (onKeyUp "wait_search(this.value)")
+                       (type "text") (name "word") (size 10)))
            (input/ (@/ (type "submit") (value ($$ "検索"))))))
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/ (@@/ (cont musume-list unit-id))
@@ -625,22 +626,6 @@
 		  (mname-of musume)
 		  (disp-name-of
 		   (status-of musume))))
-     (let1 songs (reverse (all-songs musume))
-       (map/ (lambda (n f t m u)
-	       (dl/
-		(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
-		(if (null? u)
-		    (dd/ (pre/ (melody-format m)))
-		    (let1 upfile (car u)
-		      (dd/ (pre/ m
-				 (br/)
-				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
-		))
-	     (map (lambda (m) (seq-no-of m)) songs)
-	     (map (lambda (m) (fan-of m)) songs)
-	     (map (lambda (m) (ctime-of m)) songs)
-	     (map melody-of songs)
-	     (map files-of songs)))
      (form/cont/
       (@/ (enctype "multipart/form-data"))
       (@@/ (cont (entry-lambda (:keyword melody priority status type assign file)
@@ -700,12 +685,27 @@
        (tr/
 	(td/ "内容")
 	(td/ (textarea/ (@/ (type "text") (name "melody")
-			    (rows 20) (cols 80)) ""))
+			    (rows 10) (cols 80)) ""))
 	(tr/
 	 (td/ ($$ "ファイル"))
-	 (td/ (input/ (@/ (type "file") (name "file")))))))
-      (input/ (@/ (type "submit") (name "submit") (value ($$ "コミット")))))
-     )))
+	 (td/ (input/ (@/ (type "file") (name "file"))))))))
+     (let1 songs (all-songs musume)
+       (map/ (lambda (n f t m u)
+	       (dl/
+		(dt/ (#`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
+		(if (null? u)
+		    (dd/ (pre/ (melody-format m)))
+		    (let1 upfile (car u)
+		      (dd/ (pre/ m
+				 (br/)
+				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))
+		))
+	     (map (lambda (m) (seq-no-of m)) songs)
+	     (map (lambda (m) (fan-of m)) songs)
+	     (map (lambda (m) (ctime-of m)) songs)
+	     (map melody-of songs)
+	     (map files-of songs)))
+     ))))
 
 (define-entry (mypage type)
 
