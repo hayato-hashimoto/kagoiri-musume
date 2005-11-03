@@ -99,7 +99,7 @@ function filter_table(select, id, all_text, pos){
 
      var tbody = table.getElementsByTagName('TBODY').item(0);
      var newbody = document.createElement('tbody');
-     table.style.display='none'
+     table.style.display='none';
      /* filter loop */
      for (var i = 1; i < rows.length; i++) {
           row = rows.item(i);
@@ -236,3 +236,52 @@ function toggle_fulllist(e){
           select.size = select.length;
      }
 }
+
+
+var search_delay = null;
+var search_key = null;
+
+function wait_search(value){
+
+     if (search_delay)
+     {
+          clearTimeout(search_delay);
+     }
+     search_delay = setTimeout("search_musume('"
+                               +
+                               value
+                               +
+                               "');search_delay=null",300);
+}
+
+function search_musume(value)
+{
+     var table = document.getElementById('musume_list');
+     if (value == search_key){
+          return false;
+     }
+     search_key = value;
+     var showall=value==""?true:false
+
+     var tbody = table.getElementsByTagName('TBODY').item(0);
+     var newbody = document.createElement('tbody');
+     table.style.display='none';
+     var rows = table.rows;
+     var matcher = new RegExp(value,'i');
+
+     for (var i = 1; i < rows.length; i++) {
+          row = rows.item(i);
+          cell0 = row.cells.item(0);
+          cell1 = row.cells.item(1);
+          if (showall ||
+              (cell0[textContent]+cell1[textContent]).match(matcher)) {
+               row.style.display = '';
+          }
+          else {
+               row.style.display = "none";
+          }
+     }
+     table.style.display=''
+     search_delay = null;
+}
+
