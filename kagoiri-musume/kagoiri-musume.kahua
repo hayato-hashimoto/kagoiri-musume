@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.123 2005/11/04 15:19:56 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.124 2005/11/04 15:41:26 cut-sea Exp $
 
 ;;
 ;; include
@@ -376,135 +376,146 @@
            (input/ (@/ (type "submit") (value ($$ "検索"))))))
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/ (@@/ (cont musume-list unit-id))
-		     (table/ (@/ (class "table-filter"))
+		     (table/
+		      (@/ (class "table-filter"))
 		      (tr/ (@/ (onclick "toggle_select_mode(event)"))
-                           (th/ (clickable ($$ "優先度")))
-			   (th/ (clickable ($$ "ステータス")))
-			   (th/ (clickable ($$ "アサイン")))
-                           (th/ (clickable ($$ "タイプ")))
-                           (th/ (clickable ($$ "カテゴリ")))
+			   (has-item? unit priorities-of (th/ (clickable ($$ "優先度"))))
+			   (has-item? unit statuss-of (th/ (clickable ($$ "ステータス"))))
+			   (has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
+			   (has-item? unit types-of (th/ (clickable ($$ "タイプ"))))
+			   (has-item? unit categories-of (th/ (clickable ($$ "カテゴリ"))))
 			   (th/ ($$ "表示上限")))
-                      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
-                        (tr/ (@/ (valign "top"))
-                         (td/
-                          (select/
-                           (@/ (onchange (filter-row 2))
-                               (name "priority"))
-                           (node-set
-                            (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-                                  (options (priorities-of unit) priority)))))
-                         (td/
-                          (select/
-                           (@/ (onchange (filter-row 3))
-                               (name "status"))
-                           (node-set
-                            (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-                                  (options (statuss-of unit) status)))))
-                         (td/
-                          (select/
-                           (@/ (onchange (filter-row 4))
-                               (name "assign"))
-                           (node-set
-                            (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-                                  (options (fans-of unit) assign)))))
-                         (td/
-                          (select/
-                           (@/ (onchange (filter-row 5))
-                               (name "type"))
-                           (node-set
-                            (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-                                  (options (types-of unit) type)))))
-                         (td/
-                          (select/
-                           (@/ (onchange (filter-row 6))
-                               (name "category"))
-                           (node-set
-                            (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-                                  (options (categories-of unit) category)))))
-                         (td/
-                          (select/
-                           (@/ (name "limit"))
-                           (map/ (lambda (l)
-                                   (if (equal? *limit* l)
-                                       (option/ (@/ (value l) (selected "true")) l)
-				     (option/ (@/ (value l)) l)))
-                                 *limits-list*)))
-                         (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み")))))
-                         )))
+		      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
+			(tr/ (@/ (valign "top"))
+			     (has-item? unit priorities-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 2))
+					      (name "priority"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (priorities-of unit) priority))))))
+			     (has-item? unit statuss-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 3))
+					      (name "status"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (statuss-of unit) status))))))
+			     (has-item? unit fans-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 4))
+					      (name "assign"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (fans-of unit) assign))))))
+			     (has-item? unit types-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 5))
+					      (name "type"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (types-of unit) type))))))
+			     (has-item? unit categories-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 6))
+					      (name "category"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (categories-of unit) category))))))
+			     (td/
+			      (select/
+			       (@/ (name "limit"))
+			       (map/ (lambda (l)
+				       (if (equal? *limit* l)
+					   (option/ (@/ (value l) (selected "true")) l)
+					   (option/ (@/ (value l)) l)))
+				     *limits-list*)))
+			     (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み")))))
+			     )))
 		     ;; data table
 		     (let1 musumes (limiter (sort (filter and-filter
 							  (all-musumes unit))
 						  (lambda (m1 m2)
 						    (> (mno-of m1) (mno-of m2)))))
 		       (table/ (@/ (class "listing") (id "musume_list"))
-			(thead/ (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
-				      ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
-				      ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))
-				      ((> 500 (length musumes)) (format ($$  "~a人もの娘。に萌えました(萌えすぎです)") (length musumes)))
-				      (else (format ($$  "なんと~a人もの娘。に萌えまつきました orz") (length musumes))))
-                                (div/ (@/ (id "status-num"))
-                                 (map/ (lambda (s)
-                                         (let1 statusid (code-of s)
-                                           (span/ (a/cont/ (@@/ (cont musume-list unit-id  `(status ,statusid)))
-                                                           (disp-name-of s))
-                                                  (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
-                                       (statuss-of unit)))
-                                (tr/ (@/ (onclick "sort_table(event);return false"))
-                                     (th/ ($$ "No."))
-                                     (th/ ($$ "タイトル"))
-                                     (th/ ($$ "優先度"))
-                                     (th/ ($$ "ステータス"))
-                                     (th/ ($$ "アサイン"))
-                                     (th/ ($$ "タイプ"))
-                                     (th/ ($$ "カテゴリ"))
-                                     (th/ ($$ "登録日"))
-                                     (th/ ($$ "更新日"))))
-                        (tbody/
-			(map/ (lambda (m)
-                                (let ((status (status-of m))
-                                      (songs (songs-of m)))
-				(tr/ (@/ (class #`"status-,(code-of status)"))
-                                     (let1 val (format "~3,'0d" (mno-of m))
-                                       (td/ (@/ (value val))
-                                            (a/cont/
-                                             (@@/ (cont musume-edit (key-of m)))
-                                             (x->string val))))
-                                     (let1 val (mname-of m)
-                                       (td/ (@/ (value val))
-                                            (a/cont/
-                                             (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
-                                             val)
-                                            (format " (~a)" (length songs))))
+			       (thead/ (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
+					     ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
+					     ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))
+					     ((> 500 (length musumes)) (format ($$  "~a人もの娘。に萌えました(萌えすぎです)") (length musumes)))
+					     (else (format ($$  "なんと~a人もの娘。に萌えまつきました orz") (length musumes))))
+				       (div/ (@/ (id "status-num"))
+					     (map/ (lambda (s)
+						     (let1 statusid (code-of s)
+						       (span/ (a/cont/ (@@/ (cont musume-list unit-id  `(status ,statusid)))
+								       (disp-name-of s))
+							      (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
+						   (statuss-of unit)))
+				       (tr/ (@/ (onclick "sort_table(event);return false"))
+					    (th/ ($$ "No."))
+					    (th/ ($$ "タイトル"))
+					    (has-item? unit priorities-of (th/ ($$ "優先度")))
+					    (has-item? unit statuss-of (th/ ($$ "ステータス")))
+					    (has-item? unit fans-of (th/ ($$ "アサイン")))
+					    (has-item? unit types-of (th/ ($$ "タイプ")))
+					    (has-item? unit categories-of (th/ ($$ "カテゴリ")))
+					    (th/ ($$ "登録日"))
+					    (th/ ($$ "更新日"))))
+			       (tbody/
+				(map/ (lambda (m)
+					(let ((status (status-of m))
+					      (songs (songs-of m)))
+					  (tr/ (@/ (class #`"status-,(code-of status)"))
+					       (let1 val (format "~3,'0d" (mno-of m))
+						 (td/ (@/ (value val))
+						      (a/cont/
+						       (@@/ (cont musume-edit (key-of m)))
+						       (x->string val))))
+					       (let1 val (mname-of m)
+						 (td/ (@/ (value val))
+						      (a/cont/
+						       (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
+						       val)
+						      (format " (~a)" (length songs))))
 
-                                     (let1 val (priority-of m)
-                                       (td/ (@/ (value (level-of val)))
-                                            (disp-name-of
-                                             val)))
-                                     (let1 val (code-of status)
-                                       (td/ (@/ (value val))
-                                            (disp-name-of
-                                             status)))
-                                     (let1 val (fan-name-of (assign-of m))
-                                       (td/ (@/ (value val))
-                                            val))
-                                     (let1 val (type-of m)
-                                       (td/ (@/ (value (code-of val)))
-                                            (disp-name-of
-                                             val)))
-                                     (let1 val (category-of m)
-                                       (td/ (@/ (value (code-of val)))
-                                            (disp-name-of
-                                             val)))
-				     (let1 val (ctime-of m)
-                                       (td/ (@/ (value val))
-                                            (sys-strftime "%Y/%m/%d %H:%M"
-                                                          (sys-localtime val))))
-                                     (let1 val (ctime-of (car songs))
-                                       (td/ (@/ (value val))
-                                            (sys-strftime "%Y/%m/%d %H:%M"
-                                                          (sys-localtime val)))))))
-			      musumes)))
-		     )))))))
+					       (let1 val (priority-of m)
+						 (has-item? unit priorities-of
+							    (td/ (@/ (value (level-of val)))
+								 (disp-name-of
+								  val))))
+					       (let1 val (code-of status)
+						 (has-item? unit statuss-of
+							    (td/ (@/ (value val))
+								 (disp-name-of
+								  status))))
+					       (let1 val (fan-name-of (assign-of m))
+						 (has-item? unit fans-of
+							    (td/ (@/ (value val))
+								 val)))
+					       (let1 val (type-of m)
+						 (has-item? unit types-of
+							    (td/ (@/ (value (code-of val)))
+								 (disp-name-of
+								  val))))
+					       (let1 val (category-of m)
+						 (has-item? unit categories-of
+							    (td/ (@/ (value (code-of val)))
+								 (disp-name-of
+								  val))))
+					       (let1 val (ctime-of m)
+						 (td/ (@/ (value val))
+						      (sys-strftime "%Y/%m/%d %H:%M"
+								    (sys-localtime val))))
+					       (let1 val (ctime-of (car songs))
+						 (td/ (@/ (value val))
+						      (sys-strftime "%Y/%m/%d %H:%M"
+								    (sys-localtime val)))))))
+				      musumes)))
+		       )))))))
 
 (define-entry (musume-new unit-id)
   (let1 unit (find-kahua-instance <unit> unit-id)
@@ -549,14 +560,20 @@
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (table/
-       (tr/ (th/ ($$ "優先度")) (th/ ($$ "ステータス")) (th/ ($$ "タイプ")) (th/ ($$ "カテゴリ")) (th/ ($$ "アサイン")))
+       (tr/
+	(has-item? unit priorities-of (th/ ($$ "優先度")))
+	(has-item? unit statuss-of (th/ ($$ "ステータス")))
+	(has-item? unit types-of (th/ ($$ "タイプ")))
+	(has-item? unit categories-of (th/ ($$ "カテゴリ")))
+	(th/ ($$ "アサイン")))
        (tr/
 	(map/ (lambda (n refer)
-		(td/ (select/ (@/ (name n))
-			      (map/ (lambda (item)
-				      (option/ (@/ (value (code-of item)))
-					       (disp-name-of item)))
-				    (refer unit)))))
+		(has-item? unit refer
+			   (td/ (select/ (@/ (name n))
+					 (map/ (lambda (item)
+						 (option/ (@/ (value (code-of item)))
+							  (disp-name-of item)))
+					       (refer unit))))))
 	      (list "priority" "status" "type" "category" "assign")
 	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))))
@@ -677,17 +694,22 @@
 				 (sendmail-lite unit musume song)))))
 		   (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
       (table/
-       (tr/ (th/ ($$ "優先度")) (th/ ($$ "ステータス")) (th/ ($$ "タイプ")) (th/ ($$ "アサイン")))
+       (tr/
+	(has-item? unit priorities-of (th/ ($$ "優先度")))
+	(has-item? unit statuss-of (th/ ($$ "ステータス")))
+	(has-item? unit types-of (th/ ($$ "タイプ")))
+	(has-item? unit fans-of (th/ ($$ "アサイン"))))
        (tr/ (map/ (lambda (n refer items-of)
-		    (td/ (select/ (@/ (name n))
-				  (map/ (lambda (item)
-					  (if (eq? item (refer musume))
-					      (option/ (@/ (value (code-of item))
-							   (selected "true"))
-						       (disp-name-of item))
-					      (option/ (@/ (value (code-of item)))
-						       (disp-name-of item))))
-					(items-of unit)))))
+		    (has-item? unit items-of
+			       (td/ (select/ (@/ (name n))
+					     (map/ (lambda (item)
+						     (if (eq? item (refer musume))
+							 (option/ (@/ (value (code-of item))
+								      (selected "true"))
+								  (disp-name-of item))
+							 (option/ (@/ (value (code-of item)))
+								  (disp-name-of item))))
+						   (items-of unit))))))
 		  (list "priority" "status" "type" "assign")
 		  (list priority-of status-of type-of assign-of)
 		  (list priorities-of statuss-of types-of fans-of))
