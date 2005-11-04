@@ -1,14 +1,22 @@
+function addOnloadEvent(proc){
+     if (window.addEventListener) {
+          window.addEventListener("load",proc,false);
+     }
+     else if (window.attachEvent) {
+          window.attachEvent("onload", proc);
+     }
+}
+
+var win = false;
+var textContent = 'textContent';
+
 function init(){
-     if (onload_func)
-          onload_func();
      win = document.all?true:false;
      textContent = win?'innerText':'textContent';
 }
-var win = false;
-var textContent = 'textContent'
 
-onload_func = window.onload;
-window.onload = init;
+addOnloadEvent(init);
+addOnloadEvent(focus_focus);
 
 function sort_table(e){
      e = win?window.event:e;
@@ -30,7 +38,7 @@ function sort_table(e){
      var pos = target.cellIndex;
      var rows = table.rows;
      var rows_ = new Array;
-     for (var i = 1; i < rows.length; i++) {
+     for (i = 1; i < rows.length; i++) {
           rows_[i-1] = rows.item(i);
      }
 
@@ -49,7 +57,7 @@ function sort_table(e){
 
      var tbody = table.getElementsByTagName('TBODY').item(0);
 
-     for (var i = 0; i<rows_.length; i++) {
+     for (i = 0; i<rows_.length; i++) {
           newbody.appendChild(rows_[i]);
      }
      table.replaceChild(newbody, tbody);
@@ -75,10 +83,10 @@ function filter_table(select, id, all_text, pos){
      /* highlight selected option */
      var prev_options = select.prev_options;
      if (prev_options != undefined)
-          for (var i=0; i<prev_options.length; i++) {
+          for (i=0; i<prev_options.length; i++) {
                prev_options[i].style.backgroundColor = '';
           }
-     for (var i=0; i<option_list.length; i++) {
+     for (i=0; i<option_list.length; i++) {
           option_list[i].style.backgroundColor = 'lightblue';
      }
      select.prev_options = option_list;
@@ -88,7 +96,7 @@ function filter_table(select, id, all_text, pos){
      var row;
      /* reset previous filter */
      if (select.filterd_rows != undefined) {
-          for (var i = 0; i<select.filterd_rows.length; i++) {
+          for (i = 0; i<select.filterd_rows.length; i++) {
                row = select.filterd_rows[i];
                row.filterd -= 1;
           }
@@ -101,7 +109,7 @@ function filter_table(select, id, all_text, pos){
      var newbody = document.createElement('tbody');
      table.style.display='none';
      /* filter loop */
-     for (var i = 1; i < rows.length; i++) {
+     for (i = 1; i < rows.length; i++) {
           row = rows.item(i);
           cell = row.cells.item(pos);
           /* initialize filter count */
@@ -235,32 +243,33 @@ function toggle_fulllist(e){
           select.prev_size = select.size;
           select.size = select.length;
      }
+     return false;
 }
 
 
-var search_delay = null;
-var search_key = null;
+var current_search = null;
+var previous_search_key = null;
 
-function wait_search(value){
+function delay_search(value){
 
-     if (search_delay)
-     {
-          clearTimeout(search_delay);
+     if (current_search) {
+          // abort previous delayed search
+          clearTimeout(current_search);
      }
-     search_delay = setTimeout("search_musume('"
-                               +
-                               value
-                               +
-                               "');search_delay=null",300);
+     current_search = setTimeout(function () {
+                                      search_musume(value);
+                                      current_search = null;
+                                 },
+                                 300);
 }
 
 function search_musume(value)
 {
      var table = document.getElementById('musume_list');
-     if (value == search_key){
+     if (value == previous_search_key){
           return false;
      }
-     search_key = value;
+     previous_search_key = value;
      var showall=value==""?true:false
 
      var tbody = table.getElementsByTagName('TBODY').item(0);
@@ -268,6 +277,7 @@ function search_musume(value)
      table.style.display='none';
      var rows = table.rows;
      var matcher = new RegExp(value,'i');
+     var row, cell0, cell1;
 
      for (var i = 1; i < rows.length; i++) {
           row = rows.item(i);
@@ -282,9 +292,13 @@ function search_musume(value)
           }
      }
      table.style.display=''
-     search_delay = null;
+     current_search = null;
+     return false;
 }
 
 function focus_focus(){
-     document.getElementById('focus').focus();
+     var target = document.getElementById('focus');
+     if (target)
+          target.focus();
+     return false;
 }

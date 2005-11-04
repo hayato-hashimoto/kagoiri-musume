@@ -1,3 +1,16 @@
+2005-11-05  SHIBATA Tomohisa  <shibata@kahua.org>
+
+	* test/test1.scm, test/test2.scm, kagoiri-musume/page.kahua:
+	improved onload events.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	improved onload events.
+	changed message catalog path.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.js:
+	improved onload events.
+
+
 2005-11-04  SHIBATA Tomohisa  <shibata@kahua.org>
 
 	* kagoiri-musume/gadget.kahua:

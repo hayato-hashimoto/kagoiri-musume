@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.7 2005/11/03 16:15:51 shibata Exp $
+;; $Id: test2.scm,v 1.8 2005/11/04 15:20:27 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -52,7 +52,6 @@
            ,*header*
            ,(*make-body*
              (h1 "籠入娘。へようこそ！")
-             (script ?*)
              (h3 "ユニット一覧は一般ユーザアカウントが必要です")
              (form (@ (action ?&) ?*)
                    (table
@@ -156,7 +155,6 @@
 	 (body
 	  ,(*header-logedin* "cut-sea")
           ,(*make-body*
-            (script ?*)
             (h3 "cut-sea さんのパスワード変更")
             (form (@ (action ?&) ?*)
                   (table

@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test1.scm,v 1.6 2005/11/03 16:15:51 shibata Exp $
+;; $Id: test1.scm,v 1.7 2005/11/04 15:20:27 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -70,7 +70,6 @@
            ,*header*
            ,(*make-body*
              (h1 ?_)
-             (script ?*)
              (h3 "システム管理者のアカウントが必要です")
              (form (@ (action ?&) ?*)
 		 (table
@@ -103,7 +102,6 @@
            ,*header*
            ,(*make-body*
              (h1 ?_)
-             (script ?*)
              (h3 "システム管理者のアカウントが必要です")
              (form (@ (action ?&) ?*)
                    (table
