@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.122 2005/11/04 12:49:23 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.123 2005/11/04 15:19:56 shibata Exp $
 
 ;;
 ;; include
@@ -26,7 +26,17 @@
 
 ;; aliases
 ;;
-(textdomain "kagoiri-musume" '("ja" "en"))
+; xgettext -L Scheme -k\$\$ *.kahua --from-code=euc-jp -o msgs/ja/kagoiri-musume.po
+;
+(textdomain "kagoiri-musume"
+            "ja"
+            (build-path (ref (kahua-config) 'working-directory)
+                        "checkout"
+                        "kagoiri-musume"
+                        "msgs")
+            ""
+            #f)
+
 (define $$ gettext)
 
 (load "kagoiri-musume/version.kahua")
@@ -360,8 +370,9 @@
           (form/cont/
            (@@/ (cont search `(unit-id ,unit-id)))
 	   ($$ "ユニット内検索:")
-           (input/ (@/ (onKeyUp "wait_search(this.value)")
-                       (type "text") (name "word") (size 10)))
+           (input/ (@/ (onKeyUp "delay_search(this.value)")
+                       (type "text") (name "word") (size 10)
+                       (id "focus")))
            (input/ (@/ (type "submit") (value ($$ "検索"))))))
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/ (@@/ (cont musume-list unit-id))
@@ -550,12 +561,12 @@
 	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))))
       (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
-		   (td/ (textarea/ (@/ (type "text") (name "name")
-				       (rows 1) (cols 32)) "")
+		   (td/ (input/ (@/ (type "text") (name "name")
+                                    (id "focus") (size 80)))
 			(error:span/ (@/ (class "warning")) (set-error-message #f))))
 	      (tr/ (td/ ($$ "内容"))
 		   (td/ (textarea/ (@/ (type "text") (name "melody")
-				       (rows 20) (cols 80)) "")))
+				       (rows 20) (cols 80)))))
 	      (tr/ (td/ ($$ "ファイル"))
 		   (td/ (input/ (@/ (type "file") (name "file"))))))
       (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))
@@ -647,7 +658,7 @@
 			     ;; save file and make file object.
 			     (if file
 				 (let* ((tmp-path (car file))
-					(file-name (cadr file))
+					(file-name (sys-basename (cadr file)))
 					(file-xtnsn (let1 body+ext (string-split file-name ".")
 						      (if (= (length body+ext) 1)
 							  "" (last body+ext))))
@@ -686,7 +697,7 @@
                (tr/
                 (td/ "内容")
                 (td/ (textarea/ (@/ (type "text") (name "melody")
-                                    (rows 10) (cols 80)) ""))
+                                    (rows 10) (cols 80) (id "focus"))))
                 (tr/
                  (td/ ($$ "ファイル"))
                  (td/ (input/ (@/ (type "file") (name "file"))))))))
@@ -778,7 +789,6 @@
     (permission-check-page
      identity
      ($$ "パスワード変更には一般ユーザのアカウントが必要です")
-     (focus_focus)
      (h3/ (format ($$ "~a さんのパスワード変更") cuser-name))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
