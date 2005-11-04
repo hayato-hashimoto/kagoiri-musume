@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.124 2005/11/04 15:41:26 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.125 2005/11/04 16:07:01 shibata Exp $
 
 ;;
 ;; include
@@ -529,8 +529,9 @@
 	  (li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
      (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
-      (@/ (enctype "multipart/form-data"))
-      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
+      (@/ (enctype "multipart/form-data")
+          (onsubmit "this.filename.value = this.file.value"))
+      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file filename)
 		     (if (string-null? name)
 			 (begin
 			   (set-error-message ($$ "タイトルを入力してください。"))
@@ -543,11 +544,13 @@
 			       ;; save file and make file object.
 			       (if file
 				   (let* ((tmp-path (car file))
-					  (file-name (sys-basename (cadr file)))
+					  (file-name (sys-basename (if (not (string-null? filename))
+                                                                       filename
+                                                                     (cadr file))))
 					  (file-xtnsn (let1 body+ext (string-split file-name ".")
 							(if (= (length body+ext) 1)
 							    "" (last body+ext))))
-					  (real-name (if (equal? file-xtnsn "") 
+					  (real-name (if (equal? file-xtnsn "")
 							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)"
 							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id).,file-xtnsn"))
 					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
@@ -585,7 +588,8 @@
 		   (td/ (textarea/ (@/ (type "text") (name "melody")
 				       (rows 20) (cols 80)))))
 	      (tr/ (td/ ($$ "ファイル"))
-		   (td/ (input/ (@/ (type "file") (name "file"))))))
+		   (td/ (input/ (@/ (type "file") (name "file")))
+                        (input/ (@/ (type "hidden") (name "filename") (value ""))))))
       (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))
      )))
 
@@ -656,8 +660,9 @@
 		  (disp-name-of
 		   (status-of musume))))
      (form/cont/
-      (@/ (enctype "multipart/form-data"))
-      (@@/ (cont (entry-lambda (:keyword melody priority status type assign file)
+      (@/ (enctype "multipart/form-data")
+          (onsubmit "this.filename.value = this.file.value"))
+      (@@/ (cont (entry-lambda (:keyword melody priority status type assign file filename)
 		     (if (and (string-null? melody)
 			      (not file))
 			 (begin
@@ -675,7 +680,9 @@
 			     ;; save file and make file object.
 			     (if file
 				 (let* ((tmp-path (car file))
-					(file-name (sys-basename (cadr file)))
+					(file-name (sys-basename (if (not (string-null? filename))
+                                                                     filename
+                                                                   (cadr file))))
 					(file-xtnsn (let1 body+ext (string-split file-name ".")
 						      (if (= (length body+ext) 1)
 							  "" (last body+ext))))
@@ -722,7 +729,8 @@
                                     (rows 10) (cols 80) (id "focus"))))
                 (tr/
                  (td/ ($$ "ファイル"))
-                 (td/ (input/ (@/ (type "file") (name "file"))))))))
+                 (td/ (input/ (@/ (type "file") (name "file")))
+                      (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
      (let1 songs (all-songs musume)
        (map/ (lambda (n f t m u)
 	       (dl/

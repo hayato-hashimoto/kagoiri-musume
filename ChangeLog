@@ -1,5 +1,8 @@
 2005-11-05  SHIBATA Tomohisa  <shibata@kahua.org>
 
+	* kagoiri-musume/kagoiri-musume.kahua:
+	added filename hidden input.
+
 	* test/test1.scm, test/test2.scm, kagoiri-musume/page.kahua:
 	improved onload events.
 
