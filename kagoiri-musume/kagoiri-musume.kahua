@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.125 2005/11/04 16:07:01 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.126 2005/11/05 05:42:24 cut-sea Exp $
 
 ;;
 ;; include
@@ -662,13 +662,14 @@
      (form/cont/
       (@/ (enctype "multipart/form-data")
           (onsubmit "this.filename.value = this.file.value"))
-      (@@/ (cont (entry-lambda (:keyword melody priority status type assign file filename)
+      (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
 		     (if (and (string-null? melody)
 			      (not file))
 			 (begin
 			   (set! (priority-of musume) (id->obj <priority> priority))
 			   (set! (status-of musume) (id->obj <status> status))
 			   (set! (type-of musume) (id->obj <type> type))
+			   (set! (category-of musume) (id->obj <category> category))
 			   (set! (assign-of musume) (id->obj <fan> assign)))
 			 (begin
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
@@ -676,6 +677,7 @@
 			     (set! (priority-of musume) (id->obj <priority> priority))
 			     (set! (status-of musume) (id->obj <status> status))
 			     (set! (type-of musume) (id->obj <type> type))
+			     (set! (category-of musume) (id->obj <category> category))
 			     (set! (assign-of musume) (id->obj <fan> assign))
 			     ;; save file and make file object.
 			     (if file
@@ -705,6 +707,7 @@
 	(has-item? unit priorities-of (th/ ($$ "優先度")))
 	(has-item? unit statuss-of (th/ ($$ "ステータス")))
 	(has-item? unit types-of (th/ ($$ "タイプ")))
+	(has-item? unit categories-of (th/ ($$ "カテゴリ")))
 	(has-item? unit fans-of (th/ ($$ "アサイン"))))
        (tr/ (map/ (lambda (n refer items-of)
 		    (has-item? unit items-of
@@ -717,9 +720,9 @@
 							 (option/ (@/ (value (code-of item)))
 								  (disp-name-of item))))
 						   (items-of unit))))))
-		  (list "priority" "status" "type" "assign")
-		  (list priority-of status-of type-of assign-of)
-		  (list priorities-of statuss-of types-of fans-of))
+		  (list "priority" "status" "type" "category" "assign")
+		  (list priority-of status-of type-of category-of assign-of)
+		  (list priorities-of statuss-of types-of categories-of fans-of))
 	    (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "コミット")))))
 	    ))
       (table/ (@/ (class "extension"))
