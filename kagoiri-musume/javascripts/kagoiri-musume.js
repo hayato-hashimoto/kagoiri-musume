@@ -302,3 +302,14 @@ function focus_focus(){
           target.focus();
      return false;
 }
+
+function submitForm(form){
+  form.submit();
+  submitForm = blockIt;
+  return false;
+}
+
+function blockIt(){
+  return false;
+}
+

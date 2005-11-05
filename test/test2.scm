@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.8 2005/11/04 15:20:27 shibata Exp $
+;; $Id: test2.scm,v 1.9 2005/11/05 07:47:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -140,8 +140,7 @@
                                     (td ?*))))))
                    (input (@ (!permute
                               (value "新ユニット結成")
-                              (type "submit")
-                              (name "submit"))))))
+                              (type "submit"))))))
            ,*footer*))
         (call-worker/gsid w
 			  '()

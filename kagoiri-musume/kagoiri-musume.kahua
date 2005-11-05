@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.126 2005/11/05 05:42:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.127 2005/11/05 07:47:20 cut-sea Exp $
 
 ;;
 ;; include
@@ -134,6 +134,7 @@
    (devel:hr/)
    (devel:h2/ ($$ "新ユニット結成"))
    (devel:form/cont/
+    (@/ (onsubmit "return submitForm(this)"))
     (@@/ (cont (entry-lambda (:keyword name desc)
 		   (if (or (string-null? name)
 			   (null? (kahua-context-ref* "fans")))
@@ -194,7 +195,7 @@
                   (div/ (@/ (class "clickable")
                             (onclick "down_select(this, 'fans')"))
                         "↓")))))))
-    (input/ (@/ (type "submit") (name "submit") (value ($$ "新ユニット結成")))))
+    (input/ (@/ (type "submit") (value ($$ "新ユニット結成")))))
    ))
 
 
@@ -530,7 +531,7 @@
      (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
       (@/ (enctype "multipart/form-data")
-          (onsubmit "this.filename.value = this.file.value"))
+          (onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
       (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file filename)
 		     (if (string-null? name)
 			 (begin
@@ -579,7 +580,7 @@
 					       (refer unit))))))
 	      (list "priority" "status" "type" "category" "assign")
 	      (list priorities-of statuss-of types-of categories-of fans-of))
-	(td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))))
+	(td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))))
       (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
 		   (td/ (input/ (@/ (type "text") (name "name")
                                     (id "focus") (size 80)))
@@ -590,7 +591,7 @@
 	      (tr/ (td/ ($$ "ファイル"))
 		   (td/ (input/ (@/ (type "file") (name "file")))
                         (input/ (@/ (type "hidden") (name "filename") (value ""))))))
-      (input/ (@/ (type "submit") (name "submit") (value ($$ "新しい娘。加入")))))
+      (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))
      )))
 
 (define-entry (musume-view)
@@ -661,7 +662,7 @@
 		   (status-of musume))))
      (form/cont/
       (@/ (enctype "multipart/form-data")
-          (onsubmit "this.filename.value = this.file.value"))
+          (onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
       (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
 		     (if (and (string-null? melody)
 			      (not file))
@@ -723,7 +724,7 @@
 		  (list "priority" "status" "type" "category" "assign")
 		  (list priority-of status-of type-of category-of assign-of)
 		  (list priorities-of statuss-of types-of categories-of fans-of))
-	    (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "コミット")))))
+	    (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
 	    ))
       (table/ (@/ (class "extension"))
                (tr/

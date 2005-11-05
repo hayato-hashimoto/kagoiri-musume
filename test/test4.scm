@@ -1,6 +1,6 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
 ;; test kagoiri-musume script.
-;; $Id: test4.scm,v 1.4 2005/11/03 16:15:51 shibata Exp $
+;; $Id: test4.scm,v 1.5 2005/11/05 07:47:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -132,7 +132,7 @@
 					       (option (@ (value "kago")) "kago")))
 				   (td (div ?@ "↑")
 				       (div ?@ "↓")))))))
-			   (input (@ (value "新ユニット結成") (type "submit") (name "submit")))))
+			   (input (@ (value "新ユニット結成") (type "submit")))))
 		,*footer*))
 	(call-worker/gsid w
 			  '()
