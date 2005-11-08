@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.14 2005/11/08 13:27:30 cut-sea Exp $
+;; $Id: initdb.scm,v 1.15 2005/11/08 16:30:25 cut-sea Exp $
 
 ;;
 ;; include
@@ -16,7 +16,7 @@
 (load "kagoiri-musume/class.kahua")
 
 ;; for test
-(if (symbol-bound? 'config-file)
+(if (global-variable-bound? (current-module) 'config-file)
     (kahua-init config-file))
 
 ;; DB Setting.
