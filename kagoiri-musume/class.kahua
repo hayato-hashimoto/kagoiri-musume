@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.41 2005/11/04 15:41:26 cut-sea Exp $
+;; $Id: class.kahua,v 1.42 2005/11/08 13:45:11 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -235,7 +235,8 @@
 (define (admin?)
   (kahua-user-has-role? (kahua-current-user) '(admin)))
 (define (common?)
-  (kahua-user-has-role? (kahua-current-user) '(user)))
+  (and (kahua-user-has-role? (kahua-current-user) '(user))
+       (not (equal? "guest" (ref (kahua-current-user) 'login-name)))))
 (define (developer?)
   (kahua-user-has-role? (kahua-current-user) '(developer)))
 (define (client?)
