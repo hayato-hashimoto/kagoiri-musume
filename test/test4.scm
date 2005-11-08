@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.6 2005/11/08 12:35:37 cut-sea Exp $
+;; $Id: test4.scm,v 1.7 2005/11/08 13:27:30 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -132,6 +132,7 @@
 				   (td (select ?@
 					       (option (@ (value "   ")))
 					       (option (@ (value "cut-sea")) "cut-sea")
+					       (option (@ (value "guest")) "guest")
 					       (option (@ (value "kago")) "kago")))
 				   (td (div ?@ "¢¬")
 				       (div ?@ "¢­")))))))
@@ -236,6 +237,7 @@
 			     (tr (td (select ?@
 					     (option (@ (value "   ") (selected "#t")))
 					     (option (@ (value "cut-sea") (selected "#t")) "cut-sea")
+					     (option (@ (value "guest")) "guest")
 					     (option (@ (value "kago")) "kago")))
 				 (td (div ?@ "¢¬")
 				     (div ?@ "¢­")))))))

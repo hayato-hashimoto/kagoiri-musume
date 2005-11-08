@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.13 2005/10/28 13:26:09 cut-sea Exp $
+;; $Id: initdb.scm,v 1.14 2005/11/08 13:27:30 cut-sea Exp $
 
 ;;
 ;; include
@@ -45,6 +45,7 @@
     (new-fan "   " "anybody" "anybody@kagoiri.org")
     (new-fan "kago" "kago" "cut-sea@kagoiri.org" 'admin 'developer 'client 'user)
     (new-fan "cut-sea" "cutsea" "cut-sea@kagoiri.org" 'developer 'user)
+    (new-fan "guest" "" "" 'client 'user)
 
     (new <priority> "normal" :disp-name "ÉáÄÌ" :level 3)
     (new <priority> "low" :disp-name "Äã" :level 2)

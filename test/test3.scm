@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test3.scm,v 1.7 2005/11/08 12:35:37 cut-sea Exp $
+;; $Id: test3.scm,v 1.8 2005/11/08 13:27:30 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -66,6 +66,7 @@
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td) (td "guest") (td) (td) (td "＊") (td))
 		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td)))
 		(table
 		 (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
@@ -99,6 +100,7 @@
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td) (td "guest") (td) (td) (td "＊") (td))
 		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td)))
 		(table
@@ -135,6 +137,7 @@
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td) (td "guest") (td) (td) (td "＊") (td))
 		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
@@ -171,6 +174,7 @@
 		 (thead "登録ユーザ一覧")
 		 (tr (th "管理者権限") (th "ログイン名") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
 		 (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "＊") (td) (td))
+		 (tr (td) (td "guest") (td) (td) (td "＊") (td))
 		 (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))
 		 (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊")))
 		(table
