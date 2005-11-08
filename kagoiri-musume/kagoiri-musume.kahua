@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.128 2005/11/08 13:45:11 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.129 2005/11/08 15:07:39 shibata Exp $
 
 ;;
 ;; include
@@ -27,7 +27,7 @@
 ;; aliases
 ;;
 ; xgettext -L Scheme -k\$\$ *.kahua --from-code=euc-jp -o msgs/ja/kagoiri-musume.po
-;
+; msgfmt -o kagoiri-musume.mo kagoiri-musume.po 
 (textdomain "kagoiri-musume"
             "ja"
             (build-path (ref (kahua-config) 'working-directory)
@@ -788,7 +788,7 @@
                            (all-units)))
             (musumes (append-map all-musumes units))
             (songs (append-map songs-of  musumes))
-            (songs (reverse! (sort! songs)))
+            (songs (reverse (sort songs)))
             (songs (take* songs 20)))
        (format "~a item(s)" (length songs))
        (map/ (lambda (s)
