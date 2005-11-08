@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.129 2005/11/08 15:07:39 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.130 2005/11/08 15:26:45 cut-sea Exp $
 
 ;;
 ;; include
@@ -738,7 +738,10 @@
      (let1 songs (all-songs musume)
        (map/ (lambda (n f t m u)
 	       (dl/
-		(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
+		#;(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
+		(dt/ (span/ (@/ (id #`",n") (class "song-no")) #`"#,|n|.")
+		     (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+		     (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]"))
 		(if (null? u)
 		    (dd/ (pre/ (melody-format m)))
 		    (let1 upfile (car u)
