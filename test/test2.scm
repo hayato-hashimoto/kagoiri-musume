@@ -1,6 +1,9 @@
 ;; -*- coding: euc-jp; mode: scheme -*-
-;; test kagoiri-musume script.
-;; $Id: test2.scm,v 1.9 2005/11/05 07:47:21 cut-sea Exp $
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: test2.scm,v 1.10 2005/11/08 12:35:37 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)

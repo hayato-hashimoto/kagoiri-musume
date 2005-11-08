@@ -1,3 +1,10 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: css.scm,v 1.2 2005/11/08 12:35:37 cut-sea Exp $
+
 (with-module kahua.server
 ;;===========================================================
 ;; CSS tree interpreter - for generates CSS
