@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.8 2005/11/09 15:31:12 cut-sea Exp $
+;; $Id: test4.scm,v 1.9 2005/11/09 18:30:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -17,7 +17,7 @@
 
 (load "common.scm")
 
-(test-start "kagoiri-musume operate admin-system parameters")
+(test-start "kagoiri-musume operate unit&musume&melody")
 
 (*setup*)
 
@@ -277,7 +277,6 @@
 	 '(// body div table))
         (make-match&pick w))
 
-
  (test* "kagoiri-musume view unit's empty musume-list"
 	`(html
 	  ,*head*
@@ -294,7 +293,7 @@
 	   (div ?@
 		(ul ?@
 		    (li (a ?@ "娘。一覧"))
-		    (li (a ?@ "新しい娘。")))
+		    (li (a (@ (href ?&) ?*) "新しい娘。")))
 		(div ?@
 		     (form ?@ (input ?@) "ユニット内検索:"
 			   (input ?@)
@@ -366,6 +365,240 @@
 	 '()
 	 '()
 	 (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test* "kagoiri-musume musume-new link click"
+	`(html
+	  ,*head*
+	  (body
+	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+		(a ?@ "トップ")
+		(a ?@ "システム管理")
+		(a ?@ "ユニット一覧")
+		(a ?@ "パスワード変更")
+		(span " Now login:" (a ?@ "cut-sea"))
+		(a ?@ "Logout")
+		(form ?@ "検索:" (input ?@)))
+	   (div ?@
+		(ul ?@
+		    (li (a ?@ "娘。一覧"))
+		    (li (a ?@ "新しい娘。")))
+		(h2 "籠入娘。Test Project. - 新しい娘。")
+		(form (@ (action ?&) ?*)
+		      (table
+		       (tr (th "優先度")
+			   (th "ステータス")
+			   (th "タイプ")
+			   (th "カテゴリ")
+			   (th "アサイン"))
+		       (tr
+			(td
+			 (select (@ (name "priority"))
+				 (option (@ (value "normal")) "普通")
+				 (option (@ (value "super")) "超高")
+				 (option (@ (value "high")) "高")))
+			(td
+			 (select (@ (name "status"))
+				 (option (@ (value "open")) "OPEN")
+				 (option (@ (value "on-hold")) "ON HOLD")
+				 (option (@ (value "completed")) "COMPLETED")))
+			(td
+			 (select (@ (name "type"))
+				 (option (@ (value "task")) "タスク")
+				 (option (@ (value "request")) "変更要望")
+				 (option (@ (value "discuss")) "議論")))
+			(td
+			 (select (@ (name "category"))
+				 (option (@ (value "master")) "マスタ")
+				 (option (@ (value "infra")) "インフラ")
+				 (option (@ (value "global")) "全体")
+				 (option (@ (value "section")) "セクション")))
+			(td
+			 (select (@ (name "assign"))
+				 (option (@ (value "   ")))
+				 (option (@ (value "cut-sea")) "cut-sea")
+				 (option (@ (value "guest")) "guest")))
+			(td
+			 (input (@ (value "新しい娘。加入") (type "submit"))))))
+		      (table
+		       (tr
+			(td "タイトル" (span ?@ "(※)"))
+			(td (input (@ (!permute (type "text") (name "name") ?*)))))
+		       (tr (td "内容")
+			   (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+		       (tr (td "ファイル")
+			   (td (input (@ (type "file") (name "file")))
+			       (input (@ (value "") (type "hidden") (name "filename"))))))
+		      (input (@ (value "新しい娘。加入") (type "submit")))))
+	   ,*footer*))
+        (call-worker/gsid
+	 w
+	 '()
+	 '()
+	 (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test/send&pick "kagoiri-musume musume-new create"
+                 w
+                 '(("priority" "high")
+		   ("status" "open")
+		   ("type" "task")
+		   ("category" "global")
+		   ("name" "テストな娘。")
+		   ("melody" "テストをする必要があるのでするなり")
+		   ("assign" "cut-sea")))
+
+ (test* "kagoiri-musume check melody-list"
+	`(html
+	  ,*head*
+	  (body
+	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+		(a ?@ "トップ")
+		(a ?@ "システム管理")
+		(a ?@ "ユニット一覧")
+		(a ?@ "パスワード変更")
+		(span " Now login:" (a ?@ "cut-sea"))
+		(a ?@ "Logout")
+		(form ?@ "検索:" (input ?@)))
+	   (div ?@
+		(ul ?@
+		    (li (a ?@ "娘。一覧"))
+		    (li (a ?@ "新しい娘。")))
+		(div (a ?@ "<<")
+		     (a ?@ ">>"))
+		(h3 "籠入娘。Test Project. - 1：テストな娘。 - OPEN")
+		(form (@ (action ?&) ?*)
+		      (table
+		       (tr
+			(th "優先度")
+			(th "ステータス")
+			(th "タイプ")
+			(th "カテゴリ")
+			(th "アサイン"))
+		       (tr
+			(td
+			 (select (@ (name "priority"))
+				 (option (@ (value "normal")) "普通")
+				 (option (@ (value "super")) "超高")
+				 (option (@ (value "high") (selected "true")) "高")))
+			(td
+			 (select (@ (name "status"))
+				 (option (@ (value "open") (selected "true")) "OPEN")
+				 (option (@ (value "on-hold")) "ON HOLD")
+				 (option (@ (value "completed")) "COMPLETED")))
+			(td
+			 (select (@ (name "type"))
+				 (option (@ (value "task") (selected "true")) "タスク")
+				 (option (@ (value "request")) "変更要望")
+				 (option (@ (value "discuss")) "議論")))
+			(td
+			 (select (@ (name "category"))
+				 (option (@ (value "master")) "マスタ")
+				 (option (@ (value "infra")) "インフラ")
+				 (option (@ (value "global") (selected "true")) "全体")
+				 (option (@ (value "section")) "セクション")))
+			(td
+			 (select (@ (name "assign"))
+				 (option (@ (value "   ")))
+				 (option (@ (value "cut-sea") (selected "true")) "cut-sea")
+				 (option (@ (value "guest")) "guest")))
+			(td
+			 (input (@ (value "コミット") (type "submit"))))))
+		      (table ?@
+			     (tr (td "内容")
+				 (td (textarea (@ (!permute (type "text") (name "melody") ?*))))
+				 (tr (td "ファイル")
+				     (td (input (@ (type "file") (name "file")))
+					 (input (@ (value "") (type "hidden") (name "filename"))))))))
+		(dl
+		 (dt (span ?@ "#1.") (span ?@ ?_)
+		     (span ?@ "[cut-sea]"))
+		 (dd (pre "テストをする必要があるのでするなり"))))
+	   ,*footer*))
+        (call-worker/gsid
+	 w
+	 '()
+	 '()
+	 (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test/send&pick "kagoiri-musume check melody-list"
+                 w
+                 '(("priority" "super")
+		   ("status" "completed")
+		   ("type" "discuss")
+		   ("category" "section")
+		   ("melody" "クローズする")
+		   ("assign" "   ")))
+
+ (test* "kagoiri-musume check melody-list complete"
+	`(*TOP*
+	  (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+	       (a ?@ "トップ")
+	       (a ?@ "システム管理")
+	       (a ?@ "ユニット一覧")
+	       (a ?@ "パスワード変更")
+	       (span " Now login:" (a ?@ "cut-sea"))
+	       (a ?@ "Logout")
+	       (form ?@ "検索:" (input ?@)))
+	  (div ?@
+	       (ul ?@
+		   (li (a ?@ "娘。一覧"))
+		   (li (a ?@ "新しい娘。")))
+	       (div
+		(a ?@ "<<")
+		(a ?@ ">>"))
+	       (h3 "籠入娘。Test Project. - 1：テストな娘。 - COMPLETED")
+	       (form ?@
+		     (table
+		      (tr (th "優先度") (th "ステータス") (th "タイプ") (th "カテゴリ") (th "アサイン"))
+		      (tr
+		       (td
+			(select (@ (name "priority"))
+				(option (@ (value "normal")) "普通")
+				(option (@ (value "super") (selected "true")) "超高")
+				(option (@ (value "high")) "高")))
+		       (td
+			(select (@ (name "status"))
+				(option (@ (value "open")) "OPEN")
+				(option (@ (value "on-hold")) "ON HOLD")
+				(option (@ (value "completed") (selected "true")) "COMPLETED")))
+		       (td
+			(select (@ (name "type"))
+				(option (@ (value "task")) "タスク")
+				(option (@ (value "request")) "変更要望")
+				(option (@ (value "discuss") (selected "true")) "議論")))
+		       (td
+			(select (@ (name "category"))
+				(option (@ (value "master")) "マスタ")
+				(option (@ (value "infra")) "インフラ")
+				(option (@ (value "global")) "全体")
+				(option (@ (value "section") (selected "true")) "セクション")))
+		       (td
+			(select (@ (name "assign"))
+				(option (@ (value "   ") (selected "true")))
+				(option (@ (value "cut-sea")) "cut-sea")
+				(option (@ (value "guest")) "guest")))
+		       (td (input (@ (value "コミット") (type "submit"))))))
+		     (table ?@
+			    (tr
+			     (td "内容")
+			     (td (textarea ?@))
+			     (tr
+			      (td "ファイル")
+			      (td (input ?@) (input ?@))))))
+	       (dl
+		(dt (span ?@ "#2.") (span ?@ ?_) (span ?@ "[cut-sea]"))
+		(dd (pre "クローズする")))
+	       (dl
+		(dt (span ?@ "#1.") (span ?@ ?_) (span ?@ "[cut-sea]"))
+		(dd (pre "テストをする必要があるのでするなり"))))
+	  ,*footer*)
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '()
+	 '(// body div))
         (make-match&pick w))
 
  )
