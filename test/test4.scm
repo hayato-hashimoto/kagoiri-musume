@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.7 2005/11/08 13:27:30 cut-sea Exp $
+;; $Id: test4.scm,v 1.8 2005/11/09 15:31:12 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -185,7 +185,7 @@
 		(form ?@ "検索:" (input ?@)))
 	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット編集")
 		(hr)
-		(form ?@
+		(form (@ (action ?&) ?*)
 		      (table
 		       (tr ?@
 			   (th ?@ (span ?@ "優先度"))
@@ -242,6 +242,124 @@
 				 (td (div ?@ "↑")
 				     (div ?@ "↓")))))))
 		      (input ?@)))
+	   ,*footer*))
+        (call-worker/gsid
+	 w
+	 '()
+	 '()
+	 (lambda (h b) (tree->string b)))
+        (make-match&pick w))
+
+ (test/send&pick "kagoiri-musume modify unit setting"
+                 w
+                 '(("priority" "normal" "super" "high")
+		   ("status" "open" "on-hold" "completed")
+		   ("type" "task" "request" "discuss")
+		   ("category" "master" "infra" "global" "section")
+		   ("name" "籠入娘。Test Project.")
+		   ("desc" "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
+		   ("fans" "   " "cut-sea" "guest")))
+
+ (test* "kagoiri-musume check modified unit"
+	`(*TOP*
+	  (table ?@
+		 (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン")))
+		 (tbody (tr ?@
+			    (td (a ?@ "編集"))
+			    (td (a ?@ "削除"))
+			    (td (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
+			    (td "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
+			    (td "cut-sea , guest")))))
+        (call-worker/gsid->sxml
+	 w
+	 '()
+	 '()
+	 '(// body div table))
+        (make-match&pick w))
+
+
+ (test* "kagoiri-musume view unit's empty musume-list"
+	`(html
+	  ,*head*
+	  (body
+	   (div ?@
+		(h1 ?@ "籠入娘。 - Groupie System")
+		(a ?@ "トップ")
+		(a ?@ "システム管理")
+		(a ?@ "ユニット一覧")
+		(a ?@ "パスワード変更")
+		(span " Now login:" (a ?@ "cut-sea"))
+		(a ?@ "Logout")
+		(form ?@ "検索:" (input ?@)))
+	   (div ?@
+		(ul ?@
+		    (li (a ?@ "娘。一覧"))
+		    (li (a ?@ "新しい娘。")))
+		(div ?@
+		     (form ?@ (input ?@) "ユニット内検索:"
+			   (input ?@)
+			   (input (@ (value "検索") (type "submit")))))
+		(h2 "籠入娘。Test Project. - 娘。一覧")
+		(form ?@
+		      (table ?@
+			     (tr ?@
+				 (th (span ?@ "優先度"))
+				 (th (span (@ (class "clickable")) "ステータス"))
+				 (th (span (@ (class "clickable")) "アサイン"))
+				 (th (span (@ (class "clickable")) "タイプ"))
+				 (th (span (@ (class "clickable")) "カテゴリ"))
+				 (th "表示上限"))
+			     (tr ?@
+				 (td (select (@ (onchange ?_) (name "priority"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "normal")) "普通")
+					     (option (@ (value "super")) "超高")
+					     (option (@ (value "high")) "高")))
+				 (td (select (@ (onchange ?_) (name "status"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "open")) "OPEN")
+					     (option (@ (value "on-hold")) "ON HOLD")
+					     (option (@ (value "completed")) "COMPLETED")))
+				 (td (select (@ (onchange ?_) (name "assign"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "   ")))
+					     (option (@ (value "cut-sea")) "cut-sea")
+					     (option (@ (value "guest")) "guest")))
+				 (td (select (@ (onchange ?_) (name "type"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "task")) "タスク")
+					     (option (@ (value "request")) "変更要望")
+					     (option (@ (value "discuss")) "議論")))
+				 (td (select (@ (onchange ?_) (name "category"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "master")) "マスタ")
+					     (option (@ (value "infra")) "インフラ")
+					     (option (@ (value "global")) "全体")
+					     (option (@ (value "section")) "セクション")))
+				 (td (select (@ (name "limit"))
+					     (option (@ (value "")))
+					     (option (@ (value "20")) "20")
+					     (option (@ (value "50")) "50")
+					     (option (@ (value "200") (selected "true")) "200")
+					     (option (@ (value "500")) "500")
+					     (option (@ (value "1000")) "1000")))
+				 (td (input (@ (value "絞り込み") (type "submit") (name "submit"))))))
+		      (table ?@
+			     (thead "萌えられる娘。がいません(T^T)"
+				    (div ?@
+					 (span (a ?@ "OPEN") "(0) ")
+					 (span (a ?@ "ON HOLD") "(0) ")
+					 (span (a ?@ "COMPLETED") "(0) "))
+				    (tr ?@
+					(th "No.")
+					(th "タイトル")
+					(th "優先度")
+					(th "ステータス")
+					(th "アサイン")
+					(th "タイプ")
+					(th "カテゴリ")
+					(th "登録日")
+					(th "更新日"))) (tbody))))
 	   ,*footer*))
         (call-worker/gsid
 	 w
