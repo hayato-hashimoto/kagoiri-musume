@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.141 2005/11/12 16:45:19 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.142 2005/11/12 16:47:48 shibata Exp $
 
 ;;
 ;; include
@@ -740,7 +740,6 @@
          (move 0)
        (node-set
         (list
-         (div/ (x->string (kahua-current-context)))
          (ul/ (@/ (class "menu"))
               (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
               (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
