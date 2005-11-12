@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.9 2005/11/03 07:01:17 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.10 2005/11/12 04:09:24 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -19,6 +19,7 @@
    (hr/)
 
    (form/cont/
+    (@/ (id "fans"))
     (@@/ (cont (entry-lambda (:keyword login-name passwd mail-address admin devel client delete)
 		   (if (not (string-null? login-name))
 		       (if (not (kahua-find-user login-name))
@@ -94,8 +95,7 @@
    (hr/)
 
    (form/cont/
-    (@@/ (cont (entry-lambda (:keyword u fallout)
-		   (redirect-page "admin-system"))))
+    (@/ (id "units"))
     (table/
      (thead/ ($$ "登録ユニット一覧"))
      (tr/ (th/ ($$ "ユニット名"))
@@ -114,6 +114,7 @@
    (hr/)
 
    (form/cont/
+    (@/ (id "priorities"))
     (@@/ (cont (entry-lambda (:keyword id disp level delete)
 		   (if (not (find-kahua-instance <priority> id))
 		       (make <priority>
@@ -155,6 +156,7 @@
    (hr/)
 
    (form/cont/
+    (@/ (id "statuss"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <status> id))
 		       (make <status>
@@ -187,6 +189,7 @@
    (hr/)
 
    (form/cont/
+    (@/ (id "types"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <type> id))
 		       (make <type>
@@ -219,6 +222,7 @@
    (hr/)
 
    (form/cont/
+    (@/ (id "categories"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
 		   (if (not (find-kahua-instance <category> id))
 		       (make <category>
@@ -247,4 +251,29 @@
 		 (td/ (input/ (@/ (type "text") (name "disp")) ""))
 		 (td/ (input/ (@/ (type "checkbox") (name "delete")) "off")))
 	    (tr/ (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "登録"))))))))
+
+   (hr/)
+
+   (form/cont/
+    (@/ (id "musumes"))
+    (table/
+     (thead/ ($$ "不良娘。一覧"))
+     (tr/ (th/ ($$ "元所属ユニット"))
+	  (th/ ($$ "娘。No"))
+	  (th/ ($$ "タイトル"))
+	  (th/ ($$ "作成日"))
+	  (th/ ($$ "活動状態")))
+     (node-set
+      (map (lambda (m)
+	     (tr/ (td/ (unit-name-of (unit-of m)))
+		  (td/ (x->string (mno-of m)))
+		  (td/ (mname-of m))
+		  (td/ (sys-strftime "%Y/%m/%d %H:%M:%S"
+				     (sys-localtime (ctime-of m))))
+		  (td/ (a/cont/ (@@/ (cont (lambda ()
+					     (set! (delete-of m) (not (delete-of m)))
+					     (redirect-page "admin-system"))))
+				(if (delete-of m) ($$ "休止") ($$ "活動"))))))
+	   (filter delete-of (make-kahua-collection <musume>))))))
+
    ))

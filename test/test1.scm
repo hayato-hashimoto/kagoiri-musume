@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test1.scm,v 1.10 2005/11/09 14:07:54 cut-sea Exp $
+;; $Id: test1.scm,v 1.11 2005/11/12 04:09:24 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -231,7 +231,13 @@
                     (tr (td (input (@ (type "text") (name "id"))))
                         (td (input (@ (type "text") (name "disp"))))
                         (td (input (@ (type "checkbox") (name "delete")))))
-                    (tr (td (input (@ (value "登録") (type "submit") (name "submit"))))))))
+                    (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+             (hr)
+             (form ?@
+                   (table
+                    (thead "不良娘。一覧")
+                    (tr (th "元所属ユニット") (th "娘。No") (th "タイトル") (th "作成日") (th "活動状態"))))
+	     )
            ,*footer*))
         (call-worker/gsid
 	 w
