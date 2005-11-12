@@ -63,6 +63,22 @@ function sort_table(e){
      table.replaceChild(newbody, tbody);
 }
 
+var filter_state = new Object;
+
+function apply_flter_state(a){
+     var state = '';
+     for (filter in  filter_state){
+          for (f in filter_state[filter]){
+               state += ('&' + filter + '=' + encodeURIComponent(filter_state[filter][f].value));
+          }
+     }
+     a.href += '?'+state.slice(1);
+}
+
+function copy_search(a){
+     a.href += (location.search + '&search=' + encodeURIComponent(location.search.slice(1)))
+}
+
 function filter_table(select, id, all_text, pos){
 
      var table = document.getElementById(id);
@@ -80,6 +96,9 @@ function filter_table(select, id, all_text, pos){
                select_text_list.push(option.text);
           }
      }
+
+     filter_state[select.name] = option_list;
+
      /* highlight selected option */
      var prev_options = select.prev_options;
      if (prev_options != undefined)

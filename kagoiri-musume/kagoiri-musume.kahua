@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.135 2005/11/12 13:12:44 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.136 2005/11/12 13:40:23 shibata Exp $
 
 ;;
 ;; include
@@ -480,11 +480,12 @@
 					       (let1 val (format "~3,'0d" (mno-of m))
 						 (td/ (@/ (value val))
 						      (a/cont/
-						       (@@/ (cont musume-edit (key-of m)))
+                                                       (@@/ (cont musume-edit (key-of m)))
 						       (x->string val))))
 					       (let1 val (mname-of m)
 						 (td/ (@/ (value val))
 						      (a/cont/
+                                                       (@/ (onClick "apply_flter_state(this)"))
 						       (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
 						       val)
 						      (format " (~a)" (length songs))))
@@ -679,8 +680,41 @@
     (define (move dist)
       (let* ((musumes (sort (all-active-musumes unit)))
              (pos (find-index (cut eq? musume <>) musumes))
-             (musume (list-ref  musumes (+ pos dist) musume)))
-        (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)")))
+             (musume (list-ref  musumes (+ pos dist) musume))
+             (priority (kahua-context-ref* "priority"))
+             (status (kahua-context-ref* "status"))
+             (assign (kahua-context-ref* "assign"))
+             (type (kahua-context-ref* "type"))
+             (category (kahua-context-ref* "category"))
+             (p-filter (if (or (null? priority)
+                               (equal? "*all*" priority))
+                           identity
+			 (lambda (m) (member (code-of (priority-of m)) priority))))
+             (s-filter (if (or (null? status)
+                               (equal? "*all*" status))
+                           identity
+			 (lambda (m) (member (code-of (status-of m)) status))))
+             (a-filter (if (or (null? assign)
+                               (equal? "*all*" assign))
+                           identity
+			 (lambda (m) (member (fan-name-of (assign-of m)) assign))))
+             (t-filter (if (or (null? type)
+                               (equal? "*all*" type))
+                           identity
+			 (lambda (m) (member (code-of (type-of m)) type))))
+             (c-filter (if (or (null? type)
+                               (equal? "*all*" category))
+                           identity
+			 (lambda (m) (member (code-of (category-of m)) category))))
+             (and-filter (lambda (m)
+                           (and (p-filter m)
+                                (s-filter m)
+                                (a-filter m)
+                                (t-filter m)
+                                (c-filter m))))
+             (musume (and-filter musume))
+             (param (kahua-context-ref "search")))
+        (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|")))
 
     (permission-check-page
      (lambda (u)
@@ -691,10 +725,12 @@
           (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
 	  (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
      (div/
-      (a/cont/ (@/ (class "clickable"))
+      (a/cont/ (@/ (class "clickable")
+                   (onclick "copy_search(this)"))
                (@@/ (cont (cut move -1)))
                "<<" )
-      (a/cont/ (@/ (class "clickable"))
+      (a/cont/ (@/ (class "clickable")
+                   (onclick "copy_search(this)"))
                (@@/ (cont (cut move +1)))
                ">>"))
 
