@@ -3,6 +3,7 @@
 	* add update directory into source tree.
 	  this directory includes version update class-redefine like script.
 	* add remove-musume function for developer.
+	* add revival-delete-song function for song's owner.
 	* add function to regress removed musume into system-admin.
 
 2005-11-09  cut-sea  <cut-sea@ipadev>

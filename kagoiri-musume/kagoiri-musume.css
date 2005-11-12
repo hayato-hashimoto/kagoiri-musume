@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.5 2005/10/29 22:34:52 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.6 2005/11/12 13:12:44 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -47,6 +47,11 @@ span.warning {
   font-size: 70%;
   color: #ff0000;
 }
+
+pre.warning {
+  color: #ff0000;
+}
+
 
 table.user-form th {
   text-align: right;

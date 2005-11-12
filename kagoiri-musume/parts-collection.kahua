@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.12 2005/11/04 15:41:26 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.13 2005/11/12 13:12:44 cut-sea Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -87,3 +87,7 @@
 
 (define-checker (has-item? unit props-of)
   (not (null? (props-of unit))))
+
+(define-checker (composer? song)
+  (eq? (current-fan) (fan-of song)))
+

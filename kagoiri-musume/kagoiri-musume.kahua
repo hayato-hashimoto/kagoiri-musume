@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.134 2005/11/12 11:56:35 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.135 2005/11/12 13:12:44 cut-sea Exp $
 
 ;;
 ;; include
@@ -635,7 +635,24 @@
      )
     ))
 
-
+(define-entry (delete-revival-song song-id)
+  (let* ((song (id->obj <song> song-id))
+	 (musume (musume-of song))
+	 (unit (unit-of musume)))
+    (define checker (lambda (u)
+		      (if (memq (id->obj <fan> (ref u 'login-name))
+                                (fans-of unit))
+			  u #f)))
+    (let1 user (or (and (kahua-current-user)
+			(checker (kahua-current-user)))
+		   (login-pc-page #f checker (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+      (permission-check-logic
+       checker
+       (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+       (begin
+	 (if (checker user)
+	     (set! (delete-of song) (not (delete-of song))))
+	 (redirect-page #`"melody-list/,(key-of unit)/,(key-of musume)#,song-id"))))))
 
 (define (melody-format melody)
   (define (parse melody)
@@ -764,17 +781,31 @@
                       (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
      (let1 songs (all-songs musume)
        (map/ (lambda (k n f t m u)
-	       (dl/
-		#;(dt/ #`"#,|n|. ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))[,(fan-name-of f)]")
-		(dt/ (span/ (@/ (id #`",k") (class "song-no")) #`"#,|n|.")
-		     (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-		     (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]"))
-		(if (null? u)
-		    (dd/ (pre/ (melody-format m)))
-		    (let1 upfile (car u)
-		      (dd/ (pre/ m
-				 (br/)
-				 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))
+	       (let1 song (id->obj <song> k)
+		 (if (delete-of song)
+		     (dl/ (@/ (id #`",k"))
+			  (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+			       (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+			       (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+			       (composer? song
+					  (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+									($$ "本当に復活しますか？"))))
+						   (@@/ (cont delete-revival-song k)) ($$ "復活"))))
+			  (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
+		     (dl/ (@/ (id #`",k"))
+			  (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+			       (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+			       (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+			       (composer? song
+					  (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+									($$ "本当に削除しますか？"))))
+						   (@@/ (cont delete-revival-song k)) ($$ "削除"))))
+			  (if (null? u)
+			      (dd/ (pre/ (melody-format m)))
+			      (let1 upfile (car u)
+				(dd/ (pre/ m
+					   (br/)
+					   (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
 	     (map key-of songs)
 	     (map (lambda (m) (seq-no-of m)) songs)
 	     (map (lambda (m) (fan-of m)) songs)
