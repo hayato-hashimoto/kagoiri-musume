@@ -1,3 +1,9 @@
+2005-11-12  cut-sea  <cut-sea@ipadev>
+
+	* add update directory into source tree.
+	  this directory includes version update class-redefine like script.
+	* add remove-musume function for developer.
+
 2005-11-09  cut-sea  <cut-sea@ipadev>
 
         * initdb.scm: modify common? definition.

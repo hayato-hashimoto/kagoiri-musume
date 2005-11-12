@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.131 2005/11/08 16:16:01 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.132 2005/11/12 02:55:13 cut-sea Exp $
 
 ;;
 ;; include
@@ -122,7 +122,7 @@
 			    (@@/ (cont musume-list (key-of u)))
 			    (unit-name-of u))
 			   (format " (~a)"
-				   (- (next-musume-no-of u) 1)))
+				   (length (all-active-musumes u))))
 		      (td/ (description-of u))
 		      (td/ (string-join
 			    (filter-map (lambda (f)
@@ -440,7 +440,7 @@
 			     )))
 		     ;; data table
 		     (let1 musumes (limiter (sort (filter and-filter
-							  (all-musumes unit))
+							  (all-active-musumes unit))
 						  (lambda (m1 m2)
 						    (> (mno-of m1) (mno-of m2)))))
 		       (table/ (@/ (class "listing") (id "musume_list"))
@@ -457,6 +457,7 @@
 							      (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
 						   (statuss-of unit)))
 				       (tr/ (@/ (onclick "sort_table(event);return false"))
+					    (devel:th/)
 					    (th/ ($$ "No."))
 					    (th/ ($$ "タイトル"))
 					    (has-item? unit priorities-of (th/ ($$ "優先度")))
@@ -471,6 +472,9 @@
 					(let ((status (status-of m))
 					      (songs (songs-of m)))
 					  (tr/ (@/ (class #`"status-,(code-of status)"))
+					       (devel:td/ (a/cont/
+							   (@@/ (cont remove-musume (key-of m)))
+							   ($$ "削除")))
 					       (let1 val (format "~3,'0d" (mno-of m))
 						 (td/ (@/ (value val))
 						      (a/cont/
@@ -599,6 +603,25 @@
    identity ($$ "ちょいまってや")
    ($$ "娘。の閲覧")))
 
+(define-entry (remove-musume musume-id)
+  (let* ((musume (find-kahua-instance <musume> musume-id))
+	 (unit (unit-of musume)))
+    (define checker (lambda (u)
+		      (if (memq (find-kahua-instance <fan> (ref u 'login-name))
+                                (fans-of unit))
+			  u #f)))
+    (let1 user (or (and (kahua-current-user)
+			(checker (kahua-current-user)))
+		   (login-pc-page #f checker (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+      (permission-check-logic
+       checker
+       (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+       (begin
+	 (if (checker user)
+	     (set! (delete-of musume) #t))
+	 (redirect-page #`"musume-list/,(key-of unit)"))))))
+
+
 (define-entry (musume-edit musume-id)
   (let* ((musume (find-kahua-instance <musume> musume-id))
 	 (unit (unit-of musume)))
@@ -609,6 +632,8 @@
      ($$ "工事中")
      )
     ))
+
+
 
 (define (melody-format melody)
   (define (parse melody)
@@ -633,7 +658,7 @@
         (musume (find-kahua-instance <musume> musume-id)))
 
     (define (move dist)
-      (let* ((musumes (sort (all-musumes unit)))
+      (let* ((musumes (sort (all-active-musumes unit)))
              (pos (find-index (cut eq? musume <>) musumes))
              (musume (list-ref  musumes (+ pos dist) musume)))
         (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)")))
@@ -790,7 +815,7 @@
      (legend/ ($$ "最近の更新"))
      (let* ((units (filter (cut fan-to? <> (current-fan))
                            (all-units)))
-            (musumes (append-map all-musumes units))
+            (musumes (append-map all-active-musumes units))
             (songs (append-map songs-of  musumes))
             (songs (reverse (sort songs)))
             (songs (take* songs 20)))

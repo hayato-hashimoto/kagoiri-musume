@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.43 2005/11/09 14:07:54 cut-sea Exp $
+;; $Id: class.kahua,v 1.44 2005/11/12 02:55:13 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -84,6 +84,8 @@
    ;; create time
    (ctime           :allocation :persistent :init-keyword :ctime
 		    :init-thunk sys-time :accessor ctime-of)
+   (delete          :allocation :persistent :init-keyword :delete
+		    :init-value #f :accessor delete-of)
    ))
 
 (define-method initialize ((obj <musume>) initargs)
@@ -102,6 +104,12 @@
 (define-method all-musumes ((unit <unit>))
   (filter (lambda (m)
 	    (eq? unit (unit-of m)))
+	  (make-kahua-collection <musume>)))
+
+(define-method all-active-musumes ((unit <unit>))
+  (filter (lambda (m)
+	    (and (eq? unit (unit-of m))
+		 (not (delete-of m))))
 	  (make-kahua-collection <musume>)))
 
 (define-method object-compare ((obj1 <musume>) (obj2 <musume>))
@@ -123,6 +131,8 @@
 		    :init-value #f :accessor fan-of)
    (ctime           :allocation :persistent :init-keyword :ctime
 		    :init-thunk sys-time :accessor ctime-of)
+   (delete          :allocation :persistent :init-keyword :delete
+		    :init-value #f :accessor delete-of)
    ))
 
 (define-method initialize ((obj <song>) initargs)

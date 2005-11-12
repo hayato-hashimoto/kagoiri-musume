@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.9 2005/11/09 18:30:21 cut-sea Exp $
+;; $Id: test4.scm,v 1.10 2005/11/12 02:55:13 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -350,6 +350,7 @@
 					 (span (a ?@ "ON HOLD") "(0) ")
 					 (span (a ?@ "COMPLETED") "(0) "))
 				    (tr ?@
+					(th)
 					(th "No.")
 					(th "タイトル")
 					(th "優先度")
