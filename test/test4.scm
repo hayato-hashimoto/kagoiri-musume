@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.11 2005/11/12 13:12:44 cut-sea Exp $
+;; $Id: test4.scm,v 1.12 2005/11/12 14:57:59 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -351,15 +351,15 @@
 					 (span (a ?@ "COMPLETED") "(0) "))
 				    (tr ?@
 					(th)
-					(th "No.")
-					(th "タイトル")
-					(th "優先度")
-					(th "ステータス")
-					(th "アサイン")
-					(th "タイプ")
-					(th "カテゴリ")
-					(th "登録日")
-					(th "更新日"))) (tbody))))
+					(th ?@ "No.")
+					(th ?@ "タイトル")
+					(th ?@ "優先度")
+					(th ?@ "ステータス")
+					(th ?@ "アサイン")
+					(th ?@ "タイプ")
+					(th ?@ "カテゴリ")
+					(th ?@ "登録日")
+					(th ?@ "更新日"))) (tbody))))
 	   ,*footer*))
         (call-worker/gsid
 	 w
