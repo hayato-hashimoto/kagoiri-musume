@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.132 2005/11/12 02:55:13 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.133 2005/11/12 03:05:15 cut-sea Exp $
 
 ;;
 ;; include
@@ -473,6 +473,8 @@
 					      (songs (songs-of m)))
 					  (tr/ (@/ (class #`"status-,(code-of status)"))
 					       (devel:td/ (a/cont/
+							   (@/ (onClick (format "return confirm('~a')?true:false"
+										($$ "本当に削除しますか？"))))
 							   (@@/ (cont remove-musume (key-of m)))
 							   ($$ "削除")))
 					       (let1 val (format "~3,'0d" (mno-of m))
