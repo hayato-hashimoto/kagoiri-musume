@@ -9,6 +9,8 @@ function addOnloadEvent(proc){
 
 var win = false;
 var textContent = 'textContent';
+var filter_state = new Object;
+var sort_state = '';
 
 function init(){
      win = document.all?true:false;
@@ -21,6 +23,9 @@ addOnloadEvent(focus_focus);
 function sort_table(e){
      e = win?window.event:e;
      var target = win?e.srcElement:e.target;
+
+     sort_state = target.getAttribute('value')
+
      var rev = false;
      if (target.style.backgroundColor){
           target.style.backgroundColor = '';
@@ -34,7 +39,6 @@ function sort_table(e){
      }
      var table = find_parent(target, 'TABLE');
      var headers = table.rows.item(0).cells;
-
      var pos = target.cellIndex;
      var rows = table.rows;
      var rows_ = new Array;
@@ -63,7 +67,6 @@ function sort_table(e){
      table.replaceChild(newbody, tbody);
 }
 
-var filter_state = new Object;
 
 function apply_flter_state(a){
      var state = '';
@@ -71,6 +74,9 @@ function apply_flter_state(a){
           for (f in filter_state[filter]){
                state += ('&' + filter + '=' + encodeURIComponent(filter_state[filter][f].value));
           }
+     }
+     if (sort_state) {
+          state += '&sort_state=' + encodeURIComponent(sort_state);
      }
      if (state){
           a.href += '?'+state.slice(1);
