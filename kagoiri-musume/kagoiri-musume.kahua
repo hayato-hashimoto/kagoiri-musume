@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.133 2005/11/12 03:05:15 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.134 2005/11/12 11:56:35 cut-sea Exp $
 
 ;;
 ;; include
@@ -391,7 +391,7 @@
 			     (has-item? unit priorities-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 2))
+					  (@/ (onchange (filter-row 3))
 					      (name "priority"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
@@ -399,7 +399,7 @@
 			     (has-item? unit statuss-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 3))
+					  (@/ (onchange (filter-row 4))
 					      (name "status"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
@@ -407,7 +407,7 @@
 			     (has-item? unit fans-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 4))
+					  (@/ (onchange (filter-row 5))
 					      (name "assign"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
@@ -415,7 +415,7 @@
 			     (has-item? unit types-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 5))
+					  (@/ (onchange (filter-row 6))
 					      (name "type"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
@@ -423,7 +423,7 @@
 			     (has-item? unit categories-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 6))
+					  (@/ (onchange (filter-row 7))
 					      (name "category"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
