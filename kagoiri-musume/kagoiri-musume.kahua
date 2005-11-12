@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.139 2005/11/12 14:57:35 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.140 2005/11/12 15:04:49 shibata Exp $
 
 ;;
 ;; include
@@ -726,7 +726,7 @@
                                              (string<? (compare-value x sort_state)
                                                        (compare-value y sort_state))))
                         musumes))
-             (pos (find-index (cut eq? musume <>) #?=musumes))
+             (pos (find-index (cut eq? musume <>) musumes))
              (musume (list-ref  musumes (+ pos dist) musume))
              (param (kahua-context-ref "search")))
         (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|")))
