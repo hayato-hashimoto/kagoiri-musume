@@ -1,3 +1,12 @@
+2005-11-12  SHIBATA Tomohisa  <shibata@kahua.org>
+
+	* kagoiri-musume.kahua: added sort key to table-head.
+
+	* kagoiri-musume.js:
+	changed to save sort state to melody-list navigation.
+
+	* gadget.kahua: changed to guess string encode.
+
 2005-11-12  cut-sea  <cut-sea@ipadev>
 
 	* add update directory into source tree.
