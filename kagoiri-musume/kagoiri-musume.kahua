@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.136 2005/11/12 13:40:23 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.137 2005/11/12 14:05:20 shibata Exp $
 
 ;;
 ;; include
@@ -679,8 +679,7 @@
 
     (define (move dist)
       (let* ((musumes (sort (all-active-musumes unit)))
-             (pos (find-index (cut eq? musume <>) musumes))
-             (musume (list-ref  musumes (+ pos dist) musume))
+             (sort_state (kahua-context-ref "sort_state"))
              (priority (kahua-context-ref* "priority"))
              (status (kahua-context-ref* "status"))
              (assign (kahua-context-ref* "assign"))
@@ -712,7 +711,9 @@
                                 (a-filter m)
                                 (t-filter m)
                                 (c-filter m))))
-             (musume (and-filter musume))
+             (musumes (filter and-filter musumes))
+             (pos (find-index (cut eq? musume <>) musumes))
+             (musume (list-ref  musumes (+ pos dist) musume))
              (param (kahua-context-ref "search")))
         (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|")))
 

@@ -72,11 +72,15 @@ function apply_flter_state(a){
                state += ('&' + filter + '=' + encodeURIComponent(filter_state[filter][f].value));
           }
      }
-     a.href += '?'+state.slice(1);
+     if (state){
+          a.href += '?'+state.slice(1);
+     }
 }
 
 function copy_search(a){
-     a.href += (location.search + '&search=' + encodeURIComponent(location.search.slice(1)))
+     if (location.search){
+          a.href += (location.search + '&search=' + encodeURIComponent(location.search.slice(1)));
+     }
 }
 
 function filter_table(select, id, all_text, pos){
