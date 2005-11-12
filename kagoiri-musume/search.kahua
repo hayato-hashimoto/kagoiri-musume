@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.9 2005/11/07 15:59:20 shibata Exp $
+;; $Id: search.kahua,v 1.10 2005/11/12 14:45:47 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -38,9 +38,9 @@
 ;; search page
 (define-entry (search :keyword word unit-id)
   (let* ((word-len (string-length word))
-         (fan (find-kahua-instance <fan> (kahua-current-user-name)))
+         (fan (id->obj <fan> (kahua-current-user-name)))
          (units (if unit-id
-                    (cons (find-kahua-instance <unit> unit-id) '())
+                    (cons (id->obj <unit> unit-id) '())
 		    (filter
 		     (lambda (unit)
 		       (memq fan (fans-of unit)))

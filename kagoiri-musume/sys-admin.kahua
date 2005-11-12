@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.10 2005/11/12 04:09:24 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.11 2005/11/12 14:45:47 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -33,7 +33,7 @@
 				 (set! roles (cons 'client roles)))
 			     (apply add-fan login-name passwd mail-address roles))
 			   ;; modify user
-			   (let* ((fan  (find-kahua-instance <fan> login-name))
+			   (let* ((fan  (id->obj <fan> login-name))
 				  (user (login-user-of fan)))
 			     (if (not (string-null? passwd))
 				 (kahua-user-password-change-force user passwd))
@@ -116,13 +116,13 @@
    (form/cont/
     (@/ (id "priorities"))
     (@@/ (cont (entry-lambda (:keyword id disp level delete)
-		   (if (not (find-kahua-instance <priority> id))
+		   (if (not (id->obj <priority> id))
 		       (make <priority>
 			 :code id
 			 :disp-name disp
 			 :level (x->integer level)
 			 :delete (if (equal? "on" delete) #t #f))
-		       (let1 p (find-kahua-instance <priority> id)
+		       (let1 p (id->obj <priority> id)
 			 (if (not (string-null? disp))
 			     (set! (disp-name-of p) disp))
 			 (set! (level-of p) (x->integer level))
@@ -158,12 +158,12 @@
    (form/cont/
     (@/ (id "statuss"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
-		   (if (not (find-kahua-instance <status> id))
+		   (if (not (id->obj <status> id))
 		       (make <status>
 			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
-		       (let1 s (find-kahua-instance <status> id)
+		       (let1 s (id->obj <status> id)
 			 (if (not (string-null? disp))
 			     (set! (disp-name-of s) disp))
 			 (set! (delete-of s) (if (equal? "on" delete) #t #f))))
@@ -191,12 +191,12 @@
    (form/cont/
     (@/ (id "types"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
-		   (if (not (find-kahua-instance <type> id))
+		   (if (not (id->obj <type> id))
 		       (make <type>
 			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
-		       (let1 t (find-kahua-instance <type> id)
+		       (let1 t (id->obj <type> id)
 			 (if (not (string-null? disp))
 			     (set! (disp-name-of t) disp))
 			 (set! (delete-of t) (if (equal? "on" delete) #t #f))))
@@ -224,12 +224,12 @@
    (form/cont/
     (@/ (id "categories"))
     (@@/ (cont (entry-lambda (:keyword id disp delete)
-		   (if (not (find-kahua-instance <category> id))
+		   (if (not (id->obj <category> id))
 		       (make <category>
 			 :code id
 			 :disp-name disp
 			 :delete (if (equal? "on" delete) #t #f))
-		       (let1 c (find-kahua-instance <category> id)
+		       (let1 c (id->obj <category> id)
 			 (if (not (string-null? disp))
 			     (set! (disp-name-of c) disp))
 			 (set! (delete-of c) (if (equal? "on" delete) #t #f))))

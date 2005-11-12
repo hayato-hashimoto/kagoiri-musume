@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.17 2005/11/12 10:35:07 shibata Exp $
+;; $Id: gadget.kahua,v 1.18 2005/11/12 14:45:47 cut-sea Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -44,7 +44,7 @@
 (define (create-new-unit name desc)
   (and (not (string-null? name))
        (not (null? (kahua-context-ref* "fans")))
-       (or (find-kahua-instance <unit> name)
+       (or (id->obj <unit> name)
 	   (make <unit>
 	     :unit-name name
 	     :description desc

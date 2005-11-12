@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.137 2005/11/12 14:05:20 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.138 2005/11/12 14:45:47 cut-sea Exp $
 
 ;;
 ;; include
@@ -200,7 +200,7 @@
 
 
 (define-entry (unit-edit unit-id)
-  (let1 unit (find-kahua-instance <unit> unit-id)
+  (let1 unit (id->obj <unit> unit-id)
     (permission-check-page
      (lambda (u)
        (if (viewable? unit u)
@@ -301,9 +301,9 @@
 ; TODO: check account
 ;
 (define-entry (unit-fallout unit-id)
-  (let1 unit (find-kahua-instance <unit> unit-id)
+  (let1 unit (id->obj <unit> unit-id)
     (define checker (lambda (u)
-		      (if (memq (find-kahua-instance <fan> (ref u 'login-name))
+		      (if (memq (id->obj <fan> (ref u 'login-name))
                                 (fans-of unit))
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
@@ -357,7 +357,7 @@
 			identity
 			(lambda (ms)
 			  (take* ms (x->integer *limit*))))))
-      (let1 unit (find-kahua-instance <unit> unit-id)
+      (let1 unit (id->obj <unit> unit-id)
 	(permission-check-page
 	 (lambda (u)
 	   (if (viewable? unit u)
@@ -526,7 +526,7 @@
 		       )))))))
 
 (define-entry (musume-new unit-id)
-  (let1 unit (find-kahua-instance <unit> unit-id)
+  (let1 unit (id->obj <unit> unit-id)
     (permission-check-page
      (lambda (u)
        (if (viewable? unit u)
@@ -607,10 +607,10 @@
    ($$ "Ì¼¡£¤Î±ÜÍ÷")))
 
 (define-entry (remove-musume musume-id)
-  (let* ((musume (find-kahua-instance <musume> musume-id))
+  (let* ((musume (id->obj <musume> musume-id))
 	 (unit (unit-of musume)))
     (define checker (lambda (u)
-		      (if (memq (find-kahua-instance <fan> (ref u 'login-name))
+		      (if (memq (id->obj <fan> (ref u 'login-name))
                                 (fans-of unit))
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
@@ -626,7 +626,7 @@
 
 
 (define-entry (musume-edit musume-id)
-  (let* ((musume (find-kahua-instance <musume> musume-id))
+  (let* ((musume (id->obj <musume> musume-id))
 	 (unit (unit-of musume)))
     (permission-check-page
      identity
@@ -674,8 +674,8 @@
   (parse melody))
 
 (define-entry (melody-list unit-id musume-id)
-  (let ((unit (find-kahua-instance <unit> unit-id))
-        (musume (find-kahua-instance <musume> musume-id)))
+  (let ((unit (id->obj <unit> unit-id))
+        (musume (id->obj <musume> musume-id)))
 
     (define (move dist)
       (let* ((musumes (sort (all-active-musumes unit)))
