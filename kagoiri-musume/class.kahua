@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.44 2005/11/12 02:55:13 cut-sea Exp $
+;; $Id: class.kahua,v 1.45 2005/11/12 14:56:19 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -115,6 +115,18 @@
 (define-method object-compare ((obj1 <musume>) (obj2 <musume>))
   (compare (ctime-of obj1) (ctime-of obj2)))
 
+(define-method compare-value ((obj <musume>) key)
+  (case (string->symbol key)
+    ((no) (format "~3,'0d" (mno-of obj)))
+    ((title) (mname-of obj))
+    ((priority) (code-of (priority-of obj)))
+    ((status) (code-of (status-of obj)))
+    ((assgin) (code-of (assign-of obj)))
+    ((type) (code-of (type-of obj)))
+    ((category) (code-of (category-of obj)))
+    ((ctime) (number->string (ctime-of obj)))
+    ((mtime) (number->string (ctime-of (car (songs-of obj)))))
+    ))
 
 ;; song means one of issue.
 ;;
