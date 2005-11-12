@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sendmail.scm,v 1.2 2005/11/08 12:35:37 cut-sea Exp $
+;; $Id: sendmail.scm,v 1.3 2005/11/12 10:35:07 shibata Exp $
 
 (use gauche.process)
 (use gauche.charconv)
@@ -23,5 +23,5 @@
      (display "Content-Transfer-Encoding: 7bit\n" p)
      (display "Content-Type: text/plain; charset=ISO-2022-JP\n" p)
      (display "\n\n" p)
-     (display (ces-convert body "eucjp" "iso2022jp") p)
+     (display (ces-convert body "*JP" "iso2022jp") p)
      )))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.16 2005/11/04 15:41:26 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.17 2005/11/12 10:35:07 shibata Exp $
 ;;
 (define (encode-subject subject)
   (string-append
@@ -11,7 +11,7 @@
    (string-join
     (string-split
      (base64-encode-string
-      (ces-convert subject "eucjp" "iso2022jp")) #\newline) "")
+      (ces-convert subject "*JP" "iso2022jp")) #\newline) "")
    "?="))
 
 (define (sendmail-lite unit musume song)
