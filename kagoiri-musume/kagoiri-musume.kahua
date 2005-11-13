@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.148 2005/11/13 15:06:49 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.149 2005/11/13 15:53:22 cut-sea Exp $
 
 ;;
 ;; include
@@ -533,24 +533,7 @@
 			   (let1 musume (create-new-musume unit name priority status assign type category)
 			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
 			       ;; save file and make file object.
-			       (if file
-				   (let* ((tmp-path (car file))
-					  (file-name (sys-basename (if (not (string-null? filename))
-                                                                       filename
-                                                                     (cadr file))))
-					  (file-xtnsn (let1 body+ext (string-split file-name ".")
-							(if (= (length body+ext) 1)
-							    "" (last body+ext))))
-					  (real-name (if (equal? file-xtnsn "")
-							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)"
-							 #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id).,file-xtnsn"))
-					  (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
-					  (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
-				     (make-directory* *kagoiri-musume-upload-path* #o775)
-				     (copy-file tmp-path file-path)
-				     ;; now, just one file upload support, but...
-				     (set! (files-of song)
-					   (list (create-new-file file-name file-xtnsn file-path file-uri)))))
+			       (attach-file song file filename (uploaded-file-name unit musume song))
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (table/
@@ -745,25 +728,7 @@
 				 (let1 song (create-new-song musume melody (current-fan))
 				   (musume-makeover! musume priority status type category assign)
 				   ;; save file and make file object.
-				   (if file
-				       (let* ((tmp-path (car file))
-					      (file-name (sys-basename (if (not (string-null? filename))
-									   filename
-									   (cadr file))))
-					      (file-xtnsn (let1 body+ext (string-split file-name ".")
-							    (if (= (length body+ext) 1)
-								"" (last body+ext))))
-					      (real-name (if (equal? file-xtnsn "")
-							     #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)"
-							     #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id).,file-xtnsn"))
-					      (file-path #`",|*kagoiri-musume-upload-path*|/,|real-name|")
-					      (file-uri #`",|*kagoiri-musume-upload-uri*|/,|real-name|"))
-					 (make-directory* *kagoiri-musume-upload-path* #o775)
-					 (copy-file tmp-path file-path)
-					 ;; now, just one file upload support, but...
-					 (set! (files-of song)
-					       (list (create-new-file file-name file-xtnsn file-path file-uri)
-						     ))))
+				   (attach-file song file filename (uploaded-file-name unit musume song))
 				   (if (not (string-null? melody))
 				       (sendmail-lite unit musume song)))))
 			 (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
