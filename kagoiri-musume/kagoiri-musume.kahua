@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.153 2005/11/13 18:47:43 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.154 2005/11/13 19:43:32 cut-sea Exp $
 
 ;;
 ;; include
@@ -107,6 +107,8 @@
        (if (viewable? unit u)
 	   u #f))
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+     (create-unit-form/ unit)
+     #|
      (h2/ (format ($$ "『~a』ユニット編集") (unit-name-of unit)))
      (form/cont/
       (@/ (onsubmit "return submitForm(this)"))
@@ -114,7 +116,7 @@
 		     (if (or (string-null? name)
 			     (null? (kahua-context-ref* "fans")))
 			 (begin
-			   (set-error-message ($$ "ユニット名を入力してください。"))
+			   (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
 			   (redirect-page #`"unit-edit/,unit-id"))
 			 (begin
 			   (set-error-message #f)
@@ -171,16 +173,17 @@
 	      (tr/
 	       (td/
 		(select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
-			 (map/ (lambda (f)
-				 (let1 fan-name (fan-name-of f)
-				   (option/ (@/ (value fan-name)
-						(selected (fan-to? unit f)))
-					    fan-name)))
+			 (map/ (lambda (fan)
+				 (let1 f (fan-name-of fan)
+				   (option/ (@/ (value f)
+						(selected (fan-to? unit fan)))
+					    f)))
 			       (append (fans-of unit)
 				       (lset-difference eq? (all-fans)
 							(fans-of unit))))))
 	       (td/ (updown/ "fans")))))))
       (input/ (@/ (type "submit") (value ($$ "確定")))))
+     |#
      )))
 
 ; TODO: check account
