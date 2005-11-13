@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.143 2005/11/13 13:22:02 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.144 2005/11/13 13:42:06 cut-sea Exp $
 
 ;;
 ;; include
@@ -216,14 +216,8 @@
 			   (redirect-page #`"unit-edit/,unit-id"))
 			 (begin
 			   (set-error-message #f)
-			   (if (not (string-null? name))
-			       (set! (unit-name-of unit) name))
-			   (set! (description-of unit) desc)
-			   (set! (fans-of unit) (id-list->obj-list <fan> (kahua-context-ref* "fans")))
-			   (set! (priorities-of unit) (id-list->obj-list <priority> (kahua-context-ref* "priority")))
-			   (set! (statuss-of unit) (id-list->obj-list <status> (kahua-context-ref* "status")))
-			   (set! (types-of unit) (id-list->obj-list <type> (kahua-context-ref* "type")))
-			   (set! (categories-of unit) (id-list->obj-list <category> (kahua-context-ref* "category")))
+			   (apply unit-makeover! unit name desc
+				  (map kahua-context-ref* '("fans" "priority" "status" "type" "category")))
 			   (redirect-page "unit-list"))))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
@@ -765,11 +759,11 @@
 	    (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
 			   (if (and (string-null? melody)
 				    (not file))
-			       (makeover! musume priority status type category assign)
+			       (musume-makeover! musume priority status type category assign)
 			       (begin
 				 (set! melody (string-join (string-split melody "\r\n") "\n"))
 				 (let1 song (create-new-song musume melody (current-fan))
-				   (makeover! musume priority status type category assign)
+				   (musume-makeover! musume priority status type category assign)
 				   ;; save file and make file object.
 				   (if file
 				       (let* ((tmp-path (car file))
