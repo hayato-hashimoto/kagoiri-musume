@@ -3,7 +3,8 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts.scm,v 1.5 2005/11/08 12:35:37 cut-sea Exp $
+;; $Id: parts.scm,v 1.6 2005/11/13 01:46:54 cut-sea Exp $
+(use srfi-13)  ;; for string-scan
 
 (define *head*
   `(head
@@ -68,12 +69,18 @@
 ;; '(("Status" "302 Moved") ("Location" "http://localho.."))
 ;; => '(header (Status "302 Moved") (Location "http://localho.."))
 (define (header->sxml h b)
-  (cons 'header
+  (define (url-fragment-cutoff pair)
+    (cond ((and (eq? (car pair) 'Location)
+	     (string-scan (cadr pair) #\# 'before))
+	   => (lambda (url)
+		(list (car pair) url)))
+	  (else pair)))
+    (cons 'header
         (map (lambda (item)
-               (cons (string->symbol (car item)) (cdr item)))
+               (url-fragment-cutoff
+		(cons (string->symbol (car item))
+		      (cdr item))))
              h)))
-
-
 
 (define (test/send&pick label w send-data)
   (test* label
