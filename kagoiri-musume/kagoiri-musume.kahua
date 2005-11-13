@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.154 2005/11/13 19:43:32 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.155 2005/11/13 19:46:04 cut-sea Exp $
 
 ;;
 ;; include
@@ -107,84 +107,7 @@
        (if (viewable? unit u)
 	   u #f))
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
-     (create-unit-form/ unit)
-     #|
-     (h2/ (format ($$ "『~a』ユニット編集") (unit-name-of unit)))
-     (form/cont/
-      (@/ (onsubmit "return submitForm(this)"))
-      (@@/ (cont (entry-lambda (:keyword name desc)
-		     (if (or (string-null? name)
-			     (null? (kahua-context-ref* "fans")))
-			 (begin
-			   (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
-			   (redirect-page #`"unit-edit/,unit-id"))
-			 (begin
-			   (set-error-message #f)
-			   (apply unit-makeover! unit name desc
-				  (map kahua-context-ref* (drop-right $full-property-list$ 1)))
-			   (redirect-page "unit-list"))))))
-      (table/
-       (tr/ (@/ (onclick "toggle_fulllist(event)"))
-	    (th/ (@/ (colspan 2)) (clickable ($$ "優先度")))
-	    (th/ (@/ (colspan 2)) (clickable ($$ "ステータス")))
-	    (th/ (@/ (colspan 2)) (clickable ($$ "タイプ")))
-	    (th/ (@/ (colspan 2)) (clickable ($$ "カテゴリ"))))
-       (tr/
-	(map/ (lambda (n items)
-		(list/
-		 (td/
-		  (select/ (@/ (id n) (name n) (size "5") (multiple "true"))
-			   (map/ (lambda (item)
-				   (option/ (@/ (value (code-of item))
-						(selected (has? unit item)))
-					    (disp-name-of item)))
-				 items)))
-		 (td/ (updown/ n))))
-
-	      (drop-right $property-list$ 1)
-	      (list (append (priorities-of unit)
-			    (lset-difference eq? (all-priorities)
-					     (priorities-of unit)))
-		    (append (statuss-of unit)
-			    (lset-difference eq? (all-statuss)
-					     (statuss-of unit)))
-		    (append (types-of unit)
-			    (lset-difference eq? (all-types)
-					     (types-of unit)))
-		    (append (categories-of unit)
-			    (lset-difference eq? (all-categories)
-					     (categories-of unit)))))))
-      (table/
-       (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) ($$ "(※)")))
-	    (td/
-	     (textarea/ (@/ (type "text") (name "name")
-			    (rows 1) (cols 32))
-			(unit-name-of unit))
-	     (error:span/ (@/ (class "warning")) (set-error-message #f))))
-       (tr/ (td/ ($$  "概要"))
-	    (td/ (@/ (colspan 2))
-		 (textarea/ (@/ (type "text") (name "desc")
-				(rows 10) (cols 80))
-			    (description-of unit))))
-       (tr/ (@/ (align "left"))
-	    (td/ ($$ "ファン") (span/ (@/ (class "warning")) ($$ "(※)")))
-	    (td/
-	     (table/
-	      (tr/
-	       (td/
-		(select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
-			 (map/ (lambda (fan)
-				 (let1 f (fan-name-of fan)
-				   (option/ (@/ (value f)
-						(selected (fan-to? unit fan)))
-					    f)))
-			       (append (fans-of unit)
-				       (lset-difference eq? (all-fans)
-							(fans-of unit))))))
-	       (td/ (updown/ "fans")))))))
-      (input/ (@/ (type "submit") (value ($$ "確定")))))
-     |#
-     )))
+     (create-unit-form/ unit))))
 
 ; TODO: check account
 ;
