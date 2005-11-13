@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.18 2005/11/13 17:30:41 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.19 2005/11/13 18:47:43 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -195,18 +195,17 @@
 	    (drop-right $property-list$ 1)
 	    (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
     (table/
-     (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) "(※)"))
+     (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) ($$ "(※)")))
 	  (td/
 	   (textarea/ (@/ (type "text") (name "name")
 			  (rows 1) (cols 32)) "")
 	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
-     (tr/
-      (td/ ($$  "概要"))
-      (td/ (@/ (colspan 2))
-	   (textarea/ (@/ (type "text") (name "desc")
-			  (rows 10) (cols 80)) "")))
+     (tr/ (td/ ($$  "概要"))
+	  (td/ (@/ (colspan 2))
+	       (textarea/ (@/ (type "text") (name "desc")
+			      (rows 10) (cols 80)) "")))
      (tr/ (@/ (align "left"))
-	  (td/ ($$ "ファン") (span/ (@/ (class "warning")) "(※)"))
+	  (td/ ($$ "ファン") (span/ (@/ (class "warning")) ($$ "(※)")))
 	  (td/
 	   (table/
 	    (tr/

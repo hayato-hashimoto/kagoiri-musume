@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.13 2005/11/13 15:06:50 cut-sea Exp $
+;; $Id: test4.scm,v 1.14 2005/11/13 18:47:43 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -184,7 +184,6 @@
 		(a ?@ "Logout")
 		(form ?@ "検索:" (input ?@)))
 	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット編集")
-		(hr)
 		(form (@ (action ?&) ?*)
 		      (table
 		       (tr ?@
@@ -229,7 +228,7 @@
 		       (tr (td "ユニット名" (span ?@ "(※)"))
 			   (td (textarea ?@ "籠入娘。Test Proj.")))
 		       (tr (td "概要")
-			   (td (textarea ?@ "籠入娘。のバグトラッキングを行うユニット")))
+			   (td ?@ (textarea ?@ "籠入娘。のバグトラッキングを行うユニット")))
 		       (tr ?@
 			   (td "ファン" (span ?@ "(※)"))
 			   (td

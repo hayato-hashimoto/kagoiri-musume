@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.152 2005/11/13 17:30:41 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.153 2005/11/13 18:47:43 cut-sea Exp $
 
 ;;
 ;; include
@@ -108,10 +108,11 @@
 	   u #f))
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
      (h2/ (format ($$ "『~a』ユニット編集") (unit-name-of unit)))
-     (hr/)
      (form/cont/
+      (@/ (onsubmit "return submitForm(this)"))
       (@@/ (cont (entry-lambda (:keyword name desc)
-		     (if (string-null? name)
+		     (if (or (string-null? name)
+			     (null? (kahua-context-ref* "fans")))
 			 (begin
 			   (set-error-message ($$ "ユニット名を入力してください。"))
 			   (redirect-page #`"unit-edit/,unit-id"))
@@ -137,6 +138,7 @@
 					    (disp-name-of item)))
 				 items)))
 		 (td/ (updown/ n))))
+
 	      (drop-right $property-list$ 1)
 	      (list (append (priorities-of unit)
 			    (lset-difference eq? (all-priorities)
@@ -158,10 +160,10 @@
 			(unit-name-of unit))
 	     (error:span/ (@/ (class "warning")) (set-error-message #f))))
        (tr/ (td/ ($$  "概要"))
-	    (td/
-	     (textarea/ (@/ (type "text") (name "desc")
-			    (rows 10) (cols 80))
-			(description-of unit))))
+	    (td/ (@/ (colspan 2))
+		 (textarea/ (@/ (type "text") (name "desc")
+				(rows 10) (cols 80))
+			    (description-of unit))))
        (tr/ (@/ (align "left"))
 	    (td/ ($$ "ファン") (span/ (@/ (class "warning")) ($$ "(※)")))
 	    (td/
@@ -177,9 +179,8 @@
 			       (append (fans-of unit)
 				       (lset-difference eq? (all-fans)
 							(fans-of unit))))))
-	       (td/ (updown/ "fans"))))))
-       )
-      (input/ (@/ (type "submit") (name "submit") (value ($$ "確定")))))
+	       (td/ (updown/ "fans")))))))
+      (input/ (@/ (type "submit") (value ($$ "確定")))))
      )))
 
 ; TODO: check account
