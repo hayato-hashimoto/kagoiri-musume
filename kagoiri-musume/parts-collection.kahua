@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.17 2005/11/13 17:04:12 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.18 2005/11/13 17:30:41 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -105,6 +105,22 @@
    (div/ (@/ (class "clickable")
 	     (onclick #`"down_select(this,, ',|props|')"))
 	 "↓")))
+(define (change-passwrod-table/ old new again)
+  (table/
+   (tr/ (th/ ($$ "旧パスワード"))
+	(td/ (input/ (@/ (type "password") (name old) (id "focus")
+			 (value "")) "")))
+   (tr/ (th/ ($$ "新パスワード"))
+	(td/ (input/ (@/ (type "password") (name new)
+			 (value "")) "")))
+   (tr/ (th/ ($$ "新パスワード(確認)"))
+	(td/ (input/ (@/ (type "password") (name again)
+			 (value "")) "")))))
+
+(define (musume-menu/ unit-id)
+  (ul/ (@/ (class "menu"))
+       (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
+       (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。")))))
 
 ;;-------------------------------------------------------------
 ;; high level  parts collection

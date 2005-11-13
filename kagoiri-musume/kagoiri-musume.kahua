@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.151 2005/11/13 16:56:59 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.152 2005/11/13 17:30:41 cut-sea Exp $
 
 ;;
 ;; include
@@ -97,8 +97,7 @@
    (h2/ ($$ "ユニット一覧"))
    (unit-list-table/)
    (devel:hr/)
-   (create-unit-form/)
-   ))
+   (create-unit-form/)))
 
 
 (define-entry (unit-edit unit-id)
@@ -138,7 +137,7 @@
 					    (disp-name-of item)))
 				 items)))
 		 (td/ (updown/ n))))
-	      (list "priority" "status" "type" "category")
+	      (drop-right $property-list$ 1)
 	      (list (append (priorities-of unit)
 			    (lset-difference eq? (all-priorities)
 					     (priorities-of unit)))
@@ -248,9 +247,7 @@
 	   (if (viewable? unit u)
 	       u #f))
 	 (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
-	 (ul/ (@/ (class "menu"))
-          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
-	  (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
+	 (musume-menu/ unit-id)
          (div/
           (@/ (id "search-box"))
           (form/cont/
@@ -426,9 +423,7 @@
        (if (viewable? unit u)
 	   u #f))
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
-     (ul/ (@/ (class "menu"))
-          (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
-	  (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
+     (musume-menu/ unit-id)
      (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
       (@/ (enctype "multipart/form-data")
@@ -607,9 +602,7 @@
      (if (not musume-id)
          (move 0)
 	 (list/
-	  (ul/ (@/ (class "menu"))
-	       (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
-	       (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
+	  (musume-menu/ unit-id)
 	  (div/
 	   (a/cont/ (@/ (class "clickable")
 			(onclick "copy_search(this)"))
@@ -790,16 +783,7 @@
 			 (else
 			  (kahua-user-password-change-force cuser new-pw)
 			  (message-only-page (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
-      (table/
-       (tr/ (th/ ($$ "旧パスワード"))
-	    (td/ (input/ (@/ (type "password") (name "old-pw") (id "focus")
-			     (value "")) "")))
-       (tr/ (th/ ($$ "新パスワード"))
-	    (td/ (input/ (@/ (type "password") (name "new-pw")
-			     (value "")) "")))
-       (tr/ (th/ ($$ "新パスワード(確認)"))
-	    (td/ (input/ (@/ (type "password") (name "new-again-pw")
-			     (value "")) ""))))
+      (change-passwrod-table/ "old-pw" "new-pw" "new-again-pw")
       (input/ (@/ (type "submit") (name "submit") (value ($$ "変更"))))
       (p/ (@/ (class "warning")) (node-set message))
       ))))
