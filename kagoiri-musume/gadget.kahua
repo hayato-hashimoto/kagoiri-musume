@@ -3,8 +3,20 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.20 2005/11/13 13:42:06 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.21 2005/11/13 13:56:13 cut-sea Exp $
 ;;
+
+(define $property-list$
+  (list "priority" "status" "type" "category" "assign"))
+
+(define $property-accessor-list$
+  (list priority-of status-of type-of category-of assign-of))
+
+(define $properties-accessor-list$
+  (list priorities-of statuss-of types-of categories-of fans-of))
+
+
+
 (define (encode-subject subject)
   (string-append
    "=?ISO-2022-JP?B?"

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.144 2005/11/13 13:42:06 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.145 2005/11/13 13:56:13 cut-sea Exp $
 
 ;;
 ;; include
@@ -588,7 +588,7 @@
 						 (option/ (@/ (value (code-of item)))
 							  (disp-name-of item)))
 					       (refer unit))))))
-	      (list "priority" "status" "type" "category" "assign")
+	      $property-list$
 	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))))
       (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
@@ -805,9 +805,7 @@
 							       (option/ (@/ (value (code-of item)))
 									(disp-name-of item))))
 							 (items-of unit))))))
-			(list "priority" "status" "type" "category" "assign")
-			(list priority-of status-of type-of category-of assign-of)
-			(list priorities-of statuss-of types-of categories-of fans-of))
+			$property-list$ $property-accessor-list$ $properties-accessor-list$)
 		  (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
 		  ))
 	    (table/ (@/ (class "extension"))
