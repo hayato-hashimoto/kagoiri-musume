@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.146 2005/11/13 14:00:49 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.147 2005/11/13 14:25:23 cut-sea Exp $
 
 ;;
 ;; include
@@ -159,12 +159,7 @@
                                   (option/ (@/ (value (code-of item)))
                                            (disp-name-of item)))
                                 items)))
-                (td/ (div/ (@/ (class "clickable")
-                               (onclick #`"up_select(this\, ',|n|')"))
-                           "¢¨")
-                     (div/ (@/ (class "clickable")
-                               (onclick #`"down_select(this\, ',|n|')"))
-                           "¢≠")))))
+                (td/ (updown/ n)))))
 
             (list "priority" "status" "type" "category")
             (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
@@ -189,12 +184,7 @@
                        (map/ (lambda (f)
                                (option/ (@/ (value f)) f))
                              (all-fan-names))))
-             (td/ (div/ (@/ (class "clickable")
-                            (onclick "up_select(this, 'fans')"))
-                        "¢¨")
-                  (div/ (@/ (class "clickable")
-                            (onclick "down_select(this, 'fans')"))
-                        "¢≠")))))))
+             (td/ (updown/ "fans")))))))
     (input/ (@/ (type "submit") (value ($$ "ø∑•Ê•À•√•»∑Î¿Æ")))))
    ))
 
@@ -236,12 +226,7 @@
 						 (selected (has? unit item)))
 					     (disp-name-of item)))
 				  items)))
-		  (td/ (div/ (@/ (class "clickable")
-				 (onclick #`"up_select(this\, ',|n|')"))
-			     "¢¨")
-		       (div/ (@/ (class "clickable")
-				 (onclick #`"down_select(this\, ',|n|')"))
-			     "¢≠")))))
+		  (td/ (updown/ n)))))
 	      (list "priority" "status" "type" "category")
 	      (list (append (priorities-of unit)
 			    (lset-difference eq? (all-priorities)
@@ -282,12 +267,7 @@
 			       (append (fans-of unit)
 				       (lset-difference eq? (all-fans)
 							(fans-of unit))))))
-	       (td/ (div/ (@/ (class "clickable")
-			      (onclick "up_select(this, 'fans')"))
-			  ($$ "¢¨"))
-		    (div/ (@/ (class "clickable")
-			      (onclick "down_select(this, 'fans')"))
-			  ($$ "¢≠")))))))
+	       (td/ (updown/ "fans"))))))
        )
       (input/ (@/ (type "submit") (name "submit") (value ($$ "≥ŒƒÍ")))))
      )))

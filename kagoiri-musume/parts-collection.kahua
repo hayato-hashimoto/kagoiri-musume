@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.14 2005/11/13 13:22:02 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.15 2005/11/13 14:25:23 cut-sea Exp $
 ;;
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
@@ -93,3 +93,14 @@
 
 ;; parts
 ;;
+(define list/ (compose node-set list))
+
+(define (updown/ props)
+  (list/
+   (div/ (@/ (class "clickable")
+	     (onclick #`"up_select(this,, ',|props|')"))
+	 "¢¬")
+   (div/ (@/ (class "clickable")
+	     (onclick #`"down_select(this,, ',|props|')"))
+	 "¢­")))
+
