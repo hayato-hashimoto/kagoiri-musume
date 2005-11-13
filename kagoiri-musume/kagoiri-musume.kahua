@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.147 2005/11/13 14:25:23 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.148 2005/11/13 15:06:49 cut-sea Exp $
 
 ;;
 ;; include
@@ -161,7 +161,7 @@
                                 items)))
                 (td/ (updown/ n)))))
 
-            (list "priority" "status" "type" "category")
+            (drop-right $property-list$ 1)
             (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
     (table/
      (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) "(※)"))
@@ -207,7 +207,7 @@
 			 (begin
 			   (set-error-message #f)
 			   (apply unit-makeover! unit name desc
-				  (map kahua-context-ref* '("fans" "priority" "status" "type" "category")))
+				  (map kahua-context-ref* (drop-right $full-property-list$ 1)))
 			   (redirect-page "unit-list"))))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
@@ -304,18 +304,18 @@
 			     (equal? "*all*" status))
 			 identity
 			 (lambda (m) (equal? (code-of (status-of m)) status))))
-	   (a-filter (if (or (not assign)
-			     (equal? "*all*" assign))
-			 identity
-			 (lambda (m) (equal? (fan-name-of (assign-of m)) assign))))
 	   (t-filter (if (or (not type)
 			     (equal? "*all*" type))
 			 identity
 			 (lambda (m) (equal? (code-of (type-of m)) type))))
-           (c-filter (if (or (not type)
+	   (c-filter (if (or (not type)
 			     (equal? "*all*" category))
 			 identity
 			 (lambda (m) (equal? (code-of (category-of m)) category))))
+           (a-filter (if (or (not assign)
+			     (equal? "*all*" assign))
+			 identity
+			 (lambda (m) (equal? (fan-name-of (assign-of m)) assign))))
 	   (and-filter (lambda (m)
                          (let1 statusid (code-of (status-of m))
                            (hash-table-put!
@@ -324,9 +324,9 @@
                             (+ (hash-table-get *status-dict* statusid 0) 1)))
                          (and (p-filter m)
                               (s-filter m)
-                              (a-filter m)
                               (t-filter m)
-                              (c-filter m))))
+                              (c-filter m)
+                              (a-filter m))))
 	   (limiter (if (string-null? *limit*)
 			identity
 			(lambda (ms)
@@ -356,9 +356,9 @@
 		      (tr/ (@/ (onclick "toggle_select_mode(event)"))
 			   (has-item? unit priorities-of (th/ (clickable ($$ "優先度"))))
 			   (has-item? unit statuss-of (th/ (clickable ($$ "ステータス"))))
-			   (has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
 			   (has-item? unit types-of (th/ (clickable ($$ "タイプ"))))
 			   (has-item? unit categories-of (th/ (clickable ($$ "カテゴリ"))))
+			   (has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
 			   (th/ ($$ "表示上限")))
 		      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
 			(tr/ (@/ (valign "top"))
@@ -378,18 +378,10 @@
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
 						 (options (statuss-of unit) status))))))
-			     (has-item? unit fans-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 5))
-					      (name "assign"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (fans-of unit) assign))))))
 			     (has-item? unit types-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 6))
+					  (@/ (onchange (filter-row 5))
 					      (name "type"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
@@ -397,11 +389,19 @@
 			     (has-item? unit categories-of
 					(td/
 					 (select/
-					  (@/ (onchange (filter-row 7))
+					  (@/ (onchange (filter-row 6))
 					      (name "category"))
 					  (node-set
 					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
 						 (options (categories-of unit) category))))))
+			     (has-item? unit fans-of
+					(td/
+					 (select/
+					  (@/ (onchange (filter-row 7))
+					      (name "assign"))
+					  (node-set
+					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+						 (options (fans-of unit) assign))))))
 			     (td/
 			      (select/
 			       (@/ (name "limit"))
@@ -440,12 +440,12 @@
                                                                                ($$ "優先度")))
 					    (has-item? unit statuss-of (th/ (@/ (value "status"))
                                                                             ($$ "ステータス")))
-					    (has-item? unit fans-of (th/ (@/ (value "assign"))
-                                                                         ($$ "アサイン")))
 					    (has-item? unit types-of (th/ (@/ (value "type"))
                                                                       ($$ "タイプ")))
 					    (has-item? unit categories-of (th/ (@/ (value "category"))
                                                                            ($$ "カテゴリ")))
+					    (has-item? unit fans-of (th/ (@/ (value "assign"))
+                                                                         ($$ "アサイン")))
 					    (th/ (@/ (value "ctime"))
                                                  ($$ "登録日"))
 					    (th/ (@/ (value "mtime"))
@@ -483,10 +483,6 @@
 							    (td/ (@/ (value val))
 								 (disp-name-of
 								  status))))
-					       (let1 val (fan-name-of (assign-of m))
-						 (has-item? unit fans-of
-							    (td/ (@/ (value val))
-								 val)))
 					       (let1 val (type-of m)
 						 (has-item? unit types-of
 							    (td/ (@/ (value (code-of val)))
@@ -497,6 +493,10 @@
 							    (td/ (@/ (value (code-of val)))
 								 (disp-name-of
 								  val))))
+					       (let1 val (fan-name-of (assign-of m))
+						 (has-item? unit fans-of
+							    (td/ (@/ (value val))
+								 val)))
 					       (let1 val (ctime-of m)
 						 (td/ (@/ (value val))
 						      (sys-strftime "%Y/%m/%d %H:%M"
@@ -665,9 +665,9 @@
              (sort_state (kahua-context-ref "sort_state"))
              (priority (kahua-context-ref* "priority"))
              (status (kahua-context-ref* "status"))
-             (assign (kahua-context-ref* "assign"))
              (type (kahua-context-ref* "type"))
              (category (kahua-context-ref* "category"))
+             (assign (kahua-context-ref* "assign"))
              (p-filter (if (or (null? priority)
                                (equal? "*all*" priority))
                            identity
@@ -676,10 +676,6 @@
                                (equal? "*all*" status))
                            identity
 			 (lambda (m) (member (code-of (status-of m)) status))))
-             (a-filter (if (or (null? assign)
-                               (equal? "*all*" assign))
-                           identity
-			 (lambda (m) (member (fan-name-of (assign-of m)) assign))))
              (t-filter (if (or (null? type)
                                (equal? "*all*" type))
                            identity
@@ -688,12 +684,16 @@
                                (equal? "*all*" category))
                            identity
 			 (lambda (m) (member (code-of (category-of m)) category))))
+             (a-filter (if (or (null? assign)
+                               (equal? "*all*" assign))
+                           identity
+			 (lambda (m) (member (fan-name-of (assign-of m)) assign))))
              (and-filter (lambda (m)
                            (and (p-filter m)
                                 (s-filter m)
-                                (a-filter m)
                                 (t-filter m)
-                                (c-filter m))))
+                                (c-filter m)
+                                (a-filter m))))
              (musumes (filter and-filter musumes))
              (musumes (if sort_state (sort musumes
                                            (lambda (x y)

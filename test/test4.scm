@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.12 2005/11/12 14:57:59 shibata Exp $
+;; $Id: test4.scm,v 1.13 2005/11/13 15:06:50 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -304,9 +304,9 @@
 			     (tr ?@
 				 (th (span ?@ "優先度"))
 				 (th (span (@ (class "clickable")) "ステータス"))
-				 (th (span (@ (class "clickable")) "アサイン"))
 				 (th (span (@ (class "clickable")) "タイプ"))
 				 (th (span (@ (class "clickable")) "カテゴリ"))
+				 (th (span (@ (class "clickable")) "アサイン"))
 				 (th "表示上限"))
 			     (tr ?@
 				 (td (select (@ (onchange ?_) (name "priority"))
@@ -319,11 +319,6 @@
 					     (option (@ (value "open")) "OPEN")
 					     (option (@ (value "on-hold")) "ON HOLD")
 					     (option (@ (value "completed")) "COMPLETED")))
-				 (td (select (@ (onchange ?_) (name "assign"))
-					     (option (@ (value "*all*")) "全て")
-					     (option (@ (value "   ")))
-					     (option (@ (value "cut-sea")) "cut-sea")
-					     (option (@ (value "guest")) "guest")))
 				 (td (select (@ (onchange ?_) (name "type"))
 					     (option (@ (value "*all*")) "全て")
 					     (option (@ (value "task")) "タスク")
@@ -335,6 +330,11 @@
 					     (option (@ (value "infra")) "インフラ")
 					     (option (@ (value "global")) "全体")
 					     (option (@ (value "section")) "セクション")))
+				 (td (select (@ (onchange ?_) (name "assign"))
+					     (option (@ (value "*all*")) "全て")
+					     (option (@ (value "   ")))
+					     (option (@ (value "cut-sea")) "cut-sea")
+					     (option (@ (value "guest")) "guest")))
 				 (td (select (@ (name "limit"))
 					     (option (@ (value "")))
 					     (option (@ (value "20")) "20")
@@ -355,9 +355,9 @@
 					(th ?@ "タイトル")
 					(th ?@ "優先度")
 					(th ?@ "ステータス")
-					(th ?@ "アサイン")
 					(th ?@ "タイプ")
 					(th ?@ "カテゴリ")
+					(th ?@ "アサイン")
 					(th ?@ "登録日")
 					(th ?@ "更新日"))) (tbody))))
 	   ,*footer*))

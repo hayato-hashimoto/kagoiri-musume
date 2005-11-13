@@ -3,11 +3,14 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.21 2005/11/13 13:56:13 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.22 2005/11/13 15:06:49 cut-sea Exp $
 ;;
 
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
+
+(define $full-property-list$
+  (list "fans" "priority" "status" "type" "category" "assign"))
 
 (define $property-accessor-list$
   (list priority-of status-of type-of category-of assign-of))
