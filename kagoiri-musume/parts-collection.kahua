@@ -3,8 +3,11 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.15 2005/11/13 14:25:23 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.16 2005/11/13 16:56:59 cut-sea Exp $
 ;;
+;; utility tags
+(define list/ (compose node-set list))
+
 (define (options option-list . selected-value)
   (let1 selected (and (not (null? selected-value))
                       (car selected-value))
@@ -91,10 +94,9 @@
 (define-checker (composer? song)
   (eq? (current-fan) (fan-of song)))
 
-;; parts
-;;
-(define list/ (compose node-set list))
-
+;;-------------------------------------------------------------
+;; low level  parts collection
+;;-------------------------------------------------------------
 (define (updown/ props)
   (list/
    (div/ (@/ (class "clickable")
@@ -104,3 +106,98 @@
 	     (onclick #`"down_select(this,, ',|props|')"))
 	 "↓")))
 
+;;-------------------------------------------------------------
+;; high level  parts collection
+;;-------------------------------------------------------------
+(define (unit-list-table/)
+  (table/ (@/ (class "listing"))
+	  (thead/
+	   (tr/ (devel:th/) (devel:th/)
+		(th/ ($$ "ユニット名"))
+		(th/ ($$  "概要"))
+		(th/ ($$ "ファン"))))
+	  (tbody/
+	   (node-set
+	    (map-with-index
+	     (lambda (idx u)
+	       (developer-or-fan?
+		u
+		(tr/ (@/ (class (if (odd? idx) "odd" "even")))
+		     (devel:td/
+		      (a/cont/
+		       (@@/ (cont unit-edit (key-of u)))
+		       ($$ "編集")))
+		     (devel:td/
+		      (a/cont/
+		       (@/ (onClick (format "return confirm('~a')?true:false"
+					    ($$ "本当に削除しますか？"))))
+		       (@@/ (cont unit-fallout (key-of u)))
+		       ($$ "削除")))
+		     (td/ (a/cont/
+			   (@@/ (cont musume-list (key-of u)))
+			   (unit-name-of u))
+			  (format " (~a)"
+				  (length (all-active-musumes u))))
+		     (td/ (description-of u))
+		     (td/ (string-join
+			   (filter-map (lambda (f)
+					 (and (not (equal? "   " (code-of f)))
+					      (fan-name-of f)))
+				       (fans-of u)) " , ")))))
+	     (all-units))))))
+
+(define (create-unit-form/)
+  (list/
+   (devel:h2/ ($$ "新ユニット結成"))
+   (devel:form/cont/
+    (@/ (onsubmit "return submitForm(this)"))
+    (@@/ (cont (entry-lambda (:keyword name desc)
+		   (if (or (string-null? name)
+			   (null? (kahua-context-ref* "fans")))
+		       (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
+		       (set-error-message #f))
+		 (begin
+		   (create-new-unit name desc)
+		   (redirect-page "unit-list")))))
+    (table/
+     (tr/ (@/ (onclick "toggle_fulllist(event)"))
+	  (th/ (@/ (colspan 2)) (clickable ($$ "優先度")))
+	  (th/ (@/ (colspan 2)) (clickable ($$ "ステータス")))
+	  (th/ (@/ (colspan 2)) (clickable ($$ "タイプ")))
+	  (th/ (@/ (colspan 2)) (clickable ($$ "カテゴリ"))))
+     (tr/
+      (map/ (lambda (n items)
+	      (list/
+	       (td/
+		(select/ (@/ (id n) (name n) (size "5") (multiple "true"))
+			 (map/ (lambda (item)
+				 (option/ (@/ (value (code-of item)))
+					  (disp-name-of item)))
+			       items)))
+	       (td/ (updown/ n))))
+
+	    (drop-right $property-list$ 1)
+	    (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
+    (table/
+     (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) "(※)"))
+	  (td/
+	   (textarea/ (@/ (type "text") (name "name")
+			  (rows 1) (cols 32)) "")
+	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
+     (tr/
+      (td/ ($$  "概要"))
+      (td/ (@/ (colspan 2))
+	   (textarea/ (@/ (type "text") (name "desc")
+			  (rows 10) (cols 80)) "")))
+     (tr/ (@/ (align "left"))
+	  (td/ ($$ "ファン") (span/ (@/ (class "warning")) "(※)"))
+	  (td/
+	   (table/
+	    (tr/
+	     (td/
+	      (select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
+		       (map/ (lambda (f)
+			       (option/ (@/ (value f)) f))
+			     (all-fan-names))))
+	     (td/ (updown/ "fans")))))))
+    (input/ (@/ (type "submit") (value ($$ "新ユニット結成")))))))

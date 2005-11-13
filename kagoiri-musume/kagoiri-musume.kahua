@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.150 2005/11/13 16:35:03 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.151 2005/11/13 16:56:59 cut-sea Exp $
 
 ;;
 ;; include
@@ -95,97 +95,9 @@
   (permission-check-page
    identity ($$ "ユニット一覧は一般ユーザアカウントが必要です")
    (h2/ ($$ "ユニット一覧"))
-   (table/ (@/ (class "listing"))
-	   (thead/
-	    (tr/ (devel:th/) (devel:th/)
-		 (th/ ($$ "ユニット名"))
-		 (th/ ($$  "概要"))
-		 (th/ ($$ "ファン"))))
-	   (tbody/
-	    (node-set
-	     (map-with-index
-	      (lambda (idx u)
-		(developer-or-fan?
-		 u
-		 (tr/ (@/ (class (if (odd? idx) "odd" "even")))
-		      (devel:td/
-		       (a/cont/
-			(@@/ (cont unit-edit (key-of u)))
-			($$ "編集")))
-		      (devel:td/
-		       (a/cont/
-			(@/ (onClick (format "return confirm('~a')?true:false"
-					     ($$ "本当に削除しますか？"))))
-			(@@/ (cont unit-fallout (key-of u)))
-			($$ "削除")))
-		      (td/ (a/cont/
-			    (@@/ (cont musume-list (key-of u)))
-			    (unit-name-of u))
-			   (format " (~a)"
-				   (length (all-active-musumes u))))
-		      (td/ (description-of u))
-		      (td/ (string-join
-			    (filter-map (lambda (f)
-					  (and (not (equal? "   " (code-of f)))
-					       (fan-name-of f)))
-					(fans-of u)) " , "))
-		      )))
-	      (all-units)))))
+   (unit-list-table/)
    (devel:hr/)
-   (devel:h2/ ($$ "新ユニット結成"))
-   (devel:form/cont/
-    (@/ (onsubmit "return submitForm(this)"))
-    (@@/ (cont (entry-lambda (:keyword name desc)
-		   (if (or (string-null? name)
-			   (null? (kahua-context-ref* "fans")))
-		       (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
-		       (set-error-message #f))
-		 (begin
-		   (create-new-unit name desc)
-		   (redirect-page "unit-list")))))
-    (table/
-     (tr/ (@/ (onclick "toggle_fulllist(event)"))
-          (th/ (@/ (colspan 2)) (clickable ($$ "優先度")))
-          (th/ (@/ (colspan 2)) (clickable ($$ "ステータス")))
-	  (th/ (@/ (colspan 2)) (clickable ($$ "タイプ")))
-	  (th/ (@/ (colspan 2)) (clickable ($$ "カテゴリ"))))
-     (tr/
-      (map/ (lambda (n items)
-              (node-set
-               (list
-                (td/
-                 (select/ (@/ (id n) (name n) (size "5") (multiple "true"))
-                          (map/ (lambda (item)
-                                  (option/ (@/ (value (code-of item)))
-                                           (disp-name-of item)))
-                                items)))
-                (td/ (updown/ n)))))
-
-            (drop-right $property-list$ 1)
-            (list (all-priorities) (all-statuss) (all-types) (all-categories)))))
-    (table/
-     (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) "(※)"))
-	  (td/
-	   (textarea/ (@/ (type "text") (name "name")
-			  (rows 1) (cols 32)) "")
-	   (error:span/ (@/ (class "warning")) (set-error-message #f))))
-     (tr/
-      (td/ ($$  "概要"))
-      (td/ (@/ (colspan 2))
-	   (textarea/ (@/ (type "text") (name "desc")
-			  (rows 10) (cols 80)) "")))
-     (tr/ (@/ (align "left"))
-          (td/ ($$ "ファン") (span/ (@/ (class "warning")) "(※)"))
-          (td/
-           (table/
-            (tr/
-             (td/
-              (select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
-                       (map/ (lambda (f)
-                               (option/ (@/ (value f)) f))
-                             (all-fan-names))))
-             (td/ (updown/ "fans")))))))
-    (input/ (@/ (type "submit") (value ($$ "新ユニット結成")))))
+   (create-unit-form/)
    ))
 
 
@@ -217,16 +129,15 @@
 	    (th/ (@/ (colspan 2)) (clickable ($$ "カテゴリ"))))
        (tr/
 	(map/ (lambda (n items)
-		(node-set
-		 (list
-		  (td/
-		   (select/ (@/ (id n) (name n) (size "5") (multiple "true"))
-			    (map/ (lambda (item)
-				    (option/ (@/ (value (code-of item))
-						 (selected (has? unit item)))
-					     (disp-name-of item)))
-				  items)))
-		  (td/ (updown/ n)))))
+		(list/
+		 (td/
+		  (select/ (@/ (id n) (name n) (size "5") (multiple "true"))
+			   (map/ (lambda (item)
+				   (option/ (@/ (value (code-of item))
+						(selected (has? unit item)))
+					    (disp-name-of item)))
+				 items)))
+		 (td/ (updown/ n))))
 	      (list "priority" "status" "type" "category")
 	      (list (append (priorities-of unit)
 			    (lset-difference eq? (all-priorities)
@@ -695,107 +606,106 @@
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
      (if (not musume-id)
          (move 0)
-	 (node-set
-	  (list
-	   (ul/ (@/ (class "menu"))
-		(li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
-		(common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
-	   (div/
-	    (a/cont/ (@/ (class "clickable")
-			 (onclick "copy_search(this)"))
-		     (@@/ (cont (cut move -1)))
-		     "<<" )
-	    (a/cont/ (@/ (class "clickable")
-			 (onclick "copy_search(this)"))
-		     (@@/ (cont (cut move +1)))
-		     ">>"))
+	 (list/
+	  (ul/ (@/ (class "menu"))
+	       (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
+	       (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。"))))
+	  (div/
+	   (a/cont/ (@/ (class "clickable")
+			(onclick "copy_search(this)"))
+		    (@@/ (cont (cut move -1)))
+		    "<<" )
+	   (a/cont/ (@/ (class "clickable")
+			(onclick "copy_search(this)"))
+		    (@@/ (cont (cut move +1)))
+		    ">>"))
 
-	   (h3/ (format "~a - ~a：~a - ~a"
-			(unit-name-of unit)
-			(mno-of musume)
-			(mname-of musume)
-			(disp-name-of
-			 (status-of musume))))
-	   (common:form/cont/
-	    (@/ (enctype "multipart/form-data")
-		(onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
-	    (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
-			   (if (and (string-null? melody)
-				    (not file))
-			       (musume-makeover! musume priority status type category assign)
-			       (begin
-				 (set! melody (string-join (string-split melody "\r\n") "\n"))
-				 (let1 song (create-new-song musume melody (current-fan))
-				   (musume-makeover! musume priority status type category assign)
-				   ;; save file and make file object.
-				   (attach-file song file filename (uploaded-file-name unit musume song))
-				   (if (not (string-null? melody))
-				       (sendmail-lite unit musume song)))))
-			 (redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
-	    (table/
-	     (tr/
-	      (has-item? unit priorities-of (th/ ($$ "優先度")))
-	      (has-item? unit statuss-of (th/ ($$ "ステータス")))
-	      (has-item? unit types-of (th/ ($$ "タイプ")))
-	      (has-item? unit categories-of (th/ ($$ "カテゴリ")))
-	      (has-item? unit fans-of (th/ ($$ "アサイン"))))
-	     (tr/ (map/ (lambda (n refer items-of)
-			  (has-item? unit items-of
-				     (td/ (select/ (@/ (name n))
-						   (map/ (lambda (item)
-							   (if (eq? item (refer musume))
-							       (option/ (@/ (value (code-of item))
-									    (selected "true"))
-									(disp-name-of item))
-							       (option/ (@/ (value (code-of item)))
-									(disp-name-of item))))
-							 (items-of unit))))))
-			$property-list$ $property-accessor-list$ $properties-accessor-list$)
-		  (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
-		  ))
-	    (table/ (@/ (class "extension"))
+	  (h3/ (format "~a - ~a：~a - ~a"
+		       (unit-name-of unit)
+		       (mno-of musume)
+		       (mname-of musume)
+		       (disp-name-of
+			(status-of musume))))
+	  (common:form/cont/
+	   (@/ (enctype "multipart/form-data")
+	       (onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
+	   (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
+			  (if (and (string-null? melody)
+				   (not file))
+			      (musume-makeover! musume priority status type category assign)
+			      (begin
+				(set! melody (string-join (string-split melody "\r\n") "\n"))
+				(let1 song (create-new-song musume melody (current-fan))
+				  (musume-makeover! musume priority status type category assign)
+				  ;; save file and make file object.
+				  (attach-file song file filename (uploaded-file-name unit musume song))
+				  (if (not (string-null? melody))
+				      (sendmail-lite unit musume song)))))
+			(redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
+	   (table/
+	    (tr/
+	     (has-item? unit priorities-of (th/ ($$ "優先度")))
+	     (has-item? unit statuss-of (th/ ($$ "ステータス")))
+	     (has-item? unit types-of (th/ ($$ "タイプ")))
+	     (has-item? unit categories-of (th/ ($$ "カテゴリ")))
+	     (has-item? unit fans-of (th/ ($$ "アサイン"))))
+	    (tr/ (map/ (lambda (n refer items-of)
+			 (has-item? unit items-of
+				    (td/ (select/ (@/ (name n))
+						  (map/ (lambda (item)
+							  (if (eq? item (refer musume))
+							      (option/ (@/ (value (code-of item))
+									   (selected "true"))
+								       (disp-name-of item))
+							      (option/ (@/ (value (code-of item)))
+								       (disp-name-of item))))
+							(items-of unit))))))
+		       $property-list$ $property-accessor-list$ $properties-accessor-list$)
+		 (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
+		 ))
+	   (table/ (@/ (class "extension"))
+		   (tr/
+		    (td/ "内容")
+		    (td/ (textarea/ (@/ (type "text") (name "melody")
+					(rows 10) (cols 80) (id "focus"))))
 		    (tr/
-		     (td/ "内容")
-		     (td/ (textarea/ (@/ (type "text") (name "melody")
-					 (rows 10) (cols 80) (id "focus"))))
-		     (tr/
-		      (td/ ($$ "ファイル"))
-		      (td/ (input/ (@/ (type "file") (name "file")))
-			   (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
-	   (let1 songs (all-songs musume)
-	     (map/ (lambda (k n f t m u)
-		     (let1 song (id->obj <song> k)
-		       (if (delete-of song)
-			   (dl/ (@/ (id #`",k"))
-				(dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
-				     (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-				     (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
-				     (composer? song
-						(a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
-									      ($$ "本当に復活しますか？"))))
-							 (@@/ (cont delete-revival-song k)) ($$ "復活"))))
-				(dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
-			   (dl/ (@/ (id #`",k"))
-				(dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
-				     (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-				     (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
-				     (composer? song
-						(a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
-									      ($$ "本当に削除しますか？"))))
-							 (@@/ (cont delete-revival-song k)) ($$ "削除"))))
-				(if (null? u)
-				    (dd/ (pre/ (melody-format m)))
-				    (let1 upfile (car u)
-				      (dd/ (pre/ m
-						 (br/)
-						 (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
-		   (map key-of songs)
-		   (map seq-no-of songs)
-		   (map fan-of songs)
-		   (map ctime-of songs)
-		   (map melody-of songs)
-		   (map files-of songs))
-	     )))))))
+		     (td/ ($$ "ファイル"))
+		     (td/ (input/ (@/ (type "file") (name "file")))
+			  (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
+	  (let1 songs (all-songs musume)
+	    (map/ (lambda (k n f t m u)
+		    (let1 song (id->obj <song> k)
+		      (if (delete-of song)
+			  (dl/ (@/ (id #`",k"))
+			       (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+				    (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+				    (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+				    (composer? song
+					       (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+									     ($$ "本当に復活しますか？"))))
+							(@@/ (cont delete-revival-song k)) ($$ "復活"))))
+			       (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
+			  (dl/ (@/ (id #`",k"))
+			       (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+				    (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+				    (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+				    (composer? song
+					       (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+									     ($$ "本当に削除しますか？"))))
+							(@@/ (cont delete-revival-song k)) ($$ "削除"))))
+			       (if (null? u)
+				   (dd/ (pre/ (melody-format m)))
+				   (let1 upfile (car u)
+				     (dd/ (pre/ m
+						(br/)
+						(a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
+		  (map key-of songs)
+		  (map seq-no-of songs)
+		  (map fan-of songs)
+		  (map ctime-of songs)
+		  (map melody-of songs)
+		  (map files-of songs))
+	    ))))))
 
 (define-entry (mypage type)
 
