@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.156 2005/11/14 14:01:27 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.157 2005/11/14 14:19:51 cut-sea Exp $
 
 ;;
 ;; include
@@ -134,26 +134,16 @@
 	 (*limits-list* '("" "20" "50" "200" "500" "1000"))
 	 (*limit* (or limit (x->string *default-limit*)))
          (*status-dict* (make-hash-table 'string=?)))
-    (let* ((p-filter (if (or (not priority)
-			     (equal? "*all*" priority))
-			 identity
-			 (lambda (m) (equal? (code-of (priority-of m)) priority))))
-	   (s-filter (if (or (not status)
-			     (equal? "*all*" status))
-			 identity
-			 (lambda (m) (equal? (code-of (status-of m)) status))))
-	   (t-filter (if (or (not type)
-			     (equal? "*all*" type))
-			 identity
-			 (lambda (m) (equal? (code-of (type-of m)) type))))
-	   (c-filter (if (or (not type)
-			     (equal? "*all*" category))
-			 identity
-			 (lambda (m) (equal? (code-of (category-of m)) category))))
-           (a-filter (if (or (not assign)
-			     (equal? "*all*" assign))
-			 identity
-			 (lambda (m) (equal? (fan-name-of (assign-of m)) assign))))
+    (define (make-filter prop code prop-of)
+      (if (or (not prop)
+	      (equal? "*all*" prop))
+	  identity
+	  (lambda (m) (equal? (code (prop-of m)) prop))))
+    (let* ((p-filter (make-filter priority code-of priority-of))
+	   (s-filter (make-filter status code-of status-of))
+	   (t-filter (make-filter type code-of type-of))
+	   (c-filter (make-filter category code-of category-of))
+           (a-filter (make-filter assign fan-name-of assign-of))
 	   (and-filter (lambda (m)
                          (let1 statusid (code-of (status-of m))
                            (hash-table-put!
