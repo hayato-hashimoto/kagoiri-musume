@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.157 2005/11/14 14:19:51 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.158 2005/11/14 14:51:53 cut-sea Exp $
 
 ;;
 ;; include
@@ -113,10 +113,11 @@
 ;
 (define-entry (unit-fallout unit-id)
   (let1 unit (id->obj <unit> unit-id)
-    (define checker (lambda (u)
-		      (if (memq (id->obj <fan> (ref u 'login-name))
-                                (fans-of unit))
-			  u #f)))
+    (define checker
+      (lambda (u)
+	(if (memq (id->obj <fan> (ref u 'login-name))
+		  (fans-of unit))
+	    u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
 		   (login-pc-page #f checker
@@ -144,17 +145,14 @@
 	   (t-filter (make-filter type code-of type-of))
 	   (c-filter (make-filter category code-of category-of))
            (a-filter (make-filter assign fan-name-of assign-of))
-	   (and-filter (lambda (m)
-                         (let1 statusid (code-of (status-of m))
-                           (hash-table-put!
-                            *status-dict*
-                            statusid
-                            (+ (hash-table-get *status-dict* statusid 0) 1)))
-                         (and (p-filter m)
-			      (s-filter m)
-			      (t-filter m)
-			      (c-filter m)
-			      (a-filter m))))
+	   (and-filter
+	    (lambda (m)
+	      (let1 statusid (code-of (status-of m))
+		(hash-table-put!
+		 *status-dict*
+		 statusid
+		 (+ (hash-table-get *status-dict* statusid 0) 1)))
+	      ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
 	   (limiter (if (string-null? *limit*)
 			identity
 			(lambda (ms)
@@ -187,47 +185,24 @@
 			   (has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
 			   (th/ ($$ "表示上限")))
 		      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
+			(define (prop-dropdown/ props-of prop propname row)
+			  (td/ (select/
+				(@/ (onchange (filter-row row))
+				    (name propname))
+				(node-set
+				 (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+				       (options (props-of unit) prop))))))
 			(tr/ (@/ (valign "top"))
 			     (has-item? unit priorities-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 3))
-					      (name "priority"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (priorities-of unit) priority))))))
+					(prop-dropdown/ priorities-of priority "priority" 3))
 			     (has-item? unit statuss-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 4))
-					      (name "status"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (statuss-of unit) status))))))
+					(prop-dropdown/ statuss-of status "status" 4))
 			     (has-item? unit types-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 5))
-					      (name "type"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (types-of unit) type))))))
+					(prop-dropdown/ types-of type "type" 5))
 			     (has-item? unit categories-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 6))
-					      (name "category"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (categories-of unit) category))))))
+					(prop-dropdown/ categories-of category "category" 6))
 			     (has-item? unit fans-of
-					(td/
-					 (select/
-					  (@/ (onchange (filter-row 7))
-					      (name "assign"))
-					  (node-set
-					   (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-						 (options (fans-of unit) assign))))))
+					(prop-dropdown/ fans-of assign "assign" 7))
 			     (td/
 			      (select/
 			       (@/ (name "limit"))
