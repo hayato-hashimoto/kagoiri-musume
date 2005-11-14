@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.158 2005/11/14 14:51:53 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.159 2005/11/14 15:29:53 cut-sea Exp $
 
 ;;
 ;; include
@@ -145,14 +145,13 @@
 	   (t-filter (make-filter type code-of type-of))
 	   (c-filter (make-filter category code-of category-of))
            (a-filter (make-filter assign fan-name-of assign-of))
-	   (and-filter
-	    (lambda (m)
-	      (let1 statusid (code-of (status-of m))
-		(hash-table-put!
-		 *status-dict*
-		 statusid
-		 (+ (hash-table-get *status-dict* statusid 0) 1)))
-	      ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
+	   (and-filter (lambda (m)
+			 (let1 statusid (code-of (status-of m))
+			   (hash-table-put!
+			    *status-dict*
+			    statusid
+			    (+ (hash-table-get *status-dict* statusid 0) 1)))
+			 ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
 	   (limiter (if (string-null? *limit*)
 			identity
 			(lambda (ms)
@@ -174,142 +173,141 @@
                        (id "focus")))
            (input/ (@/ (type "submit") (value ($$ "検索"))))))
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
-	 (form/cont/ (@@/ (cont musume-list unit-id))
-		     (table/
-		      (@/ (class "table-filter"))
-		      (tr/ (@/ (onclick "toggle_select_mode(event)"))
-			   (has-item? unit priorities-of (th/ (clickable ($$ "優先度"))))
-			   (has-item? unit statuss-of (th/ (clickable ($$ "ステータス"))))
-			   (has-item? unit types-of (th/ (clickable ($$ "タイプ"))))
-			   (has-item? unit categories-of (th/ (clickable ($$ "カテゴリ"))))
-			   (has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
-			   (th/ ($$ "表示上限")))
-		      (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
-			(define (prop-dropdown/ props-of prop propname row)
-			  (td/ (select/
-				(@/ (onchange (filter-row row))
-				    (name propname))
-				(node-set
-				 (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-				       (options (props-of unit) prop))))))
-			(tr/ (@/ (valign "top"))
-			     (has-item? unit priorities-of
-					(prop-dropdown/ priorities-of priority "priority" 3))
-			     (has-item? unit statuss-of
-					(prop-dropdown/ statuss-of status "status" 4))
-			     (has-item? unit types-of
-					(prop-dropdown/ types-of type "type" 5))
-			     (has-item? unit categories-of
-					(prop-dropdown/ categories-of category "category" 6))
-			     (has-item? unit fans-of
-					(prop-dropdown/ fans-of assign "assign" 7))
-			     (td/
-			      (select/
-			       (@/ (name "limit"))
-			       (map/ (lambda (l)
-				       (if (equal? *limit* l)
-					   (option/ (@/ (value l) (selected "true")) l)
-					   (option/ (@/ (value l)) l)))
-				     *limits-list*)))
-			     (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み")))))
-			     )))
-		     ;; data table
-		     (let1 musumes (limiter (sort (filter and-filter
-							  (all-active-musumes unit))
-						  (lambda (m1 m2)
-						    (> (mno-of m1) (mno-of m2)))))
-		       (table/
-			(@/ (class "listing") (id "musume_list"))
-			(thead/
-			 (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
-			       ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
-			       ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))
-			       ((> 500 (length musumes)) (format ($$  "~a人もの娘。に萌えました(萌えすぎです)") (length musumes)))
-			       (else (format ($$  "なんと~a人もの娘。に萌えまつきました orz") (length musumes))))
-			 (div/ (@/ (id "status-num"))
-			       (map/ (lambda (s)
-				       (let1 statusid (code-of s)
-					 (span/ (a/cont/ (@@/ (cont musume-list unit-id  `(status ,statusid)))
-							 (disp-name-of s))
-						(format "(~a) " (hash-table-get *status-dict* statusid 0)))))
-				     (statuss-of unit)))
-			 (tr/ (@/ (onclick "sort_table(event);return false"))
-			      (devel:th/)
-			      (th/ (@/ (value "no"))
-				   ($$ "No."))
-			      (th/ (@/ (value "title"))
-				   ($$ "タイトル"))
-			      (has-item? unit priorities-of (th/ (@/ (value "priority"))
-								 ($$ "優先度")))
-			      (has-item? unit statuss-of (th/ (@/ (value "status"))
-							      ($$ "ステータス")))
-			      (has-item? unit types-of (th/ (@/ (value "type"))
-							    ($$ "タイプ")))
-			      (has-item? unit categories-of (th/ (@/ (value "category"))
-								 ($$ "カテゴリ")))
-			      (has-item? unit fans-of (th/ (@/ (value "assign"))
-							   ($$ "アサイン")))
-			      (th/ (@/ (value "ctime"))
-				   ($$ "登録日"))
-			      (th/ (@/ (value "mtime"))
-				   ($$ "更新日"))))
-			(tbody/
-			 (map/ (lambda (m)
-				 (let ((status (status-of m))
-				       (songs (songs-of m)))
-				   (tr/ (@/ (class #`"status-,(code-of status)"))
-					(devel:td/ (a/cont/
-						    (@/ (onClick (format "return confirm('~a')?true:false"
-									 ($$ "本当に削除しますか？"))))
-						    (@@/ (cont remove-musume (key-of m)))
-						    ($$ "削除")))
-					(let1 val (format "~3,'0d" (mno-of m))
+	 (form/cont/
+	  (@@/ (cont musume-list unit-id))
+	  (table/
+	   (@/ (class "table-filter"))
+	   (tr/ (@/ (onclick "toggle_select_mode(event)"))
+		(has-item? unit priorities-of (th/ (clickable ($$ "優先度"))))
+		(has-item? unit statuss-of (th/ (clickable ($$ "ステータス"))))
+		(has-item? unit types-of (th/ (clickable ($$ "タイプ"))))
+		(has-item? unit categories-of (th/ (clickable ($$ "カテゴリ"))))
+		(has-item? unit fans-of (th/ (clickable ($$ "アサイン"))))
+		(th/ ($$ "表示上限")))
+	   (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
+	     (define (prop-dropdown/ props-of prop propname row)
+	       (td/ (select/
+		     (@/ (onchange (filter-row row))
+			 (name propname))
+		     (node-set
+		      (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+			    (options (props-of unit) prop))))))
+	     (tr/ (@/ (valign "top"))
+		  (has-item? unit priorities-of
+			     (prop-dropdown/ priorities-of priority "priority" 3))
+		  (has-item? unit statuss-of
+			     (prop-dropdown/ statuss-of status "status" 4))
+		  (has-item? unit types-of
+			     (prop-dropdown/ types-of type "type" 5))
+		  (has-item? unit categories-of
+			     (prop-dropdown/ categories-of category "category" 6))
+		  (has-item? unit fans-of
+			     (prop-dropdown/ fans-of assign "assign" 7))
+		  (td/
+		   (select/
+		    (@/ (name "limit"))
+		    (map/ (lambda (l)
+			    (if (equal? *limit* l)
+				(option/ (@/ (value l) (selected "true")) l)
+				(option/ (@/ (value l)) l)))
+			  *limits-list*)))
+		  (td/ (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み")))))
+		  )))
+	  ;; data table
+	  (let1 musumes (limiter
+			 (sort (filter and-filter
+				       (all-active-musumes unit))
+			       (lambda (m1 m2)
+				 (> (mno-of m1) (mno-of m2)))))
+	    (table/
+	     (@/ (class "listing") (id "musume_list"))
+	     (thead/
+	      (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
+		    ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
+		    ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))
+		    ((> 500 (length musumes)) (format ($$  "~a人もの娘。に萌えました(萌えすぎです)") (length musumes)))
+		    (else (format ($$  "なんと~a人もの娘。に萌えまつきました orz") (length musumes))))
+	      (div/ (@/ (id "status-num"))
+		    (map/ (lambda (s)
+			    (let1 statusid (code-of s)
+			      (span/ (a/cont/ (@@/ (cont musume-list unit-id `(status ,statusid)))
+					      (disp-name-of s))
+				     (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
+			  (statuss-of unit)))
+	      (tr/ (@/ (onclick "sort_table(event);return false"))
+		   (devel:th/)
+		   (th/ (@/ (value "no"))
+			($$ "No."))
+		   (th/ (@/ (value "title"))
+			($$ "タイトル"))
+		   (has-item? unit priorities-of
+			      (th/ (@/ (value "priority")) ($$ "優先度")))
+		   (has-item? unit statuss-of
+			      (th/ (@/ (value "status")) ($$ "ステータス")))
+		   (has-item? unit types-of
+			      (th/ (@/ (value "type")) ($$ "タイプ")))
+		   (has-item? unit categories-of
+			      (th/ (@/ (value "category")) ($$ "カテゴリ")))
+		   (has-item? unit fans-of
+			      (th/ (@/ (value "assign")) ($$ "アサイン")))
+		   (th/ (@/ (value "ctime")) ($$ "登録日"))
+		   (th/ (@/ (value "mtime")) ($$ "更新日"))))
+	     (tbody/
+	      (map/ (lambda (m)
+		      (let ((status (status-of m))
+			    (songs (songs-of m)))
+			(tr/ (@/ (class #`"status-,(code-of status)"))
+			     (devel:td/ (a/cont/
+					 (@/ (onClick (format "return confirm('~a')?true:false"
+							      ($$ "本当に削除しますか？"))))
+					 (@@/ (cont remove-musume (key-of m)))
+					 ($$ "削除")))
+			     (let1 val (format "~3,'0d" (mno-of m))
+			       (td/ (@/ (value val))
+				    (a/cont/
+				     (@@/ (cont musume-edit (key-of m)))
+				     (x->string val))))
+			     (let1 val (mname-of m)
+			       (td/ (@/ (value val))
+				    (a/cont/
+				     (@/ (onClick "apply_flter_state(this)"))
+				     (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
+				     val)
+				    (format " (~a)" (length songs))))
+			     
+			     (let1 val (priority-of m)
+			       (has-item? unit priorities-of
+					  (td/ (@/ (value (level-of val)))
+					       (disp-name-of
+						val))))
+			     (let1 val (status-of m)
+			       (has-item? unit statuss-of
+					  (td/ (@/ (value (code-of val)))
+					       (disp-name-of
+						val))))
+			     (let1 val (type-of m)
+			       (has-item? unit types-of
+					  (td/ (@/ (value (code-of val)))
+					       (disp-name-of
+						val))))
+			     (let1 val (category-of m)
+			       (has-item? unit categories-of
+					  (td/ (@/ (value (code-of val)))
+					       (disp-name-of
+						val))))
+			     (let1 val (fan-name-of (assign-of m))
+			       (has-item? unit fans-of
 					  (td/ (@/ (value val))
-					       (a/cont/
-						(@@/ (cont musume-edit (key-of m)))
-						(x->string val))))
-					(let1 val (mname-of m)
-					  (td/ (@/ (value val))
-					       (a/cont/
-						(@/ (onClick "apply_flter_state(this)"))
-						(@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
-						val)
-					       (format " (~a)" (length songs))))
-					
-					(let1 val (priority-of m)
-					  (has-item? unit priorities-of
-						     (td/ (@/ (value (level-of val)))
-							  (disp-name-of
-							   val))))
-					(let1 val (status-of m)
-					  (has-item? unit statuss-of
-						     (td/ (@/ (value (code-of val)))
-							  (disp-name-of
-							   val))))
-					(let1 val (type-of m)
-					  (has-item? unit types-of
-						     (td/ (@/ (value (code-of val)))
-							  (disp-name-of
-							   val))))
-					(let1 val (category-of m)
-					  (has-item? unit categories-of
-						     (td/ (@/ (value (code-of val)))
-							  (disp-name-of
-							   val))))
-					(let1 val (fan-name-of (assign-of m))
-					  (has-item? unit fans-of
-						     (td/ (@/ (value val))
-							  val)))
-					(let1 val (ctime-of m)
-					  (td/ (@/ (value val))
-					       (sys-strftime "%Y/%m/%d %H:%M"
-							     (sys-localtime val))))
-					(let1 val (ctime-of (car songs))
-					  (td/ (@/ (value val))
-					       (sys-strftime "%Y/%m/%d %H:%M"
-							     (sys-localtime val)))))))
-			       musumes)))
-		       )))))))
+					       val)))
+			     (let1 val (ctime-of m)
+			       (td/ (@/ (value val))
+				    (sys-strftime "%Y/%m/%d %H:%M"
+						  (sys-localtime val))))
+			     (let1 val (ctime-of (car songs))
+			       (td/ (@/ (value val))
+				    (sys-strftime "%Y/%m/%d %H:%M"
+						  (sys-localtime val)))))))
+		    musumes))))))))))
 
 (define-entry (musume-new unit-id)
   (let1 unit (id->obj <unit> unit-id)
@@ -347,11 +345,13 @@
        (tr/
 	(map/ (lambda (n refer)
 		(has-item? unit refer
-			   (td/ (select/ (@/ (name n))
-					 (map/ (lambda (item)
-						 (option/ (@/ (value (code-of item)))
-							  (disp-name-of item)))
-					       (refer unit))))))
+			   (td/
+			    (select/
+			     (@/ (name n))
+			     (map/ (lambda (item)
+				     (option/ (@/ (value (code-of item)))
+					      (disp-name-of item)))
+				   (refer unit))))))
 	      $property-list$
 	      (list priorities-of statuss-of types-of categories-of fans-of))
 	(td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))))
@@ -382,7 +382,8 @@
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
-		   (login-pc-page #f checker (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+		   (login-pc-page #f checker
+				  (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
       (permission-check-logic
        checker
        (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
@@ -399,21 +400,20 @@
      identity
      (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
      (h3/ (format ($$ "『~a』の『~a 』を編集する。") (unit-name-of unit) (mname-of musume)))
-     ($$ "工事中")
-     )
-    ))
+     ($$ "工事中"))))
 
 (define-entry (delete-revival-song song-id)
   (let* ((song (id->obj <song> song-id))
 	 (musume (musume-of song))
 	 (unit (unit-of musume)))
-    (define checker (lambda (u)
-		      (if (memq (id->obj <fan> (ref u 'login-name))
-                                (fans-of unit))
-			  u #f)))
+    (define (checker u) 
+      (if (memq (id->obj <fan> (ref u 'login-name))
+		(fans-of unit))
+	  u #f))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
-		   (login-pc-page #f checker (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+		   (login-pc-page #f checker
+				  (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
       (permission-check-logic
        checker
        (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
@@ -443,7 +443,6 @@
 (define-entry (melody-list unit-id musume-id)
   (let ((unit (id->obj <unit> unit-id))
         (musume (id->obj <musume> musume-id)))
-
     (define (move dist)
       (let* ((musumes (sort (all-active-musumes unit)))
              (sort_state (kahua-context-ref "sort_state"))
@@ -451,43 +450,30 @@
              (status (kahua-context-ref* "status"))
              (type (kahua-context-ref* "type"))
              (category (kahua-context-ref* "category"))
-             (assign (kahua-context-ref* "assign"))
-             (p-filter (if (or (null? priority)
-                               (equal? "*all*" priority))
-                           identity
-			 (lambda (m) (member (code-of (priority-of m)) priority))))
-             (s-filter (if (or (null? status)
-                               (equal? "*all*" status))
-                           identity
-			 (lambda (m) (member (code-of (status-of m)) status))))
-             (t-filter (if (or (null? type)
-                               (equal? "*all*" type))
-                           identity
-			 (lambda (m) (member (code-of (type-of m)) type))))
-             (c-filter (if (or (null? type)
-                               (equal? "*all*" category))
-                           identity
-			 (lambda (m) (member (code-of (category-of m)) category))))
-             (a-filter (if (or (null? assign)
-                               (equal? "*all*" assign))
-                           identity
-			 (lambda (m) (member (fan-name-of (assign-of m)) assign))))
-             (and-filter (lambda (m)
-                           (and (p-filter m)
-                                (s-filter m)
-                                (t-filter m)
-                                (c-filter m)
-                                (a-filter m))))
-             (musumes (filter and-filter musumes))
-             (musumes (if sort_state (sort musumes
-                                           (lambda (x y)
-                                             (string<? (compare-value x sort_state)
-                                                       (compare-value y sort_state))))
-                        musumes))
-             (pos (or (find-index (cut eq? musume <>) musumes) 0))
-             (musume (list-ref  musumes (+ pos dist) musume))
-             (param (kahua-context-ref "search")))
-        (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|")))
+             (assign (kahua-context-ref* "assign")))
+	(define (make-filter prop code prop-of)
+	  (if (or (null? prop)
+		  (equal? "*all*" prop))
+	      identity
+	      (lambda (m) (member (code (prop-of m)) prop))))
+	(let* ((p-filter (make-filter priority code-of priority-of))
+	       (s-filter (make-filter status code-of status-of))
+	       (t-filter (make-filter type code-of type-of))
+	       (c-filter (make-filter category code-of category-of))
+	       (a-filter (make-filter assign fan-name-of assign-of))
+	       (and-filter (lambda (m)
+			     (every-pred p-filter s-filter t-filter c-filter a-filter)))
+	       (musumes (filter and-filter musumes))
+	       (musumes (if sort_state
+			    (sort musumes
+				  (lambda (x y)
+				    (string<? (compare-value x sort_state)
+					      (compare-value y sort_state))))
+			    musumes))
+	       (pos (or (find-index (cut eq? musume <>) musumes) 0))
+	       (musume (list-ref  musumes (+ pos dist) musume))
+	       (param (kahua-context-ref "search")))
+	  (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|"))))
 
     (permission-check-page
      (lambda (u)
@@ -596,7 +582,6 @@
 	    ))))))
 
 (define-entry (mypage type)
-
   (define (todo)
     (fieldset/
      (legend/ ($$ "TODO"))
@@ -639,10 +624,13 @@
                  (div/
                   (fieldset/
                    (legend/ (label-of m))
-                   (dt/ #`"#,(seq-no-of s). ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of s)))[,(fan-name-of (fan-of s)))]")
+                   (dt/
+		    (format "#~a. ~a[~a]"
+			    (seq-no-of s)
+			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
+			    (fan-name-of (fan-of s))))
                    (pre/ (melody-format (melody-of s)))))))
              songs))))
-
 
   (permission-check-page
    identity
@@ -652,12 +640,9 @@
                 (li/ (a/cont/ (@@/ (cont mypage 'todo)) ($$ "TODO")))
                 (li/ (a/cont/ (@@/ (cont mypage 'recent)) ($$ "最近の更新"))))
            (case type
-             ((todo)
-              (todo))
-             ((recent)
-              (recent))
-             (else
-              (todo)))))))
+             ((todo) (todo))
+             ((recent) (recent))
+             (else (todo)))))))
 
 
 (define (change-passwd . message)
@@ -669,15 +654,16 @@
      (h3/ (format ($$ "~a さんのパスワード変更") cuser-name))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
-		   (cond ((or (equal? "" new-pw)
-			      (equal? "" new-again-pw)
-			      (not (equal? new-pw new-again-pw)))
-			  (change-passwd ($$ "新パスワードが不正です")))
-			 ((not (kahua-check-user cuser-name old-pw))
-			  (change-passwd ($$ "旧パスワードが不正です")))
-			 (else
-			  (kahua-user-password-change-force cuser new-pw)
-			  (message-only-page (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
+		     (cond ((or (equal? "" new-pw)
+				(equal? "" new-again-pw)
+				(not (equal? new-pw new-again-pw)))
+			    (change-passwd ($$ "新パスワードが不正です")))
+			   ((not (kahua-check-user cuser-name old-pw))
+			    (change-passwd ($$ "旧パスワードが不正です")))
+			   (else
+			    (kahua-user-password-change-force cuser new-pw)
+			    (message-only-page
+			     (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
       (change-passwrod-table/ "old-pw" "new-pw" "new-again-pw")
       (input/ (@/ (type "submit") (name "submit") (value ($$ "変更"))))
       (p/ (@/ (class "warning")) (node-set message))
