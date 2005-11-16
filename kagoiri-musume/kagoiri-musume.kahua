@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.159 2005/11/14 15:29:53 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.160 2005/11/16 16:45:46 cut-sea Exp $
 
 ;;
 ;; include
@@ -186,23 +186,19 @@
 		(th/ ($$ "表示上限")))
 	   (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
 	     (define (prop-dropdown/ props-of prop propname row)
-	       (td/ (select/
-		     (@/ (onchange (filter-row row))
-			 (name propname))
-		     (node-set
-		      (cons (option/ (@/ (value "*all*")) ($$ "全て"))
-			    (options (props-of unit) prop))))))
+	       (has-item? unit props-of
+			  (td/ (select/
+				(@/ (onchange (filter-row row))
+				    (name propname))
+				(node-set
+				 (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+				       (options (props-of unit) prop)))))))
 	     (tr/ (@/ (valign "top"))
-		  (has-item? unit priorities-of
-			     (prop-dropdown/ priorities-of priority "priority" 3))
-		  (has-item? unit statuss-of
-			     (prop-dropdown/ statuss-of status "status" 4))
-		  (has-item? unit types-of
-			     (prop-dropdown/ types-of type "type" 5))
-		  (has-item? unit categories-of
-			     (prop-dropdown/ categories-of category "category" 6))
-		  (has-item? unit fans-of
-			     (prop-dropdown/ fans-of assign "assign" 7))
+		  (prop-dropdown/ priorities-of priority "priority" 3)
+		  (prop-dropdown/ statuss-of status "status" 4)
+		  (prop-dropdown/ types-of type "type" 5)
+		  (prop-dropdown/ categories-of category "category" 6)
+		  (prop-dropdown/ fans-of assign "assign" 7)
 		  (td/
 		   (select/
 		    (@/ (name "limit"))
@@ -256,6 +252,11 @@
 	      (map/ (lambda (m)
 		      (let ((status (status-of m))
 			    (songs (songs-of m)))
+			(define (prop-td/ prop-of props-of code disp)
+			  (let1 val (prop-of m)
+			    (has-item? unit prop-of
+				       (td/ (@/ (value (code val)))
+					    (disp val)))))
 			(tr/ (@/ (class #`"status-,(code-of status)"))
 			     (devel:td/ (a/cont/
 					 (@/ (onClick (format "return confirm('~a')?true:false"
@@ -266,7 +267,7 @@
 			       (td/ (@/ (value val))
 				    (a/cont/
 				     (@@/ (cont musume-edit (key-of m)))
-				     (x->string val))))
+				     val)))
 			     (let1 val (mname-of m)
 			       (td/ (@/ (value val))
 				    (a/cont/
@@ -274,31 +275,11 @@
 				     (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
 				     val)
 				    (format " (~a)" (length songs))))
-			     
-			     (let1 val (priority-of m)
-			       (has-item? unit priorities-of
-					  (td/ (@/ (value (level-of val)))
-					       (disp-name-of
-						val))))
-			     (let1 val (status-of m)
-			       (has-item? unit statuss-of
-					  (td/ (@/ (value (code-of val)))
-					       (disp-name-of
-						val))))
-			     (let1 val (type-of m)
-			       (has-item? unit types-of
-					  (td/ (@/ (value (code-of val)))
-					       (disp-name-of
-						val))))
-			     (let1 val (category-of m)
-			       (has-item? unit categories-of
-					  (td/ (@/ (value (code-of val)))
-					       (disp-name-of
-						val))))
-			     (let1 val (fan-name-of (assign-of m))
-			       (has-item? unit fans-of
-					  (td/ (@/ (value val))
-					       val)))
+			     (prop-td/ priority-of  priorities-of level-of disp-name-of)
+			     (prop-td/ status-of statuss-of code-of disp-name-of)
+			     (prop-td/ type-of types-of code-of disp-name-of)
+			     (prop-td/ category-of categories-of code-of disp-name-of)
+			     (prop-td/ assign-of fans-of fan-name-of fan-name-of)
 			     (let1 val (ctime-of m)
 			       (td/ (@/ (value val))
 				    (sys-strftime "%Y/%m/%d %H:%M"

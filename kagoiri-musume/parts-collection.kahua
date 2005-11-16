@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.21 2005/11/14 14:01:27 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.22 2005/11/16 16:45:46 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -121,6 +121,8 @@
   (ul/ (@/ (class "menu"))
        (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
        (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。")))))
+
+
 
 ;;-------------------------------------------------------------
 ;; high level  parts collection
