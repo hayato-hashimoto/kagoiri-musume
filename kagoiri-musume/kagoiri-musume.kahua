@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.163 2005/11/16 17:07:55 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.164 2005/11/16 17:23:35 cut-sea Exp $
 
 ;;
 ;; include
@@ -245,13 +245,13 @@
 		   (th/ (@/ (value "mtime")) ($$ "¹¹¿·Æü"))))
 	     (tbody/
 	      (map/ (lambda (m)
+		      (define (prop-td/ prop-of props-of code disp)
+			(let1 val (prop-of m)
+			  (has-item? unit props-of
+				     (td/ (@/ (value (code val)))
+					  (disp val)))))
 		      (let ((status (status-of m))
 			    (songs (songs-of m)))
-			(define (prop-td/ prop-of props-of code disp)
-			  (let1 val (prop-of m)
-			    (has-item? unit prop-of
-				       (td/ (@/ (value (code val)))
-					    (disp val)))))
 			(tr/ (@/ (class #`"status-,(code-of status)"))
 			     (devel:td/ (a/cont/
 					 (@/ (onClick (format "return confirm('~a')?true:false"
@@ -270,7 +270,7 @@
 				     (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
 				     val)
 				    (format " (~a)" (length songs))))
-			     (prop-td/ priority-of  priorities-of level-of disp-name-of)
+			     (prop-td/ priority-of priorities-of level-of disp-name-of)
 			     (prop-td/ status-of statuss-of code-of disp-name-of)
 			     (prop-td/ type-of types-of code-of disp-name-of)
 			     (prop-td/ category-of categories-of code-of disp-name-of)
