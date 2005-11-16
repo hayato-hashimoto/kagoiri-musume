@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.160 2005/11/16 16:45:46 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.161 2005/11/16 16:52:11 cut-sea Exp $
 
 ;;
 ;; include
@@ -106,7 +106,7 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+     (require-fan-message unit)
      (create-unit-form/ unit))))
 
 ; TODO: check account
@@ -121,10 +121,10 @@
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
 		   (login-pc-page #f checker
-				  (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+				  (require-fan-message unit)))
       (permission-check-logic
        checker
-       (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+       (require-fan-message unit)
        (begin
 	 (if (checker user)
 	     (set! (fallout-of unit) #t))
@@ -161,7 +161,7 @@
 	 (lambda (u)
 	   (if (viewable? unit u)
 	       u #f))
-	 (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+	 (require-fan-message unit)
 	 (musume-menu/ unit-id)
          (div/
           (@/ (id "search-box"))
@@ -296,7 +296,7 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+     (require-fan-message unit)
      (musume-menu/ unit-id)
      (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
@@ -364,10 +364,10 @@
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
 		   (login-pc-page #f checker
-				  (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+				  (require-fan-message unit)))
       (permission-check-logic
        checker
-       (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+       (require-fan-message unit)
        (begin
 	 (if (checker user)
 	     (set! (delete-of musume) #t))
@@ -379,7 +379,7 @@
 	 (unit (unit-of musume)))
     (permission-check-page
      identity
-     (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+     (require-fan-message unit)
      (h3/ (format ($$ "『~a』の『~a 』を編集する。") (unit-name-of unit) (mname-of musume)))
      ($$ "工事中"))))
 
@@ -394,10 +394,10 @@
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
 		   (login-pc-page #f checker
-				  (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))))
+				  (require-fan-message unit)))
       (permission-check-logic
        checker
-       (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+       (require-fan-message unit)
        (begin
 	 (if (checker user)
 	     (set! (delete-of song) (not (delete-of song))))
@@ -460,7 +460,7 @@
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
-     (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit))
+     (require-fan-message unit)
      (if (not musume-id)
          (move 0)
 	 (list/
