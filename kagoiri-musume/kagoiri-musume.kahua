@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.162 2005/11/16 16:57:39 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.163 2005/11/16 17:07:55 cut-sea Exp $
 
 ;;
 ;; include
@@ -235,16 +235,12 @@
 			($$ "No."))
 		   (th/ (@/ (value "title"))
 			($$ "タイトル"))
-		   (has-item? unit priorities-of
-			      (th/ (@/ (value "priority")) ($$ "優先度")))
-		   (has-item? unit statuss-of
-			      (th/ (@/ (value "status")) ($$ "ステータス")))
-		   (has-item? unit types-of
-			      (th/ (@/ (value "type")) ($$ "タイプ")))
-		   (has-item? unit categories-of
-			      (th/ (@/ (value "category")) ($$ "カテゴリ")))
-		   (has-item? unit fans-of
-			      (th/ (@/ (value "assign")) ($$ "アサイン")))
+		   (map/ (lambda (props-of prop msg)
+			   (has-item? unit props-of
+				      (th/ (@/ (value prop)) msg)))
+			 $properties-accessor-list$
+			 $property-list$
+			 (map $$ '("優先度" "ステータス" "タイプ" "カテゴリ" "アサイン")))
 		   (th/ (@/ (value "ctime")) ($$ "登録日"))
 		   (th/ (@/ (value "mtime")) ($$ "更新日"))))
 	     (tbody/
@@ -317,10 +313,10 @@
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (table/
        (tr/
-	(has-item? unit priorities-of (th/ ($$ "優先度")))
-	(has-item? unit statuss-of (th/ ($$ "ステータス")))
-	(has-item? unit types-of (th/ ($$ "タイプ")))
-	(has-item? unit categories-of (th/ ($$ "カテゴリ")))
+	(map/ (lambda (props-of msg)
+		(has-item? unit props-of (th/ msg)))
+	      (drop-right $properties-accessor-list$ 1)
+	      (map $$ '("優先度" "ステータス" "タイプ" "カテゴリ")))
 	(th/ ($$ "アサイン")))
        (tr/
 	(map/ (lambda (n refer)
