@@ -310,8 +310,8 @@ function search_musume(value)
 
      for (var i = 1; i < rows.length; i++) {
           row = rows.item(i);
-          cell0 = row.cells.item(0);
-          cell1 = row.cells.item(1);
+          cell0 = row.cells.item(1);
+          cell1 = row.cells.item(2);
           if (showall ||
               (cell0[textContent]+cell1[textContent]).match(matcher)) {
                row.style.display = '';
