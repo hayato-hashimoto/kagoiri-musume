@@ -1,4 +1,8 @@
-2005-11-13  cut-sea  <cut-sea@ipadev>
+2005-11-19  cut-sea  <cut-sea@kahua.org>
+
+	* modify search page which search within active songs.
+
+2005-11-13  cut-sea  <cut-sea@kahua.org>
 
 	* refactoring codes.
 
@@ -11,7 +15,7 @@
 
 	* gadget.kahua: changed to guess string encode.
 
-2005-11-12  cut-sea  <cut-sea@ipadev>
+2005-11-12  cut-sea  <cut-sea@kahua.org>
 
 	* add update directory into source tree.
 	  this directory includes version update class-redefine like script.
@@ -19,7 +23,7 @@
 	* add revival-delete-song function for song's owner.
 	* add function to regress removed musume into system-admin.
 
-2005-11-09  cut-sea  <cut-sea@ipadev>
+2005-11-09  cut-sea  <cut-sea@kahua.org>
 
         * initdb.scm: modify common? definition.
 
@@ -28,7 +32,7 @@
 
         * initdb.scm: change symbol-bound? to global-variable-bound?.
 
-2005-11-08  cut-sea  <cut-sea@ipadev>
+2005-11-08  cut-sea  <cut-sea@kahua.org>
 
         * initdb.scm: guest user add into initdb.scm.
         and hide change-password link for guest user.
@@ -64,7 +68,7 @@
 	added auto focusing javascript function.
 	auto focus on main input box.
 
-2005-11-03  cut-sea  <cut-sea@ipadev>
+2005-11-03  cut-sea  <cut-sea@kahua.org>
 
 	* ChangeLog: add check to select fan when create new unit.
 
@@ -78,7 +82,7 @@
 	* Makefile.in:
 	added '--no-overwrite' option to 'user-setting.kahua' rule.
 
-2005-11-03  cut-sea  <cut-sea@ipadev>
+2005-11-03  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in: use text.gettext.
 	and translate messages in order to prepare gettext.
@@ -86,12 +90,12 @@
 	* Makefile.in: add message.kahua,which message catalog for default.
 	and separete messages into this file.
 
-2005-10-31  cut-sea  <cut-sea@ipadev>
+2005-10-31  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in:
 	add test/test4.scm and construct test code for unit-list.
 
-2005-10-28  cut-sea  <cut-sea@ipadev>
+2005-10-28  cut-sea  <cut-sea@kahua.org>
 
 	* initdb.scm: test modify.
 
@@ -99,7 +103,7 @@
 
 	* Makefile.in: marged for 'for-mysql_marge-1'.
 
-2005-10-23  cut-sea  <cut-sea@ipadev>
+2005-10-23  cut-sea  <cut-sea@kahua.org>
 
 	* ChangeLog: write ChangeLog.
 
@@ -107,7 +111,7 @@
 
 	* initdb.scm: merged from "for-mysql".
 
-2005-10-22  cut-sea  <cut-sea@ipadev>
+2005-10-22  cut-sea  <cut-sea@kahua.org>
 
 	* initdb.scm: delete rm command from initdb.scm
 
@@ -118,11 +122,11 @@
 	* Makefile.in: add rule for test/common.scm.in.
 	remove rule for test/test*.scm.in.
 
-2005-10-20  cut-sea  <cut-sea@ipadev>
+2005-10-20  cut-sea  <cut-sea@kahua.org>
 
 	* VERSION, configure.ac: cvs tag 0.0.1.
 
-2005-10-19  cut-sea  <cut-sea@ipadev>
+2005-10-19  cut-sea  <cut-sea@kahua.org>
 
 	* INSTALL, Makefile.in, initdb.scm: remove 'make dbinit' step.
 	So,in initdb.scm,check find-kahua-instance instances.
@@ -135,16 +139,16 @@
 
 	* Makefile.in: add javascript file.
 
-2005-10-17  cut-sea  <cut-sea@ipadev>
+2005-10-17  cut-sea  <cut-sea@kahua.org>
 
 	* INSTALL, VERSION, configure.ac: change 0.0.1_pre1 tag.
 	and add comment for INSTALL.
 
-2005-10-16  cut-sea  <cut-sea@ipadev>
+2005-10-16  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in: construct test.
 
-2005-10-15  cut-sea  <cut-sea@ipadev>
+2005-10-15  cut-sea  <cut-sea@kahua.org>
 
 	* INSTALL, Makefile.in: Edit INSTALL.
 
@@ -166,30 +170,30 @@
 	* INSTALL, Makefile.in, initdb.scm: remove kagoiri-musume/local.kahua.
 	instead of it, i add kagoiri-musume/user-setting.kahua, kagoiri-musume/util.kahua.
 
-2005-10-13  cut-sea  <cut-sea@ipadev>
+2005-10-13  cut-sea  <cut-sea@kahua.org>
 
 	* initdb.scm: construct test code.
 	when lougout, then test redirect header "Moved 302".
 
-2005-10-10  cut-sea  <cut-sea@ipadev>
+2005-10-10  cut-sea  <cut-sea@kahua.org>
 
 	* initdb.scm: *** WARNING ***
 	change class music to song.
 	change fan class structure, which has slot of kahua-user.
 	most of changes are incompatible for before.
 
-2005-10-03  cut-sea  <cut-sea@ipadev>
+2005-10-03  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in: add plugin/upload.scm written by bizen.
 	and add only upload design into melody-list.
 
-2005-10-02  cut-sea  <cut-sea@ipadev>
+2005-10-02  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in: create new file kagoiri-musume/sys-admin.kahua.
 	this is a page of admin-system only.
 	the other pages are kept on kagoiri-musume/kagoiri-musume.kahua.
 
-2005-10-01  cut-sea  <cut-sea@ipadev>
+2005-10-01  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in:
 	sepalate kagoiri-musume.kahua into page.kahua, gadget.kahua,
@@ -203,7 +207,7 @@
 
 	* Makefile.in: add interp-css.
 
-2005-09-26  cut-sea  <cut-sea@ipadev>
+2005-09-26  cut-sea  <cut-sea@kahua.org>
 
 	* Makefile.in: add search.kahua into Makefile.in.
 
@@ -211,7 +215,7 @@
 
 	* ChangeLog: add search entry.
 
-2005-09-23  cut-sea  <cut-sea@ipadev>
+2005-09-23  cut-sea  <cut-sea@kahua.org>
 
 	* initdb.scm: mail address modify for shibata.
 
@@ -221,7 +225,7 @@
 
 	* initdb.scm: bug fix.
 
-2005-09-22  cut-sea  <cut-sea@ipadev>
+2005-09-22  cut-sea  <cut-sea@kahua.org>
 
 	* INSTALL: add sequence number slot into music class.
 	and display that # on melody-list.
@@ -236,7 +240,7 @@
 	And add permission checker for page template.
 	only admin role kahua-user can access system-admin page.
 
-2005-09-19  cut-sea  <cut-sea@ipadev>
+2005-09-19  cut-sea  <cut-sea@kahua.org>
 
 	* ChangeLog, DIST_EXCLUDE_X: construct pages.
 
