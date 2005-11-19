@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.10 2005/11/12 14:45:47 cut-sea Exp $
+;; $Id: search.kahua,v 1.11 2005/11/19 13:25:00 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -20,7 +20,7 @@
              "%Y/%m/%d %H:%M:%S"
              (sys-localtime (ref song 'ctime)))
             (melody-of song)))
-         (reverse (ref obj 'songs)))))
+         (reverse (filter active? (ref obj 'songs))))))
 
 (define-method label-of ((obj <unit>))
   (a/cont/ (@@/ (cont musume-list (key-of obj))) (ref obj 'unit-name)))
@@ -91,7 +91,7 @@
 			(fold
 			 (lambda (x y)
 			   (append (cons x
-					 (all-musumes x))
+					 (all-active-musumes x))
 				   y))
 			 '()
 			 units))))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.45 2005/11/12 14:56:19 shibata Exp $
+;; $Id: class.kahua,v 1.46 2005/11/19 13:25:00 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -162,6 +162,14 @@
 
 (define-method all-songs ((musume <musume>))
   (songs-of musume))
+
+(define-method active? ((song <song>))
+  (not (delete-of song)))
+
+(define-method all-active-songs ((musume <musume>))
+  (filter active? (songs-of musume)))
+
+
 
 ;; file
 ;;
