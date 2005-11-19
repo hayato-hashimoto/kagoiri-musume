@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.24 2005/11/14 14:01:27 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.25 2005/11/19 14:49:26 cut-sea Exp $
 ;;
 
 (define $property-list$
@@ -20,6 +20,9 @@
 
 (define $all-properties-list$
   (list all-priorities all-statuss all-types all-categories all-fans))
+
+(define $property-headers$
+  (map $$ '("優先度" "ステータス" "タイプ" "カテゴリ" "アサイン")))
 
 (define (encode-subject subject)
   (string-append
