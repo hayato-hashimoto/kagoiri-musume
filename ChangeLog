@@ -3,6 +3,9 @@
 	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
 	changed to use label text for filtering cells.
 
+	* kagoiri-musume/gadget.kahua:
+	changed to send email only fan has email address.
+
 2005-11-19  cut-sea  <cut-sea@kahua.org>
 
 	* modify search page which search within active songs.

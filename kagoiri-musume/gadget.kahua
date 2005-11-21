@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.25 2005/11/19 14:49:26 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.26 2005/11/21 16:50:39 shibata Exp $
 ;;
 
 (define $property-list$
@@ -35,7 +35,8 @@
 
 (define (sendmail-lite unit musume song)
   (and-let* ((fans (filter (lambda (fan)
-			     (not (equal? "   " (fan-name-of fan))))
+			     (not (or (equal? "   " (fan-name-of fan))
+                                      (string-null? (email-address-of fan)))))
 			   (fans-of unit))))
     (let* ((raw-subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
 	   (subject  (encode-subject raw-subject))
