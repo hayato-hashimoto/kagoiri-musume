@@ -89,7 +89,7 @@ function copy_search(a){
      }
 }
 
-function filter_table(select, id, all_text, pos){
+function filter_table(select, id, all_text){
 
      var table = document.getElementById(id);
      var options = select.options;
@@ -97,6 +97,17 @@ function filter_table(select, id, all_text, pos){
 
      var option_list = new Array;
      var select_text_list = new Array;
+
+     var label = find_parent(select, 'TABLE').rows.item(0).cells.item(select.parentNode.cellIndex);
+     var label_text = label[textContent]
+     var thead_cells = table.tHead.rows.item(0).cells;
+     var pos = 0;
+     for (var i = 0; i<thead_cells.length; i++) {
+          if (thead_cells.item(i)[textContent] == label_text) {
+               pos = i;
+               break;
+          }
+     }
 
      /* find selected text */
      for (var i=0; i<options.length; i++) {
@@ -161,7 +172,7 @@ function filter_table(select, id, all_text, pos){
      table.style.display=''
      /* save filterd_rows for next select */
      select.filterd_rows = filterd_rows;
-     find_parent(select, 'TABLE').rows.item(0).cells.item(select.parentNode.cellIndex).style.color = all?'':'red';
+     label.style.color = all?'':'red';
 
 
      return true;

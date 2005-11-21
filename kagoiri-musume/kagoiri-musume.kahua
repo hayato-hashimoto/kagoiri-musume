@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.165 2005/11/19 14:49:26 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.166 2005/11/21 16:31:32 shibata Exp $
 
 ;;
 ;; include
@@ -183,21 +183,21 @@
 		      $properties-accessor-list$
 		      $property-headers$)
 		(th/ ($$ "表示上限")))
-	   (let1 filter-row (cut format "filter_table(this, 'musume_list', '全て', ~a)" <>)
-	     (define (prop-dropdown/ props-of prop propname row)
+	   (let1 filter-row "filter_table(this, 'musume_list', '全て')"
+	     (define (prop-dropdown/ props-of prop propname)
 	       (has-item? unit props-of
 			  (td/ (select/
-				(@/ (onchange (filter-row row))
+				(@/ (onchange filter-row)
 				    (name propname))
 				(node-set
 				 (cons (option/ (@/ (value "*all*")) ($$ "全て"))
 				       (options (props-of unit) prop)))))))
 	     (tr/ (@/ (valign "top"))
-		  (prop-dropdown/ priorities-of priority "priority" 3)
-		  (prop-dropdown/ statuss-of status "status" 4)
-		  (prop-dropdown/ types-of type "type" 5)
-		  (prop-dropdown/ categories-of category "category" 6)
-		  (prop-dropdown/ fans-of assign "assign" 7)
+		  (prop-dropdown/ priorities-of priority "priority")
+		  (prop-dropdown/ statuss-of status "status")
+		  (prop-dropdown/ types-of type "type")
+		  (prop-dropdown/ categories-of category "category")
+		  (prop-dropdown/ fans-of assign "assign")
 		  (td/
 		   (select/
 		    (@/ (name "limit"))
