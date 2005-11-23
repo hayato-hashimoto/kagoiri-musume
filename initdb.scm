@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.17 2005/11/09 14:07:54 cut-sea Exp $
+;; $Id: initdb.scm,v 1.18 2005/11/23 14:46:47 shibata Exp $
 
 ;;
 ;; include
@@ -12,7 +12,7 @@
 (use kahua-server)
 
 (load "kagoiri-musume/version.kahua")
-(load "kagoiri-musume/user-setting.kahua")
+(load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/class.kahua")
 
 ;; for test
