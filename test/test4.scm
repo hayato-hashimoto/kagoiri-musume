@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.14 2005/11/13 18:47:43 cut-sea Exp $
+;; $Id: test4.scm,v 1.15 2005/11/23 06:28:58 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -464,6 +464,7 @@
 		(ul ?@
 		    (li (a ?@ "娘。一覧"))
 		    (li (a ?@ "新しい娘。")))
+                (a ?@ "ブックマークに追加")
 		(div (a ?@ "<<")
 		     (a ?@ ">>"))
 		(h3 "籠入娘。Test Project. - 1：テストな娘。 - OPEN")
@@ -546,6 +547,7 @@
 	       (ul ?@
 		   (li (a ?@ "娘。一覧"))
 		   (li (a ?@ "新しい娘。")))
+               (a ?@ "ブックマークに追加")
 	       (div
 		(a ?@ "<<")
 		(a ?@ ">>"))

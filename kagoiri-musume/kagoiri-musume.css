@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.7 2005/11/23 05:04:13 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.8 2005/11/23 06:28:58 shibata Exp $ */
 
 /*
  * Common stuff
@@ -327,4 +327,9 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 #musume_list thead {
     cursor: pointer;
+}
+
+#bookmark-button {
+    position:absolute;
+    right:10px;
 }

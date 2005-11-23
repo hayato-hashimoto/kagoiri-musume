@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.171 2005/11/23 06:25:40 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.172 2005/11/23 06:28:58 shibata Exp $
 
 ;;
 ;; include
@@ -365,6 +365,8 @@
          (move 0)
 	 (list/
 	  (musume-menu/ unit-id)
+          (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
+                   (@@/ (cont add-bookmark unit-id musume-id)) ($$ "ブックマークに追加"))
 	  (div/
 	   (a/cont/ (@/ (class "clickable")
 			(onclick "copy_search(this)"))
@@ -512,17 +514,52 @@
                    (pre/ (melody-format (melody-of s)))))))
              songs))))
 
+  (define (bookmark)
+    (fieldset/
+     (legend/ ($$ "ブックマーク"))
+     (let1 musumes (ref (current-fan) 'bookmark)
+       (format "~a item(s)" (length musumes))
+       (table/ (@/ (class "listing"))
+               (thead/ (tr/ (th/ ($$ "タイトル"))
+                            (th/ ($$ "優先度"))
+                            (th/ ($$ "ステータス"))
+                            (th/ ($$ "タイプ"))
+                            (th/ ($$ "登録日"))))
+               (tbody/
+                (map/ (lambda (m)
+                        (let1 status (status-of m)
+                          (tr/ (@/ (class #`"status-,(code-of status)"))
+                               (td/ (label-of m))
+                               (td/ (disp-name-of (priority-of m)))
+                               (td/ (disp-name-of status))
+                               (td/ (disp-name-of (type-of m)))
+                               (td/ (sys-strftime "%Y/%m/%d"
+                                                  (sys-localtime (ctime-of m)))))))
+                      musumes))))))
+
   (permission-check-page
    identity
    ($$ "マイページは一般ユーザアカウントが必要です")
    (let1 type (and type (string->symbol type))
      (div/ (ul/ (@/ (class "menu"))
                 (li/ (a/cont/ (@@/ (cont mypage 'todo)) ($$ "TODO")))
-                (li/ (a/cont/ (@@/ (cont mypage 'recent)) ($$ "最近の更新"))))
+                (li/ (a/cont/ (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
+                (li/ (a/cont/ (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク"))))
            (case type
              ((todo) (todo))
              ((recent) (recent))
+             ((bookmark) (bookmark))
              (else (todo)))))))
+
+(define-entry (add-bookmark unit-id musume-id)
+  (let1 musume (find-kahua-instance <musume> musume-id)
+    (update! (ref (current-fan) 'bookmark)
+             (lambda (bkmks)
+               (if (memq musume bkmks)
+                   bkmks
+                 (cons musume bkmks))))
+    (redirect-page #`"melody-list/,|unit-id|/,musume-id")))
+
 
 
 (define (change-passwd . message)
