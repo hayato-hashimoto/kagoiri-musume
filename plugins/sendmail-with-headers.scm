@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sendmail-with-headers.scm,v 1.1 2005/11/23 03:03:57 shibata Exp $
+;; $Id: sendmail-with-headers.scm,v 1.2 2005/11/23 04:39:44 shibata Exp $
 
 (use gauche.process)
 (use gauche.charconv)
@@ -36,7 +36,8 @@
    (lambda (p)
 
      (define (print-head field value)
-       (display (format "~a: ~a\n" field value) p))
+       (when value
+         (display (format "~a: ~a\n" field value) p)))
 
      (print-head "Subject"
                  (encode-subject (get-keyword :subject headers "no subject")))
