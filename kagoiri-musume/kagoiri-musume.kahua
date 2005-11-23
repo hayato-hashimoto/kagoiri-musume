@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.175 2005/11/23 06:46:47 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.176 2005/11/23 07:25:23 shibata Exp $
 
 ;;
 ;; include
@@ -510,7 +510,8 @@
      (let1 musumes (or (ref (current-fan) 'bookmark) '())
        (format "~a item(s)" (length musumes))
        (table/ (@/ (class "listing"))
-               (thead/ (tr/ (th/ ($$ "タイトル"))
+               (thead/ (tr/ (th/ ($$ "削除"))
+                            (th/ ($$ "タイトル"))
                             (th/ ($$ "優先度"))
                             (th/ ($$ "ステータス"))
                             (th/ ($$ "タイプ"))
@@ -519,6 +520,14 @@
                 (map/ (lambda (m)
                         (let1 status (status-of m)
                           (tr/ (@/ (class #`"status-,(code-of status)"))
+                               (td/ (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+                                                                  ($$ "本当に削除しますか？"))))
+                                             (@@/ (cont
+                                                   (lambda ()
+                                                     (update! (ref (current-fan) 'bookmark)
+                                                              (cut delete m  <>))
+                                                     (redirect-page "mypage/bookmark"))))
+                                             ($$ "削除")))
                                (td/ (label-of m))
                                (td/ (disp-name-of (priority-of m)))
                                (td/ (disp-name-of status))
@@ -539,7 +548,7 @@
              ((todo) (todo))
              ((recent) (recent))
              ((bookmark) (bookmark))
-             (else (todo)))))))
+             (else (bookmark)))))))
 
 (define-entry (add-bookmark unit-id musume-id)
   (let1 musume (find-kahua-instance <musume> musume-id)
