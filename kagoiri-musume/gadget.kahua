@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.26 2005/11/21 16:50:39 shibata Exp $
+;; $Id: gadget.kahua,v 1.27 2005/11/23 03:05:59 shibata Exp $
 ;;
 
 (define $property-list$
@@ -24,25 +24,15 @@
 (define $property-headers$
   (map $$ '("優先度" "ステータス" "タイプ" "カテゴリ" "アサイン")))
 
-(define (encode-subject subject)
-  (string-append
-   "=?ISO-2022-JP?B?"
-   (string-join
-    (string-split
-     (base64-encode-string
-      (ces-convert subject "*JP" "iso2022jp")) #\newline) "")
-   "?="))
-
 (define (sendmail-lite unit musume song)
   (and-let* ((fans (filter (lambda (fan)
 			     (not (or (equal? "   " (fan-name-of fan))
                                       (string-null? (email-address-of fan)))))
 			   (fans-of unit))))
-    (let* ((raw-subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
-	   (subject  (encode-subject raw-subject))
+    (let* ((subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
 	   (body  (string-join
 		   (list
-		    #`"【 タイトル 】,raw-subject"
+		    #`"【 タイトル 】 ,subject"
 		    #`"【  ポスト  】 ,(fan-name-of (fan-of song))"
 		    #`"【   日時   】 ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of song)))"
 		    #`"【ステータス】 ,(disp-name-of (status-of musume))"
@@ -55,10 +45,11 @@
 		    #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
 		   "\n")))
       (for-each (lambda (fan)
-		  (sendmail (email-address-of fan)
-			    *kagoiri-musume-email*
-			    subject
-			    body))
+		  (sendmail/headers body
+                                    :to (email-address-of fan)
+                                    :from *kagoiri-musume-email*
+                                    :subject subject
+                                    ))
 		fans))))
 
 (define (create-new-unit name desc)
