@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.23 2005/11/16 16:52:11 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.24 2005/11/23 06:12:08 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -122,10 +122,93 @@
        (li/ (a/cont/ (@@/ (cont musume-list unit-id)) ($$ "娘。一覧")))
        (common:li/ (a/cont/ (@@/ (cont musume-new unit-id)) ($$ "新しい娘。")))))
 
-
 (define (require-fan-message unit)
   (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit)))
 
+(define (inter-unit-search-box/ unit-id)
+  (div/
+   (@/ (id "search-box"))
+   (form/cont/
+    (@@/ (cont search `(unit-id ,unit-id)))
+    ($$ "ユニット内検索:")
+    (input/ (@/ (onKeyUp "delay_search(this.value)")
+		(onKeyDown "search_onKeyDown(event)")
+		(type "text") (name "word") (size 10)
+		(id "focus")))
+    (input/ (@/ (type "submit") (value ($$ "検索")))))))
+
+(define (musume-table/ unit musumes status-hash)
+  (table/
+   (@/ (class "listing") (id "musume_list"))
+   (thead/
+    (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
+	  ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
+	  ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))
+	  ((> 500 (length musumes)) (format ($$  "~a人もの娘。に萌えました(萌えすぎです)") (length musumes)))
+	  (else (format ($$  "なんと~a人もの娘。に萌えまつきました orz") (length musumes))))
+    (div/ (@/ (id "status-num"))
+	  (map/ (lambda (s)
+		  (let1 statusid (code-of s)
+		    (span/ (a/cont/ (@/ (onclick "return update_status(this)"))
+				    (@@/ (cont musume-list (key-of unit) `(status ,statusid)))
+				    (disp-name-of s))
+			   (format "(~a) " (hash-table-get status-hash statusid 0)))))
+		(statuss-of unit)))
+    (tr/ (@/ (onclick "sort_table(event);return false"))
+	 (devel:th/)
+	 (th/ (@/ (value "no"))
+	      ($$ "No."))
+	 (th/ (@/ (value "title"))
+	      ($$ "タイトル"))
+	 (map/ (lambda (props-of prop msg)
+		 (has-item? unit props-of
+			    (th/ (@/ (value prop)) msg)))
+	       $properties-accessor-list$
+	       $property-list$
+	       $property-headers$)
+	 (th/ (@/ (value "ctime")) ($$ "登録日"))
+	 (th/ (@/ (value "mtime")) ($$ "更新日"))))
+   (tbody/
+    (map/ (lambda (m)
+	    (define (prop-td/ prop-of props-of code disp)
+	      (let1 val (prop-of m)
+		(has-item? unit props-of
+			   (td/ (@/ (value (code val)))
+				(disp val)))))
+	    (let ((status (status-of m))
+		  (songs (songs-of m)))
+	      (tr/ (@/ (class #`"status-,(code-of status)"))
+		   (devel:td/ (a/cont/
+			       (@/ (onClick (format "return confirm('~a')?true:false"
+						    ($$ "本当に削除しますか？"))))
+			       (@@/ (cont remove-musume (key-of m)))
+			       ($$ "削除")))
+		   (let1 val (format "~3,'0d" (mno-of m))
+		     (td/ (@/ (value val))
+			  (a/cont/
+			   (@@/ (cont musume-edit (key-of m)))
+			   val)))
+		   (let1 val (mname-of m)
+		     (td/ (@/ (value val))
+			  (a/cont/
+			   (@/ (onClick "apply_flter_state(this)"))
+			   (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
+			   val)
+			  (format " (~a)" (length songs))))
+		   (prop-td/ priority-of priorities-of level-of disp-name-of)
+		   (prop-td/ status-of statuss-of code-of disp-name-of)
+		   (prop-td/ type-of types-of code-of disp-name-of)
+		   (prop-td/ category-of categories-of code-of disp-name-of)
+		   (prop-td/ assign-of fans-of fan-name-of fan-name-of)
+		   (let1 val (ctime-of m)
+		     (td/ (@/ (value val))
+			  (sys-strftime "%Y/%m/%d %H:%M"
+					(sys-localtime val))))
+		   (let1 val (ctime-of (car songs))
+		     (td/ (@/ (value val))
+			  (sys-strftime "%Y/%m/%d %H:%M"
+					(sys-localtime val)))))))
+	  musumes))))
 
 ;;-------------------------------------------------------------
 ;; high level  parts collection
