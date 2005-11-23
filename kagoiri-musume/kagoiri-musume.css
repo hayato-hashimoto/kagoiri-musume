@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.8 2005/11/23 06:28:58 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.9 2005/11/23 13:58:19 shibata Exp $ */
 
 /*
  * Common stuff
@@ -288,12 +288,16 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 .clickable
 {
-/*     background-color: #eef8ff; */
     color: inherit;
     border: 1px solid #e8e8e8;
     padding:2px 3px;
     margin:0px;
     cursor: pointer;
+    text-decoration:none;
+}
+
+a.clickable:hover {
+    border:1px solid black;
 }
 
 .menu {
