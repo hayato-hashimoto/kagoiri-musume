@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.32 2005/11/23 09:13:01 shibata Exp $
+;; $Id: gadget.kahua,v 1.33 2005/11/23 11:13:13 shibata Exp $
 ;;
 
 (define $property-list$
@@ -125,12 +125,10 @@
 (define (uploaded-file-name unit musume song)
   #`",(ref unit 'id)_,(ref musume 'id)_,(ref song 'id)")
 
-(define (attach-file song file original-name upload-name)
+(define (attach-file song file upload-name)
   (if file
       (let* ((tmp-path (car file))
-	     (file-name (sys-basename (if (not (string-null? original-name))
-					  original-name
-					  (cadr file))))
+	     (file-name (sys-basename (cadr file)))
 	     (file-xtnsn (let1 body+ext (string-split file-name ".")
 			   (if (= (length body+ext) 1)
 			       "" (last body+ext))))

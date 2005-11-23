@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.176 2005/11/23 07:25:23 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.177 2005/11/23 11:13:13 shibata Exp $
 
 ;;
 ;; include
@@ -219,9 +219,8 @@
      (musume-menu/ unit-id)
      (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
      (form/cont/
-      (@/ (enctype "multipart/form-data")
-          (onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
-      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file filename)
+      (@/ (enctype "multipart/form-data"))
+      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
 		     (if (string-null? name)
 			 (begin
 			   (set-error-message ($$ "タイトルを入力してください。"))
@@ -232,7 +231,7 @@
 			   (let1 musume (create-new-musume unit name priority status assign type category)
 			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
 			       ;; save file and make file object.
-			       (attach-file song file filename (uploaded-file-name unit musume song))
+			       (attach-file song file (uploaded-file-name unit musume song))
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (musume-new-table/ unit)
@@ -374,9 +373,8 @@
 		       (disp-name-of
 			(status-of musume))))
 	  (common:form/cont/
-	   (@/ (enctype "multipart/form-data")
-	       (onsubmit "this.filename.value = this.file.value;return submitForm(this)"))
-	   (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file filename)
+	   (@/ (enctype "multipart/form-data"))
+	   (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file)
 			  (if (and (string-null? melody)
 				   (not file))
 			      (musume-makeover! musume priority status type category assign)
@@ -385,7 +383,7 @@
 				(let1 song (create-new-song musume melody (current-fan))
 				  (musume-makeover! musume priority status type category assign)
 				  ;; save file and make file object.
-				  (attach-file song file filename (uploaded-file-name unit musume song))
+				  (attach-file song file (uploaded-file-name unit musume song))
 				  (if (not (string-null? melody))
 				      (sendmail-lite unit musume song)))))
 			(redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
@@ -417,7 +415,7 @@
 		    (tr/
 		     (td/ ($$ "ファイル"))
 		     (td/ (input/ (@/ (type "file") (name "file")))
-			  (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
+                          )))))
 	  (let1 songs (all-songs musume)
 	    (map/ (lambda (k n f t m u)
 		    (let1 song (id->obj <song> k)
