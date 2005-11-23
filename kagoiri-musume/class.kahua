@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.47 2005/11/23 06:28:05 shibata Exp $
+;; $Id: class.kahua,v 1.48 2005/11/23 09:12:05 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -37,6 +37,9 @@
    ;; delete flag
    (fallout         :allocation :persistent :init-keyword :fallout
 		    :init-value #f :accessor fallout-of)
+
+   (notify-addresses :allocation :persistent :init-keyword :notify-addresses
+                     :init-value '() :accessor notify-addresses-of)
    ))
 
 (define (active? unit)
@@ -45,6 +48,18 @@
 (define (all-units)
   (filter active?
 	  (make-kahua-collection <unit>)))
+
+
+(define-method normalize-addresses ((addresses <string>))
+  (normalize-addresses
+   (string-split addresses "\r\n")))
+
+(define-method normalize-addresses ((addresses <list>))
+  (filter (lambda (email) (not (string-null? email))) addresses))
+
+(define-method normalize-addresses ((addresses <boolean>))
+  '())
+
 
 ;; Musume means issue.
 ;;
