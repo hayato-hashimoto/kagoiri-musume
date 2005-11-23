@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.166 2005/11/21 16:31:32 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.167 2005/11/23 02:07:39 shibata Exp $
 
 ;;
 ;; include
@@ -169,11 +169,13 @@
            (@@/ (cont search `(unit-id ,unit-id)))
 	   ($$ "ユニット内検索:")
            (input/ (@/ (onKeyUp "delay_search(this.value)")
+                       (onKeyDown "search_onKeyDown(event)")
                        (type "text") (name "word") (size 10)
                        (id "focus")))
            (input/ (@/ (type "submit") (value ($$ "検索"))))))
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/
+          (@/ (id "filtering_form"))
 	  (@@/ (cont musume-list unit-id))
 	  (table/
 	   (@/ (class "table-filter"))
@@ -225,7 +227,8 @@
 	      (div/ (@/ (id "status-num"))
 		    (map/ (lambda (s)
 			    (let1 statusid (code-of s)
-			      (span/ (a/cont/ (@@/ (cont musume-list unit-id `(status ,statusid)))
+			      (span/ (a/cont/ (@/ (onclick "return update_status(this)"))
+                                              (@@/ (cont musume-list unit-id `(status ,statusid)))
 					      (disp-name-of s))
 				     (format "(~a) " (hash-table-get *status-dict* statusid 0)))))
 			  (statuss-of unit)))
@@ -438,7 +441,7 @@
 	       (c-filter (make-filter category code-of category-of))
 	       (a-filter (make-filter assign fan-name-of assign-of))
 	       (and-filter (lambda (m)
-			     (every-pred p-filter s-filter t-filter c-filter a-filter)))
+                             ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
 	       (musumes (filter and-filter musumes))
 	       (musumes (if sort_state
 			    (sort musumes

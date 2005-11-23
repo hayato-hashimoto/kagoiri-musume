@@ -1,3 +1,14 @@
+2005-11-23  SHIBATA Tomohisa  <shiata@kahua.org>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	* kagoiri-musume/kagoiri-musume.js:
+	Improved sort filter and search function code.
+	fixed song navigation bug.
+
+2005-11-22  cut-sea  <cut-sea@kahua.org>
+
+	* configure.ac: release 0.0.3
+
 2005-11-21  SHIBATA Tomohisa  <shiata@kahua.org>
 
 	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
