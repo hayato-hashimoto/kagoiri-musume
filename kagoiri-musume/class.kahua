@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.46 2005/11/19 13:25:00 cut-sea Exp $
+;; $Id: class.kahua,v 1.47 2005/11/23 06:28:05 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -205,7 +205,21 @@
    ;; delete flag
    (delete          :allocation :persistent :init-keyword :delete
 		    :init-value #f :accessor delete-of)
+   (%properties	    :allocation :persistent
+                    :init-value '())
    ))
+
+;; pseudo getter
+(define-method slot-missing ((class <class>) (obj <fan>) slot)
+  (assq-ref (ref obj '%properties) slot))
+
+;; pseudo setter
+(define-method slot-missing ((class <class>) (obj <fan>) slot val)
+  (unless (kahua-serializable-object? val)
+    (error "attempted to enter unserializable object to <fan>: ~s"
+           val))
+  (set! (ref obj '%properties)
+      (assq-set! (ref obj '%properties) slot val)))
 
 (define-method email-address-of ((self <fan>))
   (address-of (email-of self)))
