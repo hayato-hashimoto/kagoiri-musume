@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.174 2005/11/23 06:42:42 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.175 2005/11/23 06:46:47 cut-sea Exp $
 
 ;;
 ;; include
@@ -236,17 +236,7 @@
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
       (musume-new-table/ unit)
-      (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
-		   (td/ (input/ (@/ (type "text") (name "name")
-                                    (id "focus") (size 80)))
-			(error:span/ (@/ (class "warning")) (set-error-message #f))))
-	      (tr/ (td/ ($$ "内容"))
-		   (td/ (textarea/ (@/ (type "text") (name "melody")
-				       (rows 20) (cols 80)))))
-	      (tr/ (td/ ($$ "ファイル"))
-		   (td/ (input/ (@/ (type "file") (name "file")))
-                        (input/ (@/ (type "hidden") (name "filename") (value ""))))))
-      (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))
+      )
      )))
 
 (define-entry (musume-view)
