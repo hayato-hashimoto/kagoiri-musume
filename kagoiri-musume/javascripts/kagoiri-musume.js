@@ -59,7 +59,7 @@ function sort_table(e){
 
      var newbody = document.createElement('tbody');
 
-     var tbody = table.getElementsByTagName('TBODY').item(0);
+     var tbody = table.tBodies[0];
 
      for (i = 0; i<rows_.length; i++) {
           newbody.appendChild(rows_[i]);
@@ -99,7 +99,7 @@ function filter_table(select, id, all_text){
      var select_text_list = new Array;
 
      var label = find_parent(select, 'TABLE').rows.item(0).cells.item(select.parentNode.cellIndex);
-     var label_text = label[textContent]
+     var label_text = label[textContent];
      var thead_cells = table.tHead.rows.item(0).cells;
      var pos = 0;
      for (var i = 0; i<thead_cells.length; i++) {
@@ -110,7 +110,7 @@ function filter_table(select, id, all_text){
      }
 
      /* find selected text */
-     for (var i=0; i<options.length; i++) {
+     for (i=0; i<options.length; i++) {
           option = options.item(i)
           if (option.selected) {
                option_list.push(option);
@@ -145,8 +145,6 @@ function filter_table(select, id, all_text){
      var rows = table.rows;
      var filterd_rows = new Array;
 
-     var tbody = table.getElementsByTagName('TBODY').item(0);
-     var newbody = document.createElement('tbody');
      table.style.display='none';
      /* filter loop */
      for (i = 1; i < rows.length; i++) {
@@ -178,28 +176,6 @@ function filter_table(select, id, all_text){
      return true;
 }
 
-function filter_this(e){
-     e = win?window.event:e;
-     var target = win?e.srcElement:e.target;
-     var target_text = target[textContent];
-     var table = find_parent(target,'TABLE');
-     var head = table.tHead.rows.item(0).cells.item(target.cellIndex);
-     var pos = head.getAttribute('for');
-     var filter = document.getElementById('table_filter');
-     var select = filter.rows.item(1).cells.item(pos).getElementsByTagName('SELECT').item(0);
-     var opt;
-     for (var i=0; i<select.options.length; i++) {
-          opt = select.options[i];
-          if (opt[textContent] == target_text) {
-               opt.selected = true;
-          }
-     }
-     select.onchange()
-
-//      var rows = table.rows;
-//      var filterd_rows = new Array;
-}
-
 
 function find_parent(ele, tagname){
      while (ele.tagName != tagname) {
@@ -210,7 +186,6 @@ function find_parent(ele, tagname){
      }
      return ele;
 }
-
 
 function toggle_select_mode(e){
      e = win?window.event:e;
@@ -309,20 +284,33 @@ function search_musume(value)
      if (value == previous_search_key){
           return false;
      }
+
+     // save searching position to table attribute
+     if (table.search_pos == undefined) {
+          var thead_cells = table.tHead.rows.item(0).cells;
+          var pos = [];
+          var name;
+          for (var i = 0; i<thead_cells.length; i++) {
+               name = thead_cells.item(i).getAttribute('value');
+               if (name == 'no' || name == 'title') {
+                    pos.push(i);
+               }
+          }
+          table.search_pos = [1,2];
+     }
+
      previous_search_key = value;
      var showall=value==""?true:false
 
-     var tbody = table.getElementsByTagName('TBODY').item(0);
-     var newbody = document.createElement('tbody');
      table.style.display='none';
      var rows = table.rows;
      var matcher = new RegExp(value,'i');
      var row, cell0, cell1;
 
-     for (var i = 1; i < rows.length; i++) {
+     for (i = 1; i < rows.length; i++) {
           row = rows.item(i);
-          cell0 = row.cells.item(1);
-          cell1 = row.cells.item(2);
+          cell0 = row.cells.item(table.search_pos[0]);
+          cell1 = row.cells.item(table.search_pos[1]);
           if (showall ||
               (cell0[textContent]+cell1[textContent]).match(matcher)) {
                row.style.display = '';
@@ -335,6 +323,27 @@ function search_musume(value)
      current_search = null;
      return false;
 }
+
+function search_onKeyDown(e)
+{
+     if(true || e.ctrlKey){
+          switch (e.keyCode) {
+          case 32: /* SPACE */{
+                    var table = document.getElementById('musume_list');
+                    var rows = table.tBodies[0].rows;
+                    var pos = get_row_pos_by_value(table, 'title');
+                    for (var i=0; i < rows.length; i++) {
+                         if (rows[i].style.display != "none") {
+                              rows[i].cells[pos].firstChild.focus();
+                              return false;
+                         }
+                    }
+               }
+          }
+     }
+     return true;
+}
+
 
 function focus_focus(){
      var target = document.getElementById('focus');
@@ -353,3 +362,26 @@ function blockIt(){
   return false;
 }
 
+function update_status(elem){
+     var form = document.getElementById('filtering_form');
+     var target = elem[textContent];
+     var options = form.status.options;
+     for (var i=0; i < options.length; i++) {
+          if (options[i][textContent] == target) {
+               options[i].selected = true;
+               break;
+          }
+     }
+     form.status.onchange();
+     return false;
+}
+
+function get_row_pos_by_value(table, value) {
+     var thead_cells = table.tHead.rows.item(0).cells;
+     for (var i = 0; i<thead_cells.length; i++) {
+          if (thead_cells.item(i).getAttribute('value') == value) {
+               return i;
+          }
+     }
+     return -1;
+}
