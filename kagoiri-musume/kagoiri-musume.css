@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.6 2005/11/12 13:12:44 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.7 2005/11/23 05:04:13 shibata Exp $ */
 
 /*
  * Common stuff
@@ -36,6 +36,7 @@ pre {
   border-color: #bbccbb;
   border-width: 1px;
   border-style: solid;
+  overflow: auto;
   padding: 0.5em;
 }
 
