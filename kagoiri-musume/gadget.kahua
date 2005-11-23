@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.29 2005/11/23 04:35:53 shibata Exp $
+;; $Id: gadget.kahua,v 1.30 2005/11/23 04:54:26 shibata Exp $
 ;;
 
 (define $property-list$
@@ -58,7 +58,8 @@
                                     :reply-to *kagoiri-musume-email*
                                     :subject subject
                                     :message-id message-id
-                                    :in-reply-to reply-to))
+                                    :in-reply-to reply-to
+                                    :x-kagoiri-unit-id (key-of unit)))
 		fans))))
 
 (define (create-new-unit name desc)
