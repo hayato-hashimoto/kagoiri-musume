@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.24 2005/11/23 06:12:08 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.25 2005/11/23 06:25:40 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -209,6 +209,27 @@
 			  (sys-strftime "%Y/%m/%d %H:%M"
 					(sys-localtime val)))))))
 	  musumes))))
+
+(define (musume-new-table/ unit)
+  (define (make-col n refer)
+    (has-item? unit refer
+	       (td/
+		(select/
+		 (@/ (name n))
+		 (map/ (lambda (item)
+			 (option/ (@/ (value (code-of item)))
+				  (disp-name-of item)))
+		       (refer unit))))))
+  (table/
+   (tr/
+    (map/ (lambda (props-of msg)
+	    (has-item? unit props-of (th/ msg)))
+	  (drop-right $properties-accessor-list$ 1)
+	  (drop-right $property-headers$ 1))
+    (th/ ($$ "アサイン")))
+   (tr/
+    (map/ make-col $property-list$ $properties-accessor-list$)
+    (td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入"))))))))
 
 ;;-------------------------------------------------------------
 ;; high level  parts collection

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.170 2005/11/23 06:12:08 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.171 2005/11/23 06:25:40 cut-sea Exp $
 
 ;;
 ;; include
@@ -207,8 +207,7 @@
 				       (all-active-musumes unit))
 			       (lambda (m1 m2)
 				 (> (mno-of m1) (mno-of m2)))))
-	    (musume-table/ unit musumes *status-dict*)
-	    )))))))
+	    (musume-table/ unit musumes *status-dict*))))))))
 
 (define-entry (musume-new unit-id)
   (let1 unit (id->obj <unit> unit-id)
@@ -236,26 +235,7 @@
 			       (attach-file song file filename (uploaded-file-name unit musume song))
 			       (sendmail-lite unit musume song)
 			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
-      (table/
-       (tr/
-	(map/ (lambda (props-of msg)
-		(has-item? unit props-of (th/ msg)))
-	      (drop-right $properties-accessor-list$ 1)
-	      (drop-right $property-headers$ 1))
-	(th/ ($$ "アサイン")))
-       (tr/
-	(map/ (lambda (n refer)
-		(has-item? unit refer
-			   (td/
-			    (select/
-			     (@/ (name n))
-			     (map/ (lambda (item)
-				     (option/ (@/ (value (code-of item)))
-					      (disp-name-of item)))
-				   (refer unit))))))
-	      $property-list$
-	      (list priorities-of statuss-of types-of categories-of fans-of))
-	(td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))))
+      (musume-new-table/ unit)
       (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
 		   (td/ (input/ (@/ (type "text") (name "name")
                                     (id "focus") (size 80)))
