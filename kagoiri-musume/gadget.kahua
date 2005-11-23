@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.27 2005/11/23 03:05:59 shibata Exp $
+;; $Id: gadget.kahua,v 1.28 2005/11/23 03:15:00 shibata Exp $
 ;;
 
 (define $property-list$
@@ -29,7 +29,9 @@
 			     (not (or (equal? "   " (fan-name-of fan))
                                       (string-null? (email-address-of fan)))))
 			   (fans-of unit))))
-    (let* ((subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
+    (let* ((from-name (kahua-current-user-name))
+           (from-address (email-address-of (current-fan)))
+           (subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
 	   (body  (string-join
 		   (list
 		    #`"¡Ú ¥¿¥¤¥È¥ë ¡Û ,subject"
@@ -47,7 +49,8 @@
       (for-each (lambda (fan)
 		  (sendmail/headers body
                                     :to (email-address-of fan)
-                                    :from *kagoiri-musume-email*
+                                    :from #`",|from-name| <,|from-address|>"
+                                    :reply-to *kagoiri-musume-email*
                                     :subject subject
                                     ))
 		fans))))
