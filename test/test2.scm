@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.11 2005/11/08 13:27:30 cut-sea Exp $
+;; $Id: test2.scm,v 1.12 2005/11/23 09:13:01 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -141,7 +141,8 @@
                                              (option (@ (value "cut-sea")) "cut-sea")
 					     (option (@ (value "guest")) "guest")
                                              (option (@ (value "kago")) "kago")))
-                                    (td ?*))))))
+                                    (td ?*)))))
+                    (tr (td "通知アドレス") (td (textarea ?@) ?*)))
                    (input (@ (!permute
                               (value "新ユニット結成")
                               (type "submit"))))))

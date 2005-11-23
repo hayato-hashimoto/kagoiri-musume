@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.26 2005/11/23 06:46:47 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.27 2005/11/23 09:13:01 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -291,7 +291,7 @@
 	      ($$ "新ユニット結成")))
      (form/cont/
       (@/ (onsubmit "return submitForm(this)"))
-      (@@/ (cont (entry-lambda (:keyword name desc)
+      (@@/ (cont (entry-lambda (:keyword name desc notify-addresses)
 		     (if (or (string-null? name)
 			     (null? (kahua-context-ref* "fans")))
 			 (begin
@@ -301,7 +301,7 @@
 			       (redirect-page "unit-list")))
 			 (set-error-message #f))
 		   (if unit
-		       (apply unit-makeover! unit name desc
+		       (apply unit-makeover! unit name desc notify-addresses
 			      (map kahua-context-ref* (drop-right $full-property-list$ 1)))
 		       (create-new-unit name desc))
 		   (redirect-page "unit-list"))))
@@ -365,7 +365,14 @@
 					   (lset-difference eq? (all-fans)
 							    (fans-of unit)))
 				   (all-fans)))))
-	       (td/ (updown/ "fans")))))))
+	       (td/ (updown/ "fans"))))))
+       (tr/ (td/ ($$ "通知アドレス"))
+            (td/
+             (textarea/ (@/ (type "text") (name "notify-addresses")
+                            (rows 2) (cols 20))
+                        (if unit (string-join
+                                  (notify-addresses-of unit) "\n")
+                          "")))))
       (if unit
 	  (input/ (@/ (type "submit") (value ($$ "確定"))))
 	  (input/ (@/ (type "submit") (value ($$ "新ユニット結成")))))))))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.31 2005/11/23 08:03:43 shibata Exp $
+;; $Id: gadget.kahua,v 1.32 2005/11/23 09:13:01 shibata Exp $
 ;;
 
 (define $property-list$
@@ -29,7 +29,8 @@
 			     (not (or (equal? "   " (fan-name-of fan))
                                       (string-null? (email-address-of fan)))))
 			   (fans-of unit))))
-    (let* ((from-name (kahua-current-user-name))
+    (let* ((addresses (append (map email-address-of fans) (notify-addresses-of unit)))
+           (from-name (kahua-current-user-name))
            (from-address (email-address-of (current-fan)))
            (domain (values-ref (uri-parse (kahua-server-uri)) 2))
            (subject #`"[,(unit-name-of unit)] ,(mno-of musume):,(mname-of musume)")
@@ -55,16 +56,16 @@
                         #`"FILE: ,(name-of (car files)) -> ,(kahua-server-uri),(uri-of (car files))"))
                     #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
                    "\n")))
-      (for-each (lambda (fan)
+      (for-each (lambda (address)
 		  (sendmail/headers body
-                                    :to (email-address-of fan)
+                                    :to address
                                     :from #`",|from-name| <,|from-address|>"
                                     :reply-to *kagoiri-musume-email*
                                     :subject subject
                                     :message-id message-id
                                     :in-reply-to reply-to
                                     :x-kagoiri-unit-id (key-of unit)))
-		fans))))
+		addresses))))
 
 (define (create-new-unit name desc)
   (and (not (string-null? name))
@@ -78,6 +79,7 @@
 	     :statuss (id-list->obj-list <status> (kahua-context-ref* "status"))
 	     :types (id-list->obj-list <type> (kahua-context-ref* "type"))
 	     :categories (id-list->obj-list <category> (kahua-context-ref* "category"))
+             :notify-addresses (normalize-addresses (kahua-context-ref "notify-addresses"))
 	     ))))
 
 (define (create-new-musume unit name priority status assign type category)
@@ -108,7 +110,7 @@
   (set! (assign-of musume) (id->obj <fan> a))
   musume)
 
-(define (unit-makeover! unit n d fs ps ss ts cs)
+(define (unit-makeover! unit n d notify fs ps ss ts cs)
   (if (not (string-null? n))
       (set! (unit-name-of unit) n))
   (set! (description-of unit) d)
@@ -117,6 +119,7 @@
   (set! (statuss-of unit) (id-list->obj-list <status> ss))
   (set! (types-of unit) (id-list->obj-list <type> ts))
   (set! (categories-of unit) (id-list->obj-list <category> cs))
+  (set! (notify-addresses-of unit) (normalize-addresses (kahua-context-ref "notify-addresses")))
   unit)
 
 (define (uploaded-file-name unit musume song)

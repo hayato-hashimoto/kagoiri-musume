@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.15 2005/11/23 06:28:58 shibata Exp $
+;; $Id: test4.scm,v 1.16 2005/11/23 09:13:01 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -135,7 +135,8 @@
 					       (option (@ (value "guest")) "guest")
 					       (option (@ (value "kago")) "kago")))
 				   (td (div ?@ "↑")
-				       (div ?@ "↓")))))))
+				       (div ?@ "↓"))))))
+                            (tr (td "通知アドレス") (td (textarea ?@) ?*)))
 			   (input (@ (value "新ユニット結成") (type "submit")))))
 		,*footer*))
 	(call-worker/gsid w
@@ -239,7 +240,8 @@
 					     (option (@ (value "guest")) "guest")
 					     (option (@ (value "kago")) "kago")))
 				 (td (div ?@ "↑")
-				     (div ?@ "↓")))))))
+				     (div ?@ "↓"))))))
+                       (tr (td "通知アドレス") (td (textarea ?@) ?*)))
 		      (input ?@)))
 	   ,*footer*))
         (call-worker/gsid
