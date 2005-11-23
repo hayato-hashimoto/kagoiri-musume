@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.168 2005/11/23 03:05:59 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.169 2005/11/23 04:37:32 shibata Exp $
 
 ;;
 ;; include
@@ -11,7 +11,6 @@
 (use gauche.charconv)
 (use gauche.logger)
 (use file.util)
-(use rfc.base64)
 (use srfi-10)
 (use srfi-13)
 (use srfi-19)
@@ -21,6 +20,7 @@
 (use gauche.sequence)
 (use gauche.parameter)
 (use text.gettext)
+(use rfc.uri)
 
 (use sendmail/headers)
 
