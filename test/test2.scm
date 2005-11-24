@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.12 2005/11/23 09:13:01 shibata Exp $
+;; $Id: test2.scm,v 1.13 2005/11/24 16:42:59 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -82,7 +82,7 @@
              (h2 "ユニット一覧")
              (table
               ?@
-              (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン")))
+              (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
               (tbody))
              (hr)
              (h2 "新ユニット結成")

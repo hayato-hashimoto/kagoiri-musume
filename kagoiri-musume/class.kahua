@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.48 2005/11/23 09:12:05 shibata Exp $
+;; $Id: class.kahua,v 1.49 2005/11/24 16:43:00 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -235,6 +235,10 @@
            val))
   (set! (ref obj '%properties)
       (assq-set! (ref obj '%properties) slot val)))
+
+(define-method unsubscriptions-of ((self <fan>))
+  (or (ref self 'unsubscriptions)
+      '()))
 
 (define-method email-address-of ((self <fan>))
   (address-of (email-of self)))

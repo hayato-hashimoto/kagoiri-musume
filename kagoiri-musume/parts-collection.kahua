@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.27 2005/11/23 09:13:01 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.28 2005/11/24 16:42:59 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -247,41 +247,59 @@
 ;; high level  parts collection
 ;;-------------------------------------------------------------
 (define (unit-list-table/)
-  (table/ (@/ (class "listing"))
-	  (thead/
-	   (tr/ (devel:th/) (devel:th/)
-		(th/ ($$ "ユニット名"))
-		(th/ ($$  "概要"))
-		(th/ ($$ "ファン"))))
-	  (tbody/
-	   (node-set
-	    (map-with-index
-	     (lambda (idx u)
-	       (developer-or-fan?
-		u
-		(tr/ (@/ (class (if (odd? idx) "odd" "even")))
-		     (devel:td/
-		      (a/cont/
-		       (@@/ (cont unit-edit (key-of u)))
-		       ($$ "編集")))
-		     (devel:td/
-		      (a/cont/
-		       (@/ (onClick (format "return confirm('~a')?true:false"
-					    ($$ "本当に削除しますか？"))))
-		       (@@/ (cont unit-fallout (key-of u)))
-		       ($$ "削除")))
-		     (td/ (a/cont/
-			   (@@/ (cont musume-list (key-of u)))
-			   (unit-name-of u))
-			  (format " (~a)"
-				  (length (all-active-musumes u))))
-		     (td/ (description-of u))
-		     (td/ (string-join
-			   (filter-map (lambda (f)
-					 (and (not (equal? "   " (code-of f)))
-					      (fan-name-of f)))
-				       (fans-of u)) " , ")))))
-	     (all-units))))))
+  (let1 unsubscriptions (unsubscriptions-of (current-fan))
+    (table/ (@/ (class "listing"))
+            (thead/
+             (tr/ (devel:th/) (devel:th/)
+                  (th/ ($$ "ユニット名"))
+                  (th/ ($$  "概要"))
+                  (th/ ($$ "ファン"))
+                  (th/ ($$ "購読"))))
+            (tbody/
+             (node-set
+              (map-with-index
+               (lambda (idx u)
+                 (developer-or-fan?
+                  u
+                  (tr/ (@/ (class (if (odd? idx) "odd" "even")))
+                       (devel:td/
+                        (a/cont/
+                         (@@/ (cont unit-edit (key-of u)))
+                         ($$ "編集")))
+                       (devel:td/
+                        (a/cont/
+                         (@/ (onClick (format "return confirm('~a')?true:false"
+                                              ($$ "本当に削除しますか？"))))
+                         (@@/ (cont unit-fallout (key-of u)))
+                         ($$ "削除")))
+                       (td/ (a/cont/
+                             (@@/ (cont musume-list (key-of u)))
+                             (unit-name-of u))
+                            (format " (~a)"
+                                    (length (all-active-musumes u))))
+                       (td/ (description-of u))
+                       (td/ (string-join
+                             (filter-map (lambda (f)
+                                           (and (not (equal? "   " (code-of f)))
+                                                (fan-name-of f)))
+                                         (fans-of u)) " , "))
+                       (td/
+                        (let1 subscription? (not (memq u unsubscriptions))
+                          (a/cont/ (@/ (class "clickable"))
+                                   (@@/ (cont (cut (lambda ()
+                                                     (update! (ref (current-fan) 'unsubscriptions)
+                                                              (lambda (ls)
+                                                                (let1 ls (or ls '())
+                                                                  (if subscription?
+                                                                      (if (memq u ls)
+                                                                          bkmks
+                                                                        (cons u ls))
+                                                                    (delete u ls)))))
+                                                     (redirect-page "unit-list")))))
+                                   (if subscription?
+                                       ($$ "購読をやめる")
+                                     ($$ "購読する"))))))))
+               (all-units)))))))
 
 (define (create-unit-form/ . unit)
   (let1 unit (get-optional unit #f)
