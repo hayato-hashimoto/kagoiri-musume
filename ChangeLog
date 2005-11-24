@@ -1,3 +1,58 @@
+2005-11-24  SHIBATA Tomohisa <shibata@kahua.org>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua:
+	* kagoiri-musume/parts-collection.kahua, test/test2.scm, test/test4.scm:
+	added subscription and unsubscriptions button to unit-list.
+
+2005-11-23  SHIBATA Tomohisa <shibata@kahua.org>
+
+	* Makefile.in, initdb.scm, kagoiri-musume/user-setting.kahua, test/common.scm.in:
+	improved initdb logic.
+
+	* kagoiri-musume/kagoiri-musume.css:
+	added a.clickable:hover style.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	removed filename hidden input.
+	gauche-0.8.6 can get uploaded filename from request.
+
+	* kagoiri-musume/class.kahua:
+	added notify-addresses to <unit> class.
+	added normalize-addresses generic function.
+
+	* kagoiri-musume/gadget.kahua:
+	added attachment file url to submit mail.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	added bookmark deleting button.
+	chnaged mypage to bookmark view.
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, test/test4.scm:
+	added song bookmark page to mypage.
+
+	* kagoiri-musume/class.kahua:
+	added %properties slot to <fan> class.
+
+	* kagoiri-musume/kagoiri-musume.css:
+	added "overflow: auto" to pre tag.
+
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	added rfc.uri to allow-module
+	removed rfc.base64 from allow-module
+
+	* kagoiri-musume/gadget.kahua:
+	changed "From:" address to current user.
+	added "Reply-to:" address.
+	added X-Kagoiri-Unit-Id to submit mail header.
+
+	* plugins/sendmail.scm, Makefile.in, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, test/common.scm.in:
+	changed to use new sendmail plugin.
+
+	* plugins/sendmail-with-headers.scm:
+	added new sendmail plugin.
+	new plugin can handle mail header.
+
 2005-11-23  SHIBATA Tomohisa  <shiata@kahua.org>
 
 	* kagoiri-musume/kagoiri-musume.kahua:
