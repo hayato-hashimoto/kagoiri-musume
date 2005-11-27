@@ -3,8 +3,14 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.scm,v 1.15 2005/11/23 04:37:32 shibata Exp $
+;; $Id: kagoiri-musume.scm,v 1.16 2005/11/27 07:28:01 cut-sea Exp $
 
+;; for debug
+(allow-module gauche.interactive)
+(allow-module gauche.vm.debugger)
+(allow-module slib)
+
+;; for kagoiri
 (allow-module gauche.charconv)
 (allow-module gauche.logger)
 (allow-module file.util)
@@ -19,3 +25,5 @@
 (allow-module gauche.parameter)
 (allow-module gauche.vm.debugger)
 (allow-module text.gettext)
+
+

@@ -1,0 +1,27 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: debug-support.kahua,v 1.1 2005/11/27 07:28:00 cut-sea Exp $
+;;
+
+(use text.tree)
+(use sxml.ssax)
+(use sxml.sxpath)
+(use sxml.tools)
+(use gauche.interactive)
+(use gauche.vm.debugger)
+(use slib)
+(require 'pretty-print)
+
+(define pp pretty-print)
+
+(define (node->sxml node)
+  (pp (rev-nodes (exec () node))))
+
+(define (node->html node)
+  (write-tree
+   (sxml:sxml->xml
+    (car (rev-nodes (exec () node))))))
+
