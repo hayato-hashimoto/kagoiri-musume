@@ -3,12 +3,12 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.scm,v 1.16 2005/11/27 07:28:01 cut-sea Exp $
+;; $Id: kagoiri-musume.scm,v 1.17 2005/11/30 13:11:12 cut-sea Exp $
 
 ;; for debug
-(allow-module gauche.interactive)
-(allow-module gauche.vm.debugger)
-(allow-module slib)
+;(allow-module gauche.interactive)
+;(allow-module gauche.vm.debugger)
+;(allow-module slib)
 
 ;; for kagoiri
 (allow-module gauche.charconv)
