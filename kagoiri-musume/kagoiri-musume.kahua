@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.177 2005/11/23 11:13:13 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.178 2005/12/09 15:09:46 cut-sea Exp $
 
 ;;
 ;; include
@@ -270,7 +270,17 @@
      identity
      (require-fan-message unit)
      (h3/ (format ($$ "『~a』の『~a 』を編集する。") (unit-name-of unit) (mname-of musume)))
-     ($$ "工事中"))))
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword name)
+		    (if (not (string-null? name))
+			(set! (mname-of musume) name))
+		  (redirect-page #`"musume-edit/,musume-id"))))
+      (table/ (tr/ (td/ ($$ "タイトル"))
+		   (td/ (input/ (@/ (type "text") (name "name")
+				    (id "focus") (size 80)
+				    (value (mname-of musume)))))))
+      (input/ (@/ (type "submit") (value ($$ "改名")))))
+     )))
 
 (define-entry (delete-revival-song song-id)
   (let* ((song (id->obj <song> song-id))
