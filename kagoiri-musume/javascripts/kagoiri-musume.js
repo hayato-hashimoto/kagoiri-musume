@@ -296,7 +296,7 @@ function search_musume(value)
                     pos.push(i);
                }
           }
-          table.search_pos = [1,2];
+          table.search_pos = pos;
      }
 
      previous_search_key = value;
