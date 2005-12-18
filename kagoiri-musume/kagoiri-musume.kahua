@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.178 2005/12/09 15:09:46 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.179 2005/12/18 13:39:30 cut-sea Exp $
 
 ;;
 ;; include
@@ -320,17 +320,13 @@
 	    (else (node-set (append result (list mel)))))))
   (parse melody))
 
-(define-entry (melody-list unit-id musume-id)
+(define-entry (melody-list unit-id musume-id
+			   :keyword sort_state search
+			   :mvkeyword priority status type category assign)
   (let ((unit (id->obj <unit> unit-id))
         (musume (id->obj <musume> musume-id)))
     (define (move dist)
-      (let* ((musumes (sort (all-active-musumes unit)))
-             (sort_state (kahua-context-ref "sort_state"))
-             (priority (kahua-context-ref* "priority"))
-             (status (kahua-context-ref* "status"))
-             (type (kahua-context-ref* "type"))
-             (category (kahua-context-ref* "category"))
-             (assign (kahua-context-ref* "assign")))
+      (let ((musumes (sort (all-active-musumes unit))))
 	(define (make-filter prop code prop-of)
 	  (if (or (null? prop)
 		  (equal? "*all*" prop))
@@ -351,9 +347,8 @@
 					      (compare-value y sort_state))))
 			    musumes))
 	       (pos (or (find-index (cut eq? musume <>) musumes) 0))
-	       (musume (list-ref  musumes (+ pos dist) musume))
-	       (param (kahua-context-ref "search")))
-	  (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|param|"))))
+	       (musume (list-ref  musumes (+ pos dist) musume)))
+	  (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|search|"))))
 
     (permission-check-page
      (lambda (u)

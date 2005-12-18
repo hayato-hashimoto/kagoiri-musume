@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.34 2005/11/24 16:43:00 shibata Exp $
+;; $Id: gadget.kahua,v 1.35 2005/12/18 13:39:30 cut-sea Exp $
 ;;
 
 (define $property-list$
@@ -68,20 +68,19 @@
                                     :x-kagoiri-unit-id (key-of unit)))
 		addresses))))
 
-(define (create-new-unit name desc)
+(define (create-new-unit name desc fans priority status type category notify-addresses)
   (and (not (string-null? name))
-       (not (null? (kahua-context-ref* "fans")))
+       (not (null? fans))
        (or (id->obj <unit> name)
 	   (make <unit>
 	     :unit-name name
 	     :description desc
-	     :fans (id-list->obj-list <fan> (kahua-context-ref* "fans"))
-	     :priorities (id-list->obj-list <priority> (kahua-context-ref* "priority"))
-	     :statuss (id-list->obj-list <status> (kahua-context-ref* "status"))
-	     :types (id-list->obj-list <type> (kahua-context-ref* "type"))
-	     :categories (id-list->obj-list <category> (kahua-context-ref* "category"))
-             :notify-addresses (normalize-addresses (kahua-context-ref "notify-addresses"))
-	     ))))
+	     :fans (id-list->obj-list <fan> fans)
+	     :priorities (id-list->obj-list <priority> priority)
+	     :statuss (id-list->obj-list <status> status)
+	     :types (id-list->obj-list <type> type)
+	     :categories (id-list->obj-list <category> category)
+	     :notify-addresses (normalize-addresses notify-addresses)))))
 
 (define (create-new-musume unit name priority status assign type category)
   (make <musume> :unit unit
