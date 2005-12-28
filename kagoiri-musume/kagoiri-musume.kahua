@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.179 2005/12/18 13:39:30 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.180 2005/12/28 17:57:05 cut-sea Exp $
 
 ;;
 ;; include
@@ -227,6 +227,7 @@
 			   (redirect-page #`"musume-new/,unit-id"))
 			 (begin
 			   (if (string-null? melody) (set! melody name))
+			   (set! name (kana-trans:half->full name))
 			   (set! melody (string-join (string-split melody "\r\n") "\n"))
 			   (let1 musume (create-new-musume unit name priority status assign type category)
 			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
