@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.180 2005/12/28 17:57:05 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.181 2006/01/07 05:52:27 cut-sea Exp $
 
 ;;
 ;; include
@@ -87,8 +87,10 @@
   (kagoiri-page
    (h2/ ($$ "籠入娘。へようこそ！"))
    (ul/ (@/ (class "menu"))
-        (li/ (a/cont/ (@@/ (cont admin-system)) ($$ "システム設定管理画面")))
-	(li/ (a/cont/ (@@/ (cont unit-list)) ($$ "ユニット一覧"))))
+        (li/ (a/cont/ (@/ (class "clickable"))
+		      (@@/ (cont admin-system)) ($$ "システム設定管理画面")))
+	(li/ (a/cont/ (@/ (class "clickable"))
+		      (@@/ (cont unit-list)) ($$ "ユニット一覧"))))
    ))
 
 (define-entry (unit-list)

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.19 2006/01/07 05:06:21 cut-sea Exp $
+;; $Id: test4.scm,v 1.20 2006/01/07 05:52:27 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -43,7 +43,7 @@
 		   (h2 ?_)
 		   (ul ?@
 		       (li (a ?@ "システム設定管理画面"))
-		       (li (a (@ (href ?&)) "ユニット一覧"))))
+		       (li (a (@ (href ?&) ?*) "ユニット一覧"))))
 		 ,*footer*))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
