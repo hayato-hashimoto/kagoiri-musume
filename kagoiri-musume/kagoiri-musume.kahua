@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.182 2006/01/07 08:05:14 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.183 2006/01/07 08:46:01 cut-sea Exp $
 
 ;;
 ;; include
@@ -549,9 +549,12 @@
    ($$ "マイページは一般ユーザアカウントが必要です")
    (let1 type (and type (string->symbol type))
      (div/ (ul/ (@/ (class "menu"))
-                (li/ (a/cont/ (@@/ (cont mypage 'todo)) ($$ "TODO")))
-                (li/ (a/cont/ (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
-                (li/ (a/cont/ (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク"))))
+                (li/ (a/cont/ (@/ (class "clickable"))
+			      (@@/ (cont mypage 'todo)) ($$ "TODO")))
+                (li/ (a/cont/ (@/ (class "clickable"))
+			      (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
+                (li/ (a/cont/ (@/ (class "clickable"))
+			      (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク"))))
            (case type
              ((todo) (todo))
              ((recent) (recent))
