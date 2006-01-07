@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.13 2005/11/24 16:42:59 shibata Exp $
+;; $Id: test2.scm,v 1.14 2006/01/07 05:06:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -37,7 +37,7 @@
                      (h1 ?@ ?_)
 		     (a ?@ "トップ")
 		     (a ?@ "システム管理")
-		     (a (@ (href ?&)) "ユニット一覧")
+		     (a (@ (href ?&) ?*) "ユニット一覧")
 		     (a ?@ "Login"))
                 ,(*make-body*
                   (h2 ?_)
@@ -74,7 +74,7 @@
 		(a ?@ "トップ")
 		(a ?@ "システム管理")
                 (a ?@ "ユニット一覧")
-		(a (@ (href ?&)) "パスワード変更")
+		(a (@ (href ?&) ?*) "パスワード変更")
                 (span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
                 (form ?@ "検索:" (input ?@)))
@@ -82,7 +82,7 @@
              (h2 "ユニット一覧")
              (table
               ?@
-              (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
+              (thead (tr (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
               (tbody))
              (hr)
              (h2 "新ユニット結成")
@@ -228,7 +228,7 @@
            (a ?@ "トップ")
            (a ?@ "システム管理")
            (a ?@ "ユニット一覧")
-           (a (@ (href ?&)) "パスワード変更")
+           (a (@ (href ?&) ?*) "パスワード変更")
            (span " Now login:" (a ?@ "cut-sea"))
            (a ?@ "Logout")
            (form ?@ "検索:" (input ?@)))

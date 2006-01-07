@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.18 2005/11/24 16:42:59 shibata Exp $
+;; $Id: test4.scm,v 1.19 2006/01/07 05:06:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -74,7 +74,7 @@
 		(div ?@
 		     (h2 "ユニット一覧")
 		     (table ?@
-			    (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
+			    (thead (tr (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
 			    (tbody))
 		     (hr)
 		     (h2 "新ユニット結成")
@@ -158,10 +158,9 @@
  (test* "kagoiri-musume check new unit"
 	`(*TOP*
 	  (table ?@
-		 (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
+		 (thead (tr (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
 		 (tbody (tr ?@
-			    (td (a (@ (href ?&)) "編集"))
-			    (td (a ?@ "削除"))
+			    (td (a (@ (href ?&)) "設定"))
 			    (td (a ?@ "籠入娘。Test Proj.") " (0)")
 			    (td "籠入娘。のバグトラッキングを行うユニット")
 			    (td "cut-sea")
@@ -185,7 +184,7 @@
 		(span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
 		(form ?@ "検索:" (input ?@)))
-	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット編集")
+	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット設定")
 		(form (@ (action ?&) ?*)
 		      (table
 		       (tr ?@
@@ -265,10 +264,9 @@
  (test* "kagoiri-musume check modified unit"
 	`(*TOP*
 	  (table ?@
-		 (thead (tr (th) (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
+		 (thead (tr (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
 		 (tbody (tr ?@
-			    (td (a ?@ "編集"))
-			    (td (a ?@ "削除"))
+			    (td (a ?@ "設定"))
 			    (td (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
 			    (td "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
 			    (td "cut-sea , guest")

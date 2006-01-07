@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test1.scm,v 1.11 2005/11/12 04:09:24 cut-sea Exp $
+;; $Id: test1.scm,v 1.12 2006/01/07 05:06:21 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -35,7 +35,7 @@
           ,*head*
 	  (body (div ?@
                      (h1 ?@ ?_)
-		     (a (@ (href ?&)) "トップ")
+		     (a (@ (href ?&) ?*) "トップ")
 		     (a ?@ "システム管理")
 		     (a ?@ "ユニット一覧")
 		     (a ?@ "Login"))
@@ -54,7 +54,7 @@
 	  (body (div ?@
                      (h1 ?@ ?_)
 		     (a  ?@ "トップ")
-		     (a (@ (href ?&)) "システム管理")
+		     (a (@ (href ?&) ?*) "システム管理")
 		     (a ?@ "ユニット一覧")
 		     (a ?@ "Login"))
                 (div (@ (id "body"))

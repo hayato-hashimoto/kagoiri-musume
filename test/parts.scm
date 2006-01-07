@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts.scm,v 1.6 2005/11/13 01:46:54 cut-sea Exp $
+;; $Id: parts.scm,v 1.7 2006/01/07 05:06:21 cut-sea Exp $
 (use srfi-13)  ;; for string-scan
 
 (define *head*
@@ -30,7 +30,7 @@
         (a ?@ "ユニット一覧")
         (a ?@ "パスワード変更")
         (span " Now login:" (a ?@ ,user))
-        (a (@ (href ?&)) "Logout")
+        (a (@ (href ?&) ?*) "Logout")
         (form ?@ "検索:" (input ?@))))
 
 (define-syntax *make-body*

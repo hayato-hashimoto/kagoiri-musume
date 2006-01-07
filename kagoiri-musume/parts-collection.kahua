@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.30 2005/12/18 13:39:30 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.31 2006/01/07 05:06:21 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -250,7 +250,7 @@
   (let1 unsubscriptions (unsubscriptions-of (current-fan))
     (table/ (@/ (class "listing"))
             (thead/
-             (tr/ (devel:th/) (devel:th/)
+             (tr/ (devel:th/) (admin:th/)
                   (th/ ($$ "ユニット名"))
                   (th/ ($$  "概要"))
                   (th/ ($$ "ファン"))
@@ -265,8 +265,8 @@
                        (devel:td/
                         (a/cont/
                          (@@/ (cont unit-edit (key-of u)))
-                         ($$ "編集")))
-                       (devel:td/
+                         ($$ "設定")))
+                       (admin:td/
                         (a/cont/
                          (@/ (onClick (format "return confirm('~a')?true:false"
                                               ($$ "本当に削除しますか？"))))
@@ -306,7 +306,7 @@
   (let1 unit (get-optional unit #f)
     (devel:list/
      (h2/ (if unit
-	      (format ($$ "『~a』ユニット編集") (unit-name-of unit))
+	      (format ($$ "『~a』ユニット設定") (unit-name-of unit))
 	      ($$ "新ユニット結成")))
      (form/cont/
       (@/ (onsubmit "return submitForm(this)"))
