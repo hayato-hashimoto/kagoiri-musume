@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.14 2006/01/07 05:06:21 cut-sea Exp $
+;; $Id: test2.scm,v 1.15 2006/01/07 08:05:15 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -30,24 +30,6 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
- (test* "kagoiri-musume top2"
-	`(html
-	  ,*head*
-	  (body (div ?@
-                     (h1 ?@ ?_)
-		     (a ?@ "トップ")
-		     (a ?@ "システム管理")
-		     (a (@ (href ?&) ?*) "ユニット一覧")
-		     (a ?@ "Login"))
-                ,(*make-body*
-                  (h2 ?_)
-                  (ul ?@
-                   (li (a ?@ "システム設定管理画面"))
-                   (li (a ?@ "ユニット一覧"))))
-                ,*footer*))
-        (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
-        (make-match&pick w))
-
  (test* "kagoiri-musume unit-list link click without login"
 	`(html
 	  ,*head*
@@ -71,7 +53,6 @@
 	  (body
 	   (div ?@
                 (h1 ?@ ?_)
-		(a ?@ "トップ")
 		(a ?@ "システム管理")
                 (a ?@ "ユニット一覧")
 		(a (@ (href ?&) ?*) "パスワード変更")
@@ -225,7 +206,6 @@
 	 (body
 	  (div ?@
            (h1 ?@ ?_)
-           (a ?@ "トップ")
            (a ?@ "システム管理")
            (a ?@ "ユニット一覧")
            (a (@ (href ?&) ?*) "パスワード変更")

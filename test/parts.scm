@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts.scm,v 1.7 2006/01/07 05:06:21 cut-sea Exp $
+;; $Id: parts.scm,v 1.8 2006/01/07 08:05:15 cut-sea Exp $
 (use srfi-13)  ;; for string-scan
 
 (define *head*
@@ -13,7 +13,6 @@
 (define *header*
   '(div ?@
         (h1 ?@ ?_)
-        (a ?@ "トップ")
         (a ?@ "システム管理")
         (a ?@ "ユニット一覧")
         (a ?@ "Login")))
@@ -25,7 +24,6 @@
 (define (*header-logedin* user)
   `(div ?@
         (h1 ?@ ?_)
-        (a ?@ "トップ")
         (a ?@ "システム管理")
         (a ?@ "ユニット一覧")
         (a ?@ "パスワード変更")

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test1.scm,v 1.12 2006/01/07 05:06:21 cut-sea Exp $
+;; $Id: test1.scm,v 1.13 2006/01/07 08:05:15 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -30,39 +30,24 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
- (test* "kagoiri-musume top"
-	`(html
-          ,*head*
-	  (body (div ?@
-                     (h1 ?@ ?_)
-		     (a (@ (href ?&) ?*) "トップ")
-		     (a ?@ "システム管理")
-		     (a ?@ "ユニット一覧")
-		     (a ?@ "Login"))
-                ,(*make-body*
-                  (h2 ?_)
-                  (ul ?@
-                      (li (a ?@ "システム設定管理画面"))
-                      (li (a ?@ "ユニット一覧"))))
-                ,*footer*))
-        (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
-        (make-match&pick w))
-
  (test* "kagoiri-musume top link click"
 	`(html
           ,*head*
-	  (body (div ?@
-                     (h1 ?@ ?_)
-		     (a  ?@ "トップ")
-		     (a (@ (href ?&) ?*) "システム管理")
-		     (a ?@ "ユニット一覧")
-		     (a ?@ "Login"))
-                (div (@ (id "body"))
-                     (h2 ?_)
-                     (ul ?@
-                         (li (a ?@ "システム設定管理画面"))
-                         (li (a ?@ "ユニット一覧"))))
-                ,*footer*))
+	  (body
+           (div ?@
+		(h1 ?@ ?_)
+		(a (@ (href ?&) ?*) "システム管理")
+		(a ?@ "ユニット一覧")
+		(a ?@ "Login"))
+           ,(*make-body*
+             (h1 "籠入娘。へようこそ！")
+             (h3 "ユニット一覧は一般ユーザアカウントが必要です")
+             (form ?@
+                   (table
+                    (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name") (id "focus")))))
+                    (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
+                   (input (@ (value "login") (type "submit") (name "submit")))))
+           ,*footer*))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 

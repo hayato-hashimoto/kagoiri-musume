@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.20 2006/01/07 05:52:27 cut-sea Exp $
+;; $Id: test4.scm,v 1.21 2006/01/07 08:05:15 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -32,19 +32,22 @@
 
  (test* "kagoiri-musume top link click"
 	`(html
-	   ,*head*
-	   (body (div ?@
-		      (h1 ?@ ?_)
-		      (a ?@ "トップ")
-		      (a ?@ "システム管理")
-		      (a ?@ "ユニット一覧")
-		      (a ?@ "Login"))
-		 ,(*make-body*
-		   (h2 ?_)
-		   (ul ?@
-		       (li (a ?@ "システム設定管理画面"))
-		       (li (a (@ (href ?&) ?*) "ユニット一覧"))))
-		 ,*footer*))
+          ,*head*
+	  (body
+           (div ?@
+		(h1 ?@ ?_)
+		(a ?@ "システム管理")
+		(a (@ (href ?&) ?*) "ユニット一覧")
+		(a ?@ "Login"))
+           ,(*make-body*
+             (h1 "籠入娘。へようこそ！")
+             (h3 "ユニット一覧は一般ユーザアカウントが必要です")
+             (form ?@
+                   (table
+                    (tr (th "Login Name") (td (input (@ (value "") (type "text") (name "name") (id "focus")))))
+                    (tr (th "Password") (td (input (@ (value "") (type "password") (name "pass"))))))
+                   (input (@ (value "login") (type "submit") (name "submit")))))
+           ,*footer*))
         (call-worker/gsid w '() '() (lambda (h b) (tree->string b)))
         (make-match&pick w))
 
@@ -64,7 +67,6 @@
 	  ,*head*
 	  (body (div ?@
 		     (h1 ?@ ?_)
-		     (a ?@ "トップ")
 		     (a ?@ "システム管理")
 		     (a ?@ "ユニット一覧")
 		     (a ?@ "パスワード変更")
@@ -177,7 +179,6 @@
 	  ,*head*
 	  (body
 	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
-		(a ?@ "トップ")
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -284,7 +285,6 @@
 	  (body
 	   (div ?@
 		(h1 ?@ "籠入娘。 - Groupie System")
-		(a ?@ "トップ")
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -374,7 +374,6 @@
 	  ,*head*
 	  (body
 	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
-		(a ?@ "トップ")
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -455,7 +454,6 @@
 	  ,*head*
 	  (body
 	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
-		(a ?@ "トップ")
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -537,7 +535,6 @@
  (test* "kagoiri-musume check melody-list complete"
 	`(*TOP*
 	  (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
-	       (a ?@ "トップ")
 	       (a ?@ "システム管理")
 	       (a ?@ "ユニット一覧")
 	       (a ?@ "パスワード変更")
