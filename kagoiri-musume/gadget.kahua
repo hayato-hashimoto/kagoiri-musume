@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.42 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.43 2006/01/07 13:05:16 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -157,6 +157,7 @@
 
 ;; for jisx0201 half kana
 ;;
+(use srfi-1)
 (use gauche.collection)
 
 (define (make-table src dst)
@@ -167,28 +168,34 @@
 	      pairs)
     tbl))
 
-(define (kana-trans:half->full orig-string)
-  (let ((tbl1 (make-table
-	       "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｧｨｩｪｫｬｭｮｯｰ､｡｢｣･"
-	       "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォャュョッー、。「」・"))
-	(tbl2 (make-table
-	       "ｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾊﾋﾌﾍﾎ"
-	       "ガギグゲゴザジズゼゾダヂヅデドバビブベボ"))
-	(tbl3 (make-table
-	       "ﾊﾋﾌﾍﾎ"
-	       "パピプペポ")))
-    (let lp ((rev-str (string->list (reverse orig-string)))
-	     (result '()))
-      (if (null? rev-str)
-	  (list->string (reverse result))
-	  (let ((c (car rev-str))
-		(rest (cdr rev-str)))
-	    (cond ((eq? c #\ﾞ) (cond ((null? rest) (lp rest result))
-				     ((hash-table-get tbl2 (car rest) #f) => (lambda (v) (lp (cdr rest) (cons v result))))
-				     (else (lp rest result))))
-		  ((eq? c #\ﾟ) (cond ((null? rest) (lp rest result))
-				     ((hash-table-get tbl3 (car rest) #f) => (lambda (v) (lp (cdr rest) (cons v result))))
-				     (else (lp rest result))))
-		  ((hash-table-get tbl1 c #f) => (lambda (v) (lp rest (cons v result))))
-		  (else (lp rest (cons c result)))))))))
+(define (gen-kana-trans voiced semivoiced)
+  (let ((normal (make-table
+		 "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝｧｨｩｪｫｬｭｮｯｰ､｡｢｣･"
+		 "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォャュョッー、。「」・"))
+	(voiced (make-table
+		 "ｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾊﾋﾌﾍﾎ"
+		 "ガギグゲゴザジズゼゾダヂヅデドバビブベボ"))
+	(semivoiced (make-table
+		     "ﾊﾋﾌﾍﾎ"
+		     "パピプペポ"))
+	(vs (make-table voiced (make-list (string-length voiced) #t)))
+	(svs (make-table semivoiced (make-list (string-length voiced) #t))))
+    (lambda (orig-string)
+      (let lp ((rev-str (reverse (string->list orig-string)))
+	       (result '()))
+	(if (null? rev-str)
+	    (list->string result)
+	    (let ((c (car rev-str))
+		  (rest (cdr rev-str)))
+	      (cond ((eq? c #\ﾞ) (cond ((null? rest) (lp rest result))
+				       ((hash-table-get voiced (car rest) #f) => (lambda (v) (lp (cdr rest) (cons v result))))
+				       ((hash-table-get vs (car rest) #f) (lp rest (cons #\゛ result)))
+				       (else (lp rest result))))
+		    ((eq? c #\ﾟ) (cond ((null? rest) (lp rest result))
+				       ((hash-table-get semivoiced (car rest) #f) => (lambda (v) (lp (cdr rest) (cons v result))))
+				       ((hash-table-get svs (car rest) #f) (lp rest (cons #\゜ result)))
+				       (else (lp rest result))))
+		    ((hash-table-get normal c #f) => (lambda (v) (lp rest (cons v result))))
+		    (else (lp rest (cons c result))))))))))
 
+(define kana-trans:half->full (gen-kana-trans "ｱｲｳｴｵ" "ｱｲｳｴｵ"))
