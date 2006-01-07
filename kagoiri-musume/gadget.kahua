@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.43 2006/01/07 13:05:16 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.44 2006/01/07 13:15:32 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -198,4 +198,4 @@
 		    ((hash-table-get normal c #f) => (lambda (v) (lp rest (cons v result))))
 		    (else (lp rest (cons c result))))))))))
 
-(define kana-trans:half->full (gen-kana-trans "Ž±Ž²Ž³Ž´Žµ" "Ž±Ž²Ž³Ž´Žµ"))
+(define kana-trans:half->full (gen-kana-trans "Ž±Ž²Ž³Ž´Žµ" ""))
