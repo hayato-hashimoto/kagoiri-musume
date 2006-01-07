@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.32 2006/01/07 08:46:01 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.33 2006/01/07 09:49:10 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -289,19 +289,19 @@
                         (unit-member? u
                           (let1 subscription? (not (memq u unsubscriptions))
                             (a/cont/ (@/ (class "clickable"))
-                                     (@@/ (cont (cut (lambda ()
+				     (@@/ (cont (cut (lambda ()
                                                        (update! (ref (current-fan) 'unsubscriptions)
                                                                 (lambda (ls)
                                                                   (let1 ls (or ls '())
                                                                     (if subscription?
                                                                         (if (memq u ls)
                                                                             bkmks
-                                                                          (cons u ls))
-                                                                      (delete u ls)))))
+									    (cons u ls))
+									(delete u ls)))))
                                                        (redirect-page "unit-list")))))
                                      (if subscription?
-                                         ($$ "¹ØÆÉ¤ò¤ä¤á¤ë")
-                                       ($$ "¹ØÆÉ¤¹¤ë")))))))))
+                                         ($$ "¡û")
+					 ($$ "¡ß")))))))))
                (all-units)))))))
 
 (define (create-unit-form/ . unit)

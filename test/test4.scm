@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.21 2006/01/07 08:05:15 cut-sea Exp $
+;; $Id: test4.scm,v 1.22 2006/01/07 09:49:10 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -166,7 +166,7 @@
 			    (td (a ?@ "籠入娘。Test Proj.") " (0)")
 			    (td "籠入娘。のバグトラッキングを行うユニット")
 			    (td "cut-sea")
-                            (td (a ?@ "購読をやめる"))))))
+                            (td (a ?@ "○"))))))
         (call-worker/gsid->sxml
 	 w
 	 '()
@@ -271,7 +271,7 @@
 			    (td (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
 			    (td "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
 			    (td "cut-sea , guest")
-                            (td (a ?@ "購読をやめる"))))))
+                            (td (a ?@ "○"))))))
         (call-worker/gsid->sxml
 	 w
 	 '()

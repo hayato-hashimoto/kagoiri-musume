@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.12 2006/01/07 06:08:39 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.13 2006/01/07 09:49:10 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -275,18 +275,18 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 a.clickable
 {
-    border:outset 2px!important;
-    background-color:#d6d3ce!important;
+    border:solid 1px!important;
+    background-color:#eeffff!important;
     color:#000000!important;
     text-decoration:none!important;
     font:menu!important;
     line-height:1.4!important;
-    padding:2px 2px 2px 2px!important;
+    padding:1px 1px 1px 1px!important;
 }
 
-a.clickable:active
+a.clickable:hover
 {
-    border-style:inset!important;
+    background-color:#add8e6!important;
 }
 
 .menu {
