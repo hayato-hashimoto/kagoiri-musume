@@ -18,465 +18,465 @@ msgstr ""
 
 #: kagoiri-musume.kahua:89 page.kahua:130
 msgid "籠入娘。へようこそ！"
-msgstr ""
+msgstr "籠入娘。へようこそ！"
 
 #: kagoiri-musume.kahua:92
 msgid "システム設定管理画面"
-msgstr ""
+msgstr "システム設定管理画面"
 
 #: kagoiri-musume.kahua:94 kagoiri-musume.kahua:101 page.kahua:58
 msgid "ユニット一覧"
-msgstr ""
+msgstr "ユニット一覧"
 
 #: kagoiri-musume.kahua:100
 msgid "ユニット一覧は一般ユーザアカウントが必要です"
-msgstr ""
+msgstr "ユニット一覧は一般ユーザアカウントが必要です"
 
 #: kagoiri-musume.kahua:171
 #, scheme-format
 msgid "~a - 娘。一覧"
-msgstr ""
+msgstr "~a - 娘。一覧"
 
 #: kagoiri-musume.kahua:182
 msgid "表示上限"
-msgstr ""
+msgstr "表示上限"
 
 #: kagoiri-musume.kahua:190
 msgid "全て"
-msgstr ""
+msgstr "全て"
 
 #: kagoiri-musume.kahua:206
 msgid "絞り込み"
-msgstr ""
+msgstr "絞り込み"
 
 #: kagoiri-musume.kahua:224
 msgid " - 新しい娘。"
-msgstr ""
+msgstr " - 新しい娘。"
 
 #: kagoiri-musume.kahua:230
 msgid "タイトルを入力してください。"
-msgstr ""
+msgstr "タイトルを入力してください。"
 
 #: kagoiri-musume.kahua:248
 msgid "ちょいまってや"
-msgstr ""
+msgstr "ちょいまってや"
 
 #: kagoiri-musume.kahua:249
 msgid "娘。の閲覧"
-msgstr ""
+msgstr "娘。の閲覧"
 
 #: kagoiri-musume.kahua:277
 #, scheme-format
 msgid "『~a』の『~a 』を編集する。"
-msgstr ""
+msgstr "『~a』の『~a 』を編集する。"
 
 #: kagoiri-musume.kahua:283 kagoiri-musume.kahua:475 kagoiri-musume.kahua:522
 #: parts-collection.kahua:162 parts-collection.kahua:234 search.kahua:15
 #: sys-admin.kahua:263
 msgid "タイトル"
-msgstr ""
+msgstr "タイトル"
 
 #: kagoiri-musume.kahua:287
 msgid "改名"
-msgstr ""
+msgstr "改名"
 
 #: kagoiri-musume.kahua:368
 msgid "ブックマークに追加"
-msgstr ""
+msgstr "ブックマークに追加"
 
 #: kagoiri-musume.kahua:418
 msgid "コミット"
-msgstr ""
+msgstr "コミット"
 
 #: kagoiri-musume.kahua:426 parts-collection.kahua:241
 msgid "ファイル"
-msgstr ""
+msgstr "ファイル"
 
 #: kagoiri-musume.kahua:439
 msgid "本当に復活しますか？"
-msgstr ""
+msgstr "本当に復活しますか？"
 
 #: kagoiri-musume.kahua:440
 msgid "復活"
-msgstr ""
+msgstr "復活"
 
 #: kagoiri-musume.kahua:441
 msgid "このメロディは削除されてます"
-msgstr ""
+msgstr "このメロディは削除されてます"
 
 #: kagoiri-musume.kahua:448 kagoiri-musume.kahua:532
 #: parts-collection.kahua:183 parts-collection.kahua:272
 msgid "本当に削除しますか？"
-msgstr ""
+msgstr "本当に削除しますか？"
 
 #: kagoiri-musume.kahua:449 kagoiri-musume.kahua:521 kagoiri-musume.kahua:538
 #: parts-collection.kahua:185 parts-collection.kahua:274
 msgid "削除"
-msgstr ""
+msgstr "削除"
 
 #: kagoiri-musume.kahua:467 kagoiri-musume.kahua:552
 msgid "TODO"
-msgstr ""
+msgstr "TODO"
 
 #: kagoiri-musume.kahua:476 kagoiri-musume.kahua:523
 #: parts-collection.kahua:330
 msgid "優先度"
-msgstr ""
+msgstr "優先度"
 
 #: kagoiri-musume.kahua:477 kagoiri-musume.kahua:524
 #: parts-collection.kahua:331
 msgid "ステータス"
-msgstr ""
+msgstr "ステータス"
 
 #: kagoiri-musume.kahua:478 kagoiri-musume.kahua:525
 #: parts-collection.kahua:332
 msgid "タイプ"
-msgstr ""
+msgstr "タイプ"
 
 #: kagoiri-musume.kahua:479 kagoiri-musume.kahua:526
 #: parts-collection.kahua:169
 msgid "登録日"
-msgstr ""
+msgstr "登録日"
 
 #: kagoiri-musume.kahua:494 kagoiri-musume.kahua:553
 msgid "最近の更新"
-msgstr ""
+msgstr "最近の更新"
 
 #: kagoiri-musume.kahua:517 kagoiri-musume.kahua:554
 msgid "ブックマーク"
-msgstr ""
+msgstr "ブックマーク"
 
 #: kagoiri-musume.kahua:549
 msgid "マイページは一般ユーザアカウントが必要です"
-msgstr ""
+msgstr "マイページは一般ユーザアカウントが必要です"
 
 #: kagoiri-musume.kahua:578
 msgid "パスワード変更には一般ユーザのアカウントが必要です"
-msgstr ""
+msgstr "パスワード変更には一般ユーザのアカウントが必要です"
 
 #: kagoiri-musume.kahua:579
 #, scheme-format
 msgid "~a さんのパスワード変更"
-msgstr ""
+msgstr "~a さんのパスワード変更"
 
 #: kagoiri-musume.kahua:585
 msgid "新パスワードが不正です"
-msgstr ""
+msgstr "新パスワードが不正です"
 
 #: kagoiri-musume.kahua:587
 msgid "旧パスワードが不正です"
-msgstr ""
+msgstr "旧パスワードが不正です"
 
 #: kagoiri-musume.kahua:591
 #, scheme-format
 msgid "~a さんのパスワードを変更しました"
-msgstr ""
+msgstr "~a さんのパスワードを変更しました"
 
 #: kagoiri-musume.kahua:593
 msgid "変更"
-msgstr ""
+msgstr "変更"
 
 #: page.kahua:55
 msgid "システム管理"
-msgstr ""
+msgstr "システム管理"
 
 #: page.kahua:62
 msgid "Login"
-msgstr ""
+msgstr "Login"
 
 #: page.kahua:67
 msgid "パスワード変更"
-msgstr ""
+msgstr "パスワード変更"
 
 #: page.kahua:69
 msgid " Now login:"
-msgstr ""
+msgstr " Now login:"
 
 #: page.kahua:76
 msgid "Logout"
-msgstr ""
+msgstr "Logout"
 
 #: page.kahua:80
 msgid "検索:"
-msgstr ""
+msgstr "検索:"
 
 #: parts-collection.kahua:110
 msgid "旧パスワード"
-msgstr ""
+msgstr "旧パスワード"
 
 #: parts-collection.kahua:113
 msgid "新パスワード"
-msgstr ""
+msgstr "新パスワード"
 
 #: parts-collection.kahua:116
 msgid "新パスワード(確認)"
-msgstr ""
+msgstr "新パスワード(確認)"
 
 #: parts-collection.kahua:122
 msgid "娘。一覧"
-msgstr ""
+msgstr "娘。一覧"
 
 #: parts-collection.kahua:123
 msgid "新しい娘。"
-msgstr ""
+msgstr "新しい娘。"
 
 #: parts-collection.kahua:126
 #, scheme-format
 msgid "『~a』のファンとしてのアカウントが必要です"
-msgstr ""
+msgstr "『~a』のファンとしてのアカウントが必要です"
 
 #: parts-collection.kahua:133
 msgid "ユニット内検索:"
-msgstr ""
+msgstr "ユニット内検索:"
 
 #: parts-collection.kahua:138
 msgid "検索"
-msgstr ""
+msgstr "検索"
 
 #: parts-collection.kahua:144
 msgid "萌えられる娘。がいません(T^T)"
-msgstr ""
+msgstr "萌えられる娘。がいません(T^T)"
 
 #: parts-collection.kahua:145
 msgid "ただひとりの娘。に萌えました"
-msgstr ""
+msgstr "ただひとりの娘。に萌えました"
 
 #: parts-collection.kahua:146
 #, scheme-format
 msgid "~a人の娘。に萌えました"
-msgstr ""
+msgstr "~a人の娘。に萌えました"
 
 #: parts-collection.kahua:147
 #, scheme-format
 msgid "~a人もの娘。に萌えました(萌えすぎです)"
-msgstr ""
+msgstr "~a人もの娘。に萌えました(萌えすぎです)"
 
 #: parts-collection.kahua:148
 #, scheme-format
 msgid "なんと~a人もの娘。に萌えまつきました orz"
-msgstr ""
+msgstr "なんと~a人もの娘。に萌えまつきました orz"
 
 #: parts-collection.kahua:160
 msgid "No."
-msgstr ""
+msgstr "No."
 
 #: parts-collection.kahua:170
 msgid "更新日"
-msgstr ""
+msgstr "更新日"
 
 #: parts-collection.kahua:230
 msgid "アサイン"
-msgstr ""
+msgstr "アサイン"
 
 #: parts-collection.kahua:233 parts-collection.kahua:244
 msgid "新しい娘。加入"
-msgstr ""
+msgstr "新しい娘。加入"
 
 #: parts-collection.kahua:234 parts-collection.kahua:358
 #: parts-collection.kahua:370
 msgid "(※)"
-msgstr ""
+msgstr "(※)"
 
 #: parts-collection.kahua:238
 msgid "内容"
-msgstr ""
+msgstr "内容"
 
 #: parts-collection.kahua:254 parts-collection.kahua:358 search.kahua:11
 #: sys-admin.kahua:101
 msgid "ユニット名"
-msgstr ""
+msgstr "ユニット名"
 
 #: parts-collection.kahua:255 parts-collection.kahua:364 search.kahua:12
 #: sys-admin.kahua:102
 msgid "概要"
-msgstr ""
+msgstr "概要"
 
 #: parts-collection.kahua:256 parts-collection.kahua:370
 msgid "ファン"
-msgstr ""
+msgstr "ファン"
 
 #: parts-collection.kahua:257
 msgid "購読"
-msgstr ""
+msgstr "購読"
 
 #: parts-collection.kahua:268
 msgid "設定"
-msgstr ""
+msgstr "設定"
 
 #: parts-collection.kahua:301
 msgid "購読をやめる"
-msgstr ""
+msgstr "購読をやめる"
 
 #: parts-collection.kahua:302
 msgid "購読する"
-msgstr ""
+msgstr "購読する"
 
 #: parts-collection.kahua:309
 #, scheme-format
 msgid "『~a』ユニット設定"
-msgstr ""
+msgstr "『~a』ユニット設定"
 
 #: parts-collection.kahua:310 parts-collection.kahua:398
 msgid "新ユニット結成"
-msgstr ""
+msgstr "新ユニット結成"
 
 #: parts-collection.kahua:318
 msgid "ユニット名入力とファン選択は必須です。"
-msgstr ""
+msgstr "ユニット名入力とファン選択は必須です。"
 
 #: parts-collection.kahua:333
 msgid "カテゴリ"
-msgstr ""
+msgstr "カテゴリ"
 
 #: parts-collection.kahua:389
 msgid "通知アドレス"
-msgstr ""
+msgstr "通知アドレス"
 
 #: parts-collection.kahua:397
 msgid "確定"
-msgstr ""
+msgstr "確定"
 
 #: search.kahua:99
 #, scheme-format
 msgid "search key: ~a (~a items)n"
-msgstr ""
+msgstr "search key: ~a (~a items)n"
 
 #: search.kahua:113
 #, scheme-format
 msgid "Keyword is too short: ~a"
-msgstr ""
+msgstr "Keyword is too short: ~a"
 
 #: sys-admin.kahua:16
 msgid "システム管理者のアカウントが必要です"
-msgstr ""
+msgstr "システム管理者のアカウントが必要です"
 
 #: sys-admin.kahua:17
 msgid "籠入娘。システム設定管理画面"
-msgstr ""
+msgstr "籠入娘。システム設定管理画面"
 
 #: sys-admin.kahua:56
 msgid "登録ユーザ一覧"
-msgstr ""
+msgstr "登録ユーザ一覧"
 
 #: sys-admin.kahua:57 sys-admin.kahua:79
 msgid "管理者権限"
-msgstr ""
+msgstr "管理者権限"
 
 #: sys-admin.kahua:58 sys-admin.kahua:80
 msgid "ログイン名"
-msgstr ""
+msgstr "ログイン名"
 
 #: sys-admin.kahua:59 sys-admin.kahua:82
 msgid "メールアドレス"
-msgstr ""
+msgstr "メールアドレス"
 
 #: sys-admin.kahua:60 sys-admin.kahua:83
 msgid "開発"
-msgstr ""
+msgstr "開発"
 
 #: sys-admin.kahua:61 sys-admin.kahua:84
 msgid "顧客"
-msgstr ""
+msgstr "顧客"
 
 #: sys-admin.kahua:62 sys-admin.kahua:85
 msgid "隠密"
-msgstr ""
+msgstr "隠密"
 
 #: sys-admin.kahua:66 sys-admin.kahua:70 sys-admin.kahua:73 sys-admin.kahua:74
 #: sys-admin.kahua:140 sys-admin.kahua:178 sys-admin.kahua:211
 #: sys-admin.kahua:244
 msgid "＊"
-msgstr ""
+msgstr "＊"
 
 #: sys-admin.kahua:81
 msgid "パスワード"
-msgstr ""
+msgstr "パスワード"
 
 #: sys-admin.kahua:93
 msgid "ファン登録"
-msgstr ""
+msgstr "ファン登録"
 
 #: sys-admin.kahua:100
 msgid "登録ユニット一覧"
-msgstr ""
+msgstr "登録ユニット一覧"
 
 #: sys-admin.kahua:103 sys-admin.kahua:265
 msgid "活動状態"
-msgstr ""
+msgstr "活動状態"
 
 #: sys-admin.kahua:111 sys-admin.kahua:276
 msgid "休止"
-msgstr ""
+msgstr "休止"
 
 #: sys-admin.kahua:111 sys-admin.kahua:276
 msgid "活動"
-msgstr ""
+msgstr "活動"
 
 #: sys-admin.kahua:132
 msgid "登録優先度一覧"
-msgstr ""
+msgstr "登録優先度一覧"
 
 #: sys-admin.kahua:133 sys-admin.kahua:143
 msgid "優先度ID"
-msgstr ""
+msgstr "優先度ID"
 
 #: sys-admin.kahua:134 sys-admin.kahua:144 sys-admin.kahua:174
 #: sys-admin.kahua:182 sys-admin.kahua:207 sys-admin.kahua:215
 #: sys-admin.kahua:240 sys-admin.kahua:248
 msgid "表示名"
-msgstr ""
+msgstr "表示名"
 
 #: sys-admin.kahua:135 sys-admin.kahua:145
 msgid "レベル"
-msgstr ""
+msgstr "レベル"
 
 #: sys-admin.kahua:136 sys-admin.kahua:146 sys-admin.kahua:175
 #: sys-admin.kahua:183 sys-admin.kahua:208 sys-admin.kahua:216
 #: sys-admin.kahua:241 sys-admin.kahua:249
 msgid "無効"
-msgstr ""
+msgstr "無効"
 
 #: sys-admin.kahua:154 sys-admin.kahua:187 sys-admin.kahua:220
 #: sys-admin.kahua:253
 msgid "登録"
-msgstr ""
+msgstr "登録"
 
 #: sys-admin.kahua:172
 msgid "登録ステータス一覧"
-msgstr ""
+msgstr "登録ステータス一覧"
 
 #: sys-admin.kahua:173 sys-admin.kahua:181
 msgid "ステータスID"
-msgstr ""
+msgstr "ステータスID"
 
 #: sys-admin.kahua:205
 msgid "登録タイプ一覧"
-msgstr ""
+msgstr "登録タイプ一覧"
 
 #: sys-admin.kahua:206 sys-admin.kahua:214
 msgid "タイプID"
-msgstr ""
+msgstr "タイプID"
 
 #: sys-admin.kahua:238
 msgid "登録カテゴリ一覧"
-msgstr ""
+msgstr "登録カテゴリ一覧"
 
 #: sys-admin.kahua:239 sys-admin.kahua:247
 msgid "カテゴリID"
-msgstr ""
+msgstr "カテゴリID"
 
 #: sys-admin.kahua:260
 msgid "不良娘。一覧"
-msgstr ""
+msgstr "不良娘。一覧"
 
 #: sys-admin.kahua:261
 msgid "元所属ユニット"
-msgstr ""
+msgstr "元所属ユニット"
 
 #: sys-admin.kahua:262
 msgid "娘。No"
-msgstr ""
+msgstr "娘。No"
 
 #: sys-admin.kahua:264
 msgid "作成日"
-msgstr ""
+msgstr "作成日"
