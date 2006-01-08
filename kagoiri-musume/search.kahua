@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.12 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: search.kahua,v 1.13 2006/01/08 06:29:55 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -96,7 +96,7 @@
 			 '()
 			 units))))
 	    (div/
-	     (h1/ (format ($$ "search key: ~a (~a items)n") word (length hits)))
+	     (h1/ (format ($$ "search key: ~a (~a items)") word (length hits)))
 	     (map/ (lambda (hit)
 		     (fieldset/
 		      (legend/ (car hit))
