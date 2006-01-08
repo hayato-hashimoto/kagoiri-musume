@@ -231,7 +231,7 @@ msgstr "プロジェクト内検索:"
 
 #: parts-collection.kahua:138
 msgid "検索"
-msgstr "検索"
+msgstr "全体検索"
 
 #: parts-collection.kahua:144
 msgid "萌えられる娘。がいません(T^T)"
