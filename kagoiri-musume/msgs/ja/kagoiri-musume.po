@@ -182,7 +182,7 @@ msgstr "システム管理"
 
 #: page.kahua:62
 msgid "Login"
-msgstr "Login"
+msgstr "ログイン"
 
 #: page.kahua:67
 msgid "パスワード変更"
