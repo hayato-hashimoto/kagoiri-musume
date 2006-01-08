@@ -1,150 +1,416 @@
-2005-11-24  SHIBATA Tomohisa <shibata@kahua.org>
+2006-01-08  cut-sea  <cut-sea@ipadev>
 
-	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua:
-	* kagoiri-musume/parts-collection.kahua, test/test2.scm, test/test4.scm:
+	* kagoiri-musume/msgs/ja/kagoiri-musume.po: fix messages.
+
+	* kagoiri-musume/msgs/ja/kagoiri-musume.po: a bit touch message.
+
+	* kagoiri-musume/msgs/ja/kagoiri-musume.po, kagoiri-musume/search.kahua:
+	po file message modify.
+
+	* kagoiri-musume/gadget.kahua: modify kana trans.
+
+	* kagoiri-musume/gadget.kahua: a bit touch for kana-trans logic.
+
+2006-01-07  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/gadget.kahua: a bit touch.
+
+	* kagoiri-musume/gadget.kahua: modify kana transform function.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/debug-support.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/page.kahua, kagoiri-musume/parts-collection.kahua, kagoiri-musume/search.kahua, kagoiri-musume/sys-admin.kahua, kagoiri-musume/user-setting.kahua, kagoiri-musume/util.kahua, kagoiri-musume/version.kahua.in:
+	mode change as mode: scheme -> mode: kahua
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/parts-collection.kahua, test/test4.scm:
+	change design of clickable.
+
+2006-01-07  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/gadget.kahua: Added "kagikaggo" "tyuten".
+
+	* kagoiri-musume/gadget.kahua: Added "ten" "maru".
+
+2006-01-07  cut-sea  <cut-sea@ipadev>
+
+	* DIST_EXCLUDE_X, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	a bit touch for a link design.
+
+	* kagoiri-musume/msgs/ja/kagoiri-musume.po: copy message.
+
+2006-01-07  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/msgs/ja/kagoiri-musume.po: msg file
+
+2006-01-07  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/page.kahua, test/parts.scm, test/test1.scm, test/test2.scm, test/test3.scm, test/test4.scm:
+	delete kagoiri top menu.
+
+	* kagoiri-musume/kagoiri-musume.css: a bit touch for design.
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, test/test4.scm:
+	a bit touch for clickable link design.
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/page.kahua, kagoiri-musume/parts-collection.kahua, test/parts.scm, test/test1.scm, test/test2.scm, test/test3.scm, test/test4.scm:
+	change devel permission to admin permission for delete button.
+	add clickable attribute for navi links.
+
+	* kagoiri-musume/gadget.kahua: a bit touch.
+
+2006-01-06  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/gadget.kahua: a bit touch.
+
+2005-12-28  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	sanitize for jisx0201 half kana character.
+
+2005-12-18  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	a bit touch.
+
+2005-12-15  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.js: fixed unit-search auto detection.
+
+2005-12-09  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch.
+
+2005-12-04  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/debug-support.kahua: marge feeley's pp code.
+
+2005-11-30  cut-sea  <cut-sea@ipadev>
+
+	* plugins/kagoiri-musume.scm: a bit touch.
+
+2005-11-27  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in, kagoiri-musume/debug-support.kahua, plugins/kagoiri-musume.scm:
+	convenient debug-support file added.
+
+2005-11-24  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/parts-collection.kahua: fixed no-member subscription.
+
+	* ChangeLog: write changelog
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/parts-collection.kahua, test/test2.scm, test/test4.scm:
 	added subscription and unsubscriptions button to unit-list.
 
-2005-11-23  SHIBATA Tomohisa <shibata@kahua.org>
+2005-11-23  shibata  <shibata@ipadev>
 
 	* Makefile.in, initdb.scm, kagoiri-musume/user-setting.kahua, test/common.scm.in:
 	improved initdb logic.
 
-	* kagoiri-musume/kagoiri-musume.css:
-	added a.clickable:hover style.
+	* kagoiri-musume/kagoiri-musume.css: added a.clickable:hover style.
+
+	* test/test4.scm: removed filename hidden input.
 
 	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
 	removed filename hidden input.
 	gauche-0.8.6 can get uploaded filename from request.
 
-	* kagoiri-musume/class.kahua:
-	added notify-addresses to <unit> class.
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/parts-collection.kahua, test/test2.scm, test/test4.scm:
+	added notify-addresses.
+
+	* kagoiri-musume/class.kahua: added notify-addresses to <unit> class.
 	added normalize-addresses generic function.
 
 	* kagoiri-musume/gadget.kahua:
 	added attachment file url to submit mail.
 
-	* kagoiri-musume/kagoiri-musume.kahua:
-	added bookmark deleting button.
+	* kagoiri-musume/kagoiri-musume.kahua: added bookmark deleting button.
 	chnaged mypage to bookmark view.
+
+2005-11-23  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	refactoring codes.
+
+2005-11-23  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: fixed bookmark bug.
 
 	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, test/test4.scm:
 	added song bookmark page to mypage.
 
-	* kagoiri-musume/class.kahua:
-	added %properties slot to <fan> class.
+	* kagoiri-musume/class.kahua: added %properties slot to <fan> class.
 
-	* kagoiri-musume/kagoiri-musume.css:
-	added "overflow: auto" to pre tag.
+2005-11-23  cut-sea  <cut-sea@ipadev>
 
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua, VERSION:
+	refactoring codes.
+
+2005-11-23  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.css: added "overflow: auto" to pre tag.
+
+	* kagoiri-musume/gadget.kahua:
+	added X-Kagoiri-Unit-Id to submit mail header.
+
+	* plugins/sendmail-with-headers.scm:
+	changed header converter to ignore head when value is #f.
 
 	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
 	added rfc.uri to allow-module
 	removed rfc.base64 from allow-module
 
-	* kagoiri-musume/gadget.kahua:
-	changed "From:" address to current user.
+	* kagoiri-musume/gadget.kahua: added Reply-To field to submit mail.
+
+	* kagoiri-musume/gadget.kahua: changed "From:" address to current user.
 	added "Reply-to:" address.
-	added X-Kagoiri-Unit-Id to submit mail header.
 
 	* plugins/sendmail.scm, Makefile.in, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, test/common.scm.in:
 	changed to use new sendmail plugin.
 
-	* plugins/sendmail-with-headers.scm:
-	added new sendmail plugin.
+	* plugins/sendmail-with-headers.scm: added new sendmail plugin.
 	new plugin can handle mail header.
 
-2005-11-23  SHIBATA Tomohisa  <shiata@kahua.org>
-
-	* kagoiri-musume/kagoiri-musume.kahua:
-	* kagoiri-musume/kagoiri-musume.js:
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua:
 	Improved sort filter and search function code.
 	fixed song navigation bug.
 
-2005-11-22  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/kagoiri-musume.js:
+	Improved sort filter and search function code.
+
+2005-11-22  cut-sea  <cut-sea@ipadev>
 
 	* configure.ac: release 0.0.3
 
-2005-11-21  SHIBATA Tomohisa  <shiata@kahua.org>
+2005-11-21  shibata  <shibata@ipadev>
 
-	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
-	changed to use label text for filtering cells.
-
-	* kagoiri-musume/gadget.kahua:
+	* ChangeLog, kagoiri-musume/gadget.kahua:
 	changed to send email only fan has email address.
 
-2005-11-19  cut-sea  <cut-sea@kahua.org>
+	* ChangeLog, kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
+	changed to use label text for filtering cells.
 
-	* modify search page which search within active songs.
+2005-11-19  cut-sea  <cut-sea@ipadev>
 
-2005-11-13  cut-sea  <cut-sea@kahua.org>
+	* ChangeLog: touch ChangeLog
 
-	* refactoring codes.
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	refactoring codes.
 
-2005-11-12  SHIBATA Tomohisa  <shibata@kahua.org>
+	* kagoiri-musume/class.kahua, kagoiri-musume/search.kahua:
+	add predicate method active? for <song> class.
+	and modify search page's search area within active.
 
-	* kagoiri-musume.kahua: added sort key to table-head.
+2005-11-17  shibata  <shibata@ipadev>
 
-	* kagoiri-musume.js:
+	* kagoiri-musume/kagoiri-musume.js:
+	changed search text position (search_musume).
+
+2005-11-16  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: bug fix.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua, DIST_EXCLUDE_X:
+	refactoring codes.
+
+2005-11-15  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in, kagoiri-musume/images/logo-trans.gif, kagoiri-musume/images/logo.gif, kagoiri-musume/images/title-trans.gif, kagoiri-musume/images/title.gif:
+	add image file for source tree.
+
+2005-11-14  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: refactoring.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/parts-collection.kahua:
+	refactoring codes.
+
+2005-11-13  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	refactoring codes.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua, test/test4.scm:
+	prepare for refactoring of unify create unit and edit unit routine.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	refactoring codes.
+
+	* kagoiri-musume/parts-collection.kahua:
+	a bit touch for refactoring codes.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	refactoring codes.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	a bit touch for refactoring codes.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, test/test4.scm, kagoiri-musume/parts-collection.kahua, ChangeLog, VERSION:
+	refactoring codes.
+
+	* configure.ac: cvs tag 0.0.3_pre1.
+
+	* kagoiri-musume/sys-admin.kahua, test/parts.scm:
+	test/send&pick modified.
+	directly touched function is header->sxml.
+	so, i ignore url fragment part at testing.
+
+	* updates/changeclass.scm: add changeclass.scm to source tree.
+
+2005-11-12  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: removed debug tag.
+
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua:
+	add changelog message.
+
+	* kagoiri-musume/kagoiri-musume.kahua: removed debug-print.
+
+	* test/test4.scm, kagoiri-musume/kagoiri-musume.kahua:
+	added sort key to table-head.
+
+	* kagoiri-musume/kagoiri-musume.js:
 	changed to save sort state to melody-list navigation.
 
-	* gadget.kahua: changed to guess string encode.
+	* kagoiri-musume/class.kahua: added compare-value method to <musume>.
 
-2005-11-12  cut-sea  <cut-sea@kahua.org>
+2005-11-12  cut-sea  <cut-sea@ipadev>
 
-	* add update directory into source tree.
-	  this directory includes version update class-redefine like script.
-	* add remove-musume function for developer.
-	* add revival-delete-song function for song's owner.
-	* add function to regress removed musume into system-admin.
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/search.kahua, kagoiri-musume/sys-admin.kahua:
+	a bit refactoring.
 
-2005-11-09  cut-sea  <cut-sea@kahua.org>
+2005-11-12  shibata  <shibata@ipadev>
 
-        * initdb.scm: modify common? definition.
+	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
+	fixed no filter select bug.
 
-        * initdb.scm: roll back global-variable-bound?->symbol-bound?.
-        So, this change is task on future.
+	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
+	changed to save filter state to melody-list navigation.
 
-        * initdb.scm: change symbol-bound? to global-variable-bound?.
+2005-11-12  cut-sea  <cut-sea@ipadev>
 
-2005-11-08  cut-sea  <cut-sea@kahua.org>
-
-        * initdb.scm: guest user add into initdb.scm.
-        and hide change-password link for guest user.
-
-        * app-servers: euc encoding specification.
-
-2005-11-05  SHIBATA Tomohisa  <shibata@kahua.org>
+	* ChangeLog, kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua, test/test4.scm:
+	add revival-delete-song function for song's owner.
 
 	* kagoiri-musume/kagoiri-musume.kahua:
-	added filename hidden input.
+	bug fix for musume-list's dropdownlist multiple selection.
 
-	* test/test1.scm, test/test2.scm, kagoiri-musume/page.kahua:
-	improved onload events.
+2005-11-12  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/gadget.kahua, plugins/sendmail.scm:
+	changed to guess string encode.
+
+2005-11-12  cut-sea  <cut-sea@ipadev>
+
+	* ChangeLog, kagoiri-musume/sys-admin.kahua, test/test1.scm:
+	add function to regress removed musume into system-admin.
+
+	* DIST_EXCLUDE_X, kagoiri-musume/kagoiri-musume.kahua:
+	confirm at remove musume.
+
+	* ChangeLog, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/user-setting.kahua, test/test4.scm, updates/update0_0_2_to_0_0_3.scm:
+	add update directory into source tree.
+	this directory includes version update class-redefine like script.
+	add remove-musume function for developer.
+
+2005-11-09  cut-sea  <cut-sea@ipadev>
+
+	* VERSION, test/test4.scm: test construct.
+	just ,so just a basic function tests are implemented.
+
+	* configure.ac: change tag in configure.ac.
+
+	* ChangeLog: edit ChangeLog.
+
+	* test/test4.scm: construct test.
+
+	* initdb.scm, kagoiri-musume/class.kahua, test/test1.scm, test/test3.scm:
+	modify common? definition.
+
+	* initdb.scm, kagoiri-musume/util.kahua:
+	roll back global-variable-bound?->symbol-bound?.
+	So, this change is task on future.
+
+2005-11-08  cut-sea  <cut-sea@ipadev>
+
+	* initdb.scm, kagoiri-musume/util.kahua:
+	change symbol-bound? to global-variable-bound?.
 
 	* kagoiri-musume/kagoiri-musume.kahua:
+	modify id number of song at melody-list's dt tag.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add css class for song list's dt tag elements.
+
+2005-11-08  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	changed to use sort and reverse instead of sort! and reverse!.
+
+2005-11-08  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	modify common? and common:* tags.
+	and we controll that guest user can't post all data.
+
+	* initdb.scm, kagoiri-musume/page.kahua, test/test1.scm, test/test2.scm, test/test3.scm, test/test4.scm:
+	guest user add into initdb.scm.
+	and hide change-password link for guest user.
+
+	* app-servers, plugins/css.scm, plugins/kagoiri-musume.scm, plugins/sendmail.scm, test/common.scm.in, test/parts.scm, test/test.conf, test/test1.scm, test/test2.scm, test/test3.scm, test/test4.scm:
+	euc encoding specification.
+
+2005-11-07  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/search.kahua: added "coding: euc-jp".
+
+2005-11-05  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua, test/test2.scm, test/test4.scm:
+	against for double click by only javascript.
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	a bit touch.
+
+2005-11-04  shibata  <shibata@ipadev>
+
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua:
+	supported IE's upload file name.
+
+2005-11-04  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	add has-item? checker.
+	We set each property has no items.
+	Then, the property can't visible in that unit.
+
+2005-11-04  shibata  <shibata@ipadev>
+
+	* ChangeLog, test/test1.scm, test/test2.scm, kagoiri-musume/page.kahua:
 	improved onload events.
+
+	* kagoiri-musume/kagoiri-musume.kahua: improved onload events.
 	changed message catalog path.
 
 	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.js:
 	improved onload events.
 
+2005-11-04  cut-sea  <cut-sea@ipadev>
 
-2005-11-04  SHIBATA Tomohisa  <shibata@kahua.org>
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	change checker function unit-fan? to developer-or-fan?
 
-	* kagoiri-musume/gadget.kahua:
-	* kagoiri-musume/kagoiri-musume.js:
-	* kagoiri-musume/kagoiri-musume.kahua:
-	* kagoiri-musume/page.kahua:
-	* test/test1.scm:
-	* test/test2.scm:
-	* test/test3.scm:
-	* test/test4.scm:
-	added auto focusing javascript function.
-	auto focus on main input box.
+2005-11-03  shibata  <shibata@ipadev>
 
-2005-11-03  cut-sea  <cut-sea@kahua.org>
+	* ChangeLog, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/page.kahua, test/test1.scm, test/test2.scm, test/test3.scm, test/test4.scm:
+	added auto focus logic.
 
-	* ChangeLog: add check to select fan when create new unit.
+2005-11-03  cut-sea  <cut-sea@ipadev>
+
+	* ChangeLog: ChangeLog replace by rcs2log generated ChangeLog.
+
+	* ChangeLog, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	add check to select fan when create new unit.
 
 	* ChangeLog: write ChangeLog 0.0.2_pre1.
 	after now, we write ChangeLog each time.
@@ -153,39 +419,178 @@
 
 2005-11-03  shibata  <shibata@ipadev>
 
+	* kagoiri-musume/kagoiri-musume.kahua: fixed extra close parenthesis..
+
+	* kagoiri-musume/kagoiri-musume.kahua: added incremental search.
+	changed song listing order to descending-order.
+
+	* kagoiri-musume/kagoiri-musume.js: added incremental search.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	fix musume navigation (sort musume by ctime).
+
+	* kagoiri-musume/kagoiri-musume.kahua: fixed format miss.
+
 	* Makefile.in:
 	added '--no-overwrite' option to 'user-setting.kahua' rule.
 
-2005-11-03  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/kagoiri-musume.kahua: changed issue no to 3 digit.
 
-	* Makefile.in: use text.gettext.
+2005-11-03  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	finish messages for gettext method.
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/messages.kahua, kagoiri-musume/page.kahua, kagoiri-musume/search.kahua, kagoiri-musume/sys-admin.kahua, plugins/kagoiri-musume.scm:
+	use text.gettext.
 	and translate messages in order to prepare gettext.
 
-	* Makefile.in: add message.kahua,which message catalog for default.
+2005-11-03  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/messages.kahua: dadded 'recent change' message.
+
+	* kagoiri-musume/kagoiri-musume.kahua: added 'recent change' to mypage.
+
+	* kagoiri-musume/class.kahua:
+	added object-compare method to <song>. sort by songs's ctime.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	added "next", "prev" link to melody-list.
+
+2005-11-03  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/messages.kahua, kagoiri-musume/search.kahua:
+	construct message catalog.
+
+2005-11-02  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/messages.kahua, kagoiri-musume/page.kahua, test/test2.scm, kagoiri-musume/sys-admin.kahua:
+	construct message catalog.
+
+	* kagoiri-musume/messages.kahua: a bit touch.
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/messages.kahua:
+	add message.kahua,which message catalog for default.
 	and separete messages into this file.
 
-2005-10-31  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/kagoiri-musume.kahua: prepare for message catalog.
 
-	* Makefile.in:
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch .
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/parts-collection.kahua:
+	bug fix and test pass check.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	bug fix at delete unit, error was occured.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	view control by fan vs units at unit-list.
+
+2005-11-01  cut-sea  <cut-sea@ipadev>
+
+	* test/test4.scm: test construct.
+
+2005-10-30  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/class.kahua: removed duplicated 'load'.
+
+2005-10-30  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in, test/parts.scm, test/test4.scm:
 	add test/test4.scm and construct test code for unit-list.
 
-2005-10-28  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add error message for musume-new page.
 
-	* initdb.scm: test modify.
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch action of unit-edit.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua, plugins/kagoiri-musume.scm, test/test2.scm:
+	add error message parameter and tag function.
+
+2005-10-29  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, test/test2.scm:
+	a bit touch.
+
+2005-10-29  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/parts-collection.kahua: added define-checker macro.
+
+	* kagoiri-musume/kagoiri-musume.js: fixed problem with IE.
+
+2005-10-28  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua: define <errorlog> class.
+
+	* kagoiri-musume/kagoiri-musume.kahua: parse mailto link.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	make invisible delete and edit unit by client.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	apply shibata's user interface of unit-new for unit-edit page.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	modify parts of unit-list.
+
+	* initdb.scm, test/test1.scm, test/test3.scm: test modify.
+
+2005-10-27  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/sys-admin.kahua, test/test1.scm, test/test3.scm:
+	add developer role and client role.
+	this is for visible control sxml parts.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/parts-collection.kahua:
+	modify macros for custom tags.
+
+2005-10-26  cut-sea  <cut-sea@ipadev>
+
+	* plugins/kagoiri-musume.scm, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/parts-collection.kahua:
+	construct custom tags.
+
+	* kagoiri-musume/parts-collection.kahua:
+	constracut custom node generate macro and macros.
+	but not check this working.
+
+2005-10-25  shibata  <shibata@ipadev>
+
+	* test/test1.scm, test/test2.scm, test/test3.scm:
+	changed to use test/send&pick or header->sxml.
+
+	* test/parts.scm: added some header testing function.
+
+	* kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua:
+	added select order changer.
 
 2005-10-23  shibata  <shibata@ipadev>
 
-	* Makefile.in: marged for 'for-mysql_marge-1'.
+	* test/test1.scm.in, test/test2.scm.in, test/test3.scm.in, Makefile.in, kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.js, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/page.kahua, kagoiri-musume/parts-collection.kahua, test/common.scm.in, test/parts.scm, test/test1.scm, test/test2.scm, test/test3.scm:
+	marged for 'for-mysql_marge-1'.
 
-2005-10-23  cut-sea  <cut-sea@kahua.org>
+2005-10-23  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: file upload bug fix.
+	change upload path to under static-document.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	a bit refactoring.
 
 	* ChangeLog: write ChangeLog.
+
+2005-10-22  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	at least, support http/https/ftp uri string to change link.
+
+	* kagoiri-musume/page.kahua, kagoiri-musume/sys-admin.kahua, test/test1.scm.in, test/test2.scm.in, test/test3.scm.in:
+	add footer for page-base.
 
 2005-10-22  shibata  <shibata@ipadev>
 
 	* initdb.scm: merged from "for-mysql".
 
-2005-10-22  cut-sea  <cut-sea@kahua.org>
+2005-10-22  cut-sea  <cut-sea@ipadev>
 
 	* initdb.scm: delete rm command from initdb.scm
 
@@ -193,42 +598,99 @@
 
 	* initdb.scm: removed "rm -rf dbpath".
 
+	* kagoiri-musume/parts-collection.kahua: added select option generator.
+
+	* kagoiri-musume/kagoiri-musume.kahua: added category to musume-list.
+
+	* kagoiri-musume/kagoiri-musume.css: move header to top:0px
+
+	* test/test1.scm.in, test/test2.scm.in, test/test3.scm.in:
+	move dependency setting to common.scm.in.
+
+	* test/test1.scm, test/test2.scm, test/test3.scm: New file.
+
+	* test/test1.scm, test/test2.scm, test/test3.scm:
+	move dependency setting to common.scm.in
+
+	* test/parts.scm: New file.
+
+	* test/parts.scm: add test pattern parts.
+
+	* test/common.scm.in: New file.
+
+	* test/common.scm.in: added
+
+	* kagoiri-musume/page.kahua: added some id and class attr.
+	change header link order.
+
+	* kagoiri-musume/kagoiri-musume.kahua: added some id and class attr.
+	added *all* assign filter option to musume-list.
+	added realtime multi filter to musume-list.
+
+	* kagoiri-musume/kagoiri-musume.js: Improved sort_table function.
+	added filter_table and util function.
+
+	* kagoiri-musume/kagoiri-musume.css: add some styles.
+
 	* Makefile.in: add rule for test/common.scm.in.
 	remove rule for test/test*.scm.in.
 
-2005-10-20  cut-sea  <cut-sea@kahua.org>
+2005-10-19  cut-sea  <cut-sea@ipadev>
 
 	* VERSION, configure.ac: cvs tag 0.0.1.
-
-2005-10-19  cut-sea  <cut-sea@kahua.org>
 
 	* INSTALL, Makefile.in, initdb.scm: remove 'make dbinit' step.
 	So,in initdb.scm,check find-kahua-instance instances.
 
-2005-10-19  shibata  <shibata@ipadev>
-
-	* Makefile.in: add '.' and 'KAHUALIB' to load-path for test.
-
 2005-10-18  shibata  <shibata@ipadev>
 
-	* Makefile.in: add javascript file.
+	* Makefile.in, test/test1.scm.in, test/test2.scm.in, test/test3.scm.in:
+	add '.' and 'KAHUALIB' to load-path for test.
 
-2005-10-17  cut-sea  <cut-sea@kahua.org>
+	* test/test3.scm.in: add script tag test.
+
+	* kagoiri-musume/page.kahua, test/test1.scm.in, test/test2.scm.in, test/test3.scm.in:
+	fix attribute bug.
+	(src/ -> src)
+	add script tag test.
+
+2005-10-17  shibata  <shibata@ipadev>
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.js, kagoiri-musume/page.kahua:
+	add javascript file.
+
+	* kagoiri-musume/kagoiri-musume.kahua: add sortable table.
+	We need template.
+
+2005-10-17  cut-sea  <cut-sea@ipadev>
 
 	* INSTALL, VERSION, configure.ac: change 0.0.1_pre1 tag.
 	and add comment for INSTALL.
 
-2005-10-16  cut-sea  <cut-sea@kahua.org>
+2005-10-16  cut-sea  <cut-sea@ipadev>
 
-	* Makefile.in: construct test.
+	* test/test3.scm.in: construct test.
+	change parameter test done.
 
-2005-10-15  cut-sea  <cut-sea@kahua.org>
+	* test/test3.scm.in: construct test.
+
+	* test/test3.scm.in: construct test.
+	add test3.scm.in
+
+	* Makefile.in, test/test1.scm.in, test/test2.scm.in: construct test.
+
+2005-10-15  cut-sea  <cut-sea@ipadev>
 
 	* INSTALL, Makefile.in: Edit INSTALL.
 
+	* test/test.scm.in, test/test1.scm.in, test/test2.scm.in:
+	remove test/test.scm.in
+	add test/test[12].scm.in
+
 	* Makefile.in: construct test.
 
-	* INSTALL, Makefile.in, initdb.scm: we go into fsdb world.
+	* INSTALL, Makefile.in, initdb.scm, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/user-setting.kahua, test/test.scm.in:
+	we go into fsdb world.
 	and improve build process.
 	we just do.
 	% ./DIST tgz
@@ -239,101 +701,445 @@
 	% make install
 	see INSTALL
 
-	* Makefile.in: remove plugins/upload.scm
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua, plugins/upload.scm, test/test.scm.in:
+	remove plugins/upload.scm
 
-	* INSTALL, Makefile.in, initdb.scm: remove kagoiri-musume/local.kahua.
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/user-setting.kahua:
+	bug fix for file uploaded file path name.
+	and add file extension slot into <file> class.
+
+	* INSTALL, Makefile.in, initdb.scm, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua, kagoiri-musume/page.kahua, kagoiri-musume/user-setting.kahua, kagoiri-musume/util.kahua:
+	remove kagoiri-musume/local.kahua.
 	instead of it, i add kagoiri-musume/user-setting.kahua, kagoiri-musume/util.kahua.
 
-2005-10-13  cut-sea  <cut-sea@kahua.org>
+2005-10-12  cut-sea  <cut-sea@ipadev>
 
-	* initdb.scm: construct test code.
+	* initdb.scm, test/test.scm.in: construct test code.
 	when lougout, then test redirect header "Moved 302".
 
-2005-10-10  cut-sea  <cut-sea@kahua.org>
+	* test/test.scm.in: construct test code.
 
-	* initdb.scm: *** WARNING ***
+2005-10-10  cut-sea  <cut-sea@ipadev>
+
+	* test/test.scm.in: construct test.
+
+	* test/test.scm.in: construct test.scm.
+	as this result, exception occured,but tests are all passed.
+
+	* kagoiri-musume/class.kahua, test/test.scm.in: test construction.
+
+	* test/test.conf, test/test.scm.in: first test code add.
+	and test.conf file added.
+
+	* kagoiri-musume/search.kahua:
+	a change node-set and map to map/ at search.kahua.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/sys-admin.kahua:
+	a bug fix for unit-list's fans separeter.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/sys-admin.kahua:
+	email class added.
+	fan has the instance of <email>.
+
+	* initdb.scm, kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/search.kahua, kagoiri-musume/sys-admin.kahua:
+	*** WARNING ***
 	change class music to song.
 	change fan class structure, which has slot of kahua-user.
 	most of changes are incompatible for before.
 
-2005-10-03  cut-sea  <cut-sea@kahua.org>
+2005-10-08  cut-sea  <cut-sea@ipadev>
 
-	* Makefile.in: add plugin/upload.scm written by bizen.
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	last change to prepare for fan-id -> fan.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add routine which auto generate upload directory.
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	replace sys-rename -> copy-file(at file.util).
+
+2005-10-06  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/gadget.kahua: modify mail format, a bit.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	a bug fix for logic when send or not send mail.
+	and modify mail format, so add title.
+
+	* kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	change path name rule for uploaded file's.
+	new name is created by append unit,musume and music id separated by '_'.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua:
+	file upload implemented.
+
+2005-10-05  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	<file> class which will be used file upload is added.
+	and add files slot into <musume> class.
+	code arrangement, move sendmail-lite into gadget.kahua.
+
+2005-10-03  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	join file upload form to the other form.
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua, plugins/upload.scm:
+	add plugin/upload.scm written by bizen.
 	and add only upload design into melody-list.
 
-2005-10-02  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	add alias method for <fan-property>.
+	code-of and disp-name-of are more convenient method to write application.
 
-	* Makefile.in: create new file kagoiri-musume/sys-admin.kahua.
+	* kagoiri-musume/class.kahua:
+	add new slot unit into <musume> class which will replace unit-id slot value.
+	and add new slot musume into <music> class which will replace musume-id slot value.
+	this work data structure transform.
+
+2005-10-02  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/sys-admin.kahua:
+	prepare for change class about priority, status, type, category.
+	add code slot, and copy from *id slot value at initialize stage.
+
+2005-10-01  cut-sea  <cut-sea@ipadev>
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/sys-admin.kahua:
+	create new file kagoiri-musume/sys-admin.kahua.
 	this is a page of admin-system only.
 	the other pages are kept on kagoiri-musume/kagoiri-musume.kahua.
 
-2005-10-01  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/class.kahua: a bit touch.
 
-	* Makefile.in:
+	* kagoiri-musume/kagoiri-musume.kahua:
+	a partial refactoring for melody-list and musume-new.
+
+2005-10-01  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	show update time on musume-list table.
+
+2005-10-01  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	a partial refactoring in unit-list and unit-edit.
+	and replace has-*? method to has?, each are more specialized method.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	at classes of  priority, type, status, category...
+	change id code accessor name to code-of.
+	this changes are in order to prepare class hierarchy change.
+
+	* kagoiri-musume/class.kahua: Modify accessor.
+	this modifing is prepare for change a class hierarchy
+	between priority, status, type and so on.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	add accessor of ctime-of,next-musume-no-of.
+	and drive ref procedure out.
+
+	* Makefile.in, kagoiri-musume/gadget.kahua, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/page.kahua, kagoiri-musume/parts-collection.kahua:
 	sepalate kagoiri-musume.kahua into page.kahua, gadget.kahua,
 	parts-collection.kahua and it.
 
+2005-10-01  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: fix selected attr.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	changed for new type slot.
+
+2005-10-01  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add button into admin-systempage which kick class initialize.
+
+2005-10-01  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/class.kahua: fix all-musumes filter.
+
+	* kagoiri-musume/search.kahua: changed for new type slots.
+
+2005-10-01  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua:
+	and more robastness check for update class structure.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/local.kahua: WARNING!!
+	this change destroy db and correctly running program.
+	this is a road to class change challenge by shibata and cut-sea, only.
+
 2005-09-30  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: add login menu and item count.
+
+2005-09-30  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/local.kahua: temp change db name kagoiri->kagoiri2.
+	for change code for global.
+
+2005-09-29  shibata  <shibata@ipadev>
 
 	* Makefile.in: fix.
 
 	* Makefile.in: fix rule.
 
-	* Makefile.in: add interp-css.
+	* Makefile.in, plugins/css.scm: add interp-css.
 
-2005-09-26  cut-sea  <cut-sea@kahua.org>
+	* kagoiri-musume/search.kahua: add title and name to searchable-text.
 
-	* Makefile.in: add search.kahua into Makefile.in.
+2005-09-29  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	construct admin-system page.
+	add unit management.
+	only simple function, which change fallout flag, is implemented.
+
+	* kagoiri-musume/kagoiri-musume.kahua: add message for login-page.
+	I selected very trivial solution.:-(
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add priority dropdown list into melody-list.
+	and change title display on this page.
+
+2005-09-28  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: show task status on mypage.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add thead and tbody for listing table.
+
+	* plugins/kagoiri-musume.scm:
+	add gauche.sequence module for map-with-index.
+
+	* kagoiri-musume/kagoiri-musume.css: add listing style.
+
+2005-09-28  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	construct admin-system page.
+	add priority, type, category management.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add css class as worning for login-pc-page's warning message.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	a bit touch for title display for musume-edit page.
+	but this page never construct,now.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	a bit touch title display added into unit-edit page.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	construct admin-system page.
+	add status management form.
+
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch display.
+
+	* kagoiri-musume/kagoiri-musume.kahua: construct admin-system.
+	change email, admin privilege, delete flag for user.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	at admin-system, filter out "   " special user account.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	Construct admin-system page.
+	At first, I add simple function to add fan.
+
+2005-09-28  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua:
+	add color to musume-list.
+
+2005-09-27  shibata  <shibata@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: add search in unit.
+
+	* kagoiri-musume/search.kahua: show match text field only.
+
+	* kagoiri-musume/kagoiri-musume.kahua: add mypage(show todo list).
+	change permission-check-* proc to macro.
+	add confirm dialog to unit-fallout link.
+
+2005-09-26  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add limit filter for musume-list.
+	and delete over comma before fan list of unit-list.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add submit button above textarea for musume-new and melody-list.
+	it's aim to easy use.
+
+	* kagoiri-musume/kagoiri-musume.kahua: musume-new's over check deleted.
+	We can submit only musume name.
+	Then, name set into melody.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	display hit count in musume-list table.
+	and add more infomation for mail contents.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add display temp message into musume-edit page.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	delete \r code from melody which inputed from web browser.
+	So, This is bug fix for ^M problem of a comment part of a kind of mailer.
+
+	* kagoiri-musume/kagoiri-musume.kahua: display search text box name.
+
+	* Makefile.in, kagoiri-musume/kagoiri-musume.kahua:
+	add search.kahua into Makefile.in.
 
 2005-09-25  shibata  <shibata@ipadev>
 
-	* ChangeLog: add search entry.
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/search.kahua, plugins/kagoiri-musume.scm:
+	add search entry.
 
-2005-09-23  cut-sea  <cut-sea@kahua.org>
+2005-09-24  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: delete logging for debugging.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add sendmail routine into musume-new.
+
+	* kagoiri-musume/kagoiri-musume.kahua: optimise log-format entry point.
+
+	* kagoiri-musume/kagoiri-musume.kahua: add more logging message.
+
+	* kagoiri-musume/kagoiri-musume.kahua: bug fix for change-passwd.
+	at logout, no display logout link and change-passwd link.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	change how to generate mail body.
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	add logging for mail debug.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add simple change-passwd function.
+
+	* configure, configure.lineno, kagoiri-musume/kagoiri-musume.kahua:
+	modify to correct string in mail H:M:S time string.
+
+	* kagoiri-musume/local.kahua:
+	System Title string changed to ''Groupie System''.
+
+	* kagoiri-musume/class.kahua:
+	change init-value to init-thunk for all class ctime slots.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	change using sys-ctime to using sys-localtime and sys-strftime.
+	and bug fix for init-value (sys-time) to init-form (sys-time).
+
+2005-09-24  nobsun  <nobsun@ipadev>
+
+	* kagoiri-musume/local.kahua: System name modified
+
+2005-09-24  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	Change mail subject. marge one string from base64.
+	Add type dropdown list into musume-list.
+
+2005-09-23  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: change subject separeter.
+
+	* kagoiri-musume/kagoiri-musume.kahua: change subject for mail.
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	add ces-convert for mail subject.
+
+	* kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	add base64_encode for mail subject.
+
+	* kagoiri-musume/kagoiri-musume.kahua: bug fix.
+	modify for couldn't change status/assign.
 
 	* initdb.scm: mail address modify for shibata.
 
-	* initdb.scm: bug fix for using of sendmail, To: addresses.
+	* kagoiri-musume/kagoiri-musume.kahua: bug fix musume-list.
+	display YMD was M is minutes, so modify %M->%m.
 
-	* ChangeLog: bug fix for mail contents.
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch sendmail routine.
 
-	* initdb.scm: bug fix.
+	* kagoiri-musume/kagoiri-musume.kahua: delete #?= ...
 
-2005-09-22  cut-sea  <cut-sea@kahua.org>
+	* initdb.scm, kagoiri-musume/kagoiri-musume.kahua:
+	bug fix for using of sendmail, To: addresses.
 
-	* INSTALL: add sequence number slot into music class.
+	* kagoiri-musume/kagoiri-musume.kahua: a bit touch for mail contents.
+
+2005-09-22  cut-sea  <cut-sea@ipadev>
+
+	* plugins/sendmail.scm: add plugin/sendmail.scm for make check.
+	Of course, but not install this.
+
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua:
+	bug fix for mail contents.
+
+	* initdb.scm, kagoiri-musume/kagoiri-musume.kahua: bug fix.
+
+	* kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua, plugins/kagoiri-musume.scm:
+	sendmail support.
+	when fan posted, system sendmail automatically.
+	therefore, user must be setting up sendmail.
+
+	* INSTALL, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	add sequence number slot into music class.
 	and display that # on melody-list.
 
-	* ChangeLog: improve display.
+2005-09-21  cut-sea  <cut-sea@ipadev>
 
-	* ChangeLog:
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua, plugins/kagoiri-musume.scm:
+	improve display.
+
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add posted fan's name for each posted music at melody-list page.
+
+	* ChangeLog, kagoiri-musume/kagoiri-musume.kahua:
 	modify checker predicate which is first argument of a template
 	permission-check-page and permission-check-logic.
 
-	* ChangeLog, initdb.scm: Rewrite page template.
+	* ChangeLog, initdb.scm, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	Rewrite page template.
 	And add permission checker for page template.
 	only admin role kahua-user can access system-admin page.
 
-2005-09-19  cut-sea  <cut-sea@kahua.org>
+2005-09-20  cut-sea  <cut-sea@ipadev>
 
-	* ChangeLog, DIST_EXCLUDE_X: construct pages.
+	* kagoiri-musume/kagoiri-musume.kahua:
+	add type's dropdown menu on musume-list, which works for data refinement.
 
-	* VERSION, initdb.scm: Kagoiri-Musume - Bug Tracking System.
-	Project start.
+	* kagoiri-musume/kagoiri-musume.kahua:
+	fid a similar bug like as previous bug fix.
 
-	* VERSION, initdb.scm: New file.
+	* kagoiri-musume/kagoiri-musume.kahua:
+	a bug, couldn't select correct assign data, when select at unit-edit page.
 
-	* COPYING, ChangeLog, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in:
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua:
+	bug fix and add navigation link for all pages(page template).
+	about bug fix, music object initialize run again at restart time,
+	as that result, music object generate clone.
+
+	* kagoiri-musume/class.kahua: bug fix.
+	at restart, musume's initialize run again, as the result,
+	musume-no increment and create same object.
+
+2005-09-19  cut-sea  <cut-sea@ipadev>
+
+	* kagoiri-musume/kagoiri-musume.kahua: construct page.
+
+	* kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.kahua, ChangeLog, DIST_EXCLUDE_X:
+	construct pages.
+
+	* AUTHORS, COPYING, ChangeLog, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, VERSION, app-servers, configure, configure.ac, configure.lineno, initdb.scm, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in, kagoiri-musume.conf.in, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua, kagoiri-musume/version.kahua.in, plugins/kagoiri-musume.scm, test/test.scm.in:
 	Kagoiri-Musume - Bug Tracking System.
 	Project start.
 
-	* COPYING, ChangeLog, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in:
-	New file.
-
-	* AUTHORS, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, app-servers, configure.ac, kagoiri-musume.conf.in:
-	Kagoiri-Musume - Bug Tracking System.
-	Project start.
-
-	* AUTHORS, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, app-servers, configure.ac, kagoiri-musume.conf.in:
+	* AUTHORS, COPYING, ChangeLog, DIST, DIST_EXCLUDE, DIST_EXCLUDE_X, INSTALL, Makefile.in, README, VERSION, app-servers, configure, configure.ac, configure.lineno, initdb.scm, install-sh, kagoiri-musume-start.in, kagoiri-musume-stop.in, kagoiri-musume.conf.in, kagoiri-musume/class.kahua, kagoiri-musume/kagoiri-musume.css, kagoiri-musume/kagoiri-musume.kahua, kagoiri-musume/local.kahua, kagoiri-musume/version.kahua.in, plugins/kagoiri-musume.scm, test/test.scm.in:
 	New file.
 
