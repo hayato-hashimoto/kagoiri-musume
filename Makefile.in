@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.28 2006/01/08 08:40:09 cut-sea Exp $
+# $Id: Makefile.in,v 1.29 2006/01/24 12:18:50 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -78,21 +78,21 @@ all:	test/common.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
 	ln -s . checkout
 
 kagoiri-musume-start: kagoiri-musume-start.in
-	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $? > $@
 	chmod +x $@
 
 kagoiri-musume-stop: kagoiri-musume-stop.in
-	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $? > $@
 	chmod +x $@
 
 test/common.scm: test/common.scm.in
-	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
+	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" $? > $@
 
 kagoiri-musume/version.kahua: kagoiri-musume/version.kahua.in
-	sed -e "s@###KAGOIRI_MUSUME_VERSION###@$(KAGOIRI_MUSUME_VERSION)@" $< > $@
+	sed -e "s@###KAGOIRI_MUSUME_VERSION###@$(KAGOIRI_MUSUME_VERSION)@" $? > $@
 
 kagoiri-musume.conf: kagoiri-musume.conf.in
-	sed -e "s@###KAGOIRI_MUSUME_INPLACE_SOCKETBASE###@$(KAGOIRI_MUSUME_INPLACE)/tmp@" -e "s@###KAGOIRI_MUSUME_INPLACE_WORKING###@$(KAGOIRI_MUSUME_INPLACE)@" -e "s@###KAGOIRI_MUSUME_INPLACE_DOCPATH###@$(KAGOIRI_MUSUME_INPLACE)@" $< > $@
+	sed -e "s@###KAGOIRI_MUSUME_INPLACE_SOCKETBASE###@$(KAGOIRI_MUSUME_INPLACE)/tmp@" -e "s@###KAGOIRI_MUSUME_INPLACE_WORKING###@$(KAGOIRI_MUSUME_INPLACE)@" -e "s@###KAGOIRI_MUSUME_INPLACE_DOCPATH###@$(KAGOIRI_MUSUME_INPLACE)@" $? > $@
 
 check:  all
 	rm -f test/test.log
