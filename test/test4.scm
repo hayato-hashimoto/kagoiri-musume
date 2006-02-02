@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.22 2006/01/07 09:49:10 cut-sea Exp $
+;; $Id: test4.scm,v 1.23 2006/02/02 14:22:04 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -420,7 +420,7 @@
 				 (option (@ (value "cut-sea")) "cut-sea")
 				 (option (@ (value "guest")) "guest")))
 			(td
-			 (input (@ (value "新しい娘。加入") (type "submit"))))))
+			 (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button"))))))
 		      (table
 		       (tr
 			(td "タイトル" (span ?@ "(※)"))
@@ -430,7 +430,7 @@
 		       (tr (td "ファイル")
 			   (td (input (@ (type "file") (name "file")))
 			       (input (@ (value "") (type "hidden") (name "filename"))))))
-		      (input (@ (value "新しい娘。加入") (type "submit")))))
+		      (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button")))))
 	   ,*footer*))
         (call-worker/gsid
 	 w

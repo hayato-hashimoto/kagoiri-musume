@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.34 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.35 2006/02/02 14:22:04 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -232,7 +232,7 @@
      (th/ ($$ "アサイン")))
     (tr/
      (map/ make-col $property-list$ $properties-accessor-list$)
-     (td/ (input/ (@/ (type "submit") (value ($$ "新しい娘。加入")))))))
+     (td/ (input/ (@/ (type "button") (onclick "submit();") (value ($$ "新しい娘。加入")))))))
    (table/ (tr/ (td/ ($$ "タイトル") (span/ (@/ (class "warning")) ($$ "(※)")))
 		(td/ (input/ (@/ (type "text") (name "name")
 				 (id "focus") (size 80)))
@@ -243,7 +243,7 @@
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))
 		     (input/ (@/ (type "hidden") (name "filename") (value ""))))))
-   (input/ (@/ (type "submit") (value ($$ "新しい娘。加入"))))))
+   (input/ (@/ (type "button") (onclick "submit();") (value ($$ "新しい娘。加入"))))))
 
 ;;-------------------------------------------------------------
 ;; high level  parts collection
