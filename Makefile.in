@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.30 2006/02/02 15:07:02 cut-sea Exp $
+# $Id: Makefile.in,v 1.31 2006/02/02 15:21:01 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -64,7 +64,7 @@ JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILES  = kagoiri-musume.scm css.scm sendmail-with-headers.scm calendar.scm
+PLUGINFILES  = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm
 
 
 

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common.scm.in,v 1.5 2005/11/23 14:46:46 shibata Exp $
+;; $Id: common.scm.in,v 1.6 2006/02/02 15:21:01 cut-sea Exp $
 
 (load "parts.scm")
 
@@ -21,7 +21,7 @@
 
   (for-each (lambda (f)
               (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
-            (list "css.scm" "kagoiri-musume.scm" "sendmail-with-headers.scm"))
+            (list "css.scm" "calendar.scm" "kagoiri-musume.scm" "sendmail-with-headers.scm"))
 
   (kahua-init *config*)
 
