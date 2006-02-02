@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.13 2006/01/07 09:49:10 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.14 2006/02/02 17:12:08 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -325,4 +325,47 @@ a.clickable:hover
 #bookmark-button {
     position:absolute;
     right:10px;
+}
+
+/*
+ * Table of Calendar
+ */
+table.calendar th,td{
+  font-size: 150%;
+  text-align: right;
+}
+
+td.other-month {
+  color: #666666;
+  background-color: #aaaaaa;
+}
+
+td.workday {
+  background-color: #ffffff;
+}
+
+td.saturday {
+  background-color: #00ddff;
+}
+
+td.sunday {
+  background-color: #ff00ff;
+}
+
+td.compensate {
+  background-color: #ff0080;
+}
+
+td.holy {
+  background-color: #ff0080;
+}
+
+td.today {
+  font-weight: bold;
+  background-color: #00ff00;
+}
+
+td.limit {
+  font-weight: bold;
+  background-color: #ff0000;
 }

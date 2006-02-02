@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.36 2006/02/02 16:23:31 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.37 2006/02/02 17:12:08 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -239,7 +239,9 @@
 		     (error:span/ (@/ (class "warning")) (set-error-message #f))))
 	   (tr/ (td/ ($$ "内容"))
 		(td/ (textarea/ (@/ (type "text") (name "melody")
-				    (rows 20) (cols 80)))))
+				    (rows 20) (cols 80))))
+		#;(td/ (calendar/ (today) (tomorrow))) ;; テスト
+		)
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))
 		     (input/ (@/ (type "hidden") (name "filename") (value ""))))))
@@ -402,11 +404,19 @@
 ;;-------------------------------------------------------------
 ;; calendar
 ;;-------------------------------------------------------------
-(define (calendar/ date)
+;;
+;; dateはデフォルト今日で移動すればその月の日付、
+;; targetは期限に設定(デフォルト#f)
+;;
+(define (calendar/ date target)
   (define (day/ date) (x->string (date-day date)))
   (define (month/ date) (x->string (date-month date)))
   (define (year/ date) (x->string (date-year date)))
   (table/
+   (@ (class "calendar"))
+   (tr/ (th/ "<<")
+	(th/ (@/ (colspan 5)) #`",(year/ date)/,(month/ date)")
+	(th/ ">>"))
    (tr/ (node-set
 	 (map (lambda (w)
 		(th/ (x->string w)))
@@ -415,17 +425,19 @@
 	   (tr/
 	    (map/ (lambda (d)
 		    (td/
-		     (if (same-month? d date)
-			 (case (holiday? d)
-			   ((0) (@/ (class "workday")))
-			   ((1) (@/ (class "saturday")))
-			   ((2) (@/ (class "sunday")))
-			   ((3) (@/ (class "holiday")))
-			   ((4) (@/ (class "compensate")))
-			   ((5) (@/ (class "holy"))))
-			 (@/ (class "other-month")))
+		     (cond ((and target (date=? target d))
+			    (@/ (class "limit")))
+			   ((date=? (today) d)
+			    (@/ (class "today")))
+			   ((same-month? d date)
+			    (case (holiday? d)
+			      ((0) (@/ (class "workday")))
+			      ((1) (@/ (class "saturday")))
+			      ((2) (@/ (class "sunday")))
+			      ((3) (@/ (class "holiday")))
+			      ((4) (@/ (class "compensate")))
+			      ((5) (@/ (class "holy")))))
+			   (else (@/ (class "other-month"))))
 		     (day/ d)))
 		  week)))
 	 (date-slices-of-month date #t))))
-
-(make-calendar (today))
