@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.184 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.185 2006/02/02 09:40:02 cut-sea Exp $
 
 ;;
 ;; include
@@ -487,7 +487,9 @@
                                (td/ (disp-name-of (type-of m)))
                                (td/ (sys-strftime "%Y/%m/%d"
                                                   (sys-localtime (ctime-of m)))))))
-                      musumes))))))
+                      (sort musumes
+			    (lambda (m1 m2)
+			      (> (ctime-of m1) (ctime-of m2))))))))))
 
   (define (recent)
     (fieldset/
@@ -559,7 +561,7 @@
              ((todo) (todo))
              ((recent) (recent))
              ((bookmark) (bookmark))
-             (else (bookmark)))))))
+             (else (recent)))))))
 
 (define-entry (add-bookmark unit-id musume-id)
   (let1 musume (find-kahua-instance <musume> musume-id)
