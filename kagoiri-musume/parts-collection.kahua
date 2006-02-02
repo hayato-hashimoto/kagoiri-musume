@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.35 2006/02/02 14:22:04 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.36 2006/02/02 16:23:31 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -398,3 +398,34 @@
       (if unit
 	  (input/ (@/ (type "submit") (value ($$ "確定"))))
 	  (input/ (@/ (type "submit") (value ($$ "新ユニット結成")))))))))
+
+;;-------------------------------------------------------------
+;; calendar
+;;-------------------------------------------------------------
+(define (calendar/ date)
+  (define (day/ date) (x->string (date-day date)))
+  (define (month/ date) (x->string (date-month date)))
+  (define (year/ date) (x->string (date-year date)))
+  (table/
+   (tr/ (node-set
+	 (map (lambda (w)
+		(th/ (x->string w)))
+	      "日月火水木金土")))
+   (map/ (lambda (week)
+	   (tr/
+	    (map/ (lambda (d)
+		    (td/
+		     (if (same-month? d date)
+			 (case (holiday? d)
+			   ((0) (@/ (class "workday")))
+			   ((1) (@/ (class "saturday")))
+			   ((2) (@/ (class "sunday")))
+			   ((3) (@/ (class "holiday")))
+			   ((4) (@/ (class "compensate")))
+			   ((5) (@/ (class "holy"))))
+			 (@/ (class "other-month")))
+		     (day/ d)))
+		  week)))
+	 (date-slices-of-month date #t))))
+
+(make-calendar (today))
