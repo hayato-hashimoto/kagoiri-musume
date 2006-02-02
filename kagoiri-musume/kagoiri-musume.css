@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.14 2006/02/02 17:12:08 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.15 2006/02/02 17:59:12 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -330,8 +330,13 @@ a.clickable:hover
 /*
  * Table of Calendar
  */
-table.calendar th,td{
-  font-size: 150%;
+table.calendar tr th{
+  font-size: 130%;
+  text-align: center;
+}
+
+table.calendar tr td{
+  font-size: 130%;
   text-align: right;
 }
 
