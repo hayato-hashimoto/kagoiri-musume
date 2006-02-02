@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.46 2006/01/08 05:42:04 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.47 2006/02/02 10:07:58 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -64,7 +64,7 @@
                                     :subject subject
                                     :message-id message-id
                                     :in-reply-to reply-to
-                                    :x-kagoiri-unit-id (key-of unit)))
+                                    (make-keyword *x-kagoiri-mail*) (key-of unit)))
 		addresses))))
 
 (define (create-new-unit name desc fans priority status type category notify-addresses)

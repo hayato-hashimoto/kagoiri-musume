@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: user-setting.kahua,v 1.6 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: user-setting.kahua,v 1.7 2006/02/02 10:07:58 cut-sea Exp $
 ;;
 
 ;; DB Setting.
@@ -18,6 +18,8 @@
 ;;
 ;;(define *kagoiri-musume-email*
 ;;  "cut-sea@kahua.org")
+;;(define *x-kagoiri-mail*
+;;  "x-kagoiri-unit-id")
 
 ;; file upload path
 ;;
