@@ -1,3 +1,9 @@
+2006-02-10  cut-sea  <cut-sea@ipadev>
+
+	* add slot of musumes into <unit> class.
+	
+	* change melody-list's second argument(musume-id) to musume-no.
+	
 2006-01-08  cut-sea  <cut-sea@ipadev>
 
 	* kagoiri-musume/msgs/ja/kagoiri-musume.po: fix messages.

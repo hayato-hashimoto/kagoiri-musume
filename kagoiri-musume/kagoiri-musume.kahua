@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.188 2006/02/02 15:07:03 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.189 2006/02/09 15:54:40 cut-sea Exp $
 
 ;;
 ;; include
@@ -243,7 +243,7 @@
 			       ;; save file and make file object.
 			       (attach-file song file (uploaded-file-name unit musume song))
 			       (sendmail-lite unit musume song)
-			       (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)"))))))))
+			       (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
       (musume-new-table/ unit)
       )
      )))
@@ -310,7 +310,7 @@
        (begin
 	 (if (checker user)
 	     (set! (delete-of song) (not (delete-of song))))
-	 (redirect-page #`"melody-list/,(key-of unit)/,(key-of musume)#,song-id"))))))
+	 (redirect-page #`"melody-list/,(key-of unit)/,(mno-of musume)#,song-id"))))))
 
 (define (melody-format melody)
   (define (parse melody)
@@ -330,11 +330,14 @@
 	    (else (node-set (append result (list mel)))))))
   (parse melody))
 
-(define-entry (melody-list unit-id musume-id
+(define-entry (melody-list unit-id musume-no
 			   :keyword sort_state search
 			   :mvkeyword priority status type category assign)
-  (let ((unit (id->obj <unit> unit-id))
-        (musume (id->obj <musume> musume-id)))
+  (let* ((musume-no (x->integer musume-no))
+	 (unit (id->obj <unit> unit-id))
+	 (musume (find (lambda (m)
+			 (= musume-no (mno-of m)))
+		       (musumes-of unit))))
     (define (move dist)
       (let ((musumes (sort (all-active-musumes unit))))
 	(define (make-filter prop code prop-of)
@@ -358,19 +361,19 @@
 			    musumes))
 	       (pos (or (find-index (cut eq? musume <>) musumes) 0))
 	       (musume (list-ref  musumes (+ pos dist) musume)))
-	  (redirect-page #`"melody-list/,|unit-id|/,(key-of musume)?,|search|"))))
+	  (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)?,|search|"))))
 
     (permission-check-page
      (lambda (u)
        (if (viewable? unit u)
 	   u #f))
      (require-fan-message unit)
-     (if (not musume-id)
+     (if (not musume-no)
          (move 0)
 	 (list/
 	  (musume-menu/ unit-id)
           (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
-                   (@@/ (cont add-bookmark unit-id musume-id)) ($$ "ブックマークに追加"))
+                   (@@/ (cont add-bookmark unit-id musume-no)) ($$ "ブックマークに追加"))
 	  (div/
 	   (a/cont/ (@/ (class "clickable")
 			(onclick "copy_search(this)"))
@@ -401,7 +404,7 @@
 				  (attach-file song file (uploaded-file-name unit musume song))
 				  (if (not (string-null? melody))
 				      (sendmail-lite unit musume song)))))
-			(redirect-page #`"melody-list/,|unit-id|/,|musume-id|"))))
+			(redirect-page #`"melody-list/,|unit-id|/,musume-no"))))
 	   (table/
 	    (tr/
 	     (map/ (lambda (props-of header)
@@ -568,15 +571,19 @@
              ((bookmark) (bookmark))
              (else (recent)))))))
 
-(define-entry (add-bookmark unit-id musume-id)
-  (let1 musume (find-kahua-instance <musume> musume-id)
+(define-entry (add-bookmark unit-id musume-no)
+  (let* ((musume-no (x->integer musume-no))
+	 (unit (find-kahua-instance <unit> unit-id))
+	 (musume (find (lambda (m)
+			 (= musume-no (mno-of m)))
+		       (musumes-of unit))))
     (update! (ref (current-fan) 'bookmark)
              (lambda (bkmks)
                (let1 bkmks (or bkmks '())
                  (if (memq musume bkmks)
                      bkmks
                    (cons musume bkmks)))))
-    (redirect-page #`"melody-list/,|unit-id|/,musume-id")))
+    (redirect-page #`"melody-list/,|unit-id|/,musume-no")))
 
 
 

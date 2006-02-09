@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.38 2006/02/02 17:59:12 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.39 2006/02/09 15:54:40 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -194,7 +194,7 @@
 		     (td/ (@/ (value val))
 			  (a/cont/
 			   (@/ (onClick "apply_flter_state(this)"))
-			   (@@/ (cont melody-list (key-of (unit-of m)) (key-of m)))
+			   (@@/ (cont melody-list (key-of (unit-of m)) (mno-of m)))
 			   val)
 			  (format " (~a)" (length songs))))
 		   (prop-td/ priority-of priorities-of level-of disp-name-of)
@@ -240,7 +240,7 @@
 	   (tr/ (td/ ($$ "内容"))
 		(td/ (textarea/ (@/ (type "text") (name "melody")
 				    (rows 20) (cols 80))))
-		#;(td/ (calendar/ (today) (tomorrow))) ;; テスト
+		#;(td/ (calendar/ (today) (tomorrow)))
 		)
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))

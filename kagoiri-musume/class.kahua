@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.51 2006/02/02 09:40:02 cut-sea Exp $
+;; $Id: class.kahua,v 1.52 2006/02/09 15:54:40 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -32,6 +32,8 @@
    ;; categories
    (categories      :allocation :persistent :init-keyword :categories
 		    :init-value '() :accessor categories-of)
+   (musumes         :allocation :persistent :init-keyword :musumes
+		    :init-value '() :accessor musumes-of)
    (ctime           :allocation :persistent :init-keyword :ctime
 		    :init-thunk sys-time :accessor ctime-of)
    ;; delete flag
@@ -41,6 +43,15 @@
    (notify-addresses :allocation :persistent :init-keyword :notify-addresses
                      :init-value '() :accessor notify-addresses-of)
    ))
+
+;; for update version 0.1.0
+(define-method initialize ((unit <unit>) initargs)
+  (next-method)
+  (if (null? (slot-ref unit 'musumes))
+      (slot-set! unit 'musumes
+		 (sort (map identity (make-kahua-collection <musume>))
+		       (lambda (m1 m2)
+			 (> (mno-of m1) (mno-of m2)))))))
 
 (define (active? unit)
   (not (fallout-of unit)))
@@ -113,21 +124,19 @@
     (if (not (mno-of obj))
 	(begin
 	  (set! (mno-of obj) mno)
-	  (set! (next-musume-no-of unit) (+ mno 1))))))
+	  (set! (next-musume-no-of unit) (+ mno 1))
+	  (set! (musumes-of unit) (cons obj (musumes-of unit)))))))
 
 (define-method next-seq-no ((obj <musume>))
   (+ 1 (length (songs-of obj))))
 
 (define-method all-musumes ((unit <unit>))
-  (filter (lambda (m)
-	    (eq? unit (unit-of m)))
-	  (make-kahua-collection <musume>)))
+  (musumes-of unit))
 
 (define-method all-active-musumes ((unit <unit>))
   (filter (lambda (m)
-	    (and (eq? unit (unit-of m))
-		 (not (delete-of m))))
-	  (make-kahua-collection <musume>)))
+	    (not (delete-of m)))
+	  (musumes-of unit)))
 
 (define-method object-compare ((obj1 <musume>) (obj2 <musume>))
   (compare (ctime-of obj1) (ctime-of obj2)))
