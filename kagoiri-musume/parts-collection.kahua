@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.40 2006/02/10 05:59:16 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.41 2006/02/10 14:06:45 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -440,6 +440,8 @@
 			      ((4) (@/ (class "compensate")))
 			      ((5) (@/ (class "holy")))))
 			   (else (@/ (class "other-month"))))
-		     (day/ d)))
+		     (a/cont/ (@@/ (cont (entry-lambda ()
+					     (parent date d))))
+			      (day/ d))))
 		  week)))
 	 (date-slices-of-month date #t))))
