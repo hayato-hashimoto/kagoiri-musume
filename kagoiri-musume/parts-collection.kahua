@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.39 2006/02/09 15:54:40 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.40 2006/02/10 05:59:16 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -212,7 +212,7 @@
 					(sys-localtime val)))))))
 	  musumes))))
 
-(define (musume-new-table/ unit)
+(define (musume-new-table/ parent unit date limit-date)
   (define (make-col n refer)
     (has-item? unit refer
 	       (td/
@@ -240,7 +240,7 @@
 	   (tr/ (td/ ($$ "内容"))
 		(td/ (textarea/ (@/ (type "text") (name "melody")
 				    (rows 20) (cols 80))))
-		#;(td/ (calendar/ (today) (tomorrow)))
+		#;(td/ (calendar/ parent date limit-date))
 		)
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))
@@ -408,15 +408,17 @@
 ;; dateはデフォルト今日で移動すればその月の日付、
 ;; targetは期限に設定(デフォルト#f)
 ;;
-(define (calendar/ date target)
+(define (calendar/ parent date target)
   (define (day/ date) (x->string (date-day date)))
   (define (month/ date) (x->string (date-month date)))
   (define (year/ date) (x->string (date-year date)))
   (table/
    (@/ (class "calendar"))
-   (tr/ (th/ "<<")
+   (tr/ (th/ (a/cont/ (@@/ (cont (entry-lambda ()
+				     (parent (prev-month date) target)))) "<<"))
 	(th/ (@/ (colspan 5)) #`",(year/ date)/,(month/ date)")
-	(th/ ">>"))
+	(th/ (a/cont/ (@@/ (cont (entry-lambda ()
+				     (parent (next-month date) target)))) ">>")))
    (tr/ (node-set
 	 (map (lambda (w)
 		(th/ (x->string w)))

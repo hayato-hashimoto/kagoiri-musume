@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.189 2006/02/09 15:54:40 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.190 2006/02/10 05:59:16 cut-sea Exp $
 
 ;;
 ;; include
@@ -219,34 +219,37 @@
 
 (define-entry (musume-new unit-id)
   (let1 unit (id->obj <unit> unit-id)
-    (permission-check-page
-     (lambda (u)
-       (if (viewable? unit u)
-	   u #f))
-     (require-fan-message unit)
-     (musume-menu/ unit-id)
-     (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
-     (form/cont/
-      (@/ (enctype "multipart/form-data")
-	  (onsubmit "return false;"))
-      (@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
-		     (if (string-null? name)
-			 (begin
-			   (set-error-message ($$ "タイトルを入力してください。"))
-			   (redirect-page #`"musume-new/,unit-id"))
-			 (begin
-			   (if (string-null? melody) (set! melody name))
-			   (set! name (kana-trans:half->full name))
-			   (set! melody (string-join (string-split melody "\r\n") "\n"))
-			   (let1 musume (create-new-musume unit name priority status assign type category)
-			     (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
-			       ;; save file and make file object.
-			       (attach-file song file (uploaded-file-name unit musume song))
-			       (sendmail-lite unit musume song)
-			       (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
-      (musume-new-table/ unit)
-      )
-     )))
+    (define (viewer date limit-date)
+      (permission-check-page
+       (lambda (u)
+	 (if (viewable? unit u)
+	     u #f))
+       (require-fan-message unit)
+       (musume-menu/ unit-id)
+       (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
+       (form/cont/
+	(@/ (enctype "multipart/form-data")
+	    (onsubmit "return false;"))
+	(@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
+		       (if (string-null? name)
+			   (begin
+			     (set-error-message ($$ "タイトルを入力してください。"))
+			     (redirect-page #`"musume-new/,unit-id"))
+			   (begin
+			     (if (string-null? melody) (set! melody name))
+			     (set! name (kana-trans:half->full name))
+			     (set! melody (string-join (string-split melody "\r\n") "\n"))
+			     (let1 musume (create-new-musume unit name priority status assign type category)
+			       (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
+				 ;; save file and make file object.
+				 (attach-file song file (uploaded-file-name unit musume song))
+				 (sendmail-lite unit musume song)
+				 (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
+	(musume-new-table/ viewer unit date limit-date)
+	)
+       ))
+    (viewer (today) #f)
+    ))
 
 (define-entry (musume-view)
   (permission-check-page
