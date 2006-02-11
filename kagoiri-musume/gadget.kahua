@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.48 2006/02/11 06:39:48 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.49 2006/02/11 07:58:46 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -101,12 +101,13 @@
 	:path path
 	:uri uri))
 
-(define (musume-makeover! musume p s t c a)
+(define (musume-makeover! musume p s t c a d)
   (set! (priority-of musume) (id->obj <priority> p))
   (set! (status-of musume) (id->obj <status> s))
   (set! (type-of musume) (id->obj <type> t))
   (set! (category-of musume) (id->obj <category> c))
   (set! (assign-of musume) (id->obj <fan> a))
+  (set! (limit-of musume) d)
   musume)
 
 (define (unit-makeover! unit n d notify fs ps ss ts cs)
