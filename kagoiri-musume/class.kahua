@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.54 2006/02/11 10:05:12 shibata Exp $
+;; $Id: class.kahua,v 1.55 2006/02/11 10:09:02 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -43,16 +43,6 @@
    (notify-addresses :allocation :persistent :init-keyword :notify-addresses
                      :init-value '() :accessor notify-addresses-of)
    ))
-
-;; for update version 0.1.0
-(define-method initialize ((unit <unit>) initargs)
-  (next-method)
-  ;; (if (null? (slot-ref unit 'musumes))
-  (slot-set! unit 'musumes
-             (sort (filter (lambda (m) (eq? unit (unit-of m)))
-                           (make-kahua-collection <musume>))
-                   (lambda (m1 m2)
-                     (> (mno-of m1) (mno-of m2))))))
 
 (define (active? unit)
   (not (fallout-of unit)))
