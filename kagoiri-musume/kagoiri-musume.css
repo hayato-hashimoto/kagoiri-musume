@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.17 2006/02/11 10:20:33 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.18 2006/02/11 10:59:02 shibata Exp $ */
 
 /*
  * Common stuff
@@ -340,31 +340,46 @@ a.clickable:hover
 /*
  * Table of Calendar
  */
+/*
+ * Table of Calendar
+ */
+table.calendar a {
+ display:block;
+ text-decoration:none;
+ text-align:center;
+ color:black;
+}
+
+table.calender {
+ border-collapse: collapse;
+}
+
 table.calendar tr th{
-  font-size: 130%;
+
   text-align: center;
 }
 
 table.calendar tr td{
-  font-size: 130%;
+
   text-align: right;
+  bolder:1px solid black;
 }
 
-td.other-month {
-  color: #666666;
-  background-color: #aaaaaa;
+td.other-month a {
+  color: gray !important;
+
 }
 
 td.workday {
   background-color: #ffffff;
 }
 
-td.saturday {
-  background-color: #00ddff;
+td.saturday a {
+  color:blue;
 }
 
-td.sunday {
-  background-color: #ff00ff;
+td.sunday a {
+  color: red;
 }
 
 td.compensate {
@@ -375,9 +390,10 @@ td.holy {
   background-color: #ff0080;
 }
 
-td.today {
+td.today a {
   font-weight: bold;
-  background-color: #00ff00;
+  border: 2px solid orange;
+
 }
 
 td.limit {
@@ -388,4 +404,3 @@ td.limit {
 td#limit-calendar {
  vertical-align: top;
 }
-
