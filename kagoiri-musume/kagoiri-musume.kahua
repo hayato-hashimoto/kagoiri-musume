@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.192 2006/02/11 06:00:52 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.193 2006/02/11 06:39:48 cut-sea Exp $
 
 ;;
 ;; include
@@ -219,7 +219,10 @@
 	    (musume-table/ unit musumes *status-dict*))))))))
 
 (define-entry (musume-new unit-id)
-  (let1 unit (id->obj <unit> unit-id)
+  (letrec ((unit (id->obj <unit> unit-id))
+	   (target #f)
+	   (get-target (lambda _ target))
+	   (set-target! (lambda (date) (set! target date))))
     (define (viewer date limit-date)
       (permission-check-page
        (lambda (u)
@@ -246,7 +249,7 @@
 				 (attach-file song file (uploaded-file-name unit musume song))
 				 (sendmail-lite unit musume song)
 				 (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
-	(musume-new-table/ unit date limit-date))))
+	(musume-new-table/ unit date limit-date get-target set-target!))))
     (viewer (today) #f)))
 
 (define-entry (musume-view)

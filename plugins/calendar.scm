@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: calendar.scm,v 1.1 2006/02/02 15:07:04 cut-sea Exp $
+;; $Id: calendar.scm,v 1.2 2006/02/11 06:39:48 cut-sea Exp $
 
 (use srfi-1)
 (use srfi-19)
@@ -22,6 +22,7 @@
           yesterday tomorrow
           current-year prev-year next-year
           date=? date<? date<=? date>? date>=?
+	  date->sys-time sys-time->date
 	  holiday?
           )
   (depend #f))
@@ -243,6 +244,10 @@
 (define spring-equinox (make-equinox 20.8357 20.8431 21.851))
 (define autumnal-equinox (make-equinox 23.2588 23.2488 24.2488))
 
+(define (date->sys-time date)
+  (time->seconds (date->time-utc date)))
+(define (sys-time->date time)
+  (time-utc->date (seconds->time time)))
 
 (define (holiday? t)
   (define %workday 0)
