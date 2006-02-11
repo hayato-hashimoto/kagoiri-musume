@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.23 2006/02/02 14:22:04 cut-sea Exp $
+;; $Id: test4.scm,v 1.24 2006/02/11 07:07:48 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -426,7 +426,8 @@
 			(td "タイトル" (span ?@ "(※)"))
 			(td (input (@ (!permute (type "text") (name "name") ?*)))))
 		       (tr (td "内容")
-			   (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+			   (td (textarea (@ (!permute (type "text") (name "melody") ?*))))
+			   (td ?@ (table ?*)))
 		       (tr (td "ファイル")
 			   (td (input (@ (type "file") (name "file")))
 			       (input (@ (value "") (type "hidden") (name "filename"))))))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.44 2006/02/11 06:39:48 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.45 2006/02/11 07:07:48 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -240,7 +240,7 @@
 	   (tr/ (td/ ($$ "内容"))
 		(td/ (textarea/ (@/ (type "text") (name "melody")
 				    (rows 20) (cols 80))))
-		#;(td/ (@/ (id "limit-calendar"))
+		(td/ (@/ (id "limit-calendar"))
 		     (calendar/ date limit-date getter setter))
 		)
 	   (tr/ (td/ ($$ "ファイル"))
