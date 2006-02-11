@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.26 2006/02/11 08:18:27 cut-sea Exp $
+;; $Id: test4.scm,v 1.27 2006/02/11 16:49:24 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -72,7 +72,7 @@
 		     (a ?@ "パスワード変更")
 		     (span " Now login:" (a ?@ "cut-sea"))
 		     (a ?@ "Logout")
-		     (form ?@ "検索:" (input ?@)))
+		     (form ?@ (input ?@) (input ?@)))
 		(div ?@
 		     (h2 "ユニット一覧")
 		     (table ?@
@@ -184,7 +184,7 @@
 		(a ?@ "パスワード変更")
 		(span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
-		(form ?@ "検索:" (input ?@)))
+		(form ?@ (input ?@) (input ?@)))
 	   (div ?@ (h2 "『籠入娘。Test Proj.』ユニット設定")
 		(form (@ (action ?&) ?*)
 		      (table
@@ -290,7 +290,7 @@
 		(a ?@ "パスワード変更")
 		(span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
-		(form ?@ "検索:" (input ?@)))
+		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
 		(ul ?@
 		    (li (a ?@ "娘。一覧"))
@@ -380,7 +380,7 @@
 		(a ?@ "パスワード変更")
 		(span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
-		(form ?@ "検索:" (input ?@)))
+		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
 		(ul ?@
 		    (li (a ?@ "娘。一覧"))
@@ -461,7 +461,7 @@
 		(a ?@ "パスワード変更")
 		(span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
-		(form ?@ "検索:" (input ?@)))
+		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
 		(ul ?@
 		    (li (a ?@ "娘。一覧"))
@@ -543,7 +543,7 @@
 	       (a ?@ "パスワード変更")
 	       (span " Now login:" (a ?@ "cut-sea"))
 	       (a ?@ "Logout")
-	       (form ?@ "検索:" (input ?@)))
+	       (form ?@ (input ?@) (input ?@)))
 	  (div ?@
 	       (ul ?@
 		   (li (a ?@ "娘。一覧"))

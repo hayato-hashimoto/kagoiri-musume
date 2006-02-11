@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.15 2006/01/07 08:05:15 cut-sea Exp $
+;; $Id: test2.scm,v 1.16 2006/02/11 16:49:24 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -58,7 +58,7 @@
 		(a (@ (href ?&) ?*) "パスワード変更")
                 (span " Now login:" (a ?@ "cut-sea"))
 		(a ?@ "Logout")
-                (form ?@ "検索:" (input ?@)))
+                (form ?@ (input ?@) (input ?@)))
            ,(*make-body*
              (h2 "ユニット一覧")
              (table
@@ -211,7 +211,7 @@
            (a (@ (href ?&) ?*) "パスワード変更")
            (span " Now login:" (a ?@ "cut-sea"))
            (a ?@ "Logout")
-           (form ?@ "検索:" (input ?@)))
+           (form ?@ (input ?@) (input ?@)))
 	  ,(*make-body*
             (div ?@ (h3 "cut-sea さんのパスワードを変更しました")))
           ,*footer*))
