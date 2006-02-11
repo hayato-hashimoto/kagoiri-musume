@@ -1,21 +1,22 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.23 2006/02/11 15:55:45 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.24 2006/02/11 16:17:36 shibata Exp $ */
 
 /*
  * Common stuff
  */
+
 body {
   font-family: verdana, arial, helvetica, sans-serif;
-  color: black;
-  background-color: white;
   padding: 0pt;
   margin: 0pt;
+    background-color: #f7f7f7;
 }
 
 h1, h2, h3, h4, h5, h6 {
-   text-align: left;
-   color: #29661a;
-   background: transparent;
+    text-align: left;
+    /* color: #29661a; */
+    color: darkblue;
+    background: transparent;
 }
 h1 { font-size: 150% }
 h2 { font-size: 130% }
@@ -25,20 +26,33 @@ h5 { font-size: 100% }
 h6 { font-size: 100%; font-style: italic }
 
 hr {
-  padding: 0pt; margin: 0pt;
-  border-width: 1px 0px 0px 0px;
-  border-style: solid;
-  border-color: #729669;
+    padding: 0pt; margin: 0pt;
+    border-width: 1px 0px 0px 0px;
+    border-style: solid;
+    border-color: #7b96ac;
 }
 
 pre {
-  background-color: #ffffee;
-  border-color: #bbccbb;
-  border-width: 1px;
-  border-style: solid;
-  overflow: auto;
-  padding: 0.5em;
+    background-color: #e8e8e8;
+    border: solid 1px #aacccc;
+    padding-left: 10px;
+    margin-left:2em;
+    margin-right:2em;
+    overflow: auto;
 }
+
+input, textarea
+{
+    background-color: white;
+    color: inherit;
+    border: 1px solid #7b96ac;
+}
+
+input:focus, textarea:focus
+{
+    border: 1px solid darkred;
+}
+
 
 p.warning {
   color: #ff0000;
@@ -59,132 +73,33 @@ table.user-form th {
   padding-right: 5pt;
 }
 
-/*
- * Title pane
- */
-div#title-pane {
-  text-align: left;
-  font-size: 190%;
-  color: #ffffff;
-  margin: 0pt;
-  padding: 10pt 15pt 5pt 10pt;
-  background: solid;
-  background-color: #49b52f;
-}
-
-div#title-pane p {
-  margin: 0pt; padding: 0pt;
-}
-
-/*
- * Navigation pane
- */
-table#navigation-pane {
-  width: 100%;
-}
-
-td#navigation-pane-left {
-  padding-left: 2em;
-  text-align: left;
-  font-size: 90%;
-}
-
-td#navigation-pane-right {
-  text-align: right;
-  font-size: 90%;
-}
-
-/*
- * Body pane
- */
-table#body-pane {
-  width: 100%;
-}
-
-td#main-pane {
-  vertical-align:top;
-  padding: 0.5em 1em 0.5em 1em;
-}
-
-div#edit-menu {
-  text-align: right;
-  font-size: 90%;
-  color: #777777;
-}
-
-div#page-footer { 
-  text-align: right;
-  font-size: 80%;
-  color: #777777;
-}
-
-td#side-pane {
-  vertical-align:top;
-  font-size: 90%;
-  width:10em;
-  border-width: 0px 1px 0px 0px; 
-  border-style: solid;
-  border-color: #729669;
-}
-
-td#side-pane ul { 
-  margin: 0pt 5pt 0pt 5pt;
-  padding-left: 10pt;
-}
-
-td#side-pane > h2 {
-  font-size: 100%;
-  margin: 0pt 1pt 0pt 1pt;
-  padding: 0pt;
-  text-align: center;
-  background: solid;
-  background-color: #aaddbb;
-}
-
-td#side-pane p {
-  margin: 0pt 0pt 1pt 0pt;
-  padding: 1pt;
-}
 
 /*
  * Bottom pane
  */
-div#bottom-pane {
-  text-align: center;
-  font-size: 70%;
-  color: #999999;
+div#bottom-pane
+{
+    text-align: center;
+    font-size: 70%;
+    color:white;
+    background-color: #7b96ac;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
 }
 
 div#bottom-pane p {
-  padding: 0px;
-  margin: 5px;
+    margin:5px 0px;
 }
 
-/*
- * Error display
- */
-.macro-error {
-    background-color: #ee5555;
-}
-
-/*
- * Comment
- */
-.simplecommentmacro {
-  font-size: 80%;
-}
-
-.commentform {
-  font-size: 80%;
-}
-
-.comments {
-  font-size: 80%;
-}
 
 /*
  * Table listing
  */
+
+table.listing a {
+    text-decoration:none;
+}
 
 table.listing {
  clear: both;
@@ -213,8 +128,7 @@ table.listing th.asc a, table.listing th.desc a {
  background-position: 100% 50%;
  background-repeat: no-repeat;
 }
-/* table.listing th.asc a { background-image: url(../asc.png) } */
-/* table.listing th.desc a { background-image: url(../desc.png) } */
+
 table.listing tbody td, table.listing tbody th {
  border: 1px dotted #ddd;
  padding: .1em .5em;
@@ -240,17 +154,22 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 }
 
 #header {
+    z-index: 600;
     position:fixed;
-    background-color:white;
-    border-bottom:1px dotted gray;
     width:100%;
     padding-top:5px;
     height:30px;
-    top:0px
+    top:0px;
+    background-color: #7b96ac;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+
 }
 
+
 #body {
-    margin-top:35px;
+    margin:40px 10px 0px 10px;
 }
 
 #header h1 {
@@ -264,39 +183,38 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 .title {
     display:inline;
+    color:white;
 }
 
 .searchbox {
     display:inline;
     position:absolute;
     right:10px;
-    background-color:white;
 }
 
 .clickable
 {
-    /*     background-color: #eef8ff; */
-    color: inherit;
-    border: 1px solid #e8e8e8;
-    padding:2px 3px;
-    margin:0px;
+    background-color:white;
+    border: 1px solid #7b96ac;
+    padding:1px 2px 1px 2px;
+    margin-left:3px;
     cursor: pointer;
 }
 
 a.clickable
 {
-    border:solid 1px!important;
-    background-color:#eeffff!important;
-    color:#000000!important;
-    text-decoration:none!important;
-    font:menu!important;
-    line-height:1.4!important;
-    padding:1px 1px 1px 1px!important;
+    text-decoration:none;
+    margin-left:3px;
+    padding:1px 2px 1px 2px;
+    border:1px solid black;
+    color: black;
+    background-color:#e8e8e8;
 }
 
 a.clickable:hover
 {
-    background-color:#add8e6!important;
+    padding:0px 1px;
+    border: 2px solid darkred !important;
 }
 
 .menu {
@@ -308,28 +226,23 @@ a.clickable:hover
     display:inline;
 }
 
-.menu li a{
+.menu li a {
     text-decoration:none;
     margin-left:3px;
-    padding:2px 3px;
-    border:1px solid #e8e8e8;
-    color:black;
-/*     background-color:#f0f9ff; */
-}
-
-.menu li a:hover {
+    padding:1px 2px 1px 2px;
     border:1px solid black;
+    color: black;
+    background-color:#e8e8e8;
 }
 
 #search-box {
-/*     margin: 0 auto; */
     position:absolute;
     right:10px;
-/*     margin-left: 20px; */
 }
 
 #musume_list thead {
     cursor: pointer;
+    background-color:white;
 }
 
 #bookmark-button {
@@ -341,20 +254,33 @@ a.clickable:hover
  * Table of Calendar
  */
 
+
 table.calendar a {
  display:block;
  text-decoration:none;
  text-align:center;
  color:black;
+    padding:1px;
+}
+
+table.calendar a:hover {
+    border:1px solid black;
+    padding:0px;
 }
 
 table.calender {
- border-collapse: collapse;
+    border-collapse: collapse;
+    border-style:outset;
 }
 
-table.calendar tr th{
+table caption {
+    font-weight:bold;
+}
 
-  text-align: center;
+table.calendar tr th
+{
+    text-align: center;
+    background-color:lightgray;
 }
 
 table.calendar tr td{
@@ -369,14 +295,14 @@ td.other-month a {
 }
 
 td.workday a {
-  background-color: white;
+    /* background-color: white; */
 }
 
-td.saturday a {
+td.saturday a , th.saturday {
   color:blue;
 }
 
-td.sunday a {
+td.sunday a, th.sunday {
   color: red;
 }
 
@@ -421,3 +347,5 @@ td.target a {
 td#limit-calendar {
  vertical-align: top;
 }
+
+
