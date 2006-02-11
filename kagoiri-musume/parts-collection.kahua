@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.50 2006/02/11 13:24:22 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.51 2006/02/11 14:43:29 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -218,7 +218,7 @@
 					(sys-localtime val)))))))
 	  musumes))))
 
-(define (musume-new-table/ unit date limit-date getter setter)
+(define (musume-new-table/ unit date target-date getter setter)
   (define (make-col n refer)
     (has-item? unit refer
 	       (td/
@@ -247,7 +247,7 @@
 		(td/ (textarea/ (@/ (type "text") (name "melody")
 				    (rows 20) (cols 80))))
 		(td/ (@/ (id "limit-calendar"))
-		     (calendar/ date limit-date getter setter))
+		     (calendar/ date target-date getter setter))
 		)
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))
