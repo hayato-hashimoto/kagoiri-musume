@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.194 2006/02/11 07:07:48 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.195 2006/02/11 07:15:52 cut-sea Exp $
 
 ;;
 ;; include
@@ -246,7 +246,8 @@
 			     (let1 musume (create-new-musume unit name priority status assign type category)
 			       (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
 				 ;; get'n set! limit date
-;;				 (set! (limit-of musume) (date->sys-time (get-target)))
+				 (set! (limit-of musume)
+				       (and (get-target) (date->sys-time (get-target))))
 				 ;; save file and make file object.
 				 (attach-file song file (uploaded-file-name unit musume song))
 				 (sendmail-lite unit musume song)
