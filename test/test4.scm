@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.25 2006/02/11 07:48:03 cut-sea Exp $
+;; $Id: test4.scm,v 1.26 2006/02/11 08:18:27 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -359,6 +359,7 @@
 					(th ?@ "タイプ")
 					(th ?@ "カテゴリ")
 					(th ?@ "アサイン")
+					(th ?@ "期限")
 					(th ?@ "登録日")
 					(th ?@ "更新日"))) (tbody))))
 	   ,*footer*))
