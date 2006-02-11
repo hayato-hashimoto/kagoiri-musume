@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.31 2006/02/02 15:21:01 cut-sea Exp $
+# $Id: Makefile.in,v 1.32 2006/02/11 03:40:47 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -60,12 +60,11 @@ STATICFILES = kagoiri-musume/kagoiri-musume.css \
 	      kagoiri-musume/images/logo-trans.gif \
 	      kagoiri-musume/images/title.gif \
 	      kagoiri-musume/images/title-trans.gif
-JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js
+JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js kagoiri-musume/async.js
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILES  = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm
-
+PLUGINFILES  = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm async.scm
 
 
 CONFIG_GENERATED = Makefile kagoiri-musume.conf test/common.scm config.log config.status autom4*.cache

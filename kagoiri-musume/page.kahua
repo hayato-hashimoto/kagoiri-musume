@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.14 2006/01/07 10:29:19 cut-sea Exp $
+;; $Id: page.kahua,v 1.15 2006/02/11 03:40:47 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -24,7 +24,10 @@
 			    "kagoiri-musume/kagoiri-musume.css"))))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/kagoiri-musume.js")))))
+                             "kagoiri-musume/kagoiri-musume.js"))))
+	  (script/ (@/ (type "text/javascript")
+                       (src (kahua-static-document-url
+                             "kagoiri-musume/async.js")))))
    (body/
     (node-set body)
     (div/ (@/ (id "bottom-pane"))

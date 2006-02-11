@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test1.scm,v 1.13 2006/01/07 08:05:15 cut-sea Exp $
+;; $Id: test1.scm,v 1.14 2006/02/11 03:40:48 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -84,8 +84,7 @@
 
  (test* "kagoiri-musume system admin link click without admin role account"
 	`(html
-	  (head
-	   (title ?_) (meta ?@) (link ?@) (script ?@))
+	  ,*head*
 	  (body
            ,*header*
            ,(*make-body*
