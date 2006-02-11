@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.198 2006/02/11 14:43:29 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.199 2006/02/11 14:53:18 cut-sea Exp $
 
 ;;
 ;; include
@@ -223,7 +223,7 @@
 	   (target #f)
 	   (get-target (lambda _ target))
 	   (set-target! (lambda (date) (set! target date))))
-    (define (viewer date target-date)
+    (define (viewer date limit-date target-date)
       (permission-check-page
        (lambda (u)
 	 (if (viewable? unit u)
@@ -252,8 +252,8 @@
 				 (attach-file song file (uploaded-file-name unit musume song))
 				 (sendmail-lite unit musume song)
 				 (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
-	(musume-new-table/ unit date target-date get-target set-target!))))
-    (viewer (today) #f)))
+	(musume-new-table/ unit date limit-date target-date get-target set-target!))))
+    (viewer (today) #f #f)))
 
 (define-entry (musume-view)
   (permission-check-page
@@ -373,7 +373,7 @@
 		 (pos (or (find-index (cut eq? musume <>) musumes) 0))
 		 (musume (list-ref  musumes (+ pos dist) musume)))
 	    (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)?,|search|"))))
-      (define (viewer date target-date)
+      (define (viewer date limit-date target-date)
 	(permission-check-page
 	 (lambda (u)
 	   (if (viewable? unit u)
@@ -444,7 +444,7 @@
 			(td/ (textarea/ (@/ (type "text") (name "melody")
 					    (rows 10) (cols 80) (id "focus"))))
 			(td/ (@/ (id "limit-calendar"))
-			     (calendar/ date target-date get-target set-target!))
+			     (calendar/ date limit-date target-date get-target set-target!))
 			)
 		       (tr/
 			(td/ ($$ "ファイル"))
@@ -484,7 +484,7 @@
 		      (map melody-of songs)
 		      (map files-of songs))
 		)))))
-      (viewer (or (get-target) (today)) (get-target)))))
+      (viewer (or (get-target) (today)) (limit-of musume) (get-target)))))
 
 (define-entry (mypage type)
   (define (todo)

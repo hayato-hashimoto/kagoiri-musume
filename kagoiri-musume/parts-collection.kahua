@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.51 2006/02/11 14:43:29 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.52 2006/02/11 14:53:18 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -218,7 +218,7 @@
 					(sys-localtime val)))))))
 	  musumes))))
 
-(define (musume-new-table/ unit date target-date getter setter)
+(define (musume-new-table/ unit date limit-date target-date getter setter)
   (define (make-col n refer)
     (has-item? unit refer
 	       (td/
@@ -247,7 +247,7 @@
 		(td/ (textarea/ (@/ (type "text") (name "melody")
 				    (rows 20) (cols 80))))
 		(td/ (@/ (id "limit-calendar"))
-		     (calendar/ date target-date getter setter))
+		     (calendar/ date limit-date target-date getter setter))
 		)
 	   (tr/ (td/ ($$ "ファイル"))
 		(td/ (input/ (@/ (type "file") (name "file")))
@@ -415,7 +415,7 @@
 ;; dateはデフォルト今日で移動すればその月の日付、
 ;; targetは期限に設定(デフォルト#f)
 ;;
-(define (calendar/ date target getter setter)
+(define (calendar/ date limit target getter setter)
   (define (day/ date) (x->string (date-day date)))
   (define (month/ date) (x->string (date-month date)))
   (define (year/ date) (x->string (date-year date)))
@@ -424,21 +424,21 @@
    (caption/ (@/ (class "calendar")) "期限")
    (tr/ (th/ (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
-					 (calendar/ (nth-month-before 12 date) target getter setter)))) "<<"))
+					 (calendar/ (nth-month-before 12 date) limit target getter setter)))) "<<"))
 	(th/ (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
-					 (calendar/ (prev-month date) target getter setter)))) "<"))
+					 (calendar/ (prev-month date) limit target getter setter)))) "<"))
 	(th/ (@/ (colspan 3))
 	     (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
-					 (calendar/ (today) target getter setter))))
+					 (calendar/ (today) limit target getter setter))))
 			    (format "~4a - ~2,,,'0@a" (year/ date) (month/ date))))
 	(th/ (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
-					 (calendar/ (next-month date) target getter setter)))) ">"))
+					 (calendar/ (next-month date) limit target getter setter)))) ">"))
 	(th/ (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
-					 (calendar/ (nth-month-after 12 date) target getter setter)))) ">>")))
+					 (calendar/ (nth-month-after 12 date) limit target getter setter)))) ">>")))
    (tr/ (node-set
 	 (map (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
@@ -457,7 +457,7 @@
 		     (a/cont/async/ (@@/ (id "limit-calendar")
 					 (cont (lambda _
 						 (setter d)
-						 (calendar/ date d getter setter))))
+						 (calendar/ date limit d getter setter))))
 				    (day/ d))))
 		  week)))
 	 (date-slices-of-month date #t))
@@ -466,5 +466,5 @@
 		       (@@/ (id "limit-calendar")
 			    (cont (lambda _
 				    (setter #f)
-				    (calendar/ (today) #f getter setter)))) "期限クリア"))
+				    (calendar/ (today) limit #f getter setter)))) "期限クリア"))
    ))
