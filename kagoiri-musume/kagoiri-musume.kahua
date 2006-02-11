@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.195 2006/02/11 07:15:52 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.196 2006/02/11 07:48:03 cut-sea Exp $
 
 ;;
 ;; include
@@ -345,136 +345,144 @@
 	 (musume (find (lambda (m)
 			 (= musume-no (mno-of m)))
 		       (musumes-of unit))))
-    (define (move dist)
-      (let ((musumes (sort (all-active-musumes unit))))
-	(define (make-filter prop code prop-of)
-	  (if (or (null? prop)
-		  (equal? "*all*" prop))
-	      identity
-	      (lambda (m) (member (code (prop-of m)) prop))))
-	(let* ((p-filter (make-filter priority code-of priority-of))
-	       (s-filter (make-filter status code-of status-of))
-	       (t-filter (make-filter type code-of type-of))
-	       (c-filter (make-filter category code-of category-of))
-	       (a-filter (make-filter assign fan-name-of assign-of))
-	       (and-filter (lambda (m)
-                             ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
-	       (musumes (filter and-filter musumes))
-	       (musumes (if sort_state
-			    (sort musumes
-				  (lambda (x y)
-				    (string<? (compare-value x sort_state)
-					      (compare-value y sort_state))))
-			    musumes))
-	       (pos (or (find-index (cut eq? musume <>) musumes) 0))
-	       (musume (list-ref  musumes (+ pos dist) musume)))
-	  (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)?,|search|"))))
+    (letrec ((target (and (limit-of musume)
+			  (sys-time->date (limit-of musume))))
+	     (get-target (lambda _ target))
+	     (set-target! (lambda (date) (set! target date))))
+      (define (move dist)
+	(let ((musumes (sort (all-active-musumes unit))))
+	  (define (make-filter prop code prop-of)
+	    (if (or (null? prop)
+		    (equal? "*all*" prop))
+		identity
+		(lambda (m) (member (code (prop-of m)) prop))))
+	  (let* ((p-filter (make-filter priority code-of priority-of))
+		 (s-filter (make-filter status code-of status-of))
+		 (t-filter (make-filter type code-of type-of))
+		 (c-filter (make-filter category code-of category-of))
+		 (a-filter (make-filter assign fan-name-of assign-of))
+		 (and-filter (lambda (m)
+			       ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
+		 (musumes (filter and-filter musumes))
+		 (musumes (if sort_state
+			      (sort musumes
+				    (lambda (x y)
+				      (string<? (compare-value x sort_state)
+						(compare-value y sort_state))))
+			      musumes))
+		 (pos (or (find-index (cut eq? musume <>) musumes) 0))
+		 (musume (list-ref  musumes (+ pos dist) musume)))
+	    (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)?,|search|"))))
+      (define (viewer date limit-date)
+	(permission-check-page
+	 (lambda (u)
+	   (if (viewable? unit u)
+	       u #f))
+	 (require-fan-message unit)
+	 (if (not musume-no)
+	     (move 0)
+	     (list/
+	      (musume-menu/ unit-id)
+	      (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
+		       (@@/ (cont add-bookmark unit-id musume-no)) ($$ "ブックマークに追加"))
+	      (div/
+	       (a/cont/ (@/ (class "clickable")
+			    (onclick "copy_search(this)"))
+			(@@/ (cont (cut move -1)))
+			"<<" )
+	       (a/cont/ (@/ (class "clickable")
+			    (onclick "copy_search(this)"))
+			(@@/ (cont (cut move +1)))
+			">>"))
 
-    (permission-check-page
-     (lambda (u)
-       (if (viewable? unit u)
-	   u #f))
-     (require-fan-message unit)
-     (if (not musume-no)
-         (move 0)
-	 (list/
-	  (musume-menu/ unit-id)
-          (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
-                   (@@/ (cont add-bookmark unit-id musume-no)) ($$ "ブックマークに追加"))
-	  (div/
-	   (a/cont/ (@/ (class "clickable")
-			(onclick "copy_search(this)"))
-		    (@@/ (cont (cut move -1)))
-		    "<<" )
-	   (a/cont/ (@/ (class "clickable")
-			(onclick "copy_search(this)"))
-		    (@@/ (cont (cut move +1)))
-		    ">>"))
-
-	  (h3/ (format "~a - ~a：~a - ~a"
-		       (unit-name-of unit)
-		       (mno-of musume)
-		       (mname-of musume)
-		       (disp-name-of
-			(status-of musume))))
-	  (common:form/cont/
-	   (@/ (enctype "multipart/form-data"))
-	   (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file)
-			  (if (and (string-null? melody)
-				   (not file))
-			      (musume-makeover! musume priority status type category assign)
-			      (begin
-				(set! melody (string-join (string-split melody "\r\n") "\n"))
-				(let1 song (create-new-song musume melody (current-fan))
+	      (h3/ (format "~a - ~a：~a - ~a"
+			   (unit-name-of unit)
+			   (mno-of musume)
+			   (mname-of musume)
+			   (disp-name-of
+			    (status-of musume))))
+	      (common:form/cont/
+	       (@/ (enctype "multipart/form-data"))
+	       (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file)
+			      (if (and (string-null? melody)
+				       (not file))
 				  (musume-makeover! musume priority status type category assign)
-				  ;; save file and make file object.
-				  (attach-file song file (uploaded-file-name unit musume song))
-				  (if (not (string-null? melody))
-				      (sendmail-lite unit musume song)))))
-			(redirect-page #`"melody-list/,|unit-id|/,musume-no"))))
-	   (table/
-	    (tr/
-	     (map/ (lambda (props-of header)
-		     (has-item? unit props-of (th/ header)))
-		   $properties-accessor-list$
-		   $property-headers$))
-	    (tr/ (map/ (lambda (n refer items-of)
-			 (has-item? unit items-of
-				    (td/ (select/ (@/ (name n))
-						  (map/ (lambda (item)
-							  (if (eq? item (refer musume))
-							      (option/ (@/ (value (code-of item))
-									   (selected "true"))
-								       (disp-name-of item))
-							      (option/ (@/ (value (code-of item)))
-								       (disp-name-of item))))
-							(items-of unit))))))
-		       $property-list$ $property-accessor-list$ $properties-accessor-list$)
-		 (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
-		 ))
-	   (table/ (@/ (class "extension"))
-		   (tr/
-		    (td/ "内容")
-		    (td/ (textarea/ (@/ (type "text") (name "melody")
-					(rows 10) (cols 80) (id "focus"))))
-		    (tr/
-		     (td/ ($$ "ファイル"))
-		     (td/ (input/ (@/ (type "file") (name "file")))
-                          )))))
-	  (let1 songs (all-songs musume)
-	    (map/ (lambda (k n f t m u)
-		    (let1 song (id->obj <song> k)
-		      (if (delete-of song)
-			  (dl/ (@/ (id #`",k"))
-			       (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
-				    (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-				    (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
-				    (composer? song
-					       (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
-									     ($$ "本当に復活しますか？"))))
-							(@@/ (cont delete-revival-song k)) ($$ "復活"))))
-			       (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
-			  (dl/ (@/ (id #`",k"))
-			       (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
-				    (span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-				    (span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
-				    (composer? song
-					       (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
-									     ($$ "本当に削除しますか？"))))
-							(@@/ (cont delete-revival-song k)) ($$ "削除"))))
-			       (if (null? u)
-				   (dd/ (pre/ (melody-format m)))
-				   (let1 upfile (car u)
-				     (dd/ (pre/ m
-						(br/)
-						(a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
-		  (map key-of songs)
-		  (map seq-no-of songs)
-		  (map fan-of songs)
-		  (map ctime-of songs)
-		  (map melody-of songs)
-		  (map files-of songs))
-	    ))))))
+				  (begin
+				    (set! melody (string-join (string-split melody "\r\n") "\n"))
+				    (let1 song (create-new-song musume melody (current-fan))
+				      (musume-makeover! musume priority status type category assign)
+				      ;; save file and make file object.
+				      (attach-file song file (uploaded-file-name unit musume song))
+				      (if (not (string-null? melody))
+					  (sendmail-lite unit musume song)))))
+			    (redirect-page #`"melody-list/,|unit-id|/,musume-no"))))
+	       (table/
+		(tr/
+		 (map/ (lambda (props-of header)
+			 (has-item? unit props-of (th/ header)))
+		       $properties-accessor-list$
+		       $property-headers$))
+		(tr/ (map/ (lambda (n refer items-of)
+			     (has-item? unit items-of
+					(td/ (select/ (@/ (name n))
+						      (map/ (lambda (item)
+							      (if (eq? item (refer musume))
+								  (option/ (@/ (value (code-of item))
+									       (selected "true"))
+									   (disp-name-of item))
+								  (option/ (@/ (value (code-of item)))
+									   (disp-name-of item))))
+							    (items-of unit))))))
+			   $property-list$ $property-accessor-list$ $properties-accessor-list$)
+		     (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
+		     ))
+	       (table/ (@/ (class "extension"))
+		       (tr/
+			(td/ "内容")
+			(td/ (textarea/ (@/ (type "text") (name "melody")
+					    (rows 10) (cols 80) (id "focus"))))
+			(td/ (@/ (id "limit-calendar"))
+			     (calendar/ date limit-date get-target set-target!))
+			)
+		       (tr/
+			(td/ ($$ "ファイル"))
+			(td/ (input/ (@/ (type "file") (name "file")))))
+		       ))
+	      (let1 songs (all-songs musume)
+		(map/ (lambda (k n f t m u)
+			(let1 song (id->obj <song> k)
+			  (if (delete-of song)
+			      (dl/ (@/ (id #`",k"))
+				   (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+					(composer? song
+						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+										 ($$ "本当に復活しますか？"))))
+							    (@@/ (cont delete-revival-song k)) ($$ "復活"))))
+				   (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
+			      (dl/ (@/ (id #`",k"))
+				   (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
+					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+					(composer? song
+						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+										 ($$ "本当に削除しますか？"))))
+							    (@@/ (cont delete-revival-song k)) ($$ "削除"))))
+				   (if (null? u)
+				       (dd/ (pre/ (melody-format m)))
+				       (let1 upfile (car u)
+					 (dd/ (pre/ m
+						    (br/)
+						    (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
+		      (map key-of songs)
+		      (map seq-no-of songs)
+		      (map fan-of songs)
+		      (map ctime-of songs)
+		      (map melody-of songs)
+		      (map files-of songs))
+		)))))
+      (viewer (or (get-target) (today)) (get-target)))))
 
 (define-entry (mypage type)
   (define (todo)

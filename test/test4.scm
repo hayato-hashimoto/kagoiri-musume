@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.24 2006/02/11 07:07:48 cut-sea Exp $
+;; $Id: test4.scm,v 1.25 2006/02/11 07:48:03 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -509,8 +509,9 @@
 		      (table ?@
 			     (tr (td "内容")
 				 (td (textarea (@ (!permute (type "text") (name "melody") ?*))))
-				 (tr (td "ファイル")
-				     (td (input (@ (type "file") (name "file"))))))))
+				 (td ?@ (table ?*)))
+			     (tr (td "ファイル")
+				 (td (input (@ (type "file") (name "file")))))))
 		(dl ?@ 
 		 (dt (span ?@ "#1.") (span ?@ ?_)
 		     (span ?@ "[cut-sea]")
@@ -583,12 +584,11 @@
 				(option (@ (value "guest")) "guest")))
 		       (td (input (@ (value "コミット") (type "submit"))))))
 		     (table ?@
-			    (tr
-			     (td "内容")
-			     (td (textarea ?@))
-			     (tr
-			      (td "ファイル")
-			      (td (input ?@))))))
+			    (tr (td "内容")
+				(td (textarea (@ (!permute (type "text") (name "melody") ?*))))
+				(td ?@ (table ?*)))
+			    (tr (td "ファイル")
+				(td (input (@ (type "file") (name "file")))))))
 	       (dl ?@
 		(dt (span ?@ "#2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
 		(dd (pre "クローズする")))
