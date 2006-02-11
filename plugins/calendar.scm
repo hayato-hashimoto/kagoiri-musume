@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: calendar.scm,v 1.2 2006/02/11 06:39:48 cut-sea Exp $
+;; $Id: calendar.scm,v 1.3 2006/02/11 11:13:10 cut-sea Exp $
 
 (use srfi-1)
 (use srfi-19)
@@ -13,6 +13,7 @@
   (version "0.1")
   (export make-date-lite make-month-lite make-year-lite today
           current-month prev-month next-month
+	  nth-month-before nth-month-after
           days-of-month first-date-of-month last-date-of-month
           same-date? same-month? same-year? include?
           dates-of-month date-slices-of-month
@@ -21,6 +22,7 @@
           current-day prev-day next-day nth-day-before nth-day-after
           yesterday tomorrow
           current-year prev-year next-year
+	  nth-year-before nth-year-after
           date=? date<? date<=? date>? date>=?
 	  date->sys-time sys-time->date
 	  holiday?
@@ -65,6 +67,12 @@
   (if (= (date-month date) 12)
       (make-month-lite (inc (date-year date)) 1)
       (make-month-lite (date-year date) (inc (date-month date)))))
+
+(define (nth-month-before n date)
+  (if (= n 0) date (nth-month-before (dec n) (prev-month date))))
+
+(define (nth-month-after n date)
+  (if (= n 0) date (nth-month-after (dec n) (next-month date))))
 
 (define (days-of-month date)
   (inexact->exact
@@ -206,6 +214,12 @@
 
 (define (next-year date)
   (make-year-lite (inc (date-year date))))
+
+(define (nth-year-before n date)
+  (if (= n 0) date (nth-year-before (dec n) (prev-year date))))
+
+(define (nth-year-after n date)
+  (if (= n 0) date (nth-year-after (dec n) (next-year date))))
 
 (define (date=? . args)
   (apply = (map date->modified-julian-day args)))
