@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.13 2006/01/08 06:29:55 cut-sea Exp $
+;; $Id: search.kahua,v 1.14 2006/02/11 14:31:25 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -32,7 +32,7 @@
               (ref unit 'unit-name))
      " : "
      (a/cont/
-      (@@/ (cont melody-list (key-of unit) (key-of obj)))
+      (@@/ (cont melody-list (key-of unit) (mno-of obj)))
       (mname-of obj)))))
 
 ;; search page
