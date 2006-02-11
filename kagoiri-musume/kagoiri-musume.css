@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.22 2006/02/11 12:31:07 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.23 2006/02/11 15:55:45 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -405,6 +405,17 @@ td.today.limit a {
 td.limit a {
   font-weight: bold;
   background-color: pink;
+}
+
+
+td.limit.target a {
+  font-weight: bold;
+  background-color: pink;
+}
+
+td.target a {
+  font-weight: bold;
+  background-color: yellow;
 }
 
 td#limit-calendar {

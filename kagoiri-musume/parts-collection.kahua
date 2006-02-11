@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.52 2006/02/11 14:53:18 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.53 2006/02/11 15:55:45 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -413,7 +413,10 @@
 ;;-------------------------------------------------------------
 ;;
 ;; dateはデフォルト今日で移動すればその月の日付、
-;; targetは期限に設定(デフォルト#f)
+;; date: これで表示する月を決定
+;; limit: 現在musumeに設定されている期限
+;; target: 選択中の期限
+;; getter/setter: targetに対するアクセサ
 ;;
 (define (calendar/ date limit target getter setter)
   (define (day/ date) (x->string (date-day date)))
@@ -451,7 +454,8 @@
 		     (@/ (class (string-join
 				 (list (list-ref '("workday" "saturday" "sunday" "holiday" "compensate" "holy")
 						 (holiday? d))
-				       (if (and target (date=? target d)) "limit" "")
+				       (if (and limit (date=? limit d)) "limit" "")
+				       (if (and (getter) (date=? (getter) d)) "target" "")
 				       (if (date=? (today) d) "today" "")
 				       (if (same-month? d date) "" "other-month")))))
 		     (a/cont/async/ (@@/ (id "limit-calendar")
