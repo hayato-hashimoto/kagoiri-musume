@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.21 2006/02/11 12:16:48 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.22 2006/02/11 12:31:07 shibata Exp $ */
 
 /*
  * Common stuff
@@ -385,6 +385,10 @@ td.compensate a {
 }
 
 td.holy a {
+    color: red;
+}
+
+td.holiday a {
     color: red;
 }
 
