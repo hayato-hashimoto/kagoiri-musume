@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.49 2006/02/11 11:34:58 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.50 2006/02/11 13:24:22 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -460,4 +460,11 @@
 						 (calendar/ date d getter setter))))
 				    (day/ d))))
 		  week)))
-	 (date-slices-of-month date #t))))
+	 (date-slices-of-month date #t))
+   (th/ (@/ (colspan 7))
+	(a/cont/async/ (@/ (class "clickable"))
+		       (@@/ (id "limit-calendar")
+			    (cont (lambda _
+				    (setter #f)
+				    (calendar/ (today) #f getter setter)))) "期限クリア"))
+   ))
