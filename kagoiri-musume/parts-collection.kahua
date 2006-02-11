@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.47 2006/02/11 11:13:10 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.48 2006/02/11 11:16:28 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -421,6 +421,7 @@
   (define (year/ date) (x->string (date-year date)))
   (table/
    (@/ (class "calendar"))
+   (caption/ (@/ (class "calendar")) "´ü¸Â")
    (tr/ (th/ (a/cont/async/ (@@/ (id "limit-calendar")
 				 (cont (lambda _
 					 (calendar/ (nth-month-before 12 date) target getter setter)))) "<<"))
