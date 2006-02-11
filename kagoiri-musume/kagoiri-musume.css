@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.18 2006/02/11 10:59:02 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.19 2006/02/11 11:11:44 shibata Exp $ */
 
 /*
  * Common stuff
@@ -391,9 +391,8 @@ td.holy {
 }
 
 td.today a {
-  font-weight: bold;
-  border: 2px solid orange;
-
+    font-weight: bold;
+    background-color:lightgray;
 }
 
 td.limit {
