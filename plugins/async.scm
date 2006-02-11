@@ -2,8 +2,8 @@
 
 (define-plugin "async"
   (version "0.1")
-  (export a/cont/async:
-          form/cont/async:)
+  (export a/cont/async: a/cont/async/
+          form/cont/async: form/cont/async/)
   (depend #f))
 
 (define (flatten ls)
@@ -21,6 +21,10 @@
 
 (define (a/cont/async: . arg) `(a/cont/async ,@(flatten arg)))
 (define (form/cont/async: . arg) `(form/cont/async ,@(flatten arg)))
+(define (a/cont/async/ . args)
+  (update (cut cons `(a/cont/async ,@(exec '() (node-set args))) <>)))
+(define (form/cont/async/ . args)
+  (update (cut cons `(form/cont/async ,@(exec '() (node-set args))) <>)))
 
 #|
 (a/cont/sync:
