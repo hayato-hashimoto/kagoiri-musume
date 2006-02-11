@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.15 2006/02/02 17:59:12 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.16 2006/02/11 05:55:36 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -374,3 +374,8 @@ td.limit {
   font-weight: bold;
   background-color: #ff0000;
 }
+
+td#limit-calendar {
+ vertical-align: top;
+}
+
