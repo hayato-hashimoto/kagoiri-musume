@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.62 2006/02/12 07:55:34 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.63 2006/02/12 09:07:47 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -432,29 +432,29 @@
 (define (month/ date) (x->string (date-month date)))
 (define (year/ date) (x->string (date-year date)))
 
-(define (calendar-header/ parent/ date limit target getter setter)
+(define (calendar-header/ parent/ date . args)
   (tr/ (th/ (a/cont/async/ (@/ (title ($$ "前年へ")))
 			   (@@/ (id "limit-calendar")
 				(cont (lambda _
-					(parent/ (nth-month-before 12 date) limit target getter setter)))) "<<"))
+					(apply parent/ (nth-month-before 12 date) args)))) "<<"))
        (th/ (a/cont/async/ (@/ (title ($$ "前月へ")))
 			   (@@/ (id "limit-calendar")
 				(cont (lambda _
-					(parent/ (prev-month date) limit target getter setter)))) "<"))
+					(apply parent/ (prev-month date) args)))) "<"))
        (th/ (@/ (colspan 3))
 	    (a/cont/async/ (@/ (title ($$ "現在の月へ")))
 			   (@@/ (id "limit-calendar")
 				(cont (lambda _
-					(parent/ (today) limit target getter setter))))
+					(apply parent/ (today) args))))
 			   (format "~4a - ~2,,,'0@a" (year/ date) (month/ date))))
        (th/ (a/cont/async/ (@/ (title ($$ "次月へ")))
 			   (@@/ (id "limit-calendar")
 				(cont (lambda _
-					(parent/ (next-month date) limit target getter setter)))) ">"))
+					(apply parent/ (next-month date) args)))) ">"))
        (th/ (a/cont/async/ (@/ (title ($$ "次年へ")))
 			   (@@/ (id "limit-calendar")
 				(cont (lambda _
-					(parent/ (nth-month-after 12 date) limit target getter setter)))) ">>"))))
+					(apply parent/ (nth-month-after 12 date) args)))) ">>"))))
   
 
 (define (calendar/ date limit target getter setter)
@@ -498,17 +498,21 @@
 			(@@/ (id "limit-calendar")
 			     (cont (lambda _
 				     (setter limit)
-				     (calendar/ (today) limit #f getter setter)))) ($$ "変更中止")))
-    )
-   ))
+				     (calendar/ (today) limit #f getter setter)))) ($$ "変更中止"))))))
 
 ;
 ; タスクカレンダー
 ;
 (define (task-calendar-table/ date)
+  (define (collect-musumes-with-limit date)
+    (filter (lambda (m)
+	      (and (limit-of m)
+		   (same-date? date (sys-time->date (limit-of m)))))
+	    (append-map all-musumes
+			(all-units (current-fan)))))
   (table/
    (@/ (class "task calendar"))
-   (calendar-header/ task-calendar-table/ date limit target getter setter)
+   (calendar-header/ task-calendar-table/ date)
    (tr/ (node-set
 	 (map (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
@@ -517,12 +521,16 @@
    (map/ (lambda (week)
 	   (tr/
 	    (map/ (lambda (d)
-		    (td/
-		     (@/ (class (string-join
-				 (list (list-ref '("workday" "saturday" "sunday" "holiday" "compensate" "holy")
-						 (holiday? d))
-				       (if (date=? (today) d) "today" "")
-				       (if (same-month? d date) "" "other-month")))))
-		     (div/ (span/ (@/ (class "date")) (day/ d)))))
+		    (let1 ms (collect-musumes-with-limit d)
+		      (td/
+		       (@/ (class (string-join
+				   (list (list-ref '("workday" "saturday" "sunday" "holiday" "compensate" "holy")
+						   (holiday? d))
+					 (if (date=? (today) d) "today" "")
+					 (if (same-month? d date) "" "other-month")))))
+		       (div/ (span/ (@/ (class "date")) (day/ d))
+			     (map/ (lambda (m)
+				     (link-of m))
+				   ms)))))
 		  week)))
 	 (date-slices-of-month date #t))))

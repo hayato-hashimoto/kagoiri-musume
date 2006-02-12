@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.30 2006/02/12 07:33:03 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.31 2006/02/12 09:07:47 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -289,15 +289,19 @@ a.clickable:hover
  * Table of Calendar
  */
 table.task {
+  border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
   height: 80%
 }
 
 table.task tr th {
+  border: 1px solid black;
   height: 1em;
 }
 
 table.task tr td {
+  border: 1px solid black;
   vertical-align:top;
 }
 
@@ -308,6 +312,10 @@ table.task tr td span {
 
 table.task tr td.today {
   background-color:lightgray;
+}
+
+table.task tr td div a {
+  text-align: left;
 }
 
 table.calendar a {
