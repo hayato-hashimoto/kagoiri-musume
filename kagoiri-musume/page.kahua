@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.16 2006/02/11 16:49:24 shibata Exp $
+;; $Id: page.kahua,v 1.17 2006/02/12 07:19:12 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -83,6 +83,7 @@
                          (input/ (@/ (type "text") (name "word") (size 10)))
                          (input/ (@/ (type "submit") (value ($$ "検索"))))) "")
          )
+   
    (div/ (@/ (id "body"))
    (node-set body))))
 
@@ -166,3 +167,25 @@
 	    (@/ (name "Location")
 		(value (string-append (kahua-self-uri-full) path)))))))
 
+
+(define-method navigation/ ((unit <unit>))
+  (div/ (@/ (id "navigation"))
+        (a/cont/ ($$ "トップ"))
+        " > "
+        (span/ (@/ (class "current"))
+              (link-of unit))))
+
+
+(define-method navigation/ ((musume <musume>))
+  (div/ (@/ (id "navigation"))
+        (a/cont/ ($$ "トップ"))
+        " > "
+        (link-of (unit-of musume))
+        " > "
+        (span/ (@/ (class "current"))
+              (link-of musume))))
+
+(define-method navigation/ ()
+  (div/ (@/ (id "navigation"))
+        (span/ (@/ (class "current"))
+               (a/cont/ ($$ "トップ")))))

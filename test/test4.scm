@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.30 2006/02/12 03:05:17 cut-sea Exp $
+;; $Id: test4.scm,v 1.31 2006/02/12 07:19:12 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -74,6 +74,7 @@
 		     (a ?@ "Logout")
 		     (form ?@ (input ?@) (input ?@)))
 		(div ?@
+                     (div ?@ ?*)
 		     (h2 "ユニット一覧")
 		     (table ?@
 			    (thead (tr (th) (th "ユニット名") (th "概要") (th "ファン") (th "購読")))
@@ -292,8 +293,8 @@
 		(a ?@ "Logout")
 		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
+                (div ?@ ?*)
 		(ul ?@
-		    (li (a ?@ "娘。一覧"))
 		    (li (a (@ (href ?&) ?*) "新しい娘。")))
 		(div ?@
 		     (form ?@ (input ?@) "ユニット内検索:"
@@ -382,8 +383,8 @@
 		(a ?@ "Logout")
 		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
-		(ul ?@
-		    (li (a ?@ "娘。一覧"))
+                (div ?@ ?*)
+                (ul ?@
 		    (li (a ?@ "新しい娘。")))
 		(h2 "籠入娘。Test Project. - 新しい娘。")
 		(form (@ (action ?&) ?*)
@@ -468,8 +469,8 @@
 		(a ?@ "Logout")
 		(form ?@ (input ?@) (input ?@)))
 	   (div ?@
+                (div ?@ ?*)
 		(ul ?@
-		    (li (a ?@ "娘。一覧"))
 		    (li (a ?@ "新しい娘。")))
                 (a ?@ "ブックマークに追加")
 		(div (a ?@ "<<")
@@ -555,8 +556,8 @@
 	       (a ?@ "Logout")
 	       (form ?@ (input ?@) (input ?@)))
 	  (div ?@
+               (div ?@ ?*)
 	       (ul ?@
-		   (li (a ?@ "娘。一覧"))
 		   (li (a ?@ "新しい娘。")))
                (a ?@ "ブックマークに追加")
 	       (div

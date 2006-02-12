@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.16 2006/02/11 16:49:24 shibata Exp $
+;; $Id: test2.scm,v 1.17 2006/02/12 07:19:12 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -60,6 +60,7 @@
 		(a ?@ "Logout")
                 (form ?@ (input ?@) (input ?@)))
            ,(*make-body*
+             (div ?@ ?*)
              (h2 "ユニット一覧")
              (table
               ?@

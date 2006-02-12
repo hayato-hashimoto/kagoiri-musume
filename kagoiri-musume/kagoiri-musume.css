@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.28 2006/02/12 06:50:11 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.29 2006/02/12 07:19:12 shibata Exp $ */
 
 /*
  * Common stuff
@@ -190,6 +190,21 @@ h1.timeover,h2.timeover,h3.timeover,h4.timeover,h5.timeover,h6.timeover {
 #header h1 {
     margin-top:10px;
     padding:10px 20px;
+}
+
+#navigation {
+    background-color: #e8e8e8;
+    border: 1px solid black;
+    padding-left: 10px;
+}
+
+#navigation a {
+    text-decoration: none;
+    color:darkblue;
+}
+
+#navigation .current {
+    font-weight:bold;
 }
 
 .table-filter {

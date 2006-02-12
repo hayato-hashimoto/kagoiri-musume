@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.206 2006/02/12 06:50:11 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.207 2006/02/12 07:19:12 shibata Exp $
 
 ;;
 ;; include
@@ -103,6 +103,7 @@
 (define-entry (unit-list)
   (permission-check-page
    identity ($$ "ユニット一覧は一般ユーザアカウントが必要です")
+   (navigation/)
    (h2/ ($$ "ユニット一覧"))
    (unit-list-table/)
    (devel:hr/)
@@ -171,6 +172,7 @@
 	   (if (viewable? unit u)
 	       u #f))
 	 (require-fan-message unit)
+         (navigation/ unit)
 	 (musume-menu/ unit-id)
 	 (inter-unit-search-box/ unit-id)
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
@@ -229,6 +231,7 @@
 	 (if (viewable? unit u)
 	     u #f))
        (require-fan-message unit)
+       (navigation/ unit)
        (musume-menu/ unit-id)
        (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
        (form/cont/
@@ -385,6 +388,7 @@
 	 (if (not musume-no)
 	     (move 0)
 	     (list/
+              (navigation/ musume)
 	      (musume-menu/ unit-id)
 	      (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
 		       (@@/ (cont add-bookmark unit-id musume-no)) ($$ "ブックマークに追加"))
@@ -493,7 +497,8 @@
 		      (map melody-of songs)
 		      (map files-of songs))
 		)))))
-      (viewer (or (get-target) (today)) (get-target) (get-target)))))
+      (viewer (or (get-target) (today)) (get-target) (get-target))
+       )))
 
 (define-entry (task-calendar)
   (define (calendar date)
