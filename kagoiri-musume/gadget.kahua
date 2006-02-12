@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.51 2006/02/12 00:43:25 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.52 2006/02/12 03:10:56 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -57,7 +57,7 @@
 		    (string-append ($$ "¡Ú ¥¢¥µ¥¤¥ó ¡Û")
 				   #`" ,(fan-name-of (assign-of musume))")
 		    (string-append ($$ "¡Ú   ´ü¸Â   ¡Û")
-				   #`" ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"-\")")
+				   #`" ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"\")")
 		    (string-append ($$ "¡Ú ¥³¥á¥ó¥È ¡Û")
 				   #`"\n\n,(melody-of song)")
 		    ""
