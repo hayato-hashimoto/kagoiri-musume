@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.27 2006/02/11 16:49:24 shibata Exp $
+;; $Id: test4.scm,v 1.28 2006/02/12 01:12:04 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -514,7 +514,7 @@
 			     (tr (td "ファイル")
 				 (td (input (@ (type "file") (name "file")))))))
 		(dl ?@ 
-		 (dt (span ?@ "#1.") (span ?@ ?_)
+		 (dt (span ?@ "♪1.") (span ?@ ?_)
 		     (span ?@ "[cut-sea]")
 		     ?*)
 		 (dd (pre "テストをする必要があるのでするなり"))))
@@ -591,10 +591,10 @@
 			    (tr (td "ファイル")
 				(td (input (@ (type "file") (name "file")))))))
 	       (dl ?@
-		(dt (span ?@ "#2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
+		(dt (span ?@ "♪2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
 		(dd (pre "クローズする")))
 	       (dl ?@
-		(dt (span ?@ "#1.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
+		(dt (span ?@ "♪1.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
 		(dd (pre "テストをする必要があるのでするなり"))))
 	  ,*footer*)
         (call-worker/gsid->sxml

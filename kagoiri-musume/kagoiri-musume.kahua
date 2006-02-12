@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.201 2006/02/12 01:05:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.202 2006/02/12 01:12:03 cut-sea Exp $
 
 ;;
 ;; include
@@ -464,7 +464,7 @@
 							    (@@/ (cont delete-revival-song k)) ($$ "復活"))))
 				   (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
 			      (dl/ (@/ (id #`",k"))
-				   (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
 					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
 					(composer? song
