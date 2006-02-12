@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.31 2006/02/12 07:19:12 shibata Exp $
+;; $Id: test4.scm,v 1.32 2006/02/12 07:53:01 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -344,7 +344,7 @@
 					     (option (@ (value "200") (selected "true")) "200")
 					     (option (@ (value "500")) "500")
 					     (option (@ (value "1000")) "1000")))
-				 (td (input (@ (value "絞り込み") (type "submit") (name "submit"))))))
+				 (td (noscript (input (@ (value "絞り込み") (type "submit") (name "submit")))))))
 		      (table ?@
 			     (thead "萌えられる娘。がいません(T^T)"
 				    (div ?@
