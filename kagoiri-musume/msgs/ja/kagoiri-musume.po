@@ -8,191 +8,207 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-07 17:13+0900\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2006-02-12 13:37+0900\n"
+"PO-Revision-Date: 2006-02-12 13:42+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: kagoiri-musume.kahua:89 page.kahua:130
+#: kagoiri-musume.kahua:89 page.kahua:130 kagoiri-musume.kahua:94
+#: page.kahua:133
 msgid "籠入娘。へようこそ！"
 msgstr "籠入娘。へようこそ！"
 
-#: kagoiri-musume.kahua:92
+#: kagoiri-musume.kahua:92 kagoiri-musume.kahua:97
 msgid "システム設定管理画面"
 msgstr "システム設定管理画面"
 
 #: kagoiri-musume.kahua:94 kagoiri-musume.kahua:101 page.kahua:58
+#: kagoiri-musume.kahua:99 kagoiri-musume.kahua:106 page.kahua:61
 msgid "ユニット一覧"
 msgstr "プロジェクト一覧"
 
-#: kagoiri-musume.kahua:100
+#: kagoiri-musume.kahua:100 kagoiri-musume.kahua:105
 msgid "ユニット一覧は一般ユーザアカウントが必要です"
 msgstr "プロジェクト一覧は一般ユーザアカウントが必要です"
 
-#: kagoiri-musume.kahua:171
+#: kagoiri-musume.kahua:171 kagoiri-musume.kahua:176
 #, scheme-format
 msgid "~a - 娘。一覧"
 msgstr "~a - 案件一覧"
 
-#: kagoiri-musume.kahua:182
+#: kagoiri-musume.kahua:182 kagoiri-musume.kahua:187
 msgid "表示上限"
 msgstr "表示上限"
 
-#: kagoiri-musume.kahua:190
+#: kagoiri-musume.kahua:190 kagoiri-musume.kahua:195
 msgid "全て"
 msgstr "全て"
 
-#: kagoiri-musume.kahua:206
+#: kagoiri-musume.kahua:206 kagoiri-musume.kahua:211
 msgid "絞り込み"
 msgstr "絞り込み"
 
-#: kagoiri-musume.kahua:224
+#: kagoiri-musume.kahua:224 kagoiri-musume.kahua:233
 msgid " - 新しい娘。"
 msgstr " - 新しい案件"
 
-#: kagoiri-musume.kahua:230
+#: kagoiri-musume.kahua:230 kagoiri-musume.kahua:240
 msgid "タイトルを入力してください。"
 msgstr "件名を入力してください。"
 
-#: kagoiri-musume.kahua:248
+#: kagoiri-musume.kahua:248 kagoiri-musume.kahua:260
 msgid "ちょいまってや"
 msgstr "工事中"
 
-#: kagoiri-musume.kahua:249
+#: kagoiri-musume.kahua:249 kagoiri-musume.kahua:261
 msgid "娘。の閲覧"
 msgstr "案件の閲覧"
 
-#: kagoiri-musume.kahua:277
+#: kagoiri-musume.kahua:277 kagoiri-musume.kahua:289
 #, scheme-format
 msgid "『~a』の『~a 』を編集する。"
 msgstr "『~a』の『~a 』を編集する。"
 
 #: kagoiri-musume.kahua:283 kagoiri-musume.kahua:475 kagoiri-musume.kahua:522
 #: parts-collection.kahua:162 parts-collection.kahua:234 search.kahua:15
-#: sys-admin.kahua:263
+#: sys-admin.kahua:263 kagoiri-musume.kahua:295 kagoiri-musume.kahua:504
+#: kagoiri-musume.kahua:553 parts-collection.kahua:164
+#: parts-collection.kahua:251
 msgid "タイトル"
 msgstr "件名"
 
-#: kagoiri-musume.kahua:287
+#: kagoiri-musume.kahua:287 kagoiri-musume.kahua:299
 msgid "改名"
 msgstr "件名変更"
 
-#: kagoiri-musume.kahua:368
+#: kagoiri-musume.kahua:368 kagoiri-musume.kahua:387
 msgid "ブックマークに追加"
 msgstr "ブックマークに追加"
 
-#: kagoiri-musume.kahua:418
+#: kagoiri-musume.kahua:418 kagoiri-musume.kahua:442
 msgid "コミット"
 msgstr "投稿"
 
 #: kagoiri-musume.kahua:426 parts-collection.kahua:241
+#: kagoiri-musume.kahua:454 parts-collection.kahua:260
 msgid "ファイル"
 msgstr "ファイル"
 
-#: kagoiri-musume.kahua:439
+#: kagoiri-musume.kahua:439 kagoiri-musume.kahua:467
 msgid "本当に復活しますか？"
 msgstr "本当に復活しますか？"
 
-#: kagoiri-musume.kahua:440
+#: kagoiri-musume.kahua:440 kagoiri-musume.kahua:468
 msgid "復活"
 msgstr "復活"
 
-#: kagoiri-musume.kahua:441
+#: kagoiri-musume.kahua:441 kagoiri-musume.kahua:469
 msgid "このメロディは削除されてます"
 msgstr "この投稿は削除されてます"
 
 #: kagoiri-musume.kahua:448 kagoiri-musume.kahua:532
 #: parts-collection.kahua:183 parts-collection.kahua:272
+#: kagoiri-musume.kahua:476 kagoiri-musume.kahua:563
+#: parts-collection.kahua:191 parts-collection.kahua:292
 msgid "本当に削除しますか？"
 msgstr "本当に削除しますか？"
 
 #: kagoiri-musume.kahua:449 kagoiri-musume.kahua:521 kagoiri-musume.kahua:538
 #: parts-collection.kahua:185 parts-collection.kahua:274
+#: kagoiri-musume.kahua:477 kagoiri-musume.kahua:552 kagoiri-musume.kahua:569
+#: parts-collection.kahua:193 parts-collection.kahua:294
 msgid "削除"
 msgstr "削除"
 
-#: kagoiri-musume.kahua:467 kagoiri-musume.kahua:552
+#: kagoiri-musume.kahua:467 kagoiri-musume.kahua:552 kagoiri-musume.kahua:496
+#: kagoiri-musume.kahua:584
 msgid "TODO"
 msgstr "TODO"
 
 #: kagoiri-musume.kahua:476 kagoiri-musume.kahua:523
-#: parts-collection.kahua:330
+#: parts-collection.kahua:330 kagoiri-musume.kahua:505
+#: kagoiri-musume.kahua:554 parts-collection.kahua:353
 msgid "優先度"
 msgstr "優先度"
 
 #: kagoiri-musume.kahua:477 kagoiri-musume.kahua:524
-#: parts-collection.kahua:331
+#: parts-collection.kahua:331 kagoiri-musume.kahua:506
+#: kagoiri-musume.kahua:555 parts-collection.kahua:354
 msgid "ステータス"
 msgstr "状態"
 
 #: kagoiri-musume.kahua:478 kagoiri-musume.kahua:525
-#: parts-collection.kahua:332
+#: parts-collection.kahua:332 kagoiri-musume.kahua:507
+#: kagoiri-musume.kahua:556 parts-collection.kahua:355
 msgid "タイプ"
 msgstr "種別"
 
 #: kagoiri-musume.kahua:479 kagoiri-musume.kahua:526
-#: parts-collection.kahua:169
+#: parts-collection.kahua:169 kagoiri-musume.kahua:508
+#: kagoiri-musume.kahua:557 parts-collection.kahua:172
 msgid "登録日"
 msgstr "登録日"
 
-#: kagoiri-musume.kahua:494 kagoiri-musume.kahua:553
+#: kagoiri-musume.kahua:494 kagoiri-musume.kahua:553 kagoiri-musume.kahua:525
+#: kagoiri-musume.kahua:586
 msgid "最近の更新"
 msgstr "最近の更新"
 
-#: kagoiri-musume.kahua:517 kagoiri-musume.kahua:554
+#: kagoiri-musume.kahua:517 kagoiri-musume.kahua:554 kagoiri-musume.kahua:548
+#: kagoiri-musume.kahua:588
 msgid "ブックマーク"
 msgstr "ブックマーク"
 
-#: kagoiri-musume.kahua:549
+#: kagoiri-musume.kahua:549 kagoiri-musume.kahua:580
 msgid "マイページは一般ユーザアカウントが必要です"
 msgstr "マイページは一般ユーザアカウントが必要です"
 
-#: kagoiri-musume.kahua:578
+#: kagoiri-musume.kahua:578 kagoiri-musume.kahua:616
 msgid "パスワード変更には一般ユーザのアカウントが必要です"
 msgstr "パスワード変更には一般ユーザのアカウントが必要です"
 
-#: kagoiri-musume.kahua:579
+#: kagoiri-musume.kahua:579 kagoiri-musume.kahua:617
 #, scheme-format
 msgid "~a さんのパスワード変更"
 msgstr "~a さんのパスワード変更"
 
-#: kagoiri-musume.kahua:585
+#: kagoiri-musume.kahua:585 kagoiri-musume.kahua:623
 msgid "新パスワードが不正です"
 msgstr "新パスワードが不正です"
 
-#: kagoiri-musume.kahua:587
+#: kagoiri-musume.kahua:587 kagoiri-musume.kahua:625
 msgid "旧パスワードが不正です"
 msgstr "旧パスワードが不正です"
 
-#: kagoiri-musume.kahua:591
+#: kagoiri-musume.kahua:591 kagoiri-musume.kahua:629
 #, scheme-format
 msgid "~a さんのパスワードを変更しました"
 msgstr "~a さんのパスワードを変更しました"
 
-#: kagoiri-musume.kahua:593
+#: kagoiri-musume.kahua:593 kagoiri-musume.kahua:631
 msgid "変更"
 msgstr "変更"
 
-#: page.kahua:55
+#: page.kahua:55 page.kahua:58
 msgid "システム管理"
 msgstr "システム管理"
 
-#: page.kahua:62
+#: page.kahua:62 page.kahua:65
 msgid "Login"
 msgstr "ログイン"
 
-#: page.kahua:67
+#: page.kahua:67 page.kahua:70
 msgid "パスワード変更"
 msgstr "パスワード変更"
 
-#: page.kahua:69
+#: page.kahua:69 page.kahua:72
 msgid " Now login:"
 msgstr " Now login:"
 
-#: page.kahua:76
+#: page.kahua:76 page.kahua:79
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -212,127 +228,132 @@ msgstr "新パスワード"
 msgid "新パスワード(確認)"
 msgstr "新パスワード(確認)"
 
-#: parts-collection.kahua:122
+#: parts-collection.kahua:122 parts-collection.kahua:123
 msgid "娘。一覧"
 msgstr "案件一覧"
 
-#: parts-collection.kahua:123
+#: parts-collection.kahua:123 parts-collection.kahua:125
 msgid "新しい娘。"
 msgstr "新しい案件"
 
-#: parts-collection.kahua:126
+#: parts-collection.kahua:126 parts-collection.kahua:128
 #, scheme-format
 msgid "『~a』のファンとしてのアカウントが必要です"
 msgstr "『~a』のメンバーアカウントが必要です"
 
-#: parts-collection.kahua:133
+#: parts-collection.kahua:133 parts-collection.kahua:135
 msgid "ユニット内検索:"
 msgstr "プロジェクト内検索:"
 
-#: parts-collection.kahua:138
+#: parts-collection.kahua:138 page.kahua:84 parts-collection.kahua:140
 msgid "検索"
 msgstr "検索"
 
-#: parts-collection.kahua:144
+#: parts-collection.kahua:144 parts-collection.kahua:146
 msgid "萌えられる娘。がいません(T^T)"
 msgstr "該当する案件がありません"
 
-#: parts-collection.kahua:145
+#: parts-collection.kahua:145 parts-collection.kahua:147
 msgid "ただひとりの娘。に萌えました"
 msgstr "該当する案件がひとつだけでした"
 
-#: parts-collection.kahua:146
+#: parts-collection.kahua:146 parts-collection.kahua:148
 #, scheme-format
 msgid "~a人の娘。に萌えました"
 msgstr "該当する案件は~a件でした"
 
-#: parts-collection.kahua:147
+#: parts-collection.kahua:147 parts-collection.kahua:149
 #, scheme-format
 msgid "~a人もの娘。に萌えました(萌えすぎです)"
 msgstr "~a件もの案件に該当しました"
 
-#: parts-collection.kahua:148
+#: parts-collection.kahua:148 parts-collection.kahua:150
 #, scheme-format
 msgid "なんと~a人もの娘。に萌えまつきました orz"
 msgstr "~a人もの案件に該当しました"
 
-#: parts-collection.kahua:160
+#: parts-collection.kahua:160 parts-collection.kahua:162
 msgid "No."
 msgstr "No."
 
-#: parts-collection.kahua:170
+#: parts-collection.kahua:170 parts-collection.kahua:173
 msgid "更新日"
 msgstr "更新日"
 
-#: parts-collection.kahua:230
+#: parts-collection.kahua:230 parts-collection.kahua:244
 msgid "アサイン"
 msgstr "担当"
 
 #: parts-collection.kahua:233 parts-collection.kahua:244
+#: parts-collection.kahua:247 parts-collection.kahua:264
 msgid "新しい娘。加入"
 msgstr "新しい案件登録"
 
 #: parts-collection.kahua:234 parts-collection.kahua:358
-#: parts-collection.kahua:370
+#: parts-collection.kahua:370 parts-collection.kahua:251
+#: parts-collection.kahua:381 parts-collection.kahua:393
 msgid "(※)"
 msgstr "(※)"
 
-#: parts-collection.kahua:238
+#: parts-collection.kahua:238 kagoiri-musume.kahua:450
+#: parts-collection.kahua:255
 msgid "内容"
 msgstr "内容"
 
 #: parts-collection.kahua:254 parts-collection.kahua:358 search.kahua:11
-#: sys-admin.kahua:101
+#: sys-admin.kahua:101 parts-collection.kahua:274 parts-collection.kahua:381
 msgid "ユニット名"
 msgstr "プロジェクト名"
 
 #: parts-collection.kahua:255 parts-collection.kahua:364 search.kahua:12
-#: sys-admin.kahua:102
+#: sys-admin.kahua:102 parts-collection.kahua:275 parts-collection.kahua:387
 msgid "概要"
 msgstr "概要"
 
 #: parts-collection.kahua:256 parts-collection.kahua:370
+#: parts-collection.kahua:276 parts-collection.kahua:393
 msgid "ファン"
 msgstr "メンバー"
 
-#: parts-collection.kahua:257
+#: parts-collection.kahua:257 parts-collection.kahua:277
 msgid "購読"
 msgstr "メール配信"
 
-#: parts-collection.kahua:268
+#: parts-collection.kahua:268 parts-collection.kahua:288
 msgid "設定"
 msgstr "設定"
 
-#: parts-collection.kahua:301
+#: parts-collection.kahua:301 parts-collection.kahua:324
 msgid "○"
 msgstr "○"
 
-#: parts-collection.kahua:302
+#: parts-collection.kahua:302 parts-collection.kahua:325
 msgid "×"
 msgstr "×"
 
-#: parts-collection.kahua:309
+#: parts-collection.kahua:309 parts-collection.kahua:332
 #, scheme-format
 msgid "『~a』ユニット設定"
 msgstr "『~a』プロジェクト設定"
 
 #: parts-collection.kahua:310 parts-collection.kahua:398
+#: parts-collection.kahua:333 parts-collection.kahua:421
 msgid "新ユニット結成"
 msgstr "新プロジェクト登録"
 
-#: parts-collection.kahua:318
+#: parts-collection.kahua:318 parts-collection.kahua:341
 msgid "ユニット名入力とファン選択は必須です。"
 msgstr "プロジェクト名入力とメンバー選択は必須です。"
 
-#: parts-collection.kahua:333
+#: parts-collection.kahua:333 parts-collection.kahua:356
 msgid "カテゴリ"
 msgstr "カテゴリ"
 
-#: parts-collection.kahua:389
+#: parts-collection.kahua:389 parts-collection.kahua:412
 msgid "通知アドレス"
 msgstr "通知アドレス"
 
-#: parts-collection.kahua:397
+#: parts-collection.kahua:397 parts-collection.kahua:420
 msgid "確定"
 msgstr "確定"
 
@@ -480,3 +501,101 @@ msgstr "案件No"
 #: sys-admin.kahua:264
 msgid "作成日"
 msgstr "作成日"
+
+#: gadget.kahua:43
+msgid "【 タイトル 】"
+msgstr "【   件名   】"
+
+#: gadget.kahua:45
+msgid "【  ポスト  】"
+msgstr "【  投稿者  】"
+
+#: gadget.kahua:47
+msgid "【   日時   】"
+msgstr ""
+
+#: gadget.kahua:49
+msgid "【ステータス】"
+msgstr "【   状態   】"
+
+#: gadget.kahua:51
+msgid "【  優先度  】"
+msgstr "【  優先度  】"
+
+#: gadget.kahua:53
+msgid "【  タイプ  】"
+msgstr "【   種別   】"
+
+#: gadget.kahua:55
+msgid "【 カテゴリ 】"
+msgstr "【 カテゴリ 】"
+
+#: gadget.kahua:57
+msgid "【 アサイン 】"
+msgstr "【   担当   】"
+
+#: gadget.kahua:59
+msgid "【   期限   】"
+msgstr "【   期限   】"
+
+#: gadget.kahua:61
+msgid "【 コメント 】"
+msgstr "【   内容   】"
+
+#: parts-collection.kahua:171 parts-collection.kahua:439
+msgid "期限"
+msgstr "期限"
+
+#: parts-collection.kahua:311
+msgid "娘。からのお便りを停止します"
+msgstr "メール配信を停止します"
+
+#: parts-collection.kahua:312
+msgid "娘。からのお便りをもらう"
+msgstr "メール配信します"
+
+#: parts-collection.kahua:440
+msgid "前年へ"
+msgstr "前年へ"
+
+#: parts-collection.kahua:444
+msgid "前月へ"
+msgstr "前月へ"
+
+#: parts-collection.kahua:449
+msgid "現在の月へ"
+msgstr "現在の月へ"
+
+#: parts-collection.kahua:454
+msgid "次月へ"
+msgstr "次月へ"
+
+#: parts-collection.kahua:458
+msgid "次年へ"
+msgstr "次年へ"
+
+#: parts-collection.kahua:487
+msgid "期限無しにします"
+msgstr "期限無しにします"
+
+#: parts-collection.kahua:491
+msgid "期限削除"
+msgstr "期限削除"
+
+#: parts-collection.kahua:494
+msgid "期限の変更をキャンセルします"
+msgstr "期限の変更をキャンセルします"
+
+#: parts-collection.kahua:498
+msgid "変更中止"
+msgstr "変更中止"
+
+#: search.kahua:99
+#, scheme-format
+msgid "検索文字列: ~a (~a 件)"
+msgstr "検索文字列: ~a (~a 件)"
+
+#: search.kahua:113
+#, scheme-format
+msgid "検索文字列が短すぎます: ~a"
+msgstr "検索文字列が短すぎます: ~a"
