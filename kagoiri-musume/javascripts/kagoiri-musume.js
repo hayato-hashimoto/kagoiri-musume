@@ -559,4 +559,3 @@ function close_help(){
           document.body.removeChild(help, document.body);
      }
 }
-

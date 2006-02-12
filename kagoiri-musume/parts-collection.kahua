@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.67 2006/02/12 15:53:53 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.68 2006/02/12 16:41:37 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -497,8 +497,7 @@
 			     (cont (lambda _
 				     (setter #f)
 				     (calendar/ (today) limit #f getter setter)))) ($$ "期限削除")))
-    (th/ (span/ (@/ (onclick "popup_help(event, 'calendar')"))
-		    (clickable "H")))
+    (th/ (help-button/ "calendar"))
     (th/ (@/ (colspan 3))
 	 (a/cont/async/ (@/ (class "clickable") (title ($$ "期限の変更をキャンセルします")))
 			(@@/ (id "limit-calendar")
