@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.50 2006/02/11 13:51:37 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.51 2006/02/12 00:43:25 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -40,16 +40,26 @@
                             #`"<,(key-of unit),(key-of musume),(key-of (cadr songs))@,|domain|>")))
 	   (body  (string-join
 		   (list
-		    #`"¡Ú ¥¿¥¤¥È¥ë ¡Û ,subject"
-		    #`"¡Ú  ¥Ý¥¹¥È  ¡Û ,(fan-name-of (fan-of song))"
-		    #`"¡Ú   Æü»þ   ¡Û ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of song)))"
-		    #`"¡Ú¥¹¥Æ¡¼¥¿¥¹¡Û ,(disp-name-of (status-of musume))"
-		    #`"¡Ú  Í¥ÀèÅÙ  ¡Û ,(disp-name-of (priority-of musume))"
-		    #`"¡Ú  ¥¿¥¤¥×  ¡Û ,(disp-name-of (type-of musume))"
-		    #`"¡Ú ¥«¥Æ¥´¥ê ¡Û ,(disp-name-of (category-of musume))"
-		    #`"¡Ú ¥¢¥µ¥¤¥ó ¡Û ,(fan-name-of (assign-of musume))"
-		    #`"¡Ú   ´ü¸Â   ¡Û ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"-\")"
-		    #`"¡Ú ¥³¥á¥ó¥È ¡Û\n\n,(melody-of song)"
+		    (string-append ($$ "¡Ú ¥¿¥¤¥È¥ë ¡Û")
+				   #`" ,subject")
+		    (string-append ($$ "¡Ú  ¥Ý¥¹¥È  ¡Û")
+				   #`" ,(fan-name-of (fan-of song))")
+		    (string-append ($$ "¡Ú   Æü»þ   ¡Û")
+				   #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of song)))")
+		    (string-append ($$ "¡Ú¥¹¥Æ¡¼¥¿¥¹¡Û")
+				   #`" ,(disp-name-of (status-of musume))")
+		    (string-append ($$ "¡Ú  Í¥ÀèÅÙ  ¡Û")
+				   #`" ,(disp-name-of (priority-of musume))")
+		    (string-append ($$ "¡Ú  ¥¿¥¤¥×  ¡Û")
+				   #`" ,(disp-name-of (type-of musume))")
+		    (string-append ($$ "¡Ú ¥«¥Æ¥´¥ê ¡Û")
+				   #`" ,(disp-name-of (category-of musume))")
+		    (string-append ($$ "¡Ú ¥¢¥µ¥¤¥ó ¡Û")
+				   #`" ,(fan-name-of (assign-of musume))")
+		    (string-append ($$ "¡Ú   ´ü¸Â   ¡Û")
+				   #`" ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"-\")")
+		    (string-append ($$ "¡Ú ¥³¥á¥ó¥È ¡Û")
+				   #`"\n\n,(melody-of song)")
 		    ""
                     (let1 files (files-of song)
                       (if (null? files)
