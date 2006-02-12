@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.65 2006/02/12 13:25:13 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.66 2006/02/12 13:31:42 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -254,7 +254,7 @@
                   (td/)
                   (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
                               (clickable ($$ "案件へのリンク")))
-		       (span/ (@/ (class "warning")) "この機能は現在開発中です。まだ使用しないでください。")))
+		       (span/ (@/ (class "warning")) "「案件へのリンク」は現在開発中です。まだ使用しないでください。")))
 		 (tr/ (td/ ($$ "内容"))
 		      (td/ (textarea/ (@/ (type "text") (name "melody") (id "melody")
 					  (rows 20) (cols 80))))
