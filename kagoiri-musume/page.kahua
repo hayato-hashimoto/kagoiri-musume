@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.18 2006/02/12 09:26:00 cut-sea Exp $
+;; $Id: page.kahua,v 1.19 2006/02/12 09:32:41 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -61,8 +61,8 @@
           (@@/ (cont unit-list)) ($$ "ユニット一覧"))
          (if (not (kahua-current-user))
              (a/cont/ (@/ (class "clickable"))
-		      (@@/ (cont mypage))
-                      ($$ "Login"))"")
+		      (@@/ (cont task-calendar))
+                      ($$ "Login")) "")
          (if (and (kahua-current-user)
 		  (not (equal? "guest" (ref (kahua-current-user) 'login-name))))
              (a/cont/
