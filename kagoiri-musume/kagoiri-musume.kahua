@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.214 2006/02/12 16:18:17 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.215 2006/02/12 16:25:56 cut-sea Exp $
 
 ;;
 ;; include
@@ -707,9 +707,16 @@
          text))
 
 (define-entry (help keywd)
-  (let1 msg (cond ((equal? keywd "calendar")
-		   "カレンダーのヘルプです")
-		  (else "ヘルプがありません。"))
+  ;; ここにヘルプのカタログを作成する
+  (letrec ((++ (lambda args (string-join args "\n")))
+	   (msg (cond ((equal? keywd "calendar")
+		       (++ "期限設定カレンダーのヘルプです"
+			   "選択して投稿すると期限が設定されます。"
+			   "期限削除で期限を未設定にできます。"
+			   "デフォルトでは未設定です。"
+			   "変更中止では選択状態を中止して、"
+			   "元の設定に選択状態が戻されます。"))
+		      (else "ヘルプがありません。"))))
     (html/
      (body/
       (div/ (@/ (class "minwindow"))
@@ -718,7 +725,7 @@
 		  (a/ (@/ (href "#")
 			  (onclick "close_help(); return false"))
 		      ($$ "×")))
-	    (p/ msg))))))
+	    (pre/ msg))))))
 
 
 ;

@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.36 2006/02/12 16:18:17 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.37 2006/02/12 16:25:56 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -424,7 +424,7 @@ td#limit-calendar {
     opacity: .85;
     margin:0px;
     border: 1px solid black;
-    background-color: #f2f2f2;
+    background-color: #e8f8e8;
 }
 
 div.miniwindow {
