@@ -385,3 +385,128 @@ function get_row_pos_by_value(table, value) {
      }
      return -1;
 }
+function popup_linkselect(event, unit){
+     var event = {pageY:event.pageY,
+                  pageX:event.pageX}
+     function showResponse(req){
+          var win = window.event;
+          event = win?window.event:event;
+          var s_x=0,s_y=0;
+          if (document.all && document.getElementById && (document.compatMode == 'CSS1Compat')){
+               s_x = document.documentElement.scrollLeft;
+               s_y = document.documentElement.scrollTop;
+          }
+          else if (document.all){
+               s_x = document.body.scrollLeft;
+               s_y = document.body.scrollTop;
+          }
+          var ele = document.createElement("div");
+          ele.className = 'memo';
+          ele.id = 'memo';
+          document.body.appendChild(ele);
+          var y = win?event.clientY:event.pageY;
+          y = y + s_y - 20;
+          ele.style.top = y + "px";
+          var x = win?event.clientX:event.pageX;
+          x = x + s_x - 20;
+          ele.style.left = x + "px";
+          ele.innerHTML = req.responseText;
+     }
+     var myAjax = new Ajax.Request(
+          '/kagoiri-musume/select',
+          {method: 'get', onComplete: showResponse}
+          );
+}
+
+function add_project_list(ele){
+     // function update_list(xml){
+//      }
+
+
+     var target = ele.options[ele.selectedIndex].value;
+     // var myAjax = new Ajax.Request(
+//           ''
+//           {method: 'get', onComplete: append}
+//           )
+}
+
+function check_click(event, url){
+     var target = event.target;
+     if (target.tagName.toLowerCase() == 'a'){
+          var textarea = document.forms.mainedit.melody;
+          textarea.focus();
+          var start = textarea.selectionStart;
+          textarea.value = textarea.value.substring(0, start)
+               + target.target
+               + textarea.value.substring(start);
+          close_memo()
+          return false;
+     }
+     if (target.tagName.toLowerCase() == 'li'){
+          if (!target.getAttribute('target')){
+               return false;
+          }
+          if (target.type == 'circle'){
+               target.child.style.display = 'none';
+               target.type = '';
+               return;
+          }
+          else {
+               target.type = 'circle';
+               if (target.child){
+                    target.child.style.display = 'block';
+                    return;
+               }
+
+               var myAjax = new Ajax.Request(
+                    '/kagoiri-musume/'+ url + '?unit-id=' + target.getAttribute('target'),
+                    {method: 'get', onComplete:function(req){
+                              var ele = document.createElement("div");
+                              ele.innerHTML = req.responseText;
+                              target.appendChild(ele);
+                              target.child = ele;
+                         }
+                    }
+                    );
+          }
+     }
+}
+
+function close_memo(){
+     var memo = document.getElementById('memo');
+     if (memo)
+     {
+          document.body.removeChild(memo, document.body);
+     }
+}
+
+
+// function mk_elem(name) {
+//      return function (childs){
+//           .length)
+//           var this_elem = document.createElement(name);
+//           childs = childs.constructor == Array?childs:[childs];
+//           childs.map(function(ele){
+//                           ele = (typeof ele == 'string')?document.createTextNode(ele):ele;
+//                           this_elem.appendChild(ele);
+//                      });
+//           return this_elem;
+//      }
+
+// var div$ = mk_elem('div');
+// var dl$ = mk_elem('dl');
+// var dt$ = mk_elem('dt');
+// var dd$ = mk_elem('dd');
+
+// function show_status(){
+//      function handler(req)
+//      {
+//           function taiou (status) {
+//                return div$([dt$(status.code),
+//                             dd$(status.color)]);
+//           }
+//           var result = eval(req.responseText);
+//           document.body.appendChild(dl$(result.map(taiou)));
+//      }
+//      new Ajax.Request('/kagoiri-musume/json-status', {onComplete: handler});
+// }

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.209 2006/02/12 09:26:00 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.210 2006/02/12 10:56:03 shibata Exp $
 
 ;;
 ;; include
@@ -238,7 +238,8 @@
        (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
        (form/cont/
 	(@/ (enctype "multipart/form-data")
-	    (onsubmit "return false;"))
+	    (onsubmit "return false;")
+            (id "mainedit"))
 	(@@/ (cont (entry-lambda (:keyword name priority status assign type category melody file)
 		       (if (string-null? name)
 			   (begin
@@ -413,7 +414,8 @@
 			    (status-of musume))
 			   (if (time-over? musume) ($$ "(期限切)") "")))
 	      (common:form/cont/
-	       (@/ (enctype "multipart/form-data"))
+	       (@/ (enctype "multipart/form-data")
+                   (id "mainedit"))
 	       (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file)
 			      (if (and (string-null? melody)
 				       (not file))
@@ -457,6 +459,10 @@
 		(tr/
 		 (td/
 		  (table/ (@/ (class "extension"))
+                          (tr/
+                           (td/)
+                           (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
+                                       (clickable ($$ "案件へのリンク")))))
 			  (tr/
 			   (td/ ($$ "内容"))
 			   (td/ (textarea/ (@/ (type "text") (name "melody")
@@ -638,7 +644,31 @@
                    (cons musume bkmks)))))
     (redirect-page #`"melody-list/,|unit-id|/,musume-no")))
 
-
+(define-entry (select unit-id)
+  (let1 musume-list (entry-lambda (:keyword unit-id)
+                      (let1 unit (find-kahua-instance <unit> unit-id)
+                        (ul/ (@/ (class "musumes"))
+                             (map/
+                              (lambda (m)
+                                (li/
+                                 (a/cont/ (@@/ (cont melody-list (key-of unit) (mno-of m)))
+                                          (@/ (target (format "[[~a/~a]]" (key-of unit) (mno-of m))))
+                                          (mname-of m))))
+                              (all-active-musumes unit)))))
+    (html/
+     (body/
+      (div/ (@/ (class "miniwindow"))
+            (div/ (@/ (class "minititle"))
+                  ($$ "ユニットを選択してください")
+                  (a/ (@/ (href "#")
+                          (onclick "close_memo(); return false"))
+                      ($$ "×")))
+            (ul/ (@/ (onclick #`"return check_click(event,,',(session-cont-register musume-list)')"))
+                 (map/ (lambda (unit)
+                         (li/ (@/ (target (key-of unit)))
+                              (unit-name-of unit)))
+                       (all-units (current-fan))))
+            )))))
 
 (define (change-passwd . message)
   (let* ((cuser (kahua-current-user))

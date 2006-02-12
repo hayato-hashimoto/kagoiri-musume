@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.32 2006/02/12 07:53:01 shibata Exp $
+;; $Id: test4.scm,v 1.33 2006/02/12 10:56:03 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -432,8 +432,10 @@
 			     (tr
 			      (td "タイトル" (span ?@ "(※)"))
 			      (td (input (@ (!permute (type "text") (name "name") ?*)))))
+                             (tr (td)
+                                 (td ?*))
 			     (tr (td "内容")
-				 (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+				 (td (textarea (@ (!permute (type "text") (name "melody")  ?*)))))
 			     (tr (td "ファイル")
 				 (td (input (@ (type "file") (name "file")))
 				     (input (@ (value "") (type "hidden") (name "filename"))))))))
@@ -520,6 +522,7 @@
 		       (tr
 			(td
 			 (table ?@
+                                (tr ?*)
 				(tr (td "内容")
 				    (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
 				(tr (td "ファイル")
@@ -534,7 +537,8 @@
 	 w
 	 '()
 	 '()
-	 (lambda (h b) (tree->string b)))
+	 (lambda (h b)
+           (tree->string b)))
         (make-match&pick w))
 
  (test/send&pick "kagoiri-musume check melody-list"
@@ -602,6 +606,8 @@
 		      (tr
 		       (td
 			(table ?@
+                               (tr (td)
+                                   (td ?*))
 			       (tr (td "内容")
 				   (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
 			       (tr (td "ファイル")
