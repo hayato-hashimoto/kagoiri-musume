@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.35 2006/02/12 15:53:53 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.36 2006/02/12 16:18:17 shibata Exp $ */
 
 /*
  * Common stuff
@@ -413,7 +413,7 @@ td#limit-calendar {
 
 .memo {
     position:absolute;
-    opacity: .85;
+    /* opacity: .90; */
     margin:0px;
     border: 1px solid black;
     background-color: #f2f2f2;
@@ -438,17 +438,39 @@ div.minititle {
     color:white;
     text-align:center;
     font-weight:bold;
+    border-bottom:1px solid black;
+    padding:0 1em;
+    position:relative;
 }
 
 div.minititle a {
     text-decoration:none;
-    /* position:absolute; */
+    position:absolute;
     right:3px;
     top: 1px;
     color: black;
-    /* width: 20px; */
-/*     height: 2em; */
-/*     border:1px solid black; */
+}
+
+div.memo ul {
+    display:block;
+    padding:0px 10px;
+}
+
+
+div.memo li {
+    /* padding:10px 0px; */
+    display:block;
+    border-bottom:1px solid lightgray;
+}
+
+div.memo li a {
+    text-decoration:none;
+    display:block;
+}
+
+div.memo a:hover {
+    background-color: #7b96ac;
+    color:white;
 }
 
 div.miniwindow  ul.musumes {

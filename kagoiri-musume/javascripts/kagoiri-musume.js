@@ -433,7 +433,7 @@ function popup_linkselect(event, unit){
           );
 }
 
-function check_click(event, url){
+function insert_mlink(event){
      var target = event.target;
      if (target.tagName.toLowerCase() == 'a'){
           var textarea = document.forms.mainedit.melody;
@@ -442,25 +442,27 @@ function check_click(event, url){
           textarea.value = textarea.value.substring(0, start)
                + target.target
                + textarea.value.substring(start);
-          close_memo()
+          close_memo();
           return false;
      }
-     if (target.tagName.toLowerCase() == 'li'){
-          if (!target.getAttribute('target')){
-               return false;
-          }
+}
+
+
+function check_click(event, url){
+     var target = event.target;
+     if (target.tagName.toLowerCase() == 'a'){
+          target = target.parentNode;
           if (target.type == 'circle'){
                target.child.style.display = 'none';
                target.type = '';
-               return;
+               return false;
           }
           else {
                target.type = 'circle';
                if (target.child){
                     target.child.style.display = 'block';
-                    return;
+                    return false;
                }
-
                var myAjax = new Ajax.Request(
                     kahua_self_uri_full + '/'+ url + '?unit-id=' + target.getAttribute('target'),
                     {method: 'get',
@@ -472,9 +474,11 @@ function check_click(event, url){
                          }
                     }
                     );
+               return false;
           }
      }
 }
+
 
 function close_memo(){
      var memo = document.getElementById('memo');

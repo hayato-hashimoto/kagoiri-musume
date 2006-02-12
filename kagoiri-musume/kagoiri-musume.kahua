@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.213 2006/02/12 15:53:53 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.214 2006/02/12 16:18:17 shibata Exp $
 
 ;;
 ;; include
@@ -648,13 +648,14 @@
 (define-entry (select unit-id)
   (let1 musume-list (entry-lambda (:keyword unit-id)
                       (let1 unit (find-kahua-instance <unit> unit-id)
-                        (ul/ (@/ (class "musumes"))
+                        (ul/ (@/ (class "musumes")
+                                 (onclick #`"return insert_mlink(event)"))
                              (map/
                               (lambda (m)
                                 (li/
                                  (a/cont/ (@@/ (cont melody-list (key-of unit) (mno-of m)))
                                           (@/ (target (format "[[~a/~a]]" (key-of unit) (mno-of m))))
-                                          (mname-of m))))
+                                          (format "#~a ~a" (mno-of m) (mname-of m)))))
                               (all-active-musumes unit)))))
     (html/
      (body/
@@ -667,7 +668,7 @@
             (ul/ (@/ (onclick #`"return check_click(event,,',(session-cont-register musume-list)')"))
                  (map/ (lambda (unit)
                          (li/ (@/ (target (key-of unit)))
-                              (unit-name-of unit)))
+                              (link-of unit)))
                        (all-units (current-fan))))
             )))))
 
