@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.24 2006/02/11 16:17:36 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.25 2006/02/12 03:31:08 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -151,6 +151,11 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 
 .status-open {
     background-color:rgb(255, 225, 225);
+}
+
+.timeover {
+    color: red;
+    font-weight: bold;
 }
 
 #header {

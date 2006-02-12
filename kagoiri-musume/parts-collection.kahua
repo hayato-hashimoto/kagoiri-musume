@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.58 2006/02/12 02:47:31 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.59 2006/02/12 03:31:08 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -178,9 +178,14 @@
 		(has-item? unit props-of
 			   (td/ (@/ (value (code val)))
 				(disp val)))))
+	    (define (time-over? musume)
+	      (and (limit-of musume)
+		   (date>=? (today) (sys-time->date (limit-of musume)))))
 	    (let ((status (status-of m))
 		  (songs (songs-of m)))
-	      (tr/ (@/ (class #`"status-,(code-of status)"))
+	      (tr/ (@/ (class (string-append #`"status-,(code-of status)"
+					     " "
+					     (if (time-over? m) "timeover" ""))))
 		   (devel:td/ (a/cont/
 			       (@/ (onClick (format "return confirm('~a')?true:false"
 						    ($$ "本当に削除しますか？"))))
