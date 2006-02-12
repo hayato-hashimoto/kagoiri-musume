@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.212 2006/02/12 13:31:42 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.213 2006/02/12 15:53:53 cut-sea Exp $
 
 ;;
 ;; include
@@ -704,6 +704,21 @@
 (define (clickable text)
   (span/ (@/ (class "clickable"))
          text))
+
+(define-entry (help keywd)
+  (let1 msg (cond ((equal? keywd "calendar")
+		   "カレンダーのヘルプです")
+		  (else "ヘルプがありません。"))
+    (html/
+     (body/
+      (div/ (@/ (class "minwindow"))
+	    (div/ (@/ (class "minititle"))
+		  ($$ "ヘルプ")
+		  (a/ (@/ (href "#")
+			  (onclick "close_help(); return false"))
+		      ($$ "×")))
+	    (p/ msg))))))
+
 
 ;
 ; initialization

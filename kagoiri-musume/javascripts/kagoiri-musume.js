@@ -514,3 +514,45 @@ function close_memo(){
 //      }
 //      new Ajax.Request('/kagoiri-musume/json-status', {onComplete: handler});
 // }
+
+function popup_help(event, keyword){
+     var event = {pageY:event.pageY,
+                  pageX:event.pageX}
+     function showResponse(req){
+          var win = window.event;
+          event = win?window.event:event;
+          var s_x=0,s_y=0;
+          if (document.all && document.getElementById && (document.compatMode == 'CSS1Compat')){
+               s_x = document.documentElement.scrollLeft;
+               s_y = document.documentElement.scrollTop;
+          }
+          else if (document.all){
+               s_x = document.body.scrollLeft;
+               s_y = document.body.scrollTop;
+          }
+          var ele = document.createElement("div");
+          ele.className = 'help';
+          ele.id = 'help';
+          document.body.appendChild(ele);
+          var y = win?event.clientY:event.pageY;
+          y = y + s_y - 20;
+          ele.style.top = y + "px";
+          var x = win?event.clientX:event.pageX;
+          x = x + s_x - 20;
+          ele.style.left = x + "px";
+          ele.innerHTML = req.responseText;
+     }
+     var myAjax = new Ajax.Request(
+          kahua_self_uri_full + '/help/' + keyword,
+          {method: 'get', onComplete: showResponse}
+          );
+}
+
+function close_help(){
+     var help = document.getElementById('help');
+     if (help)
+     {
+          document.body.removeChild(help, document.body);
+     }
+}
+
