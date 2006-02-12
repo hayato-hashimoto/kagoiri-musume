@@ -3,12 +3,12 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts.scm,v 1.11 2006/02/12 10:56:03 shibata Exp $
+;; $Id: parts.scm,v 1.12 2006/02/12 11:27:13 shibata Exp $
 (use srfi-13)  ;; for string-scan
 
 (define *head*
   `(head
-    (title ?_) (meta ?@) (link ?@) (script ?@) (script ?@) (script ?@)))
+    (title ?_) (meta ?@) (link ?@) (script ?@ ?*) (script ?@) (script ?@) (script ?@)))
 
 (define *header*
   '(div ?@

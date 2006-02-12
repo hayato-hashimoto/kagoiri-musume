@@ -413,7 +413,7 @@ function popup_linkselect(event, unit){
           ele.innerHTML = req.responseText;
      }
      var myAjax = new Ajax.Request(
-          '/kagoiri-musume/select',
+          kahua_self_uri_full + '/select',
           {method: 'get', onComplete: showResponse}
           );
 }
@@ -459,7 +459,7 @@ function check_click(event, url){
                }
 
                var myAjax = new Ajax.Request(
-                    '/kagoiri-musume/'+ url + '?unit-id=' + target.getAttribute('target'),
+                    kahua_self_uri_full + '/'+ url + '?unit-id=' + target.getAttribute('target'),
                     {method: 'get', onComplete:function(req){
                               var ele = document.createElement("div");
                               ele.innerHTML = req.responseText;
