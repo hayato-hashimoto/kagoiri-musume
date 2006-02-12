@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.26 2006/02/12 03:36:57 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.27 2006/02/12 04:37:36 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -159,6 +159,11 @@ table.listing tbody tr.odd { background-color: #f7f7f7 }
 }
 
 .timeover a{
+    color: red!important;
+    font-weight: bold;
+}
+
+h1.timeover,h2.timeover,h3.timeover,h4.timeover,h5.timeover,h6.timeover {
     color: red!important;
     font-weight: bold;
 }

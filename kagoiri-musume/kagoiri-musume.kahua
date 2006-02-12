@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.204 2006/02/12 03:05:17 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.205 2006/02/12 04:37:36 cut-sea Exp $
 
 ;;
 ;; include
@@ -349,6 +349,9 @@
 			  (sys-time->date (limit-of musume))))
 	     (get-target (lambda _ target))
 	     (set-target! (lambda (date) (set! target date))))
+      (define (time-over? musume)
+	(and (limit-of musume)
+	     (date>=? (today) (sys-time->date (limit-of musume)))))
       (define (move dist)
 	(let ((musumes (sort (all-active-musumes unit))))
 	  (define (make-filter prop code prop-of)
@@ -395,12 +398,14 @@
 			(@@/ (cont (cut move +1)))
 			">>"))
 
-	      (h3/ (format "~a - ~a：~a - ~a"
+	      (h3/ (@/ (class (and (time-over? musume) "timeover")))
+		   (format "~a - ~a：~a - ~a~a"
 			   (unit-name-of unit)
 			   (mno-of musume)
 			   (mname-of musume)
 			   (disp-name-of
-			    (status-of musume))))
+			    (status-of musume))
+			   (if (time-over? musume) ($$ "(期限切)") "")))
 	      (common:form/cont/
 	       (@/ (enctype "multipart/form-data"))
 	       (@@/ (cont (entry-lambda (:keyword melody priority status type category assign file)
