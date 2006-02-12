@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.37 2006/02/12 16:25:56 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.38 2006/02/12 17:11:08 shibata Exp $ */
 
 /*
  * Common stuff
@@ -206,6 +206,10 @@ div#navigation{
 div#navigation a {
     text-decoration: none;
     color:darkblue;
+}
+
+div#navigation  {
+    color:red;
 }
 
 #navigation .current {
@@ -486,8 +490,10 @@ div.miniwindow  ul.musumes {
     top:36px;
     right:0px;
     padding:0px 3px;
-    border: 1px solid darkblue;
+    /* border: 1px solid darkblue; */
+    border: 1px solid black;
     color:white;
     font-weight:bold;
-    background-color: #7b96ac;
+    /* background-color: #7b96ac; */
+    background-color: red;
 }
