@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.15 2006/02/12 01:05:24 cut-sea Exp $
+;; $Id: search.kahua,v 1.16 2006/02/12 07:19:29 shibata Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -22,18 +22,22 @@
             (melody-of song)))
          (reverse (filter active? (ref obj 'songs))))))
 
-(define-method label-of ((obj <unit>))
+(define-method link-of ((obj <unit>))
   (a/cont/ (@@/ (cont musume-list (key-of obj))) (ref obj 'unit-name)))
+
+(define-method label-of ((obj <unit>))
+  (link-of obj))
+
+(define-method link-of ((obj <musume>))
+  (a/cont/ (@@/ (cont melody-list (key-of (unit-of obj)) (mno-of obj)))
+           (mname-of obj)))
 
 (define-method label-of ((obj <musume>))
   (let ((unit (unit-of obj)))
     (span/
-     (a/cont/ (@@/ (cont musume-list (key-of unit)))
-              (ref unit 'unit-name))
+     (link-of unit)
      " : "
-     (a/cont/
-      (@@/ (cont melody-list (key-of unit) (mno-of obj)))
-      (mname-of obj)))))
+     (link-of obj))))
 
 ;; search page
 (define-entry (search :keyword word unit-id)
