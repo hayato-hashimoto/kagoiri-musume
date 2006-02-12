@@ -30,34 +30,52 @@ if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
     /* debug.print (xmlhttp); */
 }
 
-var ele = document.createElement("div");
-ele.style.position = 'absolute';
-ele.style.border = "1px solid black";
-ele.style.backgroundColor = "rgb(170, 221, 187)";
-ele.appendChild(document.createTextNode("Processing¡Ä"));
+function addOnloadEvent(proc){
+     if (window.addEventListener) {
+          window.addEventListener("load",proc,false);
+     }
+     else if (window.attachEvent) {
+          window.attachEvent("onload", proc);
+     }
+}
+
+
+addOnloadEvent(function (){
+                    var ele = document.createElement("div");
+                    ele.id = 'loading';
+                    ele.appendChild(document.createTextNode(kahua_loading_msg));
+                    document.body.appendChild(ele)
+                         Element.hide(ele);
+                         });
+
 
 function async_get(e,id,pagename)
 {
-     if (!document.getElementById) return true;
-
-     ele.style.top = e.pageY - 10;
-     ele.style.left = e.pageX - 10;
-     document.body.appendChild(ele);
-     var element = document.getElementById(id);
-
-     xmlhttp.open("GET", pagename , true);
-
-     xmlhttp.onreadystatechange = function()
-          {
-               if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-               {
-                    element.innerHTML = xmlhttp.responseText;
-                    document.body.removeChild(ele, document.body)
-               }
-          }
-     xmlhttp.send(null);
+     new Ajax.Updater(id, pagename, {method: 'get'});
      return false;
 }
+
+// function async_get(e,id,pagename)
+// {
+//      if (!document.getElementById) return true;
+
+//      Element.show('loading')
+//      var element = document.getElementById(id);
+
+//      xmlhttp.open("GET", pagename , true);
+
+//      xmlhttp.onreadystatechange = function()
+//           {
+//                if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+//                {
+//                     element.innerHTML = xmlhttp.responseText;
+//                     Element.hide('loading')
+
+//                }
+//           }
+//      xmlhttp.send(null);
+//      return false;
+// }
 
 function async_post(e,id)
 {

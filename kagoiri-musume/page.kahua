@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.22 2006/02/12 11:27:13 shibata Exp $
+;; $Id: page.kahua,v 1.23 2006/02/12 15:45:28 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -22,17 +22,19 @@
 	  (link/ (@/ (rel "stylesheet") (type "text/css")
 		     (href (kahua-static-document-url
 			    "kagoiri-musume/kagoiri-musume.css"))))
-          (script/ (@/ (type "text/javascript"))
-                   (format "var kahua_self_uri_full = '~a'" (kahua-self-uri-full)))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/kagoiri-musume.js"))))
-	  (script/ (@/ (type "text/javascript")
+                             "kagoiri-musume/prototype.js"))))
+          (script/ (@/ (type "text/javascript"))
+                   (format "var kahua_self_uri_full = '~a';" (kahua-self-uri-full))
+                   (format "var kahua_loading_msg = '~a';" ($$ "読み込み中")))
+          (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
                              "kagoiri-musume/async.js"))))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/prototype.js")))))
+                             "kagoiri-musume/kagoiri-musume.js"))))
+          )
    (body/
     (node-set body)
     (div/ (@/ (id "bottom-pane"))

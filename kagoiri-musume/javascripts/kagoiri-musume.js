@@ -1,11 +1,11 @@
-function addOnloadEvent(proc){
-     if (window.addEventListener) {
-          window.addEventListener("load",proc,false);
-     }
-     else if (window.attachEvent) {
-          window.attachEvent("onload", proc);
-     }
-}
+// function addOnloadEvent(proc){
+//      if (window.addEventListener) {
+//           window.addEventListener("load",proc,false);
+//      }
+//      else if (window.attachEvent) {
+//           window.attachEvent("onload", proc);
+//      }
+// }
 
 var win = false;
 var textContent = 'textContent';
@@ -19,6 +19,7 @@ function init(){
 
 addOnloadEvent(init);
 addOnloadEvent(focus_focus);
+
 
 function sort_table(e){
      e = win?window.event:e;
@@ -385,6 +386,20 @@ function get_row_pos_by_value(table, value) {
      }
      return -1;
 }
+
+Ajax.Responders.register(
+     {onCreate: function(){
+               Element.show('loading');
+          },
+      onComplete: function() {
+               // if(Ajax.activeRequestCount == 0){
+               Element.hide('loading');
+               // }
+          }
+     });
+
+
+
 function popup_linkselect(event, unit){
      var event = {pageY:event.pageY,
                   pageX:event.pageX}
@@ -413,21 +428,9 @@ function popup_linkselect(event, unit){
           ele.innerHTML = req.responseText;
      }
      var myAjax = new Ajax.Request(
-          kahua_self_uri_full + '/select',
+          kahua_self_uri_full + 'select',
           {method: 'get', onComplete: showResponse}
           );
-}
-
-function add_project_list(ele){
-     // function update_list(xml){
-//      }
-
-
-     var target = ele.options[ele.selectedIndex].value;
-     // var myAjax = new Ajax.Request(
-//           ''
-//           {method: 'get', onComplete: append}
-//           )
 }
 
 function check_click(event, url){
@@ -460,7 +463,8 @@ function check_click(event, url){
 
                var myAjax = new Ajax.Request(
                     kahua_self_uri_full + '/'+ url + '?unit-id=' + target.getAttribute('target'),
-                    {method: 'get', onComplete:function(req){
+                    {method: 'get',
+                              onComplete:function(req){
                               var ele = document.createElement("div");
                               ele.innerHTML = req.responseText;
                               target.appendChild(ele);
