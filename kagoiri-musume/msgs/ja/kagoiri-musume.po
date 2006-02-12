@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-02-12 13:37+0900\n"
-"PO-Revision-Date: 2006-02-12 13:42+0900\n"
+"PO-Revision-Date: 2006-02-12 14:06+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -512,7 +512,7 @@ msgstr "【  投稿者  】"
 
 #: gadget.kahua:47
 msgid "【   日時   】"
-msgstr ""
+msgstr "【   日時   】"
 
 #: gadget.kahua:49
 msgid "【ステータス】"
