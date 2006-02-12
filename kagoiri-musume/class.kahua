@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.55 2006/02/11 10:09:02 shibata Exp $
+;; $Id: class.kahua,v 1.56 2006/02/12 04:31:53 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -107,16 +107,13 @@
 		    :init-value #f :accessor limit-of)
    ))
 
-(define-method initialize ((obj <musume>) initargs)
+(define-method persistent-initialize ((obj <musume>) initargs)
   (next-method)
   (let* ((unit (unit-of obj))
 	 (mno (next-musume-no-of unit)))
-    ;; for restart
-    (if (not (mno-of obj))
-	(begin
-	  (set! (mno-of obj) mno)
-	  (set! (next-musume-no-of unit) (+ mno 1))
-	  (set! (musumes-of unit) (cons obj (musumes-of unit)))))))
+    (set! (mno-of obj) mno)
+    (set! (next-musume-no-of unit) (+ mno 1))
+    (set! (musumes-of unit) (cons obj (musumes-of unit)))))
 
 (define-method next-seq-no ((obj <musume>))
   (+ 1 (length (songs-of obj))))
@@ -164,15 +161,12 @@
 		    :init-value #f :accessor delete-of)
    ))
 
-(define-method initialize ((obj <song>) initargs)
+(define-method persistent-initialize ((obj <song>) initargs)
   (next-method)
   (let* ((musume (musume-of obj))
 	 (songs (songs-of musume)))
-    ;; for restart
-    (if (not (seq-no-of obj))
-	(begin
-	  (set! (seq-no-of obj) (next-seq-no musume))
-	  (set! (songs-of musume) (cons obj songs))))))
+    (set! (seq-no-of obj) (next-seq-no musume))
+    (set! (songs-of musume) (cons obj songs))))
 
 (define-method object-compare ((obj1 <song>) (obj2 <song>))
   (compare (ctime-of obj1) (ctime-of obj2)))
