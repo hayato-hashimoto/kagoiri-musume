@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.61 2006/02/12 07:19:12 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.62 2006/02/12 07:55:34 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -428,35 +428,40 @@
 ;; target: 選択中の期限
 ;; getter/setter: targetに対するアクセサ
 ;;
+(define (day/ date) (x->string (date-day date)))
+(define (month/ date) (x->string (date-month date)))
+(define (year/ date) (x->string (date-year date)))
+
+(define (calendar-header/ parent/ date limit target getter setter)
+  (tr/ (th/ (a/cont/async/ (@/ (title ($$ "前年へ")))
+			   (@@/ (id "limit-calendar")
+				(cont (lambda _
+					(parent/ (nth-month-before 12 date) limit target getter setter)))) "<<"))
+       (th/ (a/cont/async/ (@/ (title ($$ "前月へ")))
+			   (@@/ (id "limit-calendar")
+				(cont (lambda _
+					(parent/ (prev-month date) limit target getter setter)))) "<"))
+       (th/ (@/ (colspan 3))
+	    (a/cont/async/ (@/ (title ($$ "現在の月へ")))
+			   (@@/ (id "limit-calendar")
+				(cont (lambda _
+					(parent/ (today) limit target getter setter))))
+			   (format "~4a - ~2,,,'0@a" (year/ date) (month/ date))))
+       (th/ (a/cont/async/ (@/ (title ($$ "次月へ")))
+			   (@@/ (id "limit-calendar")
+				(cont (lambda _
+					(parent/ (next-month date) limit target getter setter)))) ">"))
+       (th/ (a/cont/async/ (@/ (title ($$ "次年へ")))
+			   (@@/ (id "limit-calendar")
+				(cont (lambda _
+					(parent/ (nth-month-after 12 date) limit target getter setter)))) ">>"))))
+  
+
 (define (calendar/ date limit target getter setter)
-  (define (day/ date) (x->string (date-day date)))
-  (define (month/ date) (x->string (date-month date)))
-  (define (year/ date) (x->string (date-year date)))
   (table/
    (@/ (class "calendar"))
    (caption/ (@/ (class "calendar")) ($$ "期限"))
-   (tr/ (th/ (a/cont/async/ (@/ (title ($$ "前年へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (calendar/ (nth-month-before 12 date) limit target getter setter)))) "<<"))
-	(th/ (a/cont/async/ (@/ (title ($$ "前月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (calendar/ (prev-month date) limit target getter setter)))) "<"))
-	(th/ (@/ (colspan 3))
-	     (a/cont/async/ (@/ (title ($$ "現在の月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (calendar/ (today) limit target getter setter))))
-			    (format "~4a - ~2,,,'0@a" (year/ date) (month/ date))))
-	(th/ (a/cont/async/ (@/ (title ($$ "次月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (calendar/ (next-month date) limit target getter setter)))) ">"))
-	(th/ (a/cont/async/ (@/ (title ($$ "次年へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (calendar/ (nth-month-after 12 date) limit target getter setter)))) ">>")))
+   (calendar-header/ calendar/ date limit target getter setter)
    (tr/ (node-set
 	 (map (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
@@ -501,33 +506,9 @@
 ; タスクカレンダー
 ;
 (define (task-calendar-table/ date)
-  (define (day/ date) (x->string (date-day date)))
-  (define (month/ date) (x->string (date-month date)))
-  (define (year/ date) (x->string (date-year date)))
   (table/
    (@/ (class "task calendar"))
-   (tr/ (th/ (a/cont/async/ (@/ (title ($$ "前年へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (task-calendar-table/ (nth-month-before 12 date))))) "<<"))
-	(th/ (a/cont/async/ (@/ (title ($$ "前月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (task-calendar-table/ (prev-month date))))) "<"))
-	(th/ (@/ (colspan 3))
-	     (a/cont/async/ (@/ (title ($$ "現在の月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (task-calendar-table/ (today)))))
-			    (format "~4a - ~2,,,'0@a" (year/ date) (month/ date))))
-	(th/ (a/cont/async/ (@/ (title ($$ "次月へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (task-calendar-table/ (next-month date))))) ">"))
-	(th/ (a/cont/async/ (@/ (title ($$ "次年へ")))
-			    (@@/ (id "limit-calendar")
-				 (cont (lambda _
-					 (task-calendar-table/ (nth-month-after 12 date))))) ">>")))
+   (calendar-header/ task-calendar-table/ date limit target getter setter)
    (tr/ (node-set
 	 (map (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
