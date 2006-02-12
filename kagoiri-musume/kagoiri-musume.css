@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.31 2006/02/12 09:07:47 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.32 2006/02/12 09:26:00 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -296,12 +296,12 @@ table.task {
 }
 
 table.task tr th {
-  border: 1px solid black;
+  border: 1px solid #aacccc;
   height: 1em;
 }
 
 table.task tr td {
-  border: 1px solid black;
+  border: 1px solid #aacccc;
   vertical-align:top;
 }
 

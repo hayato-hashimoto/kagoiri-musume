@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.17 2006/02/12 07:19:12 shibata Exp $
+;; $Id: page.kahua,v 1.18 2006/02/12 09:26:00 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -71,7 +71,7 @@
          (if (kahua-current-user)
              (span/ ($$ " Now login:")
                   (a/cont/ (@/ (class "clickable"))
-			   (@@/ (cont mypage))
+			   (@@/ (cont task-calendar))
                            (ref (kahua-current-user) 'login-name))) "")
          (if (kahua-current-user)
              (a/cont/
