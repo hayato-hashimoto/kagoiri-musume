@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.52 2006/02/12 03:10:56 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.53 2006/02/12 06:11:10 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -65,7 +65,7 @@
                       (if (null? files)
                           ""
                         #`"FILE: ,(name-of (car files)) -> ,(kahua-server-uri),(uri-of (car files))"))
-                    #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(key-of musume)")
+                    #`"URL: ,(kahua-self-uri-full)melody-list/,(key-of unit)/,(mno-of musume)")
                    "\n")))
       (for-each (lambda (address)
 		  (sendmail/headers body
