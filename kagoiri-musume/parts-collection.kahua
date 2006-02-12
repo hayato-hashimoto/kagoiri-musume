@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.55 2006/02/12 00:47:06 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.56 2006/02/12 01:05:24 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -297,7 +297,10 @@
                        (td/
                         (unit-member? u
                           (let1 subscription? (not (memq u unsubscriptions))
-                            (a/cont/ (@/ (class "clickable"))
+                            (a/cont/ (@/ (class "clickable")
+					 (title (if subscription?
+						    ($$ "娘。からのお便りを停止します")
+						    ($$ "娘。からのお便りをもらう"))))
 				     (@@/ (cont (cut (lambda ()
                                                        (update! (ref (current-fan) 'unsubscriptions)
                                                                 (lambda (ls)

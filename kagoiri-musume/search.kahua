@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.14 2006/02/11 14:31:25 cut-sea Exp $
+;; $Id: search.kahua,v 1.15 2006/02/12 01:05:24 cut-sea Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -96,7 +96,7 @@
 			 '()
 			 units))))
 	    (div/
-	     (h1/ (format ($$ "search key: ~a (~a items)") word (length hits)))
+	     (h1/ (format ($$ "¸¡º÷Ê¸»úÎó: ~a (~a ·ï)") word (length hits)))
 	     (map/ (lambda (hit)
 		     (fieldset/
 		      (legend/ (car hit))
@@ -110,6 +110,6 @@
 				      match)))))
 			    (cdr hit))))
 		   hits)))
-	  (h1/ (format ($$ "Keyword is too short: ~a") word))))
+	  (h1/ (format ($$ "¸¡º÷Ê¸»úÎó¤¬Ã»¤¹¤®¤Þ¤¹: ~a") word))))
 
     (kagoiri-page (search-result))))

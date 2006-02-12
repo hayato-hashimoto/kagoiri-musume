@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.200 2006/02/11 15:55:45 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.201 2006/02/12 01:05:24 cut-sea Exp $
 
 ;;
 ;; include
@@ -440,7 +440,7 @@
 		     ))
 	       (table/ (@/ (class "extension"))
 		       (tr/
-			(td/ "内容")
+			(td/ ($$ "内容"))
 			(td/ (textarea/ (@/ (type "text") (name "melody")
 					    (rows 10) (cols 80) (id "focus"))))
 			(td/ (@/ (id "limit-calendar"))
@@ -455,7 +455,7 @@
 			(let1 song (id->obj <song> k)
 			  (if (delete-of song)
 			      (dl/ (@/ (id #`",k"))
-				   (dt/ (span/ (@/ (class "song-no")) #`"#,|n|.")
+				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
 					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
 					(composer? song
