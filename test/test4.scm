@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.28 2006/02/12 01:12:04 cut-sea Exp $
+;; $Id: test4.scm,v 1.29 2006/02/12 02:47:31 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -388,51 +388,56 @@
 		(h2 "籠入娘。Test Project. - 新しい娘。")
 		(form (@ (action ?&) ?*)
 		      (table
-		       (tr (th "優先度")
-			   (th "ステータス")
-			   (th "タイプ")
-			   (th "カテゴリ")
-			   (th "アサイン"))
 		       (tr
 			(td
-			 (select (@ (name "priority"))
-				 (option (@ (value "normal")) "普通")
-				 (option (@ (value "super")) "超高")
-				 (option (@ (value "high")) "高")))
-			(td
-			 (select (@ (name "status"))
-				 (option (@ (value "open")) "OPEN")
-				 (option (@ (value "on-hold")) "ON HOLD")
-				 (option (@ (value "completed")) "COMPLETED")))
-			(td
-			 (select (@ (name "type"))
-				 (option (@ (value "task")) "タスク")
-				 (option (@ (value "request")) "変更要望")
-				 (option (@ (value "discuss")) "議論")))
-			(td
-			 (select (@ (name "category"))
-				 (option (@ (value "master")) "マスタ")
-				 (option (@ (value "infra")) "インフラ")
-				 (option (@ (value "global")) "全体")
-				 (option (@ (value "section")) "セクション")))
-			(td
-			 (select (@ (name "assign"))
-				 (option (@ (value "   ")))
-				 (option (@ (value "cut-sea")) "cut-sea")
-				 (option (@ (value "guest")) "guest")))
-			(td
-			 (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button"))))))
-		      (table
-		       (tr
-			(td "タイトル" (span ?@ "(※)"))
-			(td (input (@ (!permute (type "text") (name "name") ?*)))))
-		       (tr (td "内容")
-			   (td (textarea (@ (!permute (type "text") (name "melody") ?*))))
-			   (td ?@ (table ?*)))
-		       (tr (td "ファイル")
-			   (td (input (@ (type "file") (name "file")))
-			       (input (@ (value "") (type "hidden") (name "filename"))))))
-		      (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button")))))
+			 (table
+			  (tr (th "優先度")
+			      (th "ステータス")
+			      (th "タイプ")
+			      (th "カテゴリ")
+			      (th "アサイン"))
+			  (tr
+			   (td
+			    (select (@ (name "priority"))
+				    (option (@ (value "normal")) "普通")
+				    (option (@ (value "super")) "超高")
+				    (option (@ (value "high")) "高")))
+			   (td
+			    (select (@ (name "status"))
+				    (option (@ (value "open")) "OPEN")
+				    (option (@ (value "on-hold")) "ON HOLD")
+				    (option (@ (value "completed")) "COMPLETED")))
+			   (td
+			    (select (@ (name "type"))
+				    (option (@ (value "task")) "タスク")
+				    (option (@ (value "request")) "変更要望")
+				    (option (@ (value "discuss")) "議論")))
+			   (td
+			    (select (@ (name "category"))
+				    (option (@ (value "master")) "マスタ")
+				    (option (@ (value "infra")) "インフラ")
+				    (option (@ (value "global")) "全体")
+				    (option (@ (value "section")) "セクション")))
+			   (td
+			    (select (@ (name "assign"))
+				    (option (@ (value "   ")))
+				    (option (@ (value "cut-sea")) "cut-sea")
+				    (option (@ (value "guest")) "guest")))
+			   (td
+			    (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button")))))))
+			(td ?@ (table ?*)))
+		       (tr (td
+			    (table
+			     (tr
+			      (td "タイトル" (span ?@ "(※)"))
+			      (td (input (@ (!permute (type "text") (name "name") ?*)))))
+			     (tr (td "内容")
+				 (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+			     (tr (td "ファイル")
+				 (td (input (@ (type "file") (name "file")))
+				     (input (@ (value "") (type "hidden") (name "filename"))))))))
+		       (tr (td
+			    (input (@ (value "新しい娘。加入") (onclick "submit();") (type "button"))))))))
 	   ,*footer*))
         (call-worker/gsid
 	 w
