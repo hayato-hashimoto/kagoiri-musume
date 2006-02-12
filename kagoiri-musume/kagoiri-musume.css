@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.27 2006/02/12 04:37:36 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.28 2006/02/12 06:50:11 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -268,7 +268,27 @@ a.clickable:hover
 /*
  * Table of Calendar
  */
+table.task {
+  width: 100%;
+  height: 80%
+}
 
+table.task tr th {
+  height: 1em;
+}
+
+table.task tr td {
+  vertical-align:top;
+}
+
+table.task tr td span {
+  text-align:left;
+  display:block!important;
+}
+
+table.task tr td.today {
+  background-color:lightgray;
+}
 
 table.calendar a {
  display:block;
@@ -309,31 +329,31 @@ td.other-month a {
 
 }
 
-td.workday a {
+td.workday a,td.workday span {
     /* background-color: white; */
 }
 
-td.saturday a , th.saturday {
+td.saturday a ,td.saturday span, th.saturday {
   color:blue;
 }
 
-td.sunday a, th.sunday {
+td.sunday a, td.sunday span, th.sunday {
   color: red;
 }
 
-td.compensate a {
+td.compensate a, td.compensate span {
   color: red;
 }
 
-td.holy a {
+td.holy a, td.holy span {
     color: red;
 }
 
-td.holiday a {
+td.holiday a, td.holiday span {
     color: red;
 }
 
-td.today a {
+td.today a, td.today span {
     font-weight: bold;
     background-color:lightgray;
 }
