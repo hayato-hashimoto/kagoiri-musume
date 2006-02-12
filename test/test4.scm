@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.29 2006/02/12 02:47:31 cut-sea Exp $
+;; $Id: test4.scm,v 1.30 2006/02/12 03:05:17 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -478,51 +478,56 @@
 		(form (@ (action ?&) ?*)
 		      (table
 		       (tr
-			(th "優先度")
-			(th "ステータス")
-			(th "タイプ")
-			(th "カテゴリ")
-			(th "アサイン"))
+			(td
+			 (table
+			  (tr
+			   (th "優先度")
+			   (th "ステータス")
+			   (th "タイプ")
+			   (th "カテゴリ")
+			   (th "アサイン"))
+			  (tr
+			   (td
+			    (select (@ (name "priority"))
+				    (option (@ (value "normal")) "普通")
+				    (option (@ (value "super")) "超高")
+				    (option (@ (value "high") (selected "true")) "高")))
+			   (td
+			    (select (@ (name "status"))
+				    (option (@ (value "open") (selected "true")) "OPEN")
+				    (option (@ (value "on-hold")) "ON HOLD")
+				    (option (@ (value "completed")) "COMPLETED")))
+			   (td
+			    (select (@ (name "type"))
+				    (option (@ (value "task") (selected "true")) "タスク")
+				    (option (@ (value "request")) "変更要望")
+				    (option (@ (value "discuss")) "議論")))
+			   (td
+			    (select (@ (name "category"))
+				    (option (@ (value "master")) "マスタ")
+				    (option (@ (value "infra")) "インフラ")
+				    (option (@ (value "global") (selected "true")) "全体")
+				    (option (@ (value "section")) "セクション")))
+			   (td
+			    (select (@ (name "assign"))
+				    (option (@ (value "   ")))
+				    (option (@ (value "cut-sea") (selected "true")) "cut-sea")
+				    (option (@ (value "guest")) "guest")))
+			   (td
+			    (input (@ (value "コミット") (type "submit")))))))
+			(td ?@ (table ?*)))
 		       (tr
 			(td
-			 (select (@ (name "priority"))
-				 (option (@ (value "normal")) "普通")
-				 (option (@ (value "super")) "超高")
-				 (option (@ (value "high") (selected "true")) "高")))
-			(td
-			 (select (@ (name "status"))
-				 (option (@ (value "open") (selected "true")) "OPEN")
-				 (option (@ (value "on-hold")) "ON HOLD")
-				 (option (@ (value "completed")) "COMPLETED")))
-			(td
-			 (select (@ (name "type"))
-				 (option (@ (value "task") (selected "true")) "タスク")
-				 (option (@ (value "request")) "変更要望")
-				 (option (@ (value "discuss")) "議論")))
-			(td
-			 (select (@ (name "category"))
-				 (option (@ (value "master")) "マスタ")
-				 (option (@ (value "infra")) "インフラ")
-				 (option (@ (value "global") (selected "true")) "全体")
-				 (option (@ (value "section")) "セクション")))
-			(td
-			 (select (@ (name "assign"))
-				 (option (@ (value "   ")))
-				 (option (@ (value "cut-sea") (selected "true")) "cut-sea")
-				 (option (@ (value "guest")) "guest")))
-			(td
-			 (input (@ (value "コミット") (type "submit"))))))
-		      (table ?@
-			     (tr (td "内容")
-				 (td (textarea (@ (!permute (type "text") (name "melody") ?*))))
-				 (td ?@ (table ?*)))
-			     (tr (td "ファイル")
-				 (td (input (@ (type "file") (name "file")))))))
+			 (table ?@
+				(tr (td "内容")
+				    (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+				(tr (td "ファイル")
+				    (td (input (@ (type "file") (name "file"))))))))))
 		(dl ?@ 
-		 (dt (span ?@ "♪1.") (span ?@ ?_)
-		     (span ?@ "[cut-sea]")
-		     ?*)
-		 (dd (pre "テストをする必要があるのでするなり"))))
+		    (dt (span ?@ "♪1.") (span ?@ ?_)
+			(span ?@ "[cut-sea]")
+			?*)
+		    (dd (pre "テストをする必要があるのでするなり"))))
 	   ,*footer*))
         (call-worker/gsid
 	 w
@@ -560,47 +565,52 @@
 	       (h3 "籠入娘。Test Project. - 1：テストな娘。 - COMPLETED")
 	       (form ?@
 		     (table
-		      (tr (th "優先度") (th "ステータス") (th "タイプ") (th "カテゴリ") (th "アサイン"))
 		      (tr
 		       (td
-			(select (@ (name "priority"))
-				(option (@ (value "normal")) "普通")
-				(option (@ (value "super") (selected "true")) "超高")
-				(option (@ (value "high")) "高")))
+			(table
+			 (tr (th "優先度") (th "ステータス") (th "タイプ") (th "カテゴリ") (th "アサイン"))
+			 (tr
+			  (td
+			   (select (@ (name "priority"))
+				   (option (@ (value "normal")) "普通")
+				   (option (@ (value "super") (selected "true")) "超高")
+				   (option (@ (value "high")) "高")))
+			  (td
+			   (select (@ (name "status"))
+				   (option (@ (value "open")) "OPEN")
+				   (option (@ (value "on-hold")) "ON HOLD")
+				   (option (@ (value "completed") (selected "true")) "COMPLETED")))
+			  (td
+			   (select (@ (name "type"))
+				   (option (@ (value "task")) "タスク")
+				   (option (@ (value "request")) "変更要望")
+				   (option (@ (value "discuss") (selected "true")) "議論")))
+			  (td
+			   (select (@ (name "category"))
+				   (option (@ (value "master")) "マスタ")
+				   (option (@ (value "infra")) "インフラ")
+				   (option (@ (value "global")) "全体")
+				   (option (@ (value "section") (selected "true")) "セクション")))
+			  (td
+			   (select (@ (name "assign"))
+				   (option (@ (value "   ") (selected "true")))
+				   (option (@ (value "cut-sea")) "cut-sea")
+				   (option (@ (value "guest")) "guest")))
+			  (td (input (@ (value "コミット") (type "submit")))))))
+		       (td ?@ (table ?*)))
+		      (tr
 		       (td
-			(select (@ (name "status"))
-				(option (@ (value "open")) "OPEN")
-				(option (@ (value "on-hold")) "ON HOLD")
-				(option (@ (value "completed") (selected "true")) "COMPLETED")))
-		       (td
-			(select (@ (name "type"))
-				(option (@ (value "task")) "タスク")
-				(option (@ (value "request")) "変更要望")
-				(option (@ (value "discuss") (selected "true")) "議論")))
-		       (td
-			(select (@ (name "category"))
-				(option (@ (value "master")) "マスタ")
-				(option (@ (value "infra")) "インフラ")
-				(option (@ (value "global")) "全体")
-				(option (@ (value "section") (selected "true")) "セクション")))
-		       (td
-			(select (@ (name "assign"))
-				(option (@ (value "   ") (selected "true")))
-				(option (@ (value "cut-sea")) "cut-sea")
-				(option (@ (value "guest")) "guest")))
-		       (td (input (@ (value "コミット") (type "submit"))))))
-		     (table ?@
-			    (tr (td "内容")
-				(td (textarea (@ (!permute (type "text") (name "melody") ?*))))
-				(td ?@ (table ?*)))
-			    (tr (td "ファイル")
-				(td (input (@ (type "file") (name "file")))))))
+			(table ?@
+			       (tr (td "内容")
+				   (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
+			       (tr (td "ファイル")
+				   (td (input (@ (type "file") (name "file"))))))))))
 	       (dl ?@
-		(dt (span ?@ "♪2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
-		(dd (pre "クローズする")))
+		   (dt (span ?@ "♪2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
+		   (dd (pre "クローズする")))
 	       (dl ?@
-		(dt (span ?@ "♪1.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
-		(dd (pre "テストをする必要があるのでするなり"))))
+		   (dt (span ?@ "♪1.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
+		   (dd (pre "テストをする必要があるのでするなり"))))
 	  ,*footer*)
         (call-worker/gsid->sxml
 	 w

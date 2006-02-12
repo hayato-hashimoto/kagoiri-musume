@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.203 2006/02/12 02:24:35 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.204 2006/02/12 03:05:17 cut-sea Exp $
 
 ;;
 ;; include
@@ -420,36 +420,40 @@
 			    (redirect-page #`"melody-list/,|unit-id|/,musume-no"))))
 	       (table/
 		(tr/
-		 (map/ (lambda (props-of header)
-			 (has-item? unit props-of (th/ header)))
-		       $properties-accessor-list$
-		       $property-headers$))
-		(tr/ (map/ (lambda (n refer items-of)
-			     (has-item? unit items-of
-					(td/ (select/ (@/ (name n))
-						      (map/ (lambda (item)
-							      (if (eq? item (refer musume))
-								  (option/ (@/ (value (code-of item))
-									       (selected "true"))
-									   (disp-name-of item))
-								  (option/ (@/ (value (code-of item)))
-									   (disp-name-of item))))
-							    (items-of unit))))))
-			   $property-list$ $property-accessor-list$ $properties-accessor-list$)
-		     (td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
-		     ))
-	       (table/ (@/ (class "extension"))
-		       (tr/
-			(td/ ($$ "内容"))
-			(td/ (textarea/ (@/ (type "text") (name "melody")
-					    (rows 10) (cols 80) (id "focus"))))
-			(td/ (@/ (id "limit-calendar"))
-			     (calendar/ date limit-date target-date get-target set-target!))
-			)
-		       (tr/
-			(td/ ($$ "ファイル"))
-			(td/ (input/ (@/ (type "file") (name "file")))))
-		       ))
+		 (td/
+		  (table/
+		   (tr/
+		    (map/ (lambda (props-of header)
+			    (has-item? unit props-of (th/ header)))
+			  $properties-accessor-list$
+			  $property-headers$))
+		   (tr/ (map/ (lambda (n refer items-of)
+				(has-item? unit items-of
+					   (td/ (select/ (@/ (name n))
+							 (map/ (lambda (item)
+								 (if (eq? item (refer musume))
+								     (option/ (@/ (value (code-of item))
+										  (selected "true"))
+									      (disp-name-of item))
+								     (option/ (@/ (value (code-of item)))
+									      (disp-name-of item))))
+							       (items-of unit))))))
+			      $property-list$ $property-accessor-list$ $properties-accessor-list$)
+			(td/ (input/ (@/ (type "submit") (value ($$ "コミット")))))
+			)))
+		 (td/ (@/ (rowspan 2) (id "limit-calendar"))
+		      (calendar/ date limit-date target-date get-target set-target!)))
+		(tr/
+		 (td/
+		  (table/ (@/ (class "extension"))
+			  (tr/
+			   (td/ ($$ "内容"))
+			   (td/ (textarea/ (@/ (type "text") (name "melody")
+					       (rows 10) (cols 80) (id "focus")))))
+			  (tr/
+			   (td/ ($$ "ファイル"))
+			   (td/ (input/ (@/ (type "file") (name "file")))))
+			  )))))
 	      (let1 songs (all-songs musume)
 		(map/ (lambda (k n f t m u)
 			(let1 song (id->obj <song> k)
