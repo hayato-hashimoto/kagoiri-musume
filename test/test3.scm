@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test3.scm,v 1.11 2006/01/07 08:05:15 cut-sea Exp $
+;; $Id: test3.scm,v 1.12 2006/02/13 11:53:05 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -15,6 +15,7 @@
 (use kahua.test.xml)
 (use kahua.test.worker)
 
+(load "parts.scm")
 (load "common.scm")
 
 (test-start "kagoiri-musume operate admin-system parameters")

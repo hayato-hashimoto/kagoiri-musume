@@ -3,9 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common.scm.in,v 1.8 2006/02/13 11:48:14 cut-sea Exp $
-
-(load "parts.scm")
+;; $Id: common.scm.in,v 1.9 2006/02/13 11:53:05 cut-sea Exp $
 
 (define *GOSH* "##GOSH##")
 (define *KAHUA_LIB* "##KAHUA_LIB##")

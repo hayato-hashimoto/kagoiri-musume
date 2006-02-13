@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.17 2006/02/12 07:19:12 shibata Exp $
+;; $Id: test2.scm,v 1.18 2006/02/13 11:53:05 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -15,6 +15,7 @@
 (use kahua.test.xml)
 (use kahua.test.worker)
 
+(load "parts.scm")
 (load "common.scm")
 
 (test-start "kagoiri-musume unit-list enter check")
