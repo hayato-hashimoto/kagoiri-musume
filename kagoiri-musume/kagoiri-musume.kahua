@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.215 2006/02/12 16:25:56 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.216 2006/02/13 01:20:15 cut-sea Exp $
 
 ;;
 ;; include
@@ -522,7 +522,8 @@
 		(li/ (a/cont/ (@/ (class "clickable"))
 			      (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
 		(li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))))
+			      (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))
+		(help-button/ "mypage")))
      (div/ (@/ (id "limit-calendar"))
 	   (task-calendar-table/ date))))
   (calendar (today)))
@@ -710,12 +711,17 @@
   ;; ここにヘルプのカタログを作成する
   (letrec ((++ (lambda args (string-join args "\n")))
 	   (msg (cond ((equal? keywd "calendar")
-		       (++ "期限設定カレンダーのヘルプです"
-			   "選択して投稿すると期限が設定されます。"
-			   "期限削除で期限を未設定にできます。"
-			   "デフォルトでは未設定です。"
-			   "変更中止では選択状態を中止して、"
-			   "元の設定に選択状態が戻されます。"))
+		       (++ ($$ "期限設定カレンダーのヘルプです")
+			   ($$ "選択して投稿すると期限が登録されます")
+			   ($$ "デフォルトでは期限無しですが、設定したものは期限削除で削除してから投稿してください")
+			   ($$ "仮選択中の日付ではなく、元の期限設定に戻したい場合には変更中止を押してください")
+			   ($$ "元の設定に選択状態が戻されます")))
+		      ((equal? keywd "mypage")
+		       (++ ($$ "マイページのヘルプです")
+			   ($$ "カレンダーで期限が設定されている娘。を確認できます")
+			   ($$ "TODOであなたにアサインされている娘。を確認できます")
+			   ($$ "最近の更新で最近の登録内容が確認できます")
+			   ($$ "ブックマークであなたがブックマークに追加した娘。を確認できます")))
 		      (else "ヘルプがありません。"))))
     (html/
      (body/
