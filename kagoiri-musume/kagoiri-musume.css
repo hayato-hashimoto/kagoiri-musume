@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.38 2006/02/12 17:11:08 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.39 2006/02/13 14:33:04 shibata Exp $ */
 
 /*
  * Common stuff
@@ -429,6 +429,7 @@ td#limit-calendar {
     margin:0px;
     border: 1px solid black;
     background-color: #e8f8e8;
+    cursor:help;
 }
 
 div.miniwindow {
@@ -490,10 +491,37 @@ div.miniwindow  ul.musumes {
     top:36px;
     right:0px;
     padding:0px 3px;
-    /* border: 1px solid darkblue; */
-    border: 1px solid black;
+    border: 1px solid #7b96ac;
     color:white;
     font-weight:bold;
-    /* background-color: #7b96ac; */
     background-color: red;
+}
+
+div#musume-links {
+    display:inline;
+}
+
+div#musume-backlinks {
+    display:inline;
+}
+
+table#links-table {
+    border-bottom: 1px solid #d7d7d7;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 1em;
+}
+
+table#links-table th {
+ border: 1px solid #d7d7d7;
+ border-bottom-color: #999;
+ font-weight: bold;
+ padding: 2px .5em;
+ vertical-align: bottom;
+}
+
+table#links-table td {
+ border: 1px dotted #ddd;
+ padding: .1em .5em;
+ vertical-align: top;
 }

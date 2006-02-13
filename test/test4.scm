@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.34 2006/02/13 11:53:05 cut-sea Exp $
+;; $Id: test4.scm,v 1.35 2006/02/13 14:33:03 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -528,6 +528,9 @@
 				    (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
 				(tr (td "ファイル")
 				    (td (input (@ (type "file") (name "file"))))))))))
+                ;; link
+                (table ?@ ?*)
+
 		(dl ?@ 
 		    (dt (span ?@ "♪1.") (span ?@ ?_)
 			(span ?@ "[cut-sea]")
@@ -613,6 +616,9 @@
 				   (td (textarea (@ (!permute (type "text") (name "melody") ?*)))))
 			       (tr (td "ファイル")
 				   (td (input (@ (type "file") (name "file"))))))))))
+               ;; link
+               (table ?@ ?*)
+
 	       (dl ?@
 		   (dt (span ?@ "♪2.") (span ?@ ?_) (span ?@ "[cut-sea]") ?*)
 		   (dd (pre "クローズする")))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.217 2006/02/13 05:08:34 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.218 2006/02/13 14:33:04 shibata Exp $
 
 ;;
 ;; include
@@ -340,17 +340,45 @@
 		  (lp (append result 
 			      (list (m 'before) (a/ (@/ (href (m))) (m))))
 		      (m 'after))))
+            ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
+             => (lambda (m)
+                  (let* ((unit (find-kahua-instance <unit> (m 1)))
+                         (musume-no (x->integer (m 2)))
+                         (musume (musume-ref unit musume-no)))
+                    (lp (append result
+                                (list (m 'before) (link-of musume)))
+                        (m 'after)))))
 	    (else (node-set (append result (list mel)))))))
   (parse melody))
+
+(define (load-links! current-musume melody)
+  (define (analyze melody)
+    (let lp ((mel melody))
+      (cond ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
+             => (lambda (m)
+                  (let* ((unit (find-kahua-instance <unit> (m 1)))
+                         (musume-no (x->integer (m 2)))
+                         (musume (musume-ref unit musume-no)))
+                    (update! (links-of current-musume)
+                             (lambda (ms)
+                               (if (memq musume ms)
+                                   ms
+                                 (cons musume ms))))
+                    (update! (backlinks-of musume)
+                             (lambda (ms)
+                               (if (memq current-musume ms)
+                                   ms
+                                 (cons current-musume ms))))
+                    (lp (m 'after))))))))
+  (analyze melody))
+
 
 (define-entry (melody-list unit-id musume-no
 			   :keyword sort_state search
 			   :mvkeyword priority status type category assign)
   (let* ((musume-no (x->integer musume-no))
 	 (unit (id->obj <unit> unit-id))
-	 (musume (find (lambda (m)
-			 (= musume-no (mno-of m)))
-		       (musumes-of unit))))
+	 (musume (musume-ref unit musume-no)))
     (letrec ((target (and (limit-of musume)
 			  (sys-time->date (limit-of musume))))
 	     (get-target (lambda _ target))
@@ -404,6 +432,8 @@
 			    (onclick "copy_search(this)"))
 			(@@/ (cont (cut move +1)))
 			">>"))
+
+              
 
 	      (h3/ (@/ (class (and (time-over? musume) "timeover")))
 		   (format "~a - ~a：~a - ~a~a"
@@ -472,6 +502,18 @@
 			   (td/ ($$ "ファイル"))
 			   (td/ (input/ (@/ (type "file") (name "file")))))
 			  )))))
+
+              (table/
+               (@/ (id "links-table"))
+               (tr/
+                (th/ ($$ "リンク先"))
+                (th/ ($$ "リンク元")))
+               (tr/
+                (td/
+                 (ul/ (map/ (compose li/ link-of) (ref musume 'links))))
+                (td/
+                 (ul/ (map/ (compose li/ link-of) (ref musume 'backlinks))))))
+
 	      (let1 songs (all-songs musume)
 		(map/ (lambda (k n f t m u)
 			(let1 song (id->obj <song> k)

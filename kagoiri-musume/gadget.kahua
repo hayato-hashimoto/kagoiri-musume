@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.54 2006/02/12 16:41:37 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.55 2006/02/13 14:33:04 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -22,6 +22,27 @@
 
 (define $property-headers$
   (map $$ '("優先度" "ステータス" "タイプ" "カテゴリ" "アサイン")))
+
+
+(define (melody->mail melody)
+  (define (parse melody)
+    (let lp ((result '())
+	     (mel melody))
+      (cond ((string-null? mel) result)
+            ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
+             => (lambda (m)
+                  (let* ((unit (find-kahua-instance <unit> (m 1)))
+                         (musume-no (x->integer (m 2)))
+                         (musume (musume-ref unit musume-no)))
+                    (lp (append result
+                                (list (m 'before)
+                                      (format " [~a ~a ] "
+                                              (mname-of musume)
+                                              (url-of musume))))
+                        (m 'after)))))
+	    (else (append result (list mel))))))
+  (string-concatenate
+   (parse melody)))
 
 (define (sendmail-lite unit musume song)
   (and-let* ((fans (filter (lambda (fan)
@@ -59,7 +80,7 @@
 		    (string-append ($$ "【   期限   】")
 				   #`" ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"\")")
 		    (string-append ($$ "【 コメント 】")
-				   #`"\n\n,(melody-of song)")
+				   #`"\n\n,(melody->mail (melody-of song))")
 		    ""
                     (let1 files (files-of song)
                       (if (null? files)
@@ -102,6 +123,7 @@
 	:category (id->obj <category> category)))
 
 (define (create-new-song musume melody fan)
+  (load-links! musume melody)
   (make <song> :musume musume
 	:melody melody
 	:fan fan))

@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.16 2006/02/12 07:19:29 shibata Exp $
+;; $Id: search.kahua,v 1.17 2006/02/13 14:33:04 shibata Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -27,6 +27,10 @@
 
 (define-method label-of ((obj <unit>))
   (link-of obj))
+
+(define-method url-of ((obj <musume>))
+  (kahua-self-uri-full "melody-list" (key-of (unit-of obj)) (x->string (mno-of obj))))
+
 
 (define-method link-of ((obj <musume>))
   (a/cont/ (@@/ (cont melody-list (key-of (unit-of obj)) (mno-of obj)))
