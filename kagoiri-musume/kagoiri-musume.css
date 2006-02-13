@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.39 2006/02/13 14:33:04 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.40 2006/02/13 16:48:50 shibata Exp $ */
 
 /*
  * Common stuff
@@ -33,7 +33,7 @@ hr {
 }
 
 pre {
-    background-color: #e8e8e8;
+    background-color: #f3f3f3;
     border: solid 1px #aacccc;
     padding-left: 10px;
     margin-left:2em;
@@ -293,20 +293,26 @@ a.clickable:hover
  * Table of Calendar
  */
 table.task {
-  border-collapse: collapse;
-  table-layout: fixed;
-  width: 100%;
-  height: 80%
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    height: 78%;
+    margin-bottom: 5px;
+    border:1px dotted gray;
 }
 
 table.task tr th {
-  border: 1px solid #aacccc;
   height: 1em;
 }
 
 table.task tr td {
-  border: 1px solid #aacccc;
-  vertical-align:top;
+    border:1px dotted lightgray;
+    height:14%;
+    vertical-align:top;
+}
+
+table.task tr td:hover {
+    background-color:#e5e5e5;
 }
 
 table.task tr td span {
@@ -314,9 +320,18 @@ table.task tr td span {
   display:block!important;
 }
 
-table.task tr td.today {
-  background-color:lightgray;
+table.task tr td.today{
+    background-color: pink;
 }
+
+table.task tr td.today span {
+    background-color:transparent;
+}
+
+table.task tr td.today:hover {
+    background-color: #ffb6c1
+}
+
 
 table.task tr td div a {
   text-align: left;
@@ -331,8 +346,7 @@ table.calendar a {
 }
 
 table.calendar a:hover {
-    border:1px solid black;
-    padding:0px;
+    background-color: #a6b7d4;
 }
 
 table.calender {
@@ -474,8 +488,7 @@ div.memo li a {
 }
 
 div.memo a:hover {
-    background-color: #7b96ac;
-    color:white;
+    background-color: #a6b7d4;
 }
 
 div.miniwindow  ul.musumes {
