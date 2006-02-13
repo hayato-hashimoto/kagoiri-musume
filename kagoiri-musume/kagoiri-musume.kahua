@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.216 2006/02/13 01:20:15 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.217 2006/02/13 05:08:34 cut-sea Exp $
 
 ;;
 ;; include
@@ -574,7 +574,7 @@
                   (fieldset/
                    (legend/ (label-of m))
                    (dt/
-		    (format "#~a. ~a[~a]"
+		    (format "¢ö~a. ~a[~a]"
 			    (seq-no-of s)
 			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
 			    (fan-name-of (fan-of s))))
@@ -656,7 +656,7 @@
                                 (li/
                                  (a/cont/ (@@/ (cont melody-list (key-of unit) (mno-of m)))
                                           (@/ (target (format "[[~a/~a]]" (key-of unit) (mno-of m))))
-                                          (format "#~a ~a" (mno-of m) (mname-of m)))))
+                                          (format "¢ö~a ~a" (mno-of m) (mname-of m)))))
                               (all-active-musumes unit)))))
     (html/
      (body/
