@@ -3,13 +3,17 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common.scm.in,v 1.7 2006/02/11 03:40:48 cut-sea Exp $
+;; $Id: common.scm.in,v 1.8 2006/02/13 11:48:14 cut-sea Exp $
 
 (load "parts.scm")
 
 (define *GOSH* "##GOSH##")
 (define *KAHUA_LIB* "##KAHUA_LIB##")
+(define *PLUGINS* '(##PLUGINS##))
 (define *config* "test.conf")
+
+(define-macro (sym->str lst)
+  `(map symbol->string ,lst))
 
 (define (*setup*)
   (sys-system "rm -rf _tmp _work kagoiri-musume")
@@ -21,7 +25,7 @@
 
   (for-each (lambda (f)
               (copy-file #`"../plugins/,f" #`"_work/plugins/,f"))
-            (list "css.scm" "calendar.scm" "kagoiri-musume.scm" "sendmail-with-headers.scm" "async.scm"))
+            (sym->str *PLUGINS*))
 
   (kahua-init *config*)
 
