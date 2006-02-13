@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.40 2006/02/13 16:48:50 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.41 2006/02/13 17:02:55 shibata Exp $ */
 
 /*
  * Common stuff
@@ -33,11 +33,11 @@ hr {
 }
 
 pre {
-    background-color: #f3f3f3;
-    border: solid 1px #aacccc;
+    background-color: #fff5ee; /* seashell */
+    border: 1px solid #ffdab9;
     padding-left: 10px;
     margin-left:2em;
-    margin-right:2em;
+    width:80%;
     overflow: auto;
 }
 
@@ -324,7 +324,7 @@ table.task tr td.today{
     background-color: pink;
 }
 
-table.task tr td.today span {
+table.task tr td.today span, table.task tr td.today a {
     background-color:transparent;
 }
 
