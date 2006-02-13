@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.68 2006/02/12 16:41:37 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.69 2006/02/13 15:25:32 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -141,6 +141,7 @@
   (table/
    (@/ (class "listing") (id "musume_list"))
    (thead/
+    (span/ (@/ (id "musume_count")))
     (cond ((= 0 (length musumes)) ($$ "萌えられる娘。がいません(T^T)"))
 	  ((= 1 (length musumes)) ($$ "ただひとりの娘。に萌えました"))
 	  ((> 100 (length musumes)) (format ($$ "~a人の娘。に萌えました") (length musumes)))

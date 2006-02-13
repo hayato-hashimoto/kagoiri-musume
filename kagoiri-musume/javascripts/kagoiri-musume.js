@@ -145,6 +145,7 @@ function filter_table(select, id, all_text){
      var cell;
      var rows = table.rows;
      var filterd_rows = new Array;
+     var count = 0;
 
      table.style.display='none';
      /* filter loop */
@@ -165,6 +166,7 @@ function filter_table(select, id, all_text){
           if (!all && row.filterd > 0) {
                row.style.display = "none";
           } else if (row.filterd == 0) {
+               count++;
                row.style.display = '';
           }
      }
@@ -172,8 +174,7 @@ function filter_table(select, id, all_text){
      /* save filterd_rows for next select */
      select.filterd_rows = filterd_rows;
      label.style.color = all?'':'red';
-
-
+     $('musume_count').innerHTML = count + '/';
      return true;
 }
 
