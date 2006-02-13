@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.36 2006/02/13 12:01:57 cut-sea Exp $
+# $Id: Makefile.in,v 1.37 2006/02/13 14:40:38 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -65,7 +65,7 @@ JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js kagoiri-musume/async.js kagoi
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
 PLUGINFILES = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm async.scm
-TESTFILES   = test1 test2 test3 test4 system-admin
+TESTFILES   = test1 test2 test3 test4 # system-admin
 
 
 CONFIG_GENERATED = Makefile kagoiri-musume.conf test/common.scm config.log config.status autom4*.cache
