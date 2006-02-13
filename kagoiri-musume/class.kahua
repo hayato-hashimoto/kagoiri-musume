@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.57 2006/02/12 09:05:38 shibata Exp $
+;; $Id: class.kahua,v 1.58 2006/02/13 14:31:12 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -54,6 +54,13 @@
     (let1 fan (car fan)
       (filter (every-pred active? (cut fan-to? <> fan))
               (make-kahua-collection <unit>)))))
+
+
+(define (musume-ref unit mno)
+  (find (lambda (m)
+          (= mno (mno-of m)))
+        (musumes-of unit)))
+
 
 (define-method normalize-addresses ((addresses <string>))
   (normalize-addresses
@@ -108,6 +115,11 @@
 		    :init-value #f :accessor delete-of)
    (limitdate       :allocation :persistent :init-keyword :limitdate
 		    :init-value #f :accessor limit-of)
+
+   (backlinks       :allocation :persistent :init-keyword :backlinks
+		    :init-value '() :accessor backlinks-of)
+   (links           :allocation :persistent :init-keyword :links
+		    :init-value '() :accessor links-of)
    ))
 
 (define-method persistent-initialize ((obj <musume>) initargs)
