@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.1 2006/02/13 23:17:01 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.2 2006/02/13 23:21:16 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -92,7 +92,7 @@
 
  (set-gsid w "login")
 
- (test* "accept system administrator login to admin-system page"
+ #;(test* "accept system administrator login to admin-system page"
 	'()
 	(call-worker/gsid->sxml w 
 				'()
