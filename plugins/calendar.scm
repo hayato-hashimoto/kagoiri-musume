@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: calendar.scm,v 1.3 2006/02/11 11:13:10 cut-sea Exp $
+;; $Id: calendar.scm,v 1.4 2006/02/14 13:21:42 cut-sea Exp $
 
 (use srfi-1)
 (use srfi-19)
@@ -279,9 +279,11 @@
         (dd (date-day t))
         (ww (date-week-day t)))
 
-    (let1 r %workday
-      (define (set-holy!) (set! r %holy))
-      (define (set-holiday!) (set! r %holiday))
+    (let ((r %workday)
+	  (m #f))
+      (define (set-holy! msg) (set! r %holy) (set! m msg))
+      (define (set-holiday! msg) (set! r %holiday) (set! m msg))
+      (define (set-compensate! msg) (set! r %compensate) (set! m msg))
 
       (case ww
         ((6) (set! r %saturday))
@@ -290,55 +292,61 @@
       (if (date<? t holy-day) r
           (case mm
             ((1) (case dd
-                   ((1) (set-holy!))
+                   ((1) (set-holy! "¸µÃ¶"))
                    (else (if (>= yy 2000)
                              (if (= (int (/ (- dd 1) 7)) ww 1)
-                                 (set-holy!))
-                             (if (= dd 15) (set-holy!))))))
+                                 (set-holy! "À®¿Í¤ÎÆü"))
+                             (if (= dd 15) (set-holy! "À®¿Í¤ÎÆü"))))))
             ((2) (case dd
-                   ((11) (if (>= yy 1967) (set-holy!)))
-                   ((24) (if (= yy 1989) (set-holy!)))))
+                   ((11) (if (>= yy 1967) (set-holy! "·ú¹ñµ­Ç°¤ÎÆü")))
+                   ((24) (if (= yy 1989) (set-holy! "¾¼ÏÂÅ·¹Ä¤ÎÂçÁÓ¤ÎÎé")))))
             ((3) (if (= dd (spring-equinox yy))
-                     (set-holy!)))
+                     (set-holy! "½ÕÊ¬¤ÎÆü")))
             ((4) (case dd
-                   ((29) (set-holy!))
-                   ((10) (if (= yy 1959) (set-holy!)))))
+                   ((29) (set-holy! (cond ((>= yy 2007) "¾¼ÏÂ¤ÎÆü")
+					  ((>= yy 1989) "¤ß¤É¤ê¤ÎÆü")
+					  (else "Å·¹ÄÃÂÀ¸Æü"))))
+                   ((10) (if (= yy 1959) (set-holy! "¹ÄÂÀ»ÒÌÀ¿Î¿Æ²¦¤Î·ëº§¤Îµ·")))))
             ((5) (case dd
-                   ((3) (set-holy!))
-                   ((4) (if (and (> ww 1) (>= yy 1986))
-                            (set-holiday!)))
-                   ((5) (set-holy!))))
+                   ((3) (set-holy! "·ûË¡µ­Ç°Æü"))
+                   ((4) (cond ((>= yy 2007) (set-holy! "¤ß¤É¤ê¤ÎÆü"))
+			      ((and (> ww 1) (>= yy 1986))
+			       (set-holiday! "¹ñÌ±¤ÎµÙÆü"))))
+                   ((5) (set-holy! "¤³¤É¤â¤ÎÆü"))
+		   ((6) (if (and (>= yy 2007) (or (= ww 2) (= ww 3)))
+			    (set-compensate! "¿¶ÂØµÙÆü")))))
             ((6) (if (and (= yy 1993) (= dd 9))
-                     (set-holy!)))
+                     (set-holy! "¹ÄÂÀ»ÒÆÁ¿Î¿Æ²¦¤Î·ëº§¤Îµ·")))
             ((7) (cond ((>= yy 2003)
                         (if (and (= (int (/ (- dd 1) 7)) 2) (= ww 1))
-                            (set-holy!)))
+                            (set-holy! "³¤¤ÎÆü")))
                        ((>= yy 1996)
-                        (if (= dd 20) (set-holy!)))))
+                        (if (= dd 20) (set-holy! "³¤¤ÎÆü")))))
             ((9) (if (= dd (autumnal-equinox yy))
-                     (set-holy!)
+                     (set-holy! "½©Ê¬¤ÎÆü")
                      (cond ((>= yy 2003)
                             (if (and (= (int (/ (- dd 1) 7)) 2) (= ww 1))
-                                (set-holy!)
+                                (set-holy! "·ÉÏ·¤ÎÆü")
                                 (if (and (= ww 2)
                                          (= dd (- (autumnal-equinox yy) 1)))
-                                    (set-holiday!))))
-                           ((>= yy 1966) (if (= dd 15) (set-holy!))))))
+                                    (set-holiday! "¹ñÌ±¤ÎµÙÆü"))))
+                           ((>= yy 1966) (if (= dd 15) (set-holy! "·ÉÏ·¤ÎÆü"))))))
             ((10) (cond ((>= yy 2000) (if (= (int (/ (- dd 1) 7)) ww 1)
-                                       (set-holy!)))
-                        ((>= yy 1966) (if (= dd 10) (set-holy!)))))
+					  (set-holy! "ÂÎ°é¤ÎÆü")))
+                        ((>= yy 1966) (if (= dd 10) (set-holy! "ÂÎ°é¤ÎÆü")))))
             ((11) (case dd
-                    ((3 23) (set-holy!))
-                    ((12) (if (= yy 1990) (set-holy!)))))
+                    ((3) (set-holy! "Ê¸²½¤ÎÆü"))
+                    ((23) (set-holy! "¶ĞÏ«´¶¼Õ¤ÎÆü"))
+                    ((12) (if (= yy 1990) (set-holy! "Â¨°ÌÎéÀµÅÂ¤Îµ·")))))
             ((12) (case dd
-                    ((23) (if (>= yy 1989) (set-holy!)))))))
+                    ((23) (if (>= yy 1989) (set-holy! "Å·¹ÄÃÂÀ¸Æü")))))))
 
       (if (and (<= r %holiday) (= ww 1))
           (if (date>=? t compensating-holiday)
               (if (= (holiday? (prev-day t)) %holy)
-                  %compensate)))
+                  (set-compensate! "¿¶ÂØµÙÆü"))))
 
-      r)))
+      (values r m))))
 
 ;; Local variables:
 ;; mode: scheme
