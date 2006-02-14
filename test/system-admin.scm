@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.2 2006/02/13 23:21:16 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.3 2006/02/14 01:12:01 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -32,16 +32,10 @@
 
  (test* "first access & collect save points"
 	'(*TOP*
-	  (!permute
-	   (a (@ (href ?&admin-system) ?*) ?_)
-	   (a ?@ ?_)
-	   (a ?@ ?_))
-	  (form ?@
-		(table
-		 (tr ?*)
-		 (tr ?*))
-		(input ?@)))
-        (call-worker/gsid->sxml w '() '() '(// (or@ form a)))
+	  (a (@ (!permute (href ?&admin-system)
+			  (class "clickable"))
+		?*) "システム管理"))
+        (call-worker/gsid->sxml w '() '() '(// (a 1)))
         (make-match&pick w))
 
  (test* "first access login name input textbox check"
