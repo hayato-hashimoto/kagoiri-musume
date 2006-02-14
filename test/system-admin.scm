@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.8 2006/02/14 02:33:50 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.9 2006/02/14 14:40:04 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -277,7 +277,6 @@
 				'(// (form 4) (table 2)))
 	(make-match&pick w))
 
-;; collect add-status entry point
  (set-gsid w "login")
 
  (test* "accept system administrator login to admin-system page & save add-status entry point"
@@ -397,6 +396,18 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 7) (table 1)))
+	(make-match&pick w))
+
+ (set-gsid w "logout")
+
+ (test/send&pick "logout" w ())
+
+ (test* "redirect and login page"
+	'(*TOP* (h3 "ユニット一覧は一般ユーザアカウントが必要です"))
+	(call-worker/gsid->sxml w 
+				'()
+				'()
+				'(// h3))
 	(make-match&pick w))
 
  )
