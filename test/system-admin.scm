@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.6 2006/02/14 02:16:47 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.7 2006/02/14 02:19:37 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -165,15 +165,7 @@
 				'(// (form 1) (table 2)))
 	(make-match&pick w))
 
- (set-gsid w "login")
-
- (test* "accept system administrator login to admin-system page & check add user"
-	'()
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "kago") ("pass" "kago"))
-				'(// (form 1)))
-	(make-match&pick w))
+;; collect add-user entry point
 
  (set-gsid w "login")
 
