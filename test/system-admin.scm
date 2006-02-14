@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.4 2006/02/14 01:58:23 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.5 2006/02/14 02:16:02 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -147,6 +147,26 @@
 
  (set-gsid w "login")
 
+ (test* "accept system administrator login to admin-system page & check add user"
+	'(*TOP*
+	  (table
+	   (tr (th "管理者権限") (th "ログイン名") (th "パスワード") (th "メールアドレス") (th "開発") (th "顧客") (th "隠密"))
+	   (tr (td (input (@ (type "checkbox") (name "admin"))))
+	       (td (input (@ (type "text") (name "login-name"))))
+	       (td (input (@ (type "password") (name "passwd"))))
+	       (td (input (@ (type "text") (name "mail-address"))))
+	       (td (input (@ (type "checkbox") (name "devel"))))
+	       (td (input (@ (type "checkbox") (name "client"))))
+	       (td (input (@ (type "checkbox") (name "delete")))))
+	   (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 1) (table 2)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
  (test* "accept system administrator login to admin-system page & check unit list table"
 	'(*TOP*
 	  (table (thead "登録ユニット一覧") (tr (th "ユニット名") (th "概要") (th "活動状態"))))
@@ -175,6 +195,28 @@
 
  (set-gsid w "login")
 
+ (test* "accept system administrator login to admin-system page & check add priority"
+	'(*TOP*
+	  (table
+	   (tr (th "優先度ID") (th "表示名") (th "レベル") (th "無効"))
+	   (tr (td (input (@ (type "text") (name "id"))))
+	       (td (input (@ (type "text") (name "disp"))))
+	       (td (select (@ (name "level"))
+			   (option (@ (value "1")) "1")
+			   (option (@ (value "2")) "2")
+			   (option (@ (value "3")) "3")
+			   (option (@ (value "4")) "4")
+			   (option (@ (value "5")) "5")))
+	       (td (input (@ (type "checkbox") (name "delete")))))
+	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 3) (table 2)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
  (test* "accept system administrator login to admin-system page & check status list table"
 	'(*TOP*
 	  (table
@@ -189,6 +231,22 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 4) (table 1)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
+ (test* "accept system administrator login to admin-system page & check add status"
+	'(*TOP*
+	  (table
+	   (tr (th "ステータスID") (th "表示名") (th "無効"))
+	   (tr (td (input (@ (type "text") (name "id"))))
+	       (td (input (@ (type "text") (name "disp"))))
+	       (td (input (@ (type "checkbox") (name "delete")))))
+	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 4) (table 2)))
 	(make-match&pick w))
 
  (set-gsid w "login")
@@ -213,6 +271,22 @@
 
  (set-gsid w "login")
 
+ (test* "accept system administrator login to admin-system page & check add type"
+	'(*TOP*
+	  (table
+	   (tr (th "タイプID") (th "表示名") (th "無効"))
+	   (tr (td (input (@ (type "text") (name "id"))))
+	       (td (input (@ (type "text") (name "disp"))))
+	       (td (input (@ (type "checkbox") (name "delete")))))
+	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 5) (table 2)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
  (test* "accept system administrator login to admin-system page & check category list table"
 	'(*TOP*
 	  (table
@@ -226,6 +300,22 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 6) (table 1)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
+ (test* "accept system administrator login to admin-system page & check add category"
+	'(*TOP*
+	  (table
+	   (tr (th "カテゴリID") (th "表示名") (th "無効"))
+	   (tr (td (input (@ (type "text") (name "id"))))
+	       (td (input (@ (type "text") (name "disp"))))
+	       (td (input (@ (type "checkbox") (name "delete")))))
+	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 6) (table 2)))
 	(make-match&pick w))
 
  (set-gsid w "login")
