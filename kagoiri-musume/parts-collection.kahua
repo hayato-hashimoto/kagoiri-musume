@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.70 2006/02/14 13:21:42 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.71 2006/02/14 13:44:31 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -531,15 +531,17 @@
 	   (tr/
 	    (map/ (lambda (d)
 		    (let1 ms (collect-musumes-with-limit d)
-		      (td/
-		       (@/ (class (string-join
-				   (list (list-ref '("workday" "saturday" "sunday" "holiday" "compensate" "holy")
-						   (holiday? d))
-					 (if (date=? (today) d) "today" "")
-					 (if (same-month? d date) "" "other-month")))))
-		       (div/ (span/ (@/ (class "date")) (day/ d))
-			     (map/ (lambda (m)
-				     (link-of m))
-				   ms)))))
+		      (receive (type msg)
+			  (holiday? d)
+			(td/
+			 (@/ (class (string-join
+				     (list (list-ref '("workday" "saturday" "sunday" "holiday" "compensate" "holy")
+						     type)
+					   (if (date=? (today) d) "today" "")
+					   (if (same-month? d date) "" "other-month")))))
+			 (div/ (span/ (@/ (class "date")) (day/ d) (if msg #`" ,msg" ""))
+			       (map/ (lambda (m)
+				       (link-of m))
+				     ms))))))
 		  week)))
 	 (date-slices-of-month date #t))))
