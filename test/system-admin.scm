@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.7 2006/02/14 02:19:37 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.8 2006/02/14 02:33:50 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -165,7 +165,20 @@
 				'(// (form 1) (table 2)))
 	(make-match&pick w))
 
-;; collect add-user entry point
+ (set-gsid w "login")
+
+ (test* "accept system administrator login to admin-system page & save add-user entry point"
+	'(*TOP*
+	  ?_ ;; search box
+	  (form (@ (action ?&add-user) ?*)
+		(table ?*)
+		(table ?*)))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 1)))
+	(make-match&pick w))
+
 
  (set-gsid w "login")
 
@@ -219,6 +232,19 @@
 
  (set-gsid w "login")
 
+ (test* "accept system administrator login to admin-system page & save add-priority entry point"
+	'(*TOP*
+	  (form (@ (action ?&add-priority) ?*)
+		(table ?*)
+		(table ?*)))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 3)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
  (test* "accept system administrator login to admin-system page & check status list table"
 	'(*TOP*
 	  (table
@@ -249,6 +275,20 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 4) (table 2)))
+	(make-match&pick w))
+
+;; collect add-status entry point
+ (set-gsid w "login")
+
+ (test* "accept system administrator login to admin-system page & save add-status entry point"
+	'(*TOP*
+	  (form (@ (action ?&add-status) ?*)
+		(table ?*)
+		(table ?*)))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 4)))
 	(make-match&pick w))
 
  (set-gsid w "login")
@@ -289,6 +329,19 @@
 
  (set-gsid w "login")
 
+ (test* "accept system administrator login to admin-system page & save add-type entry point"
+	'(*TOP*
+	  (form (@ (action ?&add-type) ?*)
+		(table ?*)
+		(table ?*)))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 5)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
  (test* "accept system administrator login to admin-system page & check category list table"
 	'(*TOP*
 	  (table
@@ -318,6 +371,19 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 6) (table 2)))
+	(make-match&pick w))
+
+ (set-gsid w "login")
+
+ (test* "accept system administrator login to admin-system page & save add-category entry point"
+	'(*TOP*
+	  (form (@ (action ?&add-category) ?*)
+		(table ?*)
+		(table ?*)))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("name" "kago") ("pass" "kago"))
+				'(// (form 6)))
 	(make-match&pick w))
 
  (set-gsid w "login")
