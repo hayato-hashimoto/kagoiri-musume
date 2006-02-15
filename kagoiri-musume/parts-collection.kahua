@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.76 2006/02/15 01:27:57 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.77 2006/02/15 12:29:05 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -258,9 +258,7 @@
 		       (span/ (@/ (class "warning")) "「案件へのリンク」は現在開発中です。まだ使用しないでください。")))
 		 (tr/ (td/ ($$ "内容"))
 		      (td/ (textarea/ (@/ (type "text") (name "melody") (id "melody")
-					  (rows 20) (cols 80))))
-		      
-		      )
+					  (rows 20) (cols 80)))))
 		 (tr/ (td/ ($$ "ファイル"))
 		      (td/ (input/ (@/ (type "file") (name "file")))
 			   (input/ (@/ (type "hidden") (name "filename") (value ""))))))))
@@ -468,7 +466,8 @@
   (table/
    (@/ (class "calendar"))
    (caption/ (@/ (class "calendar")) ($$ "期限"))
-   (tr/ (td/ (@/ (colspan 3))
+   (tr/ (@/ (class "fixheight"))
+	(td/ (@/ (colspan 3))
 	     (if limit (ymd/ limit) ""))
 	(td/ (if (or limit target) "→" ""))
 	(td/ (@/ (colspan 3))
