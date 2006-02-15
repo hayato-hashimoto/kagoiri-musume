@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.43 2006/02/15 12:29:05 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.44 2006/02/15 12:41:39 cut-sea Exp $ */
 
 /*
  * Common stuff
@@ -385,7 +385,7 @@ table.calendar tr td{
     /* border:1px dotted lightgray; */
 }
 
-tr.fixheight {
+tr.limit-fromto {
     height: 1em;
 }
 
