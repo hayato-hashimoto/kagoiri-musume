@@ -30,24 +30,6 @@ if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
     /* debug.print (xmlhttp); */
 }
 
-function addOnloadEvent(proc){
-     if (window.addEventListener) {
-          window.addEventListener("load",proc,false);
-     }
-     else if (window.attachEvent) {
-          window.attachEvent("onload", proc);
-     }
-}
-
-
-addOnloadEvent(function (){
-                    var ele = document.createElement("div");
-                    ele.id = 'loading';
-                    ele.appendChild(document.createTextNode(kahua_loading_msg));
-                    document.body.appendChild(ele)
-                         Element.hide(ele);
-                         });
-
 
 function async_get(e,id,pagename)
 {

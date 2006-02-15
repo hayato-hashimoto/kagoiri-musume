@@ -1,29 +1,44 @@
-// function addOnloadEvent(proc){
-//      if (window.addEventListener) {
-//           window.addEventListener("load",proc,false);
-//      }
-//      else if (window.attachEvent) {
-//           window.attachEvent("onload", proc);
-//      }
-// }
-
 var win = false;
 var textContent = 'textContent';
 var filter_state = new Object;
 var sort_state = '';
 
+Event.observe(window, 'load', create_loading);
+Event.observe(window, 'load', init);
+Event.observe(window, 'load', focus_focus);
+
+function create_loading() {
+     var ele = document.createElement("div");
+     Element.hide(ele);
+     ele.id = 'loading';
+     ele.innerHTML = kahua_loading_msg;
+     document.body.appendChild(ele);
+};
+
 function init(){
      win = document.all?true:false;
      textContent = win?'innerText':'textContent';
+     // for IE
+     if (win){
+          var navi = $('navigation');
+          Element.remove(navi);
+          document.body.appendChild(navi);
+     }
 }
 
-addOnloadEvent(init);
-addOnloadEvent(focus_focus);
+function focus_focus(){
+     var target = $('focus');
+     if (target)
+          target.focus();
+     return false;
+}
 
 
 function sort_table(e){
      e = win?window.event:e;
-     var target = win?e.srcElement:e.target;
+
+     var target = Event.element(e);
+     // var target = win?e.srcElement:e.target;
 
      sort_state = target.getAttribute('value')
 
@@ -47,30 +62,22 @@ function sort_table(e){
           rows_[i-1] = rows.item(i);
      }
 
-     rows_ = rows_.sort(function(x,y){
-                             var x_var = x.cells.item(pos).getAttribute('value');
-                             var y_var = y.cells.item(pos).getAttribute('value');
-                             if (x_var == y_var)
-                                  return 0;
-                             else if (x_var > y_var)
-                                  return rev?1:-1;
-                             else
-                                  return rev?-1:1;
-                        });
+     rows_ = rows_.sortBy(function (v, i) { return v.cells.item(pos).getAttribute('value')});
+     rows_ = rev?rows_.reverse():rows_;
 
      var newbody = document.createElement('tbody');
 
      var tbody = table.tBodies[0];
 
-     for (i = 0; i<rows_.length; i++) {
-          newbody.appendChild(rows_[i]);
-     }
+     rows_.each(function (v, i) {newbody.appendChild(rows_[i])});
+
      table.replaceChild(newbody, tbody);
 }
 
 
 function apply_flter_state(a){
      var state = '';
+
      for (filter in  filter_state){
           for (f in filter_state[filter]){
                state += ('&' + filter + '=' + encodeURIComponent(filter_state[filter][f].value));
@@ -347,12 +354,7 @@ function search_onKeyDown(e)
 }
 
 
-function focus_focus(){
-     var target = document.getElementById('focus');
-     if (target)
-          target.focus();
-     return false;
-}
+
 
 function submitForm(form){
   form.submit();
@@ -419,7 +421,8 @@ function popup_linkselect(event, unit){
           var ele = document.createElement("div");
           ele.className = 'memo';
           ele.id = 'memo';
-          document.body.appendChild(ele);
+          $('body').appendChild(ele);
+          // document.body.
           var y = win?event.clientY:event.pageY;
           y = y + s_y - 20;
           ele.style.top = y + "px";
@@ -435,7 +438,7 @@ function popup_linkselect(event, unit){
 }
 
 function insert_mlink(event){
-     var target = event.target;
+     var target = Event.element(event);
      if (target.tagName.toLowerCase() == 'a'){
           var textarea = document.forms.mainedit.melody;
           textarea.focus();
@@ -450,7 +453,9 @@ function insert_mlink(event){
 
 
 function check_click(event, url){
-     var target = event.target;
+     // var target = event.target;
+     var target = Event.element(event);
+
      if (target.tagName.toLowerCase() == 'a'){
           target = target.parentNode;
           if (target.type == 'circle'){
@@ -482,11 +487,7 @@ function check_click(event, url){
 
 
 function close_memo(){
-     var memo = document.getElementById('memo');
-     if (memo)
-     {
-          document.body.removeChild(memo, document.body);
-     }
+     Element.remove('memo');
 }
 
 
