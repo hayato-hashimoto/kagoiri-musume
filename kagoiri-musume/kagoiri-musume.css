@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.45 2006/02/15 12:47:08 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.46 2006/02/15 13:17:58 shibata Exp $ */
 
 /*
  * Common stuff
@@ -266,8 +266,9 @@ a.clickable
 
 a.clickable:hover
 {
-    padding:0px 1px;
-    border: 2px solid darkred !important;
+    /* padding:0px 1px; */
+    /* border: 1px solid darkred !important; */
+    background-color:white;
 }
 
 .menu {
@@ -360,7 +361,7 @@ table.calendar a {
     }
 
 table.calendar a:hover {
-    background-color: #a6b7d4;
+    background-color: white !important;
 }
 
 table.calendar {
