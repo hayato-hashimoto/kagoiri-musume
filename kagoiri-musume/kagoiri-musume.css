@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.44 2006/02/15 12:41:39 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.45 2006/02/15 12:47:08 shibata Exp $ */
 
 /*
  * Common stuff
@@ -196,7 +196,7 @@ div#header {
 }
 
 #body {
-    padding:60px 10px 0px 10px;
+    padding:20px 10px 0px 10px;
 }
 
 #header h1 {
