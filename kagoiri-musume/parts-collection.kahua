@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.72 2006/02/15 01:01:10 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.73 2006/02/15 01:05:14 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -469,10 +469,10 @@
    (@/ (class "calendar"))
    (caption/ (@/ (class "calendar")) ($$ "´ü¸Â"))
    (tr/ (td/ (@/ (colspan 3))
-	     (if limit (ymd/ limit) "-"))
+	     (if limit (ymd/ limit) ""))
 	(td/ (if target "¢ª" ""))
 	(td/ (@/ (colspan 3))
-	     (if target (ymd/ target) "-")))
+	     (if target (ymd/ target) "")))
    (calendar-header/ calendar/ date limit target getter setter)
    (tr/ (node-set
 	 (map (lambda (w a)
