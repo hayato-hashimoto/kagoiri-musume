@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.220 2006/02/15 17:29:07 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.221 2006/02/15 17:47:59 shibata Exp $
 
 ;;
 ;; include
@@ -438,7 +438,7 @@
               (navigation/ musume)
 	      (musume-menu/ unit-id)
 	      (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
-		       (@@/ (cont add-bookmark unit-id musume-no)) ($$ "ブックマークに追加"))
+		       (@@/ (cont add-bookmark musume)) ($$ "ブックマークに追加"))
 	      (div/
 	       (a/cont/ (@/ (class "clickable")
 			    (onclick "copy_search(this)"))
@@ -687,19 +687,15 @@
              ((bookmark) (bookmark))
              (else (recent)))))))
 
-(define-entry (add-bookmark unit-id musume-no)
-  (let* ((musume-no (x->integer musume-no))
-	 (unit (find-kahua-instance <unit> unit-id))
-	 (musume (find (lambda (m)
-			 (= musume-no (mno-of m)))
-		       (musumes-of unit))))
-    (update! (ref (current-fan) 'bookmark)
-             (lambda (bkmks)
-               (let1 bkmks (or bkmks '())
-                 (if (memq musume bkmks)
-                     bkmks
-                   (cons musume bkmks)))))
-    (redirect-page #`"melody-list/,|unit-id|/,musume-no")))
+(define-entry-method add-bookmark ((musume <musume>))
+  (update! (ref (current-fan) 'bookmark)
+           (lambda (bkmks)
+             (let1 bkmks (or bkmks '())
+               (if (memq musume bkmks)
+                   bkmks
+                 (cons musume bkmks)))))
+  (redirect/cont
+   (cont melody-list (key-of (unit-of musume)) (mno-of musume))))
 
 (define-entry (select unit-id)
   (let1 musume-list (entry-lambda (:keyword unit-id)
