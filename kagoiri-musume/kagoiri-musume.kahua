@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.219 2006/02/15 10:13:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.220 2006/02/15 17:29:07 shibata Exp $
 
 ;;
 ;; include
@@ -326,30 +326,46 @@
 	 (redirect-page #`"melody-list/,(key-of unit)/,(mno-of musume)#,song-id"))))))
 
 (define (melody-format melody)
-  (define (parse melody)
-    (let lp ((result '())
-	     (mel melody))
-      (cond ((string-null? mel) (node-set result))
-	    ((#/(mailto:)?[\s]*([\d\w\-\.]+@[\d\w\-\.]+)/ mel)
-	     => (lambda (m)
-		  (lp (append result
-			      (list (m 'before) (a/ (@/ (href #`"mailto:,(m 2)")) (m))))
-		      (m 'after))))
-	    ((#/(http|https|ftp):[\d\w\/?&#%:.\-+=~]+/ mel)
-	     => (lambda (m)
-		  (lp (append result 
-			      (list (m 'before) (a/ (@/ (href (m))) (m))))
-		      (m 'after))))
-            ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
+  (define (regexp-fold rx proc-nomatch proc-match seed line)
+    (let loop ((line line)
+               (seed seed))
+      (cond ((string-null? line) seed)
+            ((rx line)
              => (lambda (m)
-                  (let* ((unit (find-kahua-instance <unit> (m 1)))
-                         (musume-no (x->integer (m 2)))
-                         (musume (musume-ref unit musume-no)))
-                    (lp (append result
-                                (list (m 'before) (link-of musume)))
-                        (m 'after)))))
-	    (else (node-set (append result (list mel)))))))
-  (parse melody))
+                  (let ((pre   (m 'before))
+                        (post  (m 'after)))
+                    (if (string-null? pre)
+                        (loop post (proc-match m seed))
+                      (loop post (proc-match m (proc-nomatch pre seed)))))))
+            (else
+             (proc-nomatch line seed)))))
+  (define (mail line seed)
+    (regexp-fold
+     #/(mailto:)?[\s]*([\d\w\-\.]+@[\d\w\-\.]+)/
+     cons
+     (lambda (match seed)
+       (cons (a/ (@/ (href #`"mailto:,(match 2)")) (match)) seed))
+     seed line))
+  (define (url line seed)
+    (regexp-fold
+     #/(http|https|ftp):[\d\w\/?&#%:.\-+=~]+/
+     mail
+     (lambda (match seed)
+       (cons (a/ (@/ (href (match))) (match)) seed))
+     seed line))
+  (define (reference line seed)
+    (regexp-fold
+     #/\[\[(\d+)\/(\d+)\]\]/
+     url
+     (lambda (match seed)
+       (let* ((unit (find-kahua-instance <unit> (match 1)))
+              (musume-no (x->integer (match 2)))
+              (musume (musume-ref unit musume-no)))
+         (cons (link-of musume) seed)))
+     seed line))
+  ;; body
+  (node-set (reverse (reference melody '()))))
+
 
 (define (load-links! current-musume melody)
   (define (analyze melody)
