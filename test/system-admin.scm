@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.11 2006/02/15 16:27:11 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.12 2006/02/15 16:35:26 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -63,7 +63,7 @@
         (call-worker/gsid->sxml w '() '() '(// form input))
         test-sxml-match?)
 
- (set-gsid w "admin-system")
+ (set-gsid w 'admin-system)
 
  (test* "click link to entry system admin link"
 	'(*TOP*
@@ -74,7 +74,7 @@
 	(call-worker/gsid->sxml w '() '() '(// (or@ form a)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "reject normal user login to admin-system page"
 	'(*TOP* (h3 "システム管理者のアカウントが必要です"))
@@ -84,7 +84,7 @@
 				'(// h3))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check (a 1)"
 	'(*TOP*
@@ -96,7 +96,7 @@
 				'(// (a 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check (a 2)"
 	'(*TOP*
@@ -107,7 +107,7 @@
 				'(// (a 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
  
  (test* "accept system administrator login to admin-system page & check (a 3)"
 	'(*TOP*
@@ -118,7 +118,7 @@
 				'(// (a 3)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check (a 4)"
 	'(*TOP*
@@ -129,7 +129,7 @@
 				'(// (a 4)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check user list table"
 	'(*TOP*
@@ -145,7 +145,7 @@
 				'(// (form 1) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add user"
 	'(*TOP*
@@ -165,7 +165,7 @@
 				'(// (form 1) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-user entry point"
 	'(*TOP*
@@ -180,7 +180,7 @@
 	(make-match&pick w))
 
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check unit list table"
 	'(*TOP*
@@ -191,7 +191,7 @@
 				'(// (form 2) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check priority list table"
 	'(*TOP*
@@ -208,7 +208,7 @@
 				'(// (form 3) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add priority"
 	'(*TOP*
@@ -230,7 +230,7 @@
 				'(// (form 3) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-priority entry point"
 	'(*TOP*
@@ -243,7 +243,7 @@
 				'(// (form 3)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check status list table"
 	'(*TOP*
@@ -261,7 +261,7 @@
 				'(// (form 4) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add status"
 	'(*TOP*
@@ -277,7 +277,7 @@
 				'(// (form 4) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-status entry point"
 	'(*TOP*
@@ -290,7 +290,7 @@
 				'(// (form 4)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check type list table"
 	'(*TOP*
@@ -310,7 +310,7 @@
 				'(// (form 5) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add type"
 	'(*TOP*
@@ -326,7 +326,7 @@
 				'(// (form 5) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-type entry point"
 	'(*TOP*
@@ -339,7 +339,7 @@
 				'(// (form 5)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check category list table"
 	'(*TOP*
@@ -356,7 +356,7 @@
 				'(// (form 6) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add category"
 	'(*TOP*
@@ -372,7 +372,7 @@
 				'(// (form 6) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-category entry point"
 	'(*TOP*
@@ -385,7 +385,7 @@
 				'(// (form 6)))
 	(make-match&pick w))
 
- (set-gsid w "login")
+ (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check dead musumes list table"
 	'(*TOP*
@@ -398,7 +398,7 @@
 				'(// (form 7) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w "change-password")
+ (set-gsid w 'change-password)
 
  #;(test* "accept system administrator login to admin-system page & check dead musumes list table"
 	'()
@@ -410,7 +410,7 @@
 
 
 
- (set-gsid w "logout")
+ (set-gsid w 'logout)
 
  (test/send&pick "logout" w ())
 
