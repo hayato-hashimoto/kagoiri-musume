@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.218 2006/02/13 14:33:04 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.219 2006/02/15 10:13:24 cut-sea Exp $
 
 ;;
 ;; include
@@ -432,9 +432,6 @@
 			    (onclick "copy_search(this)"))
 			(@@/ (cont (cut move +1)))
 			">>"))
-
-              
-
 	      (h3/ (@/ (class (and (time-over? musume) "timeover")))
 		   (format "~a - ~a¡§~a - ~a~a"
 			   (unit-name-of unit)
