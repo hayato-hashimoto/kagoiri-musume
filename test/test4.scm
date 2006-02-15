@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.36 2006/02/13 15:25:31 shibata Exp $
+;; $Id: test4.scm,v 1.37 2006/02/15 16:53:51 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -180,7 +180,7 @@
 	`(html
 	  ,*head*
 	  (body
-	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+	   (div ?@ (h1 ?@ (a ?@ "籠入娘。 - Groupie System"))
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -286,7 +286,7 @@
 	  ,*head*
 	  (body
 	   (div ?@
-		(h1 ?@ "籠入娘。 - Groupie System")
+		(h1 ?@ (a ?@ "籠入娘。 - Groupie System"))
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -377,7 +377,7 @@
 	`(html
 	  ,*head*
 	  (body
-	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+	   (div ?@ (h1 ?@ (a ?@ "籠入娘。 - Groupie System"))
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -465,7 +465,7 @@
 	`(html
 	  ,*head*
 	  (body
-	   (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+	   (div ?@ (h1 ?@ (a ?@ "籠入娘。 - Groupie System"))
 		(a ?@ "システム管理")
 		(a ?@ "ユニット一覧")
 		(a ?@ "パスワード変更")
@@ -557,7 +557,7 @@
 
  (test* "kagoiri-musume check melody-list complete"
 	`(*TOP*
-	  (div ?@ (h1 ?@ "籠入娘。 - Groupie System")
+	  (div ?@ (h1 ?@ (a ?@ "籠入娘。 - Groupie System"))
 	       (a ?@ "システム管理")
 	       (a ?@ "ユニット一覧")
 	       (a ?@ "パスワード変更")

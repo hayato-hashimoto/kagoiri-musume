@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.46 2006/02/15 13:17:58 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.47 2006/02/15 16:53:51 shibata Exp $ */
 
 /*
  * Common stuff
@@ -236,6 +236,11 @@ div#navigation  {
 .title {
     display:inline;
     color:white;
+}
+
+.title a {
+    color:white;
+    text-decoration:none;
 }
 
 .searchbox {

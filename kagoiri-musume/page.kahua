@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.24 2006/02/15 11:49:15 shibata Exp $
+;; $Id: page.kahua,v 1.25 2006/02/15 16:53:51 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -62,7 +62,7 @@
   (page-base
    ;; navi-link
    (div/ (@/ (id "header"))
-         (h1/ (@/ (class "title")) *kagoiri-musume-title*)
+         (h1/ (@/ (class "title")) (a/cont/ *kagoiri-musume-title*))
 ;;         (a/cont/
 ;;	  (@/ (class "clickable"))
 ;;          (@@/ (cont kagoiri)) ($$ "¥È¥Ã¥×"))
