@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.71 2006/02/14 13:44:31 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.72 2006/02/15 01:01:10 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -437,6 +437,7 @@
 (define (day/ date) (x->string (date-day date)))
 (define (month/ date) (x->string (date-month date)))
 (define (year/ date) (x->string (date-year date)))
+(define (ymd/ date) #`",(year/ date)/,(month/ date)/,(day/ date)")
 
 (define (calendar-header/ parent/ date . args)
   (tr/ (th/ (a/cont/async/ (@/ (title ($$ "前年へ")))
@@ -467,6 +468,11 @@
   (table/
    (@/ (class "calendar"))
    (caption/ (@/ (class "calendar")) ($$ "期限"))
+   (tr/ (td/ (@/ (colspan 3))
+	     (if limit (ymd/ limit) "-"))
+	(td/ (if target "→" ""))
+	(td/ (@/ (colspan 3))
+	     (if target (ymd/ target) "-")))
    (calendar-header/ calendar/ date limit target getter setter)
    (tr/ (node-set
 	 (map (lambda (w a)

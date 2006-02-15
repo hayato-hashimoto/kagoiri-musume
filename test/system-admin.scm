@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.9 2006/02/14 14:40:04 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.10 2006/02/15 01:01:11 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -397,6 +397,10 @@
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 7) (table 1)))
 	(make-match&pick w))
+
+ (set-gsid w "change-password")
+
+
 
  (set-gsid w "logout")
 
