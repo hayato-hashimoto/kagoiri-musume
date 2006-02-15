@@ -13,8 +13,3 @@ div#body {
 div#loading, div#navigation {
     top: 34px;
 }
-
-
-div#navigation {
-    visibility:hidden;
-}
