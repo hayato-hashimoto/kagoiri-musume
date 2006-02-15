@@ -1,14 +1,18 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.41 2006/02/13 17:02:55 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.42 2006/02/15 11:48:14 shibata Exp $ */
 
 /*
  * Common stuff
  */
 
 body {
-  font-family: verdana, arial, helvetica, sans-serif;
-  padding: 0pt;
-  margin: 0pt;
+/*     margin: 0; */
+    padding: 30px 0 0 0;
+/*     color: #000; */
+/*     background: #fff; */
+/*     font-size: 1em; */
+/*     padding: 0pt; */
+    margin: 0pt;
     background-color: #f7f7f7;
 }
 
@@ -168,23 +172,31 @@ h1.timeover,h2.timeover,h3.timeover,h4.timeover,h5.timeover,h6.timeover {
     font-weight: bold;
 }
 
-#header {
+div#header {
+    height: 6em;
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 600;
-    position:fixed;
     width:100%;
     padding-top:5px;
     height:30px;
-    top:0px;
     background-color: #7b96ac;
     border-width: 1px;
     border-style: solid;
     border-color: black;
-
 }
 
+@media screen
+{
+    body>div#header, body>div#loading, body>div#body>div#navigation
+    {
+        position: fixed;
+    }
+}
 
 #body {
-    margin:60px 10px 0px 10px;
+    padding:60px 10px 0px 10px;
 }
 
 #header h1 {
@@ -192,8 +204,9 @@ h1.timeover,h2.timeover,h3.timeover,h4.timeover,h5.timeover,h6.timeover {
     padding:10px 20px;
 }
 
-div#navigation{
-    position:fixed;
+div#navigation {
+    position:absolute;
+    padding:0px;
     top:36px;
     left:0px;
     width:100%;
@@ -228,6 +241,7 @@ div#navigation  {
 .searchbox {
     display:inline;
     position:absolute;
+    top:5px;
     right:10px;
 }
 
@@ -338,20 +352,20 @@ table.task tr td div a {
 }
 
 table.calendar a {
- display:block;
- text-decoration:none;
- text-align:center;
- color:black;
-    padding:1px;
-}
+    display:block;
+    text-decoration:none;
+    text-align:center;
+    color:black;
+    padding:3px;
+    }
 
 table.calendar a:hover {
     background-color: #a6b7d4;
 }
 
-table.calender {
+table.calendar {
     border-collapse: collapse;
-    border-style:outset;
+    border:1px dotted gray;
 }
 
 table caption {
@@ -362,18 +376,26 @@ table.calendar tr th
 {
     text-align: center;
     background-color:lightgray;
+    border-bottom: 1px dotted gray;
 }
 
 table.calendar tr td{
-
-  text-align: right;
-    /* border:1px solid black; */
+    text-align: right;
+    padding:0px;
+    /* border:1px dotted lightgray; */
 }
 
 td.other-month a {
   color: gray !important;
 
 }
+
+td.other-month {
+    color: gray;
+    background-color:white;
+
+}
+
 
 td.workday a,td.workday span {
     /* background-color: white; */
@@ -498,16 +520,18 @@ div.miniwindow  ul.musumes {
     overflow: auto;
 }
 
-#loading {
-    position:fixed;
+div#loading {
+    position:absolute;
     z-index:1000;
     top:36px;
     right:0px;
     padding:0px 3px;
     border: 1px solid #7b96ac;
     color:white;
-    font-weight:bold;
-    background-color: red;
+    /* font-weight:bold; */
+    /* background-color: red; */
+    background-color: #ff6347;
+    /* background-color: darkblue; */
 }
 
 div#musume-links {
