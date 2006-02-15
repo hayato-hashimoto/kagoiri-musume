@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.10 2006/02/15 01:01:11 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.11 2006/02/15 16:27:11 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -45,7 +45,7 @@
 				      (name "name"))
 			    ?*)))))
         (call-worker/gsid->sxml w '() '() '(// form table (tr 1)))
-        (make-match&pick w))
+        test-sxml-match?)
 
  (test* "first access login password input textbox check"
 	'(*TOP*
@@ -54,14 +54,14 @@
 				      (name "pass"))
 			    ?*)))))
         (call-worker/gsid->sxml w '() '() '(// form table (tr 2)))
-        (make-match&pick w))
+        test-sxml-match?)
 
  (test* "first access login submit button check"
 	'(*TOP* (input (@ (!permute (type "submit")
 				    (name "submit"))
 			  ?*)))
         (call-worker/gsid->sxml w '() '() '(// form input))
-        (make-match&pick w))
+        test-sxml-match?)
 
  (set-gsid w "admin-system")
 
@@ -82,7 +82,7 @@
 				'()
 				'(("name" "cut-sea") ("pass" "cutsea"))
 				'(// h3))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -94,7 +94,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (a 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -105,10 +105,10 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (a 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
-
+ 
  (test* "accept system administrator login to admin-system page & check (a 3)"
 	'(*TOP*
 	  (a (@ (href ?&change-password) ?*) "パスワード変更"))
@@ -143,7 +143,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 1) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -163,7 +163,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 1) (table 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -189,7 +189,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 2) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -206,7 +206,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 3) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -228,7 +228,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 3) (table 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -259,7 +259,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 4) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -275,7 +275,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 4) (table 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -308,7 +308,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 5) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -324,7 +324,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 5) (table 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -354,7 +354,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 6) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -370,7 +370,7 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 6) (table 2)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "login")
 
@@ -396,9 +396,17 @@
 				'()
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 7) (table 1)))
-	(make-match&pick w))
+	test-sxml-match?)
 
  (set-gsid w "change-password")
+
+ #;(test* "accept system administrator login to admin-system page & check dead musumes list table"
+	'()
+	(call-worker/gsid->sxml w 
+				'()
+				'()
+				'())
+	test-sxml-match?)
 
 
 
@@ -412,8 +420,8 @@
 				'()
 				'()
 				'(// h3))
-	(make-match&pick w))
-
+	test-sxml-match?)
+ 
  )
 
 (test-end)
