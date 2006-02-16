@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.12 2006/02/15 16:35:26 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.13 2006/02/16 15:09:20 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -35,7 +35,7 @@
 	  (a (@ (!permute (href ?&admin-system)
 			  (class "clickable"))
 		?*) "システム管理"))
-        (call-worker/gsid->sxml w '() '() '(// (a 1)))
+        (call-worker/gsid->sxml w '() '() '(// body div (a 1)))
         (make-match&pick w))
 
  (test* "first access login name input textbox check"
@@ -71,7 +71,7 @@
 	  (form (@ (action ?&login) ?*)
 		(table ?*)
 		(input ?@)))
-	(call-worker/gsid->sxml w '() '() '(// (or@ form a)))
+	(call-worker/gsid->sxml w '() '() '(// div (or@ form a)))
 	(make-match&pick w))
 
  (set-gsid w 'login)
@@ -88,8 +88,11 @@
 
  (test* "accept system administrator login to admin-system page & check (a 1)"
 	'(*TOP*
-	  (a ?@ "システム管理")
-	  (a ?@ "kago"))
+          (!permute
+           (a ?@ "システム管理")
+           (a ?@ "kago")
+           ?*
+           ))
 	(call-worker/gsid->sxml w 
 				'()
 				'(("name" "kago") ("pass" "kago"))
