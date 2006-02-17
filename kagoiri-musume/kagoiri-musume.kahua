@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.221 2006/02/15 17:47:59 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.222 2006/02/17 14:44:25 cut-sea Exp $
 
 ;;
 ;; include
@@ -399,9 +399,12 @@
 			  (sys-time->date (limit-of musume))))
 	     (get-target (lambda _ target))
 	     (set-target! (lambda (date) (set! target date))))
+      (define (time-limit? musume)
+	(and (limit-of musume)
+	     (same-date? (today) (sys-time->date (limit-of musume)))))
       (define (time-over? musume)
 	(and (limit-of musume)
-	     (date>=? (today) (sys-time->date (limit-of musume)))))
+	     (date>? (today) (sys-time->date (limit-of musume)))))
       (define (move dist)
 	(let ((musumes (sort (all-active-musumes unit))))
 	  (define (make-filter prop code prop-of)
@@ -448,14 +451,17 @@
 			    (onclick "copy_search(this)"))
 			(@@/ (cont (cut move +1)))
 			">>"))
-	      (h3/ (@/ (class (and (time-over? musume) "timeover")))
+	      (h3/ (@/ (class (and (or (time-limit? musume)
+				       (time-over? musume)) "timeover")))
 		   (format "~a - ~a：~a - ~a~a"
 			   (unit-name-of unit)
 			   (mno-of musume)
 			   (mname-of musume)
 			   (disp-name-of
 			    (status-of musume))
-			   (if (time-over? musume) ($$ "(期限切)") "")))
+			   (cond ((time-limit? musume) ($$ "(期日)"))
+				 ((time-over? musume) ($$ "(期限切)"))
+				 (else ""))))
 	      (common:form/cont/
 	       (@/ (enctype "multipart/form-data")
                    (id "mainedit"))
