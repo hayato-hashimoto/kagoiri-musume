@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.17 2006/02/17 16:46:19 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.18 2006/02/17 16:52:37 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -517,6 +517,24 @@
  (test* "confirm to change admin to normal and hide keep"
 	'(*TOP*
 	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "¡ö")))
+	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
+	test-sxml-match?)
+
+ (set-gsid w 'add-user)
+
+ (test/send&pick "add fan role develop and client"
+                 w
+                 '(("admin" "off")
+                   ("login-name" "shibata")
+                   ("passwd" "")
+                   ("mail-address" "")
+		   ("devel" "on")
+		   ("client" "on")
+                   ("delete" "off")))
+
+ (test* "confirm to develop and client roles"
+	'(*TOP*
+	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td "¡ö") (td "¡ö") (td)))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
 	test-sxml-match?)
 
