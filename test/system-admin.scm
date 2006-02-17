@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.13 2006/02/16 15:09:20 shibata Exp $
+;; $Id: system-admin.scm,v 1.14 2006/02/17 13:44:31 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -403,12 +403,17 @@
 
  (set-gsid w 'change-password)
 
- #;(test* "accept system administrator login to admin-system page & check dead musumes list table"
-	'()
+ (test* "enter into change-password page"
+	'(*TOP*
+	  ?_
+	  (form (@ (action ?&change-new-password) ?*)
+		(table ?*)
+		(input ?@)
+		?_))
 	(call-worker/gsid->sxml w 
 				'()
 				'()
-				'())
+				'(// form))
 	test-sxml-match?)
 
 
