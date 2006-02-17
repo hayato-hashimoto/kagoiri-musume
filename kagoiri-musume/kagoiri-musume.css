@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.47 2006/02/15 16:53:51 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.48 2006/02/17 16:13:56 shibata Exp $ */
 
 /*
  * Common stuff
@@ -50,6 +50,7 @@ input, textarea
     background-color: white;
     color: inherit;
     border: 1px solid #7b96ac;
+    vertical-align:middle;
 }
 
 input:focus, textarea:focus
