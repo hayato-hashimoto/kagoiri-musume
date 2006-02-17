@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.16 2006/02/17 14:17:34 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.17 2006/02/17 16:46:19 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -472,6 +472,73 @@
 				'(("old-pw" "kago") ("new-pw" "musume") ("new-again-pw" "musume"))
 				'(// div h3))
 	test-sxml-match?)
+
+
+ (set-gsid w 'add-user)
+
+ (test/send&pick "add new normal fan"
+		 w
+		 '(("login-name" "shibata")
+                   ("passwd" "sh1b4t4")
+                   ("mail-address" "shibata@kagoiri-musume.org")))
+
+ (test* "confirm to added new fan"
+	'(*TOP*
+	  (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td)))
+	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
+	test-sxml-match?)
+
+ (set-gsid w 'add-user)
+
+ (test/send&pick "change normal fan to admin role and hide him"
+                 w
+                 '(("admin" "on")
+                   ("login-name" "shibata")
+                   ("passwd" "")
+                   ("mail-address" "shibata@kagoiri.org")
+                   ("delete" "on")))
+
+ (test* "confirm to change normal to admin and hide"
+	'(*TOP*
+	  (tr (td "¡ö") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "¡ö")))
+	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
+	test-sxml-match?)
+
+ (set-gsid w 'add-user)
+
+ (test/send&pick "change admin fan to normal and hide him"
+                 w
+                 '(("admin" "off")
+                   ("login-name" "shibata")
+                   ("passwd" "")
+                   ("mail-address" "")
+                   ("delete" "on")))
+
+ (test* "confirm to change admin to normal and hide keep"
+	'(*TOP*
+	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "¡ö")))
+	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
+	test-sxml-match?)
+
+ (set-gsid w 'add-priority)
+
+
+
+
+ (set-gsid w 'add-status)
+
+
+
+
+ (set-gsid w 'add-type)
+
+
+
+
+ (set-gsid w 'add-category)
+
+
+
 
  (set-gsid w 'logout)
 
