@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.18 2006/02/17 16:52:37 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.19 2006/02/17 17:12:47 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -522,7 +522,7 @@
 
  (set-gsid w 'add-user)
 
- (test/send&pick "add fan role develop and client"
+ (test/send&pick "add fan role develop and client without input passwd and mail-address"
                  w
                  '(("admin" "off")
                    ("login-name" "shibata")
@@ -532,7 +532,7 @@
 		   ("client" "on")
                    ("delete" "off")))
 
- (test* "confirm to develop and client roles"
+ (test* "confirm to develop and client roles without input passwd and mail-address"
 	'(*TOP*
 	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td "＊") (td "＊") (td)))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) table (tr 5)))
@@ -540,8 +540,48 @@
 
  (set-gsid w 'add-priority)
 
+ (test/send&pick "add new priority item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストレベル")
+                   ("level" "3")
+                   ("delete" "off")))
 
+ (test* "confirm to added new priority item"
+	'(*TOP*
+	  (tr (td "test") (td "テストレベル") (td "3") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) (tr 6)))
+        test-sxml-match?)
 
+ (set-gsid w 'add-priority)
+
+ (test/send&pick "change test priority's name and level and delete it"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("level" "4")
+                   ("delete" "on")))
+
+ (test* "confirm to priority item's name level and delete"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td "4") (td "＊")))
+        (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) (tr 6)))
+        test-sxml-match?)
+
+ (set-gsid w 'add-priority)
+
+ (test/send&pick "change test priority's level without input name"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("level" "2")
+                   ("delete" "off")))
+
+ (test* "confirm to priority item's name level and delete"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td "2") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) (tr 6)))
+        test-sxml-match?)
 
  (set-gsid w 'add-status)
 
