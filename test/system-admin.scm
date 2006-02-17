@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.15 2006/02/17 14:10:23 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.16 2006/02/17 14:17:34 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -410,10 +410,7 @@
 		(table ?*)
 		(input ?@)
 		?_))
-	(call-worker/gsid->sxml w 
-				'()
-				'()
-				'(// form))
+	(call-worker/gsid->sxml w '() '() '(// form))
 	(make-match&pick w))
 
  (set-gsid w 'change-password)
@@ -421,16 +418,13 @@
  (test* "change-password page check"
 	'(*TOP*
 	  (table
-	   (tr (!permute (th "旧パスワード")
-			 (td (input (@ (type "password") ?*)))))
-	   (tr (!permute (th "新パスワード")
-			 (td (input (@ (type "password") ?*)))))
-	   (tr (!permute (th "新パスワード(確認)")
-			 (td (input (@ (type "password") ?*)))))))
-	(call-worker/gsid->sxml w 
-				'()
-				'()
-				'(// table))
+	   (tr (th "旧パスワード")
+	       (td (input (@ (!permute (type "password") (name "old-pw")) ?*))))
+	   (tr (th "新パスワード")
+	       (td (input (@ (!permute (type "password") (name "new-pw")) ?*))))
+	   (tr (th "新パスワード(確認)")
+	       (td (input (@ (!permute (type "password") (name "new-again-pw")) ?*))))))
+	(call-worker/gsid->sxml w '() '() '(// table))
 	test-sxml-match?)
 
  (set-gsid w 'change-new-password)
@@ -485,10 +479,7 @@
 
  (test* "redirect and login page"
 	'(*TOP* (h3 "ユニット一覧は一般ユーザアカウントが必要です"))
-	(call-worker/gsid->sxml w 
-				'()
-				'()
-				'(// h3))
+	(call-worker/gsid->sxml w '() '() '(// h3))
 	test-sxml-match?)
  
  )
