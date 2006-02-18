@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.20 2006/02/18 00:03:20 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.21 2006/02/18 01:00:49 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -570,7 +570,7 @@
 
  (set-gsid w 'add-priority)
 
- (test/send&pick "change test priority's level without input name"
+ (test/send&pick "change test priority's name and level without input name"
                  w
                  '(("id" "test")
                    ("disp" "")
@@ -619,7 +619,7 @@
                    ("disp" "")
                    ("delete" "off")))
 
- (test* "confirm to status item's delete without input name"
+ (test* "confirm to status item's name and delete without input name"
 	'(*TOP*
 	  (tr (td "test") (td "テスト") (td)))
         (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) (tr 7)))
@@ -627,13 +627,87 @@
 
  (set-gsid w 'add-type)
 
+ (test/send&pick "add new type item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストタイプ")
+                   ("delete" "off")))
 
+ (test* "confirm to added new type item"
+	'(*TOP*
+	  (tr (td "test") (td "テストタイプ") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) (tr 9)))
+        test-sxml-match?)
 
+ (set-gsid w 'add-type)
+
+ (test/send&pick "change test type's name and delete"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
+
+ (test* "confirm to type item's name and delete"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td "＊")))
+        (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) (tr 9)))
+        test-sxml-match?)
+
+ (set-gsid w 'add-type)
+
+ (test/send&pick "change test type's delete without input name"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
+
+ (test* "confirm to type item's name and delete without input name"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) (tr 9)))
+        test-sxml-match?)
 
  (set-gsid w 'add-category)
 
+ (test/send&pick "add new category item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストカテゴリ")
+                   ("delete" "off")))
 
+ (test* "confirm to added new category"
+	'(*TOP*
+	  (tr (td "test") (td "テストカテゴリ") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) (tr 6)))
+        test-sxml-match?)
 
+ (set-gsid w 'add-category)
+
+ (test/send&pick "change test category's name and delete"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
+
+ (test* "confirm to category item's name and delete"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td "＊")))
+        (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) (tr 6)))
+        test-sxml-match?)
+
+ (set-gsid w 'add-category)
+
+ (test/send&pick "change test category's delete without input name"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
+
+ (test* "confirm to category item's name and delete without input name"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) (tr 6)))
+        test-sxml-match?)
 
  (set-gsid w 'logout)
 
