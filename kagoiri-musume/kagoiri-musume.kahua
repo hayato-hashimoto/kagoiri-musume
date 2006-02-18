@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.223 2006/02/18 08:06:45 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.224 2006/02/18 10:18:43 shibata Exp $
 
 ;;
 ;; include
@@ -115,7 +115,7 @@
 
 (define-entry (musume-edit musume-id)
   (let1 m (find-kahua-instance <musume> musume-id)
-    (page-moved "**" (key-of (unit-of m)) (x->string (mno-of m)))))
+    (page-moved "**" (key-of (unit-of m)) (x->string (mno-of m)) "edit")))
 
 (define-entry (melody-list unit-id musume-no)
   (page-moved "**" unit-id musume-no))
