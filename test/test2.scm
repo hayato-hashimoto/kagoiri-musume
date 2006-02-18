@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test2.scm,v 1.18 2006/02/13 11:53:05 cut-sea Exp $
+;; $Id: test2.scm,v 1.19 2006/02/18 14:58:18 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -21,6 +21,9 @@
 (test-start "kagoiri-musume unit-list enter check")
 
 (*setup*)
+
+;; このテストは unit-lis.scm と change-password.scm テストに
+;; 書き換えられました．
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume
