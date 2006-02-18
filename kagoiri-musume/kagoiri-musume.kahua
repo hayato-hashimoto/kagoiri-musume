@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.224 2006/02/18 10:18:43 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.225 2006/02/18 11:46:31 shibata Exp $
 
 ;;
 ;; include
@@ -412,7 +412,7 @@
      seed line))
   (define (url line seed)
     (regexp-fold
-     #/(http|https|ftp):[\d\w\/?&#%:.\-+=~]+/
+     #/(http|https|ftp):[\d\w\/?&#%:.\-+=~*]+/
      mail
      (lambda (match seed)
        (cons (a/ (@/ (href (match))) (match)) seed))
