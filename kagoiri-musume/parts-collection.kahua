@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.78 2006/02/15 12:41:39 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.79 2006/02/18 08:06:45 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -117,10 +117,14 @@
 	(td/ (input/ (@/ (type "password") (name again)
 			 (value "")) "")))))
 
-(define (musume-menu/ unit-id)
+(define (musume-menu/ unit)
   (ul/ (@/ (class "menu"))
-       (common:li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont musume-new unit-id)) ($$ "新しい娘。")))))
+       (common:li/ (link-of unit
+                     :action "new"
+                     :body (node-set
+                            (list
+                             (@/ (class "clickable"))
+                             ($$ "新しい娘。")))))))
 
 (define (require-fan-message unit)
   (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit)))
@@ -151,7 +155,7 @@
 	  (map/ (lambda (s)
 		  (let1 statusid (code-of s)
 		    (span/ (a/cont/ (@/ (onclick "return update_status(this)"))
-				    (@@/ (cont musume-list (key-of unit) `(status ,statusid)))
+				    (@@/ (cont ** (key-of unit) `(status ,statusid)))
 				    (disp-name-of s))
 			   (format "(~a) " (hash-table-get status-hash statusid 0)))))
 		(statuss-of unit)))
@@ -192,15 +196,12 @@
 			       ($$ "削除")))
 		   (let1 val (format "~3,'0d" (mno-of m))
 		     (td/ (@/ (value val))
-			  (a/cont/
-			   (@@/ (cont musume-edit (key-of m)))
-			   val)))
+                          (link-of m :action "edit" :body val)))
 		   (let1 val (mname-of m)
 		     (td/ (@/ (value val))
-			  (a/cont/
-			   (@/ (onClick "apply_flter_state(this)"))
-			   (@@/ (cont melody-list (key-of (unit-of m)) (mno-of m)))
-			   val)
+                          (link-of m :body (node-set
+                                            (list (@/ (onClick "apply_flter_state(this)"))
+                                                  val)))
 			  (format " (~a)" (length songs))))
 		   (prop-td/ priority-of priorities-of level-of disp-name-of)
 		   (prop-td/ status-of statuss-of code-of disp-name-of)
@@ -285,18 +286,14 @@
                   u
                   (tr/ (@/ (class (if (odd? idx) "odd" "even")))
                        (devel:td/
-                        (a/cont/
-                         (@@/ (cont unit-edit (key-of u)))
-                         ($$ "設定")))
+                        (link-of u :action "edit" :body ($$ "設定")))
                        (admin:td/
                         (a/cont/
                          (@/ (onClick (format "return confirm('~a')?true:false"
                                               ($$ "本当に削除しますか？"))))
                          (@@/ (cont unit-fallout (key-of u)))
                          ($$ "削除")))
-                       (td/ (a/cont/
-                             (@@/ (cont musume-list (key-of u)))
-                             (unit-name-of u))
+                       (td/ (link-of u)
                             (format " (~a)"
                                     (length (all-active-musumes u))))
                        (td/ (description-of u))
@@ -321,7 +318,7 @@
                                                                             bkmks
 									    (cons u ls))
 									(delete u ls)))))
-                                                       (redirect-page "unit-list")))))
+                                                       (redirect/cont (cont **))))))
                                      (if subscription?
                                          ($$ "○")
 					 ($$ "×")))))))))
@@ -342,14 +339,14 @@
 			 (begin
 			   (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
 			   (if unit
-			       (redirect-page #`"unit-edit/,(key-of unit)")
-			       (redirect-page "unit-list")))
+                               (redirect-to unit "edit")
+                             (redirect/cont (cont **))))
 			 (set-error-message #f))
 		   (if unit
 		       (apply unit-makeover! unit name desc notify-addresses
 			      (map kahua-context-ref* (drop-right $full-property-list$ 1)))
 		       (create-new-unit name desc fans priority status type category notify-addresses))
-		   (redirect-page "unit-list"))))
+                   (redirect/cont (cont **)))))
       (table/
        (tr/ (@/ (onclick "toggle_fulllist(event)"))
 	    (th/ (@/ (colspan 2)) (clickable ($$ "優先度")))

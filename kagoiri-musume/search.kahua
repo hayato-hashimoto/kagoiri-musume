@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.17 2006/02/13 14:33:04 shibata Exp $
+;; $Id: search.kahua,v 1.18 2006/02/18 08:06:45 shibata Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -22,19 +22,30 @@
             (melody-of song)))
          (reverse (filter active? (ref obj 'songs))))))
 
-(define-method link-of ((obj <unit>))
-  (a/cont/ (@@/ (cont musume-list (key-of obj))) (ref obj 'unit-name)))
+(define-method link-of ((obj <unit>) . options)
+  (let-keywords* options ((action :action "")
+                          (body   :body #f))
+    (a/cont/ (@@/ (cont ** (key-of obj) action))
+             (or  body
+                  (unit-name-of obj)))))
 
 (define-method label-of ((obj <unit>))
   (link-of obj))
 
+(define-method redirect-to ((obj <unit>) . args)
+  (let1 action (get-optional args "")
+    (redirect/cont (cont ** (key-of obj) action))))
+
+
 (define-method url-of ((obj <musume>))
-  (kahua-self-uri-full "melody-list" (key-of (unit-of obj)) (x->string (mno-of obj))))
+  (kahua-self-uri-full "**" (key-of (unit-of obj)) (x->string (mno-of obj))))
 
-
-(define-method link-of ((obj <musume>))
-  (a/cont/ (@@/ (cont melody-list (key-of (unit-of obj)) (mno-of obj)))
-           (mname-of obj)))
+(define-method link-of ((obj <musume>) . options)
+  (let-keywords* options ((action :action "")
+                          (body   :body #f))
+    (a/cont/ (@@/ (cont ** (key-of (unit-of obj)) (mno-of obj) action))
+             (or  body
+                  (mname-of obj)))))
 
 (define-method label-of ((obj <musume>))
   (let ((unit (unit-of obj)))
@@ -42,6 +53,10 @@
      (link-of unit)
      " : "
      (link-of obj))))
+
+(define-method redirect-to ((obj <musume>) . args)
+  (let1 action (get-optional args "")
+    (redirect/cont (cont ** (key-of (unit-of obj)) (mno-of obj) action))))
 
 ;; search page
 (define-entry (search :keyword word unit-id)

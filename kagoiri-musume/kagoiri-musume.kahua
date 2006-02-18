@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.222 2006/02/17 14:44:25 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.223 2006/02/18 08:06:45 shibata Exp $
 
 ;;
 ;; include
@@ -77,13 +77,48 @@
   (let1 upload-path (kahua-static-document-path "kagoiri-musume/upload")
     (make-directory* upload-path)
     upload-path))
-    
+
 (define-if-not-bound *kagoiri-musume-upload-uri*
   (kahua-static-document-url "kagoiri-musume/upload"))
 
 ;; primary database
 ;;
 (primary-database-name *kagoiri-musume-database-name*)
+
+
+;; moved entry
+(define (page-moved . path)
+  (let1 url (apply kahua-self-uri-full path)
+    (html/
+     (extra-header/
+      (@/ (name "Refresh")
+          (value #`"3; ,url")))
+     (head/
+      (meta/ (@/ (http-equiv "refresh")
+                 (contnet #`"3; URL=,url"))))
+     (body/ (h1/ "このページは移動しました")
+            (a/ (@/ (href url)) url)
+            (p/ "3秒後に自動で新しいページへ移動します。"
+               "自動で移動しない場合、上のリンクをクリックしてください。")))))
+
+(define-entry (unit-list :rest rest)
+  (page-moved "**"))
+
+(define-entry (unit-edit unit-id)
+  (page-moved "**" unit-id "edit"))
+
+(define-entry (musume-list unit-id)
+  (page-moved "**" unit-id))
+
+(define-entry (musume-new unit-id)
+  (page-moved "**" unit-id "new"))
+
+(define-entry (musume-edit musume-id)
+  (let1 m (find-kahua-instance <musume> musume-id)
+    (page-moved "**" (key-of (unit-of m)) (x->string (mno-of m)))))
+
+(define-entry (melody-list unit-id musume-no)
+  (page-moved "**" unit-id musume-no))
 
 
 ; main page
@@ -100,7 +135,10 @@
    ))
 |#
 
-(define-entry (unit-list)
+;;;==============================================================
+;;; Project list
+;;;
+(define-entry-method ** ()
   (permission-check-page
    identity ($$ "ユニット一覧は一般ユーザアカウントが必要です")
    (navigation/)
@@ -110,7 +148,10 @@
    (create-unit-form/)))
 
 
-(define-entry (unit-edit unit-id)
+;;;==============================================================
+;;; Project edit
+;;;
+(define-entry-method ** (unit-id "edit")
   (let1 unit (id->obj <unit> unit-id)
     (permission-check-page
      (lambda (u)
@@ -119,6 +160,9 @@
      (require-fan-message unit)
      (create-unit-form/ unit))))
 
+;;;==============================================================
+;;; Project fallout
+;;;
 ; TODO: check account
 ;
 (define-entry (unit-fallout unit-id)
@@ -138,9 +182,12 @@
        (begin
 	 (if (checker user)
 	     (set! (fallout-of unit) #t))
-	 (redirect-page "unit-list"))))))
+	 (redirect-to))))))
 
-(define-entry (musume-list unit-id :keyword priority status assign type category limit)
+;;;==============================================================
+;;; Subject list
+;;;
+(define-entry-method ** (unit-id :keyword priority status assign type category limit)
   (let* ((*default-limit* 200)
 	 (*limits-list* '("" "20" "50" "200" "500" "1000"))
 	 (*limit* (or limit (x->string *default-limit*)))
@@ -173,12 +220,12 @@
 	       u #f))
 	 (require-fan-message unit)
          (navigation/ unit)
-	 (musume-menu/ unit-id)
+	 (musume-menu/ unit)
 	 (inter-unit-search-box/ unit-id)
 	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/
           (@/ (id "filtering_form"))
-	  (@@/ (cont musume-list unit-id))
+	  (@@/ (cont ** unit-id))
 	  (table/
 	   (@/ (class "table-filter"))
 	   (tr/ (@/ (onclick "toggle_select_mode(event)"))
@@ -222,7 +269,10 @@
 				 (> (mno-of m1) (mno-of m2)))))
 	    (musume-table/ unit musumes *status-dict*))))))))
 
-(define-entry (musume-new unit-id)
+;;;==============================================================
+;;; Subject new
+;;;
+(define-entry-method ** (unit-id "new")
   (letrec ((unit (id->obj <unit> unit-id))
 	   (target #f)
 	   (get-target (lambda _ target))
@@ -234,7 +284,7 @@
 	     u #f))
        (require-fan-message unit)
        (navigation/ unit)
-       (musume-menu/ unit-id)
+       (musume-menu/ unit)
        (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
        (form/cont/
 	(@/ (enctype "multipart/form-data")
@@ -244,7 +294,7 @@
 		       (if (string-null? name)
 			   (begin
 			     (set-error-message ($$ "タイトルを入力してください。"))
-			     (redirect-page #`"musume-new/,unit-id"))
+                             (redirect-to unit "new"))
 			   (begin
 			     (if (string-null? melody) (set! melody name))
 			     (set! name (kana-trans:half->full name))
@@ -257,7 +307,7 @@
 				 ;; save file and make file object.
 				 (attach-file song file (uploaded-file-name unit musume song))
 				 (sendmail-lite unit musume song)
-				 (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)"))))))))
+                                 (redirect-to musume))))))))
 	(musume-new-table/ unit date limit-date target-date get-target set-target!))))
     (viewer (today) #f #f)))
 
@@ -266,6 +316,9 @@
    identity ($$ "ちょいまってや")
    ($$ "娘。の閲覧")))
 
+;;;==============================================================
+;;; Subject remove
+;;;
 (define-entry (remove-musume musume-id)
   (let* ((musume (id->obj <musume> musume-id))
 	 (unit (unit-of musume)))
@@ -283,21 +336,26 @@
        (begin
 	 (if (checker user)
 	     (set! (delete-of musume) #t))
-	 (redirect-page #`"musume-list/,(key-of unit)"))))))
+         (redirect-to unit))))))
 
 
-(define-entry (musume-edit musume-id)
-  (let* ((musume (id->obj <musume> musume-id))
-	 (unit (unit-of musume)))
+;;;==============================================================
+;;; Subject edit
+;;;
+(define-entry-method ** (unit-id musume-no "edit")
+  (let* ((musume-no (x->integer musume-no))
+         (unit (id->obj <unit> unit-id))
+         (musume (musume-ref unit musume-no)))
     (permission-check-page
      identity
      (require-fan-message unit)
+     (navigation/ musume)
      (h3/ (format ($$ "『~a』の『~a 』を編集する。") (unit-name-of unit) (mname-of musume)))
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name)
-		    (if (not (string-null? name))
-			(set! (mname-of musume) name))
-		  (redirect-page #`"musume-edit/,musume-id"))))
+                   (if (not (string-null? name))
+                       (set! (mname-of musume) name))
+                   (redirect-to musume "edit"))))
       (table/ (tr/ (td/ ($$ "タイトル"))
 		   (td/ (input/ (@/ (type "text") (name "name")
 				    (id "focus") (size 80)
@@ -305,6 +363,10 @@
       (input/ (@/ (type "submit") (value ($$ "改名")))))
      )))
 
+
+;;;==============================================================
+;;; Song edit
+;;;
 (define-entry (delete-revival-song song-id)
   (let* ((song (id->obj <song> song-id))
 	 (musume (musume-of song))
@@ -323,7 +385,9 @@
        (begin
 	 (if (checker user)
 	     (set! (delete-of song) (not (delete-of song))))
-	 (redirect-page #`"melody-list/,(key-of unit)/,(mno-of musume)#,song-id"))))))
+         (redirect/cont (cont ** (key-of unit) (mno-of musume))
+                        (fragment song-id))
+         )))))
 
 (define (melody-format melody)
   (define (regexp-fold rx proc-nomatch proc-match seed line)
@@ -389,9 +453,12 @@
   (analyze melody))
 
 
-(define-entry (melody-list unit-id musume-no
-			   :keyword sort_state search
-			   :mvkeyword priority status type category assign)
+;;;==============================================================
+;;; Song list
+;;;
+(define-entry-method ** (unit-id musume-no
+                                :keyword sort_state search
+                                :mvkeyword priority status type category assign)
   (let* ((musume-no (x->integer musume-no))
 	 (unit (id->obj <unit> unit-id))
 	 (musume (musume-ref unit musume-no)))
@@ -428,7 +495,9 @@
 			      musumes))
 		 (pos (or (find-index (cut eq? musume <>) musumes) 0))
 		 (musume (list-ref  musumes (+ pos dist) musume)))
-	    (redirect-page #`"melody-list/,|unit-id|/,(mno-of musume)?,|search|"))))
+            ;; fixme
+            (redirect-page #`"**/,|unit-id|/,(mno-of musume)?,|search|")
+            )))
       (define (viewer date limit-date target-date)
 	(permission-check-page
 	 (lambda (u)
@@ -439,7 +508,7 @@
 	     (move 0)
 	     (list/
               (navigation/ musume)
-	      (musume-menu/ unit-id)
+	      (musume-menu/ unit)
 	      (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
 		       (@@/ (cont add-bookmark musume)) ($$ "ブックマークに追加"))
 	      (div/
@@ -479,7 +548,7 @@
 				      (attach-file song file (uploaded-file-name unit musume song))
 				      (if (not (string-null? melody))
 					  (sendmail-lite unit musume song)))))
-			    (redirect-page #`"melody-list/,|unit-id|/,musume-no"))))
+                              (redirect-to musume))))
 	       (table/
 		(tr/
 		 (td/
@@ -570,6 +639,9 @@
       (viewer (or (get-target) (today)) (get-target) (get-target))
        )))
 
+;;;==============================================================
+;;; Task calender
+;;;
 (define-entry (task-calendar)
   (define (calendar date)
     (permission-check-page
@@ -589,6 +661,9 @@
 	   (task-calendar-table/ date))))
   (calendar (today)))
 
+;;;==============================================================
+;;; MyPage
+;;;
 (define-entry (mypage type)
   (define (todo)
     (fieldset/
@@ -693,6 +768,9 @@
              ((bookmark) (bookmark))
              (else (recent)))))))
 
+;;;==============================================================
+;;; Add Bookmark
+;;;
 (define-entry-method add-bookmark ((musume <musume>))
   (update! (ref (current-fan) 'bookmark)
            (lambda (bkmks)
@@ -700,8 +778,7 @@
                (if (memq musume bkmks)
                    bkmks
                  (cons musume bkmks)))))
-  (redirect/cont
-   (cont melody-list (key-of (unit-of musume)) (mno-of musume))))
+  (redirect-to musume))
 
 (define-entry (select unit-id)
   (let1 musume-list (entry-lambda (:keyword unit-id)
@@ -711,9 +788,10 @@
                              (map/
                               (lambda (m)
                                 (li/
-                                 (a/cont/ (@@/ (cont melody-list (key-of unit) (mno-of m)))
-                                          (@/ (target (format "[[~a/~a]]" (key-of unit) (mno-of m))))
-                                          (format "♪~a ~a" (mno-of m) (mname-of m)))))
+                                 (link-of m
+                                   :body (node-set
+                                          (list (@/ (target (format "[[~a/~a]]" (key-of unit) (mno-of m))))
+                                                (format "♪~a ~a" (mno-of m) (mname-of m)))))))
                               (all-active-musumes unit)))))
     (html/
      (body/
@@ -764,6 +842,9 @@
   (span/ (@/ (class "clickable"))
          text))
 
+;;;==============================================================
+;;; Help
+;;;
 (define-entry (help keywd)
   ;; ここにヘルプのカタログを作成する
   (letrec ((++ (lambda args (string-join args "\n")))
@@ -795,7 +876,7 @@
 ; initialization
 ;
 
-(initialize-main-proc unit-list)
+(initialize-main-proc **)
 
 ;
 ; error
