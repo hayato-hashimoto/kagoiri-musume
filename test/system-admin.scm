@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.19 2006/02/17 17:12:47 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.20 2006/02/18 00:03:20 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -429,7 +429,7 @@
 
  (set-gsid w 'change-new-password)
 
- (test* "change password with bad new password and fail."
+ (test* "change password with bad new password and fail"
 	'(*TOP*
 	  ?_
 	  (p ?@ "新パスワードが不正です"))
@@ -441,7 +441,7 @@
 
  (set-gsid w 'change-new-password)
 
- (test* "change password with bad old password and fail."
+ (test* "change password with bad old password and fail"
 	'(*TOP*
 	  ?_
 	  (p ?@ "旧パスワードが不正です"))
@@ -453,7 +453,7 @@
 
  (set-gsid w 'change-new-password)
 
- (test* "change password with gool password but other users and fail."
+ (test* "change password with gool password but other users and fail"
 	'(*TOP*
 	  ?_
 	  (p ?@ "旧パスワードが不正です"))
@@ -465,7 +465,7 @@
 
  (set-gsid w 'change-new-password)
 
- (test* "change password with gool password and pass."
+ (test* "change password with gool password and pass"
 	'(*TOP* (h3 "kago さんのパスワードを変更しました"))
 	(call-worker/gsid->sxml w 
 				'()
@@ -585,8 +585,45 @@
 
  (set-gsid w 'add-status)
 
+ (test/send&pick "add new status item"
+                 w
+                 '(("id" "test")
+                   ("disp" "テストステータス")
+                   ("delete" "off")))
 
+ (test* "confirm to added new status item"
+	'(*TOP*
+	  (tr (td "test") (td "テストステータス") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) (tr 7)))
+        test-sxml-match?)
 
+ (set-gsid w 'add-status)
+
+ (test/send&pick "change test status's name and delete it"
+                 w
+                 '(("id" "test")
+                   ("disp" "テスト")
+                   ("delete" "on")))
+
+ (test* "confirm to status item's name and delete"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td "＊")))
+        (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) (tr 7)))
+        test-sxml-match?)
+
+ (set-gsid w 'add-status)
+
+ (test/send&pick "change test status's delete without input name"
+                 w
+                 '(("id" "test")
+                   ("disp" "")
+                   ("delete" "off")))
+
+ (test* "confirm to status item's delete without input name"
+	'(*TOP*
+	  (tr (td "test") (td "テスト") (td)))
+        (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) (tr 7)))
+        test-sxml-match?)
 
  (set-gsid w 'add-type)
 
