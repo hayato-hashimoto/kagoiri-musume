@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.21 2006/02/18 01:00:49 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.22 2006/02/18 12:53:23 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -470,6 +470,16 @@
 	(call-worker/gsid->sxml w 
 				'()
 				'(("old-pw" "kago") ("new-pw" "musume") ("new-again-pw" "musume"))
+				'(// div h3))
+	test-sxml-match?)
+
+ (set-gsid w 'change-new-password)
+
+ (test* "confirm changed password and back to original password"
+	'(*TOP* (h3 "kago さんのパスワードを変更しました"))
+	(call-worker/gsid->sxml w 
+				'()
+				'(("old-pw" "musume") ("new-pw" "kago") ("new-again-pw" "kago"))
 				'(// div h3))
 	test-sxml-match?)
 
