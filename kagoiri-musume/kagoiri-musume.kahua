@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.225 2006/02/18 11:46:31 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.226 2006/02/19 09:45:13 shibata Exp $
 
 ;;
 ;; include
@@ -580,8 +580,7 @@
                           (tr/
                            (td/)
                            (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
-                                       (clickable ($$ "案件へのリンク")))
-				(span/ (@/ (class "warning")) "「案件へのリンク」は現在開発中です。まだ使用しないでください。")))
+                                       (clickable ($$ "案件へのリンク")))))
 			  (tr/
 			   (td/ ($$ "内容"))
 			   (td/ (textarea/ (@/ (type "text") (name "melody")

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-operate.scm,v 1.1 2006/02/19 08:20:41 shibata Exp $
+;; $Id: musume-operate.scm,v 1.2 2006/02/19 09:45:12 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -175,9 +175,7 @@
                  (tr (td)
                      (td (span (@ (onclick ?_))
                                (span (@ (class "clickable"))
-                                     "案件へのリンク"))
-                         (span (@ (class "warning"))
-                               "「案件へのリンク」は現在開発中です。まだ使用しないでください。")))
+                                     "案件へのリンク"))))
                  (tr (td "内容")
                      (td (textarea
                           (@ (type "text")
