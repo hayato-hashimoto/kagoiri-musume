@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.1 2006/02/19 02:25:29 shibata Exp $
+;; $Id: common-test.scm,v 1.2 2006/02/19 03:09:14 shibata Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -17,11 +17,15 @@
   (use kahua)
   (use kahua.test.xml)
   (use kahua.test.worker)
-  (export login
+  (export //page-title
+          login
           make-unit
           ))
 
 (select-module common-test)
+
+(define //page-title '(// (div (@ (equal? (id "body")))) h2))
+
 
 (define (login w . options)
   (let-keywords* options ((top :top '?*))
