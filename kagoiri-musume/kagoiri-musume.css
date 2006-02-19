@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.48 2006/02/17 16:13:56 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.49 2006/02/19 12:37:12 shibata Exp $ */
 
 /*
  * Common stuff
@@ -37,8 +37,8 @@ hr {
 }
 
 pre {
-    background-color: #fff5ee; /* seashell */
-    border: 1px solid #ffdab9;
+    background-color: #fff5f5;
+    border: 1px solid #d7d7d7;
     padding-left: 10px;
     margin-left:2em;
     width:80%;
