@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.3 2006/02/19 08:21:44 shibata Exp $
+;; $Id: common-test.scm,v 1.4 2006/02/19 09:47:19 shibata Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -21,6 +21,7 @@
   (export  //body
            //page-title
            //navigation
+           //menu
            login
            make-unit
            make-musume
@@ -31,14 +32,17 @@
 (define //body '(// (div (@ (equal? (id "body"))))))
 (define //page-title `(,@//body h2))
 (define //navigation '(// (div (@ (equal? (id "navigation"))))))
+(define //menu '(// (ul (@ (equal? (class "menu"))))))
 
 
 (define (login w . options)
   (let-keywords* options ((top :top '?*))
 
+    (test-section "common-test.scm: login")
+
     (reset-gsid w)
 
-    (test* "ログイン画面"
+    (test* "login: ログイン画面"
            `(*TOP*
              (form (@ (method "POST")
                       (action ,top))
@@ -49,6 +53,8 @@
 (define (make-unit w . options)
   (let-keywords* options ((view :view '?*)
                           (edit :edit '?*))
+
+    (test-section "common-test.scm: make-unit")
 
     (test* "make-unit: ユニット作成ページ"
            '(*TOP*
@@ -91,6 +97,8 @@
 (define (make-musume w . options)
   (let-keywords* options ((unit-view :unit-view #f)
                           (view :view #f))
+
+    (test-section "common-test.scm: make-musume")
 
     (make-unit w :view (or unit-view '?&))
 

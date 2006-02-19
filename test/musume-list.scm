@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.2 2006/02/19 08:21:44 shibata Exp $
+;; $Id: musume-list.scm,v 1.3 2006/02/19 09:47:19 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -61,7 +61,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                '(// (ul (@ (equal? (class "menu"))))))
+                                //menu)
         test-sxml-match?)
 
  (test* "ユニット内検索"
