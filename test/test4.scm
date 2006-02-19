@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: test4.scm,v 1.37 2006/02/15 16:53:51 shibata Exp $
+;; $Id: test4.scm,v 1.38 2006/02/19 11:45:41 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -21,6 +21,11 @@
 (test-start "kagoiri-musume operate unit&musume&melody")
 
 (*setup*)
+
+;; このテストは unit-operate.scm, musume-list.scm, musume-operate.scm
+;; melody-list.scm, melody-operate.scm テストに書き換えられました．
+;; unitとmusumeの作成テストはcommon-test.scmへ統合させて，各テストから
+;; make-unit make-musumeを呼ぶようにしました．
 
 ;;------------------------------------------------------------
 ;; Run kagoiri-musume

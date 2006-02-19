@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.45 2006/02/19 09:43:01 shibata Exp $
+# $Id: Makefile.in,v 1.46 2006/02/19 11:45:42 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -70,7 +70,7 @@ TESTFILES   = test1 test2 test3 test4 \
               system-admin change-password \
               unit-list unit-operate \
               musume-list musume-operate \
-              melody-list
+              melody-list melody-operate
 
 
 CONFIG_GENERATED = Makefile kagoiri-musume.conf test/common.scm config.log config.status autom4*.cache

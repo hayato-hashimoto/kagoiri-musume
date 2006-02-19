@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.1 2006/02/19 09:43:00 shibata Exp $
+;; $Id: melody-list.scm,v 1.2 2006/02/19 11:45:41 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -196,7 +196,7 @@
  (test* "内容入力エリア"
         '(*TOP* (table (@ (class "extension"))
               (tr (td)
-                  (td (span (@ (onclick "popup_linkselect(event, \"000040\")"))
+                  (td (span (@ (onclick ?_))
                             (span (@ (class "clickable")) "案件へのリンク"))))
               (tr (td "内容")
                   (td (textarea
@@ -214,8 +214,34 @@
                                 '(// (form (@ (equal? (id "mainedit")))) table ((// table) 3)))
         test-sxml-match?)
 
+ (test* "参照リンクエリア"
+        '(*TOP*
+          (table (@ (id "links-table"))
+                    (tr (th "リンク先") (th "リンク元"))
+                    (tr (td (ul)) (td (ul)))))
 
+        (call-worker/gsid->sxml w
+                                '()
+                                '()
+                                '(// (table (@ (equal? (id "links-table"))))))
+        test-sxml-match?)
 
+ (test* "投稿表示エリア"
+        '(*TOP*
+          (dl (@ (id ?_))
+              (dt (span (@ (class "song-no")) "♪1.")
+                  (span (@ (class "song-time")) ?_)
+                  (span (@ (class "song-fan")) "[cut-sea]")
+                  (a (@ (onClick "return confirm('本当に削除しますか？')?true:false")
+                        (href ?_))
+                     "削除"))
+              (dd (pre "テストをする必要があるのでするなり"))))
+
+        (call-worker/gsid->sxml w
+                                '()
+                                '()
+                                `(,@//body dl))
+        test-sxml-match?)
  )
 
 (test-end)
