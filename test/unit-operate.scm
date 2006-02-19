@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.2 2006/02/18 16:04:28 shibata Exp $
+;; $Id: unit-operate.scm,v 1.3 2006/02/19 02:25:29 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -14,6 +14,8 @@
 (use kahua)
 (use kahua.test.xml)
 (use kahua.test.worker)
+
+(use common-test)
 
 (load "common.scm")
 
@@ -30,54 +32,11 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
- (test* "ログイン画面"
-        '(*TOP*
-          (form (@ (method "POST")
-                   (action ?&unit-list))
-                ?*))
-        (call-worker/gsid->sxml w '() '() '(// (div (@ (equal? (id "body")))) form))
-        (make-match&pick w))
+ (login w :top '?&unit-list)
 
  (set-gsid w 'unit-list)
 
- (test* "ユニット作成ページ"
-        '(*TOP*
-          (form (@ (onsubmit "return submitForm(this)")
-                   (method "POST")
-                   (action ?&))
-                ?*
-                (input (@ (value "新ユニット結成") (type "submit")))))
-        (call-worker/gsid->sxml w
-                                '()
-                                '(("name" "cut-sea") ("pass" "cutsea"))
-                                '(// (div (@ (equal? (id "body")))) form))
-        (make-match&pick w))
-
- (test/send&pick "ユニット作成 サブミット"
-                 w
-                 '(("priority" "normal" "low" "high")
-		   ("status" "open" "completed")
-		   ("type" "bug" "task" "request")
-		   ("category" "global" "section")
-		   ("name" "籠入娘。Test Proj.")
-		   ("desc" "籠入娘。のバグトラッキングを行うユニット")
-		   ("fans" "   " "cut-sea")))
- 
- (test* "作成ユニットの確認"
-	`(*TOP*
-          (tr ?@
-              (td (a (@ (href ?&unit-edit)) "設定"))
-              (td (a ?@ "籠入娘。Test Proj.") " (0)")
-              (td "籠入娘。のバグトラッキングを行うユニット")
-              (td "cut-sea")
-              (td (a ?@ "○"))))
-        (call-worker/gsid->sxml
-	 w
-	 '()
-	 '()
-         '(// (div (@ (equal? (id "body")))) table tbody tr))
-        (make-match&pick w))
-
+ (make-unit w :edit '?&unit-edit)
 
  (test-section "ユニット設定")
 
@@ -214,7 +173,6 @@
 	 '()
          '(// (div (@ (equal? (id "body")))) table tbody tr))
         (make-match&pick w))
-
  )
 
 (test-end)
