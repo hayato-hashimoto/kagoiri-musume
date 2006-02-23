@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.226 2006/02/19 09:45:13 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.227 2006/02/23 17:19:11 cut-sea Exp $
 
 ;;
 ;; include
@@ -880,4 +880,14 @@
 ;
 ; error
 ;
-;;(kahua-error-proc error-proc)
+(define (error-proc exc)
+  (let1 msg (kahua-error-string exc (kahua-current-user))
+    (error-log-write 'Error 1 msg)
+    (kagoiri-page
+     (div/ (@/ (class "error"))
+	   (h3/ (@/ (class "warning"))
+		"エラーが発生しました")
+	   (pre/ msg)))))
+
+
+(kahua-error-proc error-proc)

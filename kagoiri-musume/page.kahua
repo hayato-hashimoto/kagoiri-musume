@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.26 2006/02/18 08:06:45 shibata Exp $
+;; $Id: page.kahua,v 1.27 2006/02/23 17:19:11 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -166,6 +166,8 @@
 	    errmsg)))))
 
 (define-entry (logout)
+  (error-log-write
+   'Logging 3 #`"Logout ,(ref (kahua-current-user) 'login-name)")
   (set! (kahua-current-user) #f)
   (redirect-page))
 

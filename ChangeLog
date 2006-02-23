@@ -1,3 +1,9 @@
+2006-02-23  cut-sea  <cut-sea@ipadev>
+
+	* add error-proc and display default error page.
+
+	* add error-log-write.
+	
 2006-02-10  cut-sea  <cut-sea@ipadev>
 
 	* add slot of musumes into <unit> class.

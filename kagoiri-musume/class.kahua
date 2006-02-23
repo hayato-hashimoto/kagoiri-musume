@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.58 2006/02/13 14:31:12 shibata Exp $
+;; $Id: class.kahua,v 1.59 2006/02/23 17:19:11 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -386,15 +386,48 @@
 		     :init-value "" :accessor category-of)
    (level            :allocation :persistent :init-keyword :level
 		     :init-value 0 :accessor level-of)
+   (fan              :allocation :persistent :init-keyword :fan
+		     :init-value #f :accessor fan-of)
+   (context          :allocation :persistent :init-keyword :context
+		     :init-value () :accessor context-of)
    (message          :allocation :persistent :init-keyword :message
 		     :init-value "" :accessor message-of)
    ))
 
+; cat: Category TYPE:<symbol>
+;      Error
+;      Trace
+;      Warning
+;      Logging
+; lev: Level    TYPE:<integer>
+;      1: 緊急度大
+;      2: 重要
+;      3: 普通
+;      4: 軽微
+;      5: ほぼ無視
+;
 (define (error-log-write cat lev msg)
   (make <errorlog>
     :category cat
     :level lev
     :message msg))
+
+;
+; まだちゃんと動作確認できてない
+;
+(define (error-log-write/session cat lev msg)
+  (let1 log (make <errorlog>
+	      :category cat
+	      :level lev
+	      :message msg)
+    (let* ((ctx (filter kahua-serializable-object?
+		       (kahua-current-context)))
+	   (fan (kahua-current-user)))
+      (set! (context-of log) ctx)
+      (set! (fan-of log) fan)
+      log)))
+
+
 
 ;;
 ;;
