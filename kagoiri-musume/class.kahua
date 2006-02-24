@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.59 2006/02/23 17:19:11 cut-sea Exp $
+;; $Id: class.kahua,v 1.60 2006/02/24 01:42:54 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -228,6 +228,9 @@
 		    :init-value #f :accessor login-user-of)
    (email           :allocation :persistent :init-keyword :email
 		    :init-value #f :accessor email-of)
+   ;; daily-tasks is constructed by list of <daily-task> objects.
+   (daily-tasks     :allocation :persistent :init-keyword :daily-tasks
+		    :init-value '() :accessor daily-tasks-of)
    ;; delete flag
    (delete          :allocation :persistent :init-keyword :delete
 		    :init-value #f :accessor delete-of)
@@ -376,6 +379,26 @@
 
 (define-method has? ((unit <unit>) (category <category>))
   (if (memq category (categories-of unit)) #t #f))
+
+;; daily-task
+;;
+;; tasks slot value is constructed by list of <task> objects.
+(define-class <daily-task> (<kahua-persistent-base>)
+  ((date             :allocation :persistent :init-keyword :date
+		     :init-thunk sys-time :accessor date-of)
+   (off              :allocation :persistent :init-keyword :off
+		     :init-value #f :accessor off-of)
+   (tasks            :allocation :persistent :init-keyword :tasks
+		     :init-value '() :accessor tasks-of)))
+;; task
+;;
+(define-class <task> (<kahua-persistent-base>)
+  ((stime            :allocation :persistent :init-keyword :stime
+		     :init-value #f :accessor stime-of)
+   (etime            :allocation :persistent :init-keyword :etime
+		     :init-value #f :accessor etime-of)
+   (content          :allocation :persistent :init-keyword :content
+		     :init-value "" :accessor content-of)))
 
 ;; errorlog class
 ;;
