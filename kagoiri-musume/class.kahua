@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.60 2006/02/24 01:42:54 cut-sea Exp $
+;; $Id: class.kahua,v 1.61 2006/02/24 01:52:21 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -384,9 +384,7 @@
 ;;
 ;; tasks slot value is constructed by list of <task> objects.
 (define-class <daily-task> (<kahua-persistent-base>)
-  ((date             :allocation :persistent :init-keyword :date
-		     :init-thunk sys-time :accessor date-of)
-   (off              :allocation :persistent :init-keyword :off
+  ((off              :allocation :persistent :init-keyword :off
 		     :init-value #f :accessor off-of)
    (tasks            :allocation :persistent :init-keyword :tasks
 		     :init-value '() :accessor tasks-of)))
