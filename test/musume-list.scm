@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.3 2006/02/19 09:47:19 shibata Exp $
+;; $Id: musume-list.scm,v 1.4 2006/02/25 04:13:43 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -69,7 +69,7 @@
           (div ?@
                (form (@ (method "POST")
                         (action ?_))
-                 (input (@ (value "000040")
+                 (input (@ (value ?_)
                            (type "hidden")
                            (name "unit-id")))
                  "ユニット内検索:"

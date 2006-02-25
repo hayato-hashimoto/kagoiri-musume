@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.61 2006/02/24 01:52:21 cut-sea Exp $
+;; $Id: class.kahua,v 1.62 2006/02/25 04:13:43 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -428,27 +428,18 @@
 ;      5: ほぼ無視
 ;
 (define (error-log-write cat lev msg)
-  (make <errorlog>
-    :category cat
-    :level lev
-    :message msg))
-
-;
-; まだちゃんと動作確認できてない
-;
-(define (error-log-write/session cat lev msg)
   (let1 log (make <errorlog>
 	      :category cat
 	      :level lev
 	      :message msg)
-    (let* ((ctx (filter kahua-serializable-object?
-		       (kahua-current-context)))
-	   (fan (kahua-current-user)))
+    (let ((usr (guard (e (#t #f))
+		      (kahua-current-user)))
+	  (ctx (guard (e (#t '()))
+		      (filter kahua-serializable-object?
+			      (kahua-current-context)))))
       (set! (context-of log) ctx)
-      (set! (fan-of log) fan)
+      (set! (fan-of log) usr)
       log)))
-
-
 
 ;;
 ;;
