@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.28 2006/02/25 04:13:43 cut-sea Exp $
+;; $Id: page.kahua,v 1.29 2006/02/27 15:36:00 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -15,7 +15,7 @@
 ; page base
 ;
 (define (page-base . body)
-  (error-log-write 'Logging 3 "page-base logging.")
+  (error-log-write 'Logging 5 "page-base logging.")
   (html/
    (head/ (title/ *kagoiri-musume-title*)
 	  (meta/ (@/ (http-equiv "Content-type")
@@ -167,7 +167,7 @@
 	    errmsg)))))
 
 (define-entry (logout)
-  (error-log-write 'Logging 3 #`"logout")
+  (error-log-write 'Logging 5 #`"logout")
   (set! (kahua-current-user) #f)
   (redirect-page))
 
