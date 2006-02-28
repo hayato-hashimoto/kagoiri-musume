@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.230 2006/02/28 13:27:29 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.231 2006/02/28 15:40:56 cut-sea Exp $
 
 ;;
 ;; include
@@ -895,10 +895,27 @@
 ; error
 ;
 (define (error-proc exc)
-  (let1 msg (kahua-error-string exc (kahua-current-user))
-    (error-log-write 'Error 1 msg)
-    ;; もっとメールのmsg内容は充実させる予定
-    (sendmail-system-info msg)
+  (let* ((msg (kahua-error-string exc (kahua-current-user)))
+	 (log (error-log-write 'Error 1 msg)))
+    (and log
+	 (let* ((key (key-of log))
+		(date (sys-strftime "%Y/%m/%d %H:%M:%S"
+				    (sys-localtime (ctime-of log))))
+		(cat (category-of log))
+		(lev (level-of log))
+		(fan (fan-name-of (current-fan)))
+		(msg (string-join
+		      (list #`"以下のエラーが発生しました。"
+			    ""
+			    #`"KEY: ,key"
+			    #`"DATE: ,date"
+			    #`"CATEGORY: ,cat"
+			    #`"LEVEL: ,lev"
+			    #`"FAN: ,fan"
+			    ""
+			    msg)
+		      "\n")))
+	   (sendmail-system-info msg)))
     (kagoiri-page
      (div/ (@/ (class "error"))
 	   (h3/ (@/ (class "warning"))
