@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.56 2006/02/18 08:06:45 shibata Exp $
+;; $Id: gadget.kahua,v 1.57 2006/02/28 13:27:29 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -98,6 +98,18 @@
                                     :in-reply-to reply-to
                                     (make-keyword *x-kagoiri-mail*) (key-of unit)))
 		addresses))))
+
+(define (sendmail-system-info msg)
+  (let1 msg (string-append "以下のエラーが発生しました\n\n"
+			   #`"Time: ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (sys-time)))\n\n"
+			   msg)
+    (sendmail/headers msg
+		      :to *kagoiri-system-info-email*
+		      :from #`"kagoiri-musume system <,|*kagoiri-musume-email*|>"
+		      :reply-to *kagoiri-musume-email*
+		      :subject "籠入娘。システムエラー情報"
+		      :in-reply-to *kagoiri-musume-email*)))
+
 
 (define (create-new-unit name desc fans priority status type category notify-addresses)
   (and (not (string-null? name))

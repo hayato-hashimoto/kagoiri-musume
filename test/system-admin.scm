@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.22 2006/02/18 12:53:23 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.23 2006/02/28 13:27:29 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -17,7 +17,7 @@
 
 (load "common.scm")
 
-(test-start "kagoiri-musume admin-system enter check")
+(test-start "kagoiri-musume admin-system check")
 
 (*setup*)
 

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: user-setting.kahua,v 1.9 2006/02/28 00:55:42 cut-sea Exp $
+;; $Id: user-setting.kahua,v 1.10 2006/02/28 13:27:29 cut-sea Exp $
 ;;
 
 ;; DB Setting.
@@ -13,7 +13,7 @@
 
 ;; Error Log Level
 ;;
-;;(define-if-not-bound *kagoiri-error-level* 3)
+;;(define *kagoiri-error-level* 3)
 
 ;;(define *kagoiri-musume-database-name*
 ;;  "mysql:cut-sea::db=kagoiri")
@@ -22,9 +22,13 @@
 ;;  "mysql:cut-sea::db=kagoiri")
 
 ;; mail address
-;;
 ;;(define *kagoiri-musume-email*
 ;;  "cut-sea@kahua.org")
+;;
+;; system error infomation mail send to this.
+;;(define *kagoiri-system-info-email*
+;;  "cut-sea@kahua.org")
+;;
 ;;(define *x-kagoiri-mail*
 ;;  "x-kagoiri-unit-id")
 
