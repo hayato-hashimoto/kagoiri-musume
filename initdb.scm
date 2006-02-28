@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.18 2005/11/23 14:46:47 shibata Exp $
+;; $Id: initdb.scm,v 1.19 2006/02/28 00:55:42 cut-sea Exp $
 
 ;;
 ;; include
@@ -26,6 +26,14 @@
       (build-path (ref (kahua-config) 'working-directory)
 		  "kagoiri-musume"
 		  "db")
+    dbpath))
+
+
+(define-if-not-bound *kagoiri-musume-log-database-name*
+  (let1 dbpath
+      (build-path (ref (kahua-config) 'working-directory)
+		  "kagoiri-musume"
+		  "log")
     dbpath))
 
 

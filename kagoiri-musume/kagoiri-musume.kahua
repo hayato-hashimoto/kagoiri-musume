@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.228 2006/02/27 15:36:00 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.229 2006/02/28 00:55:42 cut-sea Exp $
 
 ;;
 ;; include
@@ -65,7 +65,14 @@
 
 ;; Error Log Level
 ;;
-(define-if-not-bound *kagoiri-error-level* 0)
+(define-if-not-bound *kagoiri-musume-log-database-name*
+  (let1 dbpath
+      (build-path (ref (kahua-config) 'working-directory)
+		  "kagoiri-musume"
+		  "log")
+    dbpath))
+
+(define-if-not-bound *kagoiri-error-level* 1)
 
 ;; mail address
 ;;
