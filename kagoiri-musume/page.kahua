@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.29 2006/02/27 15:36:00 cut-sea Exp $
+;; $Id: page.kahua,v 1.30 2006/03/01 15:06:59 cut-sea Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -116,6 +116,7 @@
     ((_ checker msg body ...)
      (begin
        (or (and (kahua-current-user)
+		(not (ref (kahua-current-user) 'inactive))
                 (checker (kahua-current-user)))
            ;; new account set
            (set! (kahua-current-user)
@@ -131,6 +132,7 @@
     ((_ checker msg begin-body)
      (begin
        (or (and (kahua-current-user)
+		(not (ref (kahua-current-user) 'inactive))
                 (checker (kahua-current-user)))
            ;; new account set
            (set! (kahua-current-user)
