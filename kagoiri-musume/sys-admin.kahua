@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.15 2006/03/01 12:04:03 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.16 2006/03/01 13:36:13 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -48,10 +48,9 @@
 			       (if (equal? "on" client)
 				   (set! roles (cons 'client roles)))
 			       (set! (ref user 'role-alist) roles))
-			     (set! (delete-of fan)
-				   (if (equal? "on" delete) #t #f))
-			     (set! (ref (ref fan 'login-user) 'inactive)
-				   (if (equal? "on" delete) #t #f))
+			     (if (equal? "on" delete)
+				 (kill! fan)
+				 (live! fan))
 			     ))
 		       )
 		 (redirect-page "admin-system#fans"))))

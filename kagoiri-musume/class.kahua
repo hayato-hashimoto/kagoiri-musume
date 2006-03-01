@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.66 2006/02/28 13:27:29 cut-sea Exp $
+;; $Id: class.kahua,v 1.67 2006/03/01 13:36:13 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -293,6 +293,15 @@
                       (kahua-add-user)
 		      (car user)) 'login-name))
     (memq fan (fans-of unit))))
+
+(define-method kill! ((fan <fan>))
+  (set! (delete-of fan) #t)
+  (set! (ref (ref fan 'login-user) 'inactive) #t))
+
+(define-method live! ((fan <fan>))
+  (set! (delete-of fan) #f)
+  (set! (ref (ref fan 'login-user) 'inactive) #f))
+
 
 ;; alias methods for convenient.
 (define-method code-of ((obj <fan>))
