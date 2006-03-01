@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.80 2006/02/19 09:45:13 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.81 2006/03/01 17:16:50 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -121,10 +121,9 @@
   (ul/ (@/ (class "menu"))
        (common:li/ (link-of unit
                      :action "new"
-                     :body (node-set
-                            (list
+                     :body (list/
                              (@/ (class "clickable"))
-                             ($$ "新しい娘。")))))))
+                             ($$ "新しい娘。"))))))
 
 (define (require-fan-message unit)
   (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit)))
@@ -199,9 +198,8 @@
                           (link-of m :action "edit" :body val)))
 		   (let1 val (mname-of m)
 		     (td/ (@/ (value val))
-                          (link-of m :body (node-set
-                                            (list (@/ (onClick "apply_flter_state(this)"))
-                                                  val)))
+                          (link-of m :body (list/ (@/ (onClick "apply_flter_state(this)"))
+                                                  val))
 			  (format " (~a)" (length songs))))
 		   (prop-td/ priority-of priorities-of level-of disp-name-of)
 		   (prop-td/ status-of statuss-of code-of disp-name-of)
@@ -471,11 +469,10 @@
 	     (if target (ymd/ target) "")))
    (calendar-header/ calendar/ date limit target getter setter)
    (tr/ (@/ (class "weekname"))
-	(node-set
-	 (map (lambda (w a)
+	(map/ (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
 	      "日月火水木金土"
-	      '("sunday" "workday" "workday" "workday" "workday" "workday" "saturday"))))
+	      '("sunday" "workday" "workday" "workday" "workday" "workday" "saturday")))
    (map/ (lambda (week)
 	   (tr/
 	    (map/ (lambda (d)
@@ -525,11 +522,10 @@
   (table/
    (@/ (class "task calendar"))
    (calendar-header/ task-calendar-table/ date)
-   (tr/ (node-set
-	 (map (lambda (w a)
+   (tr/ (map/ (lambda (w a)
 		(th/ (@/ (class a)) (x->string w)))
 	      "日月火水木金土"
-	      '("sunday" "workday" "workday" "workday" "workday" "workday" "saturday"))))
+	      '("sunday" "workday" "workday" "workday" "workday" "workday" "saturday")))
    (map/ (lambda (week)
 	   (tr/
 	    (map/ (lambda (d)
