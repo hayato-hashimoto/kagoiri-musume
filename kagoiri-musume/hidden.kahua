@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: hidden.kahua,v 1.1 2006/03/02 15:57:02 cut-sea Exp $
+;; $Id: hidden.kahua,v 1.2 2006/03/02 16:23:27 cut-sea Exp $
 ;;
 
 ;; analysis errorlog(hidden page)
@@ -51,4 +51,35 @@
       (map/ (lambda (l)
 	      (tr/ (map/ td/ (log->list l))))
 	    (reverse logs))))))
+
+;; メール送信
+;;
+(define-entry (sendmail)
+  (permission-check-page
+   (lambda (u)
+     (if (kahua-user-has-role? u '(admin))
+	 u #f))
+   ($$ "システム管理者のアカウントが必要です")
+   (h2/ "メール送信")
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword to subject content)
+		   (let1 email (email-address-of (current-fan))
+		     (sendmail/headers content
+				       :to to
+				       :from email
+				       :reply-to email
+				       :subject subject
+				       :in-reply-to email))
+		 (redirect/cont (cont sendmail)))))
+    (table/
+     (tr/ (th/ "宛先:")
+	  (td/ (input/ (@/ (type "text") (name "to")
+			   (size 80) (id "focus")))))
+     (tr/ (th/ "Subject:")
+	  (td/ (input/ (@/ (type "text") (name "subject")
+			   (size 80) (id "focus")))))
+     (tr/ (th/ "内容")
+	  (td/ (textarea/ (@/ (type "text") (name "content")
+			      (rows 30) (cols 80) (id "focus"))))))
+    (input/ (@/ (type "submit") (name "send") (value "送信"))))))
 
