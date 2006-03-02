@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.232 2006/03/01 01:22:19 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.233 2006/03/02 11:35:45 cut-sea Exp $
 
 ;;
 ;; include
@@ -895,7 +895,7 @@
 ; error
 ;
 (define (error-proc exc)
-  (let* ((msg (kahua-error-string exc (kahua-current-user)))
+  (let* ((msg (kahua-error-string exc #t))
 	 (log (error-log-write 'Error 1 msg)))
     (and log
 	 (let* ((key (key-of log))
@@ -903,7 +903,8 @@
 				    (sys-localtime (ctime-of log))))
 		(cat (category-of log))
 		(lev (level-of log))
-		(fan (fan-name-of (current-fan)))
+		(fan (guard (e (#t #f))
+			    (fan-name-of (current-fan))))
 		(msg (string-join
 		      (list #`"以下のエラーが発生しました。"
 			    ""
