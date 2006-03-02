@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.69 2006/03/01 13:51:32 cut-sea Exp $
+;; $Id: class.kahua,v 1.70 2006/03/02 13:55:44 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -439,7 +439,7 @@
 (define (error-log-write cat lev msg)
   (and (>= *kagoiri-error-level* lev)
        (let ((usr (guard (e (#t #f))
-			 (kahua-current-user)))
+			 (ref (kahua-current-user) 'login-name)))
 	     (ctx (guard (e (#t '()))
 			 (filter kahua-serializable-object?
 				 (kahua-current-context)))))
