@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.234 2006/03/02 15:57:02 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.235 2006/03/03 01:52:55 cut-sea Exp $
 
 ;;
 ;; include
@@ -442,8 +442,15 @@
               (musume (musume-ref unit musume-no)))
          (cons (link-of musume) seed)))
      seed line))
+  (define (nr line seed)
+    (regexp-fold
+     #/\n/
+     reference
+     (lambda (match seed)
+       (cons (br/) seed))
+       seed line))
   ;; body
-  (node-set (reverse (reference melody '()))))
+  (node-set (reverse (nr melody '()))))
 
 
 (define (load-links! current-musume melody)
@@ -628,7 +635,7 @@
 						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
 										 ($$ "本当に復活しますか？"))))
 							    (@@/ (cont delete-revival-song k)) ($$ "復活"))))
-				   (dd/ (pre/ (@/ (class "warning")) ($$ "このメロディは削除されてます"))))
+				   (dd/ (p/ (@/ (class "warning rectangle")) ($$ "このメロディは削除されてます"))))
 			      (dl/ (@/ (id #`",k"))
 				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
@@ -638,11 +645,11 @@
 										 ($$ "本当に削除しますか？"))))
 							    (@@/ (cont delete-revival-song k)) ($$ "削除"))))
 				   (if (null? u)
-				       (dd/ (pre/ (melody-format m)))
+				       (dd/ (p/ (@/ (class "rectangle")) (melody-format m)))
 				       (let1 upfile (car u)
-					 (dd/ (pre/ m
-						    (br/)
-						    (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
+					 (dd/ (p/ (@/ (class "rectangle")) m
+						  (br/)
+						  (a/ (@/ (href (uri-of upfile))) (name-of upfile))) "")))))))
 		      (map key-of songs)
 		      (map seq-no-of songs)
 		      (map fan-of songs)
@@ -728,7 +735,7 @@
 			    (seq-no-of s)
 			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
 			    (fan-name-of (fan-of s))))
-                   (pre/ (melody-format (melody-of s)))))))
+                   (p/ (melody-format (melody-of s)))))))
              songs))))
 
   (define (bookmark)

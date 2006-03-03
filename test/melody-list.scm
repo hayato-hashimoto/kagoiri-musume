@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.2 2006/02/19 11:45:41 shibata Exp $
+;; $Id: melody-list.scm,v 1.3 2006/03/03 01:52:55 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -235,7 +235,7 @@
                   (a (@ (onClick "return confirm('本当に削除しますか？')?true:false")
                         (href ?_))
                      "削除"))
-              (dd (pre "テストをする必要があるのでするなり"))))
+              (dd (p (@ (class "rectangle")) "テストをする必要があるのでするなり"))))
 
         (call-worker/gsid->sxml w
                                 '()
