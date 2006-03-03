@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.235 2006/03/03 01:52:55 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.236 2006/03/03 04:23:04 cut-sea Exp $
 
 ;;
 ;; include
@@ -83,8 +83,8 @@
 (define-if-not-bound *kagoiri-system-info-email*
   "announce@your.domain")
 
-(define-if-not-bound *x-kagoiri-mail*
-  "x-kagoiri-unit-id")
+(define-if-not-bound *x-kagoiri-unit-id-prefix*
+  "kago")
 
 ;; file upload path
 ;;

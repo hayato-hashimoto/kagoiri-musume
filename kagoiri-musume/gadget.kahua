@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.58 2006/02/28 15:40:56 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.59 2006/03/03 04:23:04 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -96,7 +96,7 @@
                                     :subject subject
                                     :message-id message-id
                                     :in-reply-to reply-to
-                                    (make-keyword *x-kagoiri-mail*) (key-of unit)))
+                                    :x-kagoiri-unit-id #`",|*x-kagoiri-unit-id-prefix*| ,(key-of unit)"))
 		addresses))))
 
 (define (sendmail-system-info msg)
