@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.19 2006/03/02 15:57:02 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.20 2006/03/04 05:30:39 cut-sea Exp $
 ;;
 
 ;; system admin's page
@@ -278,4 +278,50 @@
 
    ))
 
+;;;==============================================================
+;;; Log Analysis
+;;;
+(define (log->list log)
+  (with-db (db *kagoiri-musume-log-database-name*)
+      (list (sys-strftime "%Y/%m/%d %H:%M:%S"
+			  (sys-localtime (ctime-of log)))
+	    (case (category-of log)
+	      ((Error) "エラー")
+	      ((Trace) "トレース")
+	      ((Warning) "警告")
+	      ((Logging) "ログ")
+	      (else (x->string (category-of log))))
+	    (case (level-of log)
+	      ((1) "緊急")
+	      ((2) "重要")
+	      ((3) "普通")
+	      ((4) "軽微")
+	      ((5) "無視")
+	      (else (x->string (level-of log))))
+	    (or (fan-of log) "-")
+	    (list/ (map/ (lambda (v)
+			   (dl/ (dt/ (x->string (car v)))
+				(dd/ (x->string (cdr v)))))
+			 (context-of log))
+		   (p/ (@/ (class "rectangle"))
+		       (melody-format (message-of log)))))))
+
+(define-entry (log-analysis)
+  (permission-check-page
+   (lambda (u)
+     (if (kahua-user-has-role? u '(admin))
+	 u #f))
+   ($$ "システム管理者のアカウントが必要です")
+   (h2/ ($$ "籠入娘。エラーログ調査(暫定)"))
+   (let1 logs (filter (lambda (l)
+			(date>=? (sys-time->date (ctime-of l))
+				 (nth-day-before 10 (today))))
+		      (with-db (db *kagoiri-musume-log-database-name*)
+			  (make-kahua-collection <errorlog>)))
+     (table/
+      (@/ (class "listing"))
+      (tr/ (map/ th/ '("日時" "種別" "レベル" "ファン" "内容")))
+      (map/ (lambda (l)
+	      (tr/ (map/ td/ (log->list l))))
+	    (reverse logs))))))
 

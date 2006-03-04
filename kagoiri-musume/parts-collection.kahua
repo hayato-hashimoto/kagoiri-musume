@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.81 2006/03/01 17:16:50 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.82 2006/03/04 05:30:39 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -544,3 +544,21 @@
 				     ms))))))
 		  week)))
 	 (date-slices-of-month date #t))))
+
+
+(define (mypage-header/)
+  (div/ (ul/ (@/ (class "menu"))
+	     (li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont task-calendar)) ($$ "カレンダー")))
+	     (li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont mypage 'todo)) ($$ "TODO")))
+	     (li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
+	     (li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))
+	     (devel:li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont sendmail)) ($$ "メール")))
+	     (admin:li/ (a/cont/ (@/ (class "clickable"))
+			   (@@/ (cont log-analysis)) ($$ "ログ解析")))
+	     (help-button/ "mypage"))))
+

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.236 2006/03/03 04:23:04 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.237 2006/03/04 05:30:39 cut-sea Exp $
 
 ;;
 ;; include
@@ -661,6 +661,45 @@
        )))
 
 ;;;==============================================================
+;;; Sendmail
+;;;
+(define-entry (sendmail)
+  (permission-check-page
+   (lambda (u)
+     (if (kahua-user-has-role? u '(developer))
+	 u #f))
+   ($$ "システム管理者のアカウントが必要です")
+   (mypage-header/)
+   (h2/ "メール送信")
+   (form/cont/
+    (@@/ (cont (entry-lambda (:keyword to subject content)
+		   (or (string-null? to)
+		       (string-null? subject)
+		       (string-null? content)
+		       (let ((email (email-address-of (current-fan)))
+			     (fan (fan-name-of (current-fan))))
+			 (sendmail/headers content
+					   :to to
+					   :from #`",|fan| <,|email|>"
+					   :reply-to email
+					   :subject subject
+					   :in-reply-to email)
+			 (error-log-write 'Logging 3
+					  #`",|fan|が,|to|にメール送信しました。")))
+		 (redirect/cont (cont sendmail)))))
+    (table/
+     (tr/ (th/ "宛先:")
+	  (td/ (input/ (@/ (type "text") (name "to")
+			   (size 80) (id "focus")))))
+     (tr/ (th/ "題名:")
+	  (td/ (input/ (@/ (type "text") (name "subject")
+			   (size 80) (id "focus")))))
+     (tr/ (th/ "内容:")
+	  (td/ (textarea/ (@/ (type "text") (name "content")
+			      (rows 30) (cols 80) (id "focus"))))))
+    (input/ (@/ (type "submit") (name "send") (value "送信"))))))
+
+;;;==============================================================
 ;;; Task calender
 ;;;
 (define-entry (task-calendar)
@@ -668,16 +707,7 @@
     (permission-check-page
      identity
      ($$ "カレンダーは一般ユーザアカウントが必要です")
-     (div/ (ul/ (@/ (class "menu"))
-                (li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont task-calendar)) ($$ "カレンダー")))
-                (li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'todo)) ($$ "TODO")))
-		(li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
-		(li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))
-		(help-button/ "mypage")))
+     (mypage-header/)
      (div/ (@/ (id "limit-calendar"))
 	   (task-calendar-table/ date))))
   (calendar (today)))
@@ -773,21 +803,24 @@
   (permission-check-page
    identity
    ($$ "マイページは一般ユーザアカウントが必要です")
+   (div/ (ul/ (@/ (class "menu"))
+	      (li/ (a/cont/ (@/ (class "clickable"))
+			    (@@/ (cont task-calendar)) ($$ "カレンダー")))
+	      (li/ (a/cont/ (@/ (class "clickable"))
+			    (@@/ (cont mypage 'todo)) ($$ "TODO")))
+	      (li/ (a/cont/ (@/ (class "clickable"))
+			    (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
+	      (li/ (a/cont/ (@/ (class "clickable"))
+			    (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))
+	      (li/ (a/cont/ (@/ (class "clickable"))
+			    (@@/ (cont sendmail)) ($$ "メール")))
+	      (help-button/ "mypage")))
    (let1 type (and type (string->symbol type))
-     (div/ (ul/ (@/ (class "menu"))
-                (li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont task-calendar)) ($$ "カレンダー")))
-                (li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'todo)) ($$ "TODO")))
-		(li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
-		(li/ (a/cont/ (@/ (class "clickable"))
-			      (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク"))))
-           (case type
-             ((todo) (todo))
-             ((recent) (recent))
-             ((bookmark) (bookmark))
-             (else (recent)))))))
+     (case type
+       ((todo) (todo))
+       ((recent) (recent))
+       ((bookmark) (bookmark))
+       (else (recent))))))
 
 ;;;==============================================================
 ;;; Add Bookmark
