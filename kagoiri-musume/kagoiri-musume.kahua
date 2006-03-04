@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.238 2006/03/04 05:43:18 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.239 2006/03/04 11:16:07 cut-sea Exp $
 
 ;;
 ;; include
@@ -672,25 +672,34 @@
    (mypage-header/)
    (h2/ "メール送信")
    (form/cont/
-    (@@/ (cont (entry-lambda (:keyword to subject content)
-		   (or (string-null? to)
+    (@@/ (cont (entry-lambda (:keyword sendtos subject content)
+		   (or (string-null? sendtos)
 		       (string-null? subject)
 		       (string-null? content)
 		       (let ((email (email-address-of (current-fan)))
-			     (fan (fan-name-of (current-fan))))
-			 (sendmail/headers content
-					   :to to
-					   :from #`",|fan| <,|email|>"
-					   :reply-to email
-					   :subject subject
-					   :in-reply-to email)
-			 (error-log-write 'Logging 3
-					  #`",|fan|が,|to|にメール送信しました。")))
+			     (fan (fan-name-of (current-fan)))
+			     (tos (filter (compose not string-null?)
+					  (string-split sendtos "\r\n"))))
+			 (let loop ((tos tos))
+			   (if (null? tos)
+			       #f
+			       (if (string-null? (car tos))
+				   (loop (cdr tos))
+				   (begin
+				     (sendmail/headers content
+						       :to (car tos)
+						       :from #`",|fan| <,|email|>"
+						       :reply-to email
+						       :subject subject
+						       :in-reply-to email)
+				     (error-log-write 'Logging 3
+						      #`"sendmail from ,|fan| to ,(car tos)")
+				     (loop (cdr tos))))))))
 		 (redirect/cont (cont sendmail)))))
     (table/
      (tr/ (th/ "宛先:")
-	  (td/ (input/ (@/ (type "text") (name "to")
-			   (size 80) (id "focus")))))
+	  (td/ (textarea/ (@/ (type "text") (name "sendtos")
+			      (rows 5) (cols 80) (id "focus")))))
      (tr/ (th/ "題名:")
 	  (td/ (input/ (@/ (type "text") (name "subject")
 			   (size 80) (id "focus")))))
@@ -901,19 +910,25 @@
 ;;;
 (define-entry (help keywd)
   ;; ここにヘルプのカタログを作成する
-  (letrec ((++ (lambda args (string-join args "\n")))
+  (letrec ((++ (lambda (lst sep)
+		 (if (null? lst)
+		     '()
+		     (cons (car lst)
+			   (cons sep (++ (cdr lst) sep))))))
 	   (msg (cond ((equal? keywd "calendar")
-		       (++ ($$ "期限設定カレンダーのヘルプです")
-			   ($$ "選択して投稿すると期限が登録されます")
-			   ($$ "デフォルトでは期限無しですが、設定したものは期限削除で削除してから投稿してください")
-			   ($$ "仮選択中の日付ではなく、元の期限設定に戻したい場合には変更中止を押してください")
-			   ($$ "元の設定に選択状態が戻されます")))
+		       (++ (list ($$ "期限設定カレンダーのヘルプです")
+				 ($$ "選択して投稿すると期限が登録されます")
+				 ($$ "デフォルトでは期限無しですが、設定したものは期限削除で削除してから投稿してください")
+				 ($$ "仮選択中の日付ではなく、元の期限設定に戻したい場合には変更中止を押してください")
+				 ($$ "元の設定に選択状態が戻されます"))
+			   (br/)))
 		      ((equal? keywd "mypage")
-		       (++ ($$ "マイページのヘルプです")
-			   ($$ "カレンダーで期限が設定されている娘。を確認できます")
-			   ($$ "TODOであなたにアサインされている娘。を確認できます")
-			   ($$ "最近の更新で最近の登録内容が確認できます")
-			   ($$ "ブックマークであなたがブックマークに追加した娘。を確認できます")))
+		       (++ (list ($$ "マイページのヘルプです")
+				 ($$ "カレンダーで期限が設定されている娘。を確認できます")
+				 ($$ "TODOであなたにアサインされている娘。を確認できます")
+				 ($$ "最近の更新で最近の登録内容が確認できます")
+				 ($$ "ブックマークであなたがブックマークに追加した娘。を確認できます"))
+			   (br/)))
 		      (else "ヘルプがありません。"))))
     (html/
      (body/
@@ -923,7 +938,8 @@
 		  (a/ (@/ (href "#")
 			  (onclick "close_help(); return false"))
 		      ($$ "×")))
-	    (pre/ msg))))))
+	    (p/ (@/ (class "rectangle"))
+		(node-set msg)))))))
 
 
 ;
