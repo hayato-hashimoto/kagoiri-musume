@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.239 2006/03/04 11:16:07 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.240 2006/03/04 11:19:07 cut-sea Exp $
 
 ;;
 ;; include
@@ -681,20 +681,19 @@
 			     (tos (filter (compose not string-null?)
 					  (string-split sendtos "\r\n"))))
 			 (let loop ((tos tos))
-			   (if (null? tos)
-			       #f
-			       (if (string-null? (car tos))
-				   (loop (cdr tos))
-				   (begin
-				     (sendmail/headers content
-						       :to (car tos)
-						       :from #`",|fan| <,|email|>"
-						       :reply-to email
-						       :subject subject
-						       :in-reply-to email)
-				     (error-log-write 'Logging 3
-						      #`"sendmail from ,|fan| to ,(car tos)")
-				     (loop (cdr tos))))))))
+			   (cond ((null? tos) #f)
+				 ((string-null? (car tos)) (loop (cdr tos)))
+				 (else
+				  (begin
+				    (sendmail/headers content
+						      :to (car tos)
+						      :from #`",|fan| <,|email|>"
+						      :reply-to email
+						      :subject subject
+						      :in-reply-to email)
+				    (error-log-write 'Logging 3
+						     #`"sendmail from ,|fan| to ,(car tos)")
+				    (loop (cdr tos))))))))
 		 (redirect/cont (cont sendmail)))))
     (table/
      (tr/ (th/ "∞∏¿Ë:")
