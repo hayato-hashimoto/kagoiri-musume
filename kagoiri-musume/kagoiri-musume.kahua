@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.247 2006/03/05 17:19:44 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.248 2006/03/05 17:26:39 cut-sea Exp $
 
 ;;
 ;; include
@@ -505,7 +505,7 @@
 	(textarea/ (@/ (type "text") (name "melody")
 		       (rows 10) (cols 80) (id "focus"))
 		   (string-append (apply string-append
-					 (map (lambda (line) #`"\n> ,line")
+					 (map (lambda (line) #`"\n>,line")
 					      (string-split (melody-of song) "\n")))
 				  "\n\n")))
       (define (move dist)
