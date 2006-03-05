@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.245 2006/03/05 16:58:30 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.246 2006/03/05 17:09:32 cut-sea Exp $
 
 ;;
 ;; include
@@ -673,13 +673,12 @@
        )))
 
 (define (excerpt song)
-  (td/ (@/ (id "melody-text"))
-       (textarea/ (@/ (type "text") (name "melody")
-		      (rows 10) (cols 80) (id "focus"))
-		  (string-append (apply string-append
-					(map (lambda (line) #`"\n> ,line")
-					     (string-split (melody-of song) "\n")))
-				 "\n\n"))))
+  (textarea/ (@/ (type "text") (name "melody")
+		 (rows 10) (cols 80) (id "focus"))
+	     (string-append (apply string-append
+				   (map (lambda (line) #`"\n> ,line")
+					(string-split (melody-of song) "\n")))
+			    "\n\n")))
 
 
 ;;;==============================================================
