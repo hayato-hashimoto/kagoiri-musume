@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-operate.scm,v 1.2 2006/03/03 01:52:55 cut-sea Exp $
+;; $Id: melody-operate.scm,v 1.3 2006/03/05 16:47:47 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -112,6 +112,7 @@
               (dt (span (@ (class "song-no")) "♪2.")
                   (span (@ (class "song-time")) ?_)
                   (span (@ (class "song-fan")) "[cut-sea]")
+		  (a (@ (!permute (onClick ?_) (href ?_))) "[輪唱]")
                   (a (@ (onClick "return confirm('本当に削除しますか？')?true:false")
                         (href ?_)) "削除"))
               (dd (p (@ (class "rectangle")) "クローズする")))

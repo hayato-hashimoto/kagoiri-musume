@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.243 2006/03/05 07:53:24 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.244 2006/03/05 16:47:47 cut-sea Exp $
 
 ;;
 ;; include
@@ -612,7 +612,8 @@
                                        (clickable ($$ "案件へのリンク")))))
 			  (tr/
 			   (td/ ($$ "内容"))
-			   (td/ (textarea/ (@/ (type "text") (name "melody")
+			   (td/ (@/ (id "melody-text"))
+				(textarea/ (@/ (type "text") (name "melody")
 					       (rows 10) (cols 80) (id "focus")))))
 			  (tr/
 			   (td/ ($$ "ファイル"))
@@ -647,6 +648,10 @@
 				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
 					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+					(a/cont/async/ (@@/ (id "melody-text")
+							    (cont (lambda _
+								    (excerpt song))))
+						       ($$ "[輪唱]"))
 					(composer? song
 						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
 										 ($$ "本当に削除しますか？"))))
@@ -666,6 +671,16 @@
 		)))))
       (viewer (or (get-target) (today)) (get-target) (get-target))
        )))
+
+(define (excerpt song)
+  (td/ (@/ (id "melody-text"))
+       (textarea/ (@/ (type "text") (name "melody")
+		      (rows 10) (cols 80) (id "focus"))
+		  (string-append (apply string-append
+					(map (lambda (line) #`"\n> ,line")
+					     (string-split (melody-of song) "\n")))
+				 "\n\n"))))
+
 
 ;;;==============================================================
 ;;; Sendmail
