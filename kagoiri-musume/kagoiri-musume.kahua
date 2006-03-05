@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.244 2006/03/05 16:47:47 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.245 2006/03/05 16:58:30 cut-sea Exp $
 
 ;;
 ;; include
@@ -642,7 +642,7 @@
 					(composer? song
 						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
 										 ($$ "本当に復活しますか？"))))
-							    (@@/ (cont delete-revival-song k)) ($$ "復活"))))
+							    (@@/ (cont delete-revival-song k)) ($$ "[復活]"))))
 				   (dd/ (p/ (@/ (class "warning rectangle")) ($$ "このメロディは削除されてます"))))
 			      (dl/ (@/ (id #`",k"))
 				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
@@ -655,7 +655,7 @@
 					(composer? song
 						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
 										 ($$ "本当に削除しますか？"))))
-							    (@@/ (cont delete-revival-song k)) ($$ "削除"))))
+							    (@@/ (cont delete-revival-song k)) ($$ "[削除]"))))
 				   (if (null? u)
 				       (dd/ (p/ (@/ (class "rectangle")) (melody-format m)))
 				       (let1 upfile (car u)
