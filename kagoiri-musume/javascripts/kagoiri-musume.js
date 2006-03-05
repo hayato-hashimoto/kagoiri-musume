@@ -366,6 +366,24 @@ function blockIt(){
   return false;
 }
 
+function submitCreateUnit(form){
+     var members = $A($('memberlist').childNodes).map(function(ele) { return ele[textContent] });
+     var input;
+     members.map(
+          function(fan){
+               var input = document.createElement('input');
+               input.name = 'fans';
+               input.value = fan;
+               input.type = 'text';
+               Element.hide(input);
+               form.appendChild(input);
+          });
+     form.submit();
+     submitCreateUnit = blockIt;
+     return false;
+}
+
+
 function update_status(elem){
      var form = document.getElementById('filtering_form');
      var target = elem[textContent];
@@ -560,4 +578,12 @@ function close_help(){
      {
           document.body.removeChild(help, document.body);
      }
+}
+
+
+function filter_member(value){
+     var list = $(allmemberlist);
+     var nodes = $A(list.childNodes);
+     var matcher = new RegExp(value,'i');
+     nodes.map(function(ele){ ele[textContent].match(matcher)?Element.show(ele):Element.hide(ele)});
 }

@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.48 2006/03/04 02:27:36 cut-sea Exp $
+# $Id: Makefile.in,v 1.49 2006/03/05 06:06:59 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -62,7 +62,16 @@ STATICFILES = kagoiri-musume/kagoiri-musume.css \
 	      kagoiri-musume/images/logo-trans.gif \
 	      kagoiri-musume/images/title.gif \
 	      kagoiri-musume/images/title-trans.gif
-JAVASCRIPTFILES = kagoiri-musume/kagoiri-musume.js kagoiri-musume/async.js kagoiri-musume/prototype.js
+JAVASCRIPTFILES = kagoiri-musume/javascripts/kagoiri-musume.js \
+		  kagoiri-musume/javascripts/async.js \
+		  kagoiri-musume/javascripts/prototype.js \
+		  kagoiri-musume/javascripts/builder.js \
+		  kagoiri-musume/javascripts/controls.js \
+		  kagoiri-musume/javascripts/dragdrop.js \
+		  kagoiri-musume/javascripts/effects.js \
+		  kagoiri-musume/javascripts/scriptaculous.js \
+		  kagoiri-musume/javascripts/slider.js \
+		  kagoiri-musume/javascripts/unittest.js
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins

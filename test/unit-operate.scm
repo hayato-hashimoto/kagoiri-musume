@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.3 2006/02/19 02:25:29 shibata Exp $
+;; $Id: unit-operate.scm,v 1.4 2006/03/05 06:06:49 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -56,7 +56,7 @@
 
  (test* "フォーム"
 	`(*TOP*
-          (form (@ (onsubmit "return submitForm(this)")
+          (form (@ (onsubmit "return submitCreateUnit(this)")
                    (method "POST")
                    (action ?&unit-edit-submit))
                 ?*
@@ -121,21 +121,25 @@
                                    "籠入娘。のバグトラッキングを行うユニット")))
                  (tr ?@
                      (td "ファン" ?*)
-                     (td (table (tr (td (select ?@
-                                         (option
-                                          (@ (value "   ")
-                                             (selected "#t")))
-                                         (option
-                                          (@ (value "cut-sea")
-                                             (selected "#t"))
-                                          "cut-sea")
-                                         (option
-                                          (@ (value "guest"))
-                                          "guest")
-                                         (option
-                                          (@ (value "kago"))
-                                          "kago")))
-                                    (td ?*)))))
+                     (td (table (tr (td (@ (id "memberlistblock"))
+                                        (ul (@ (id "memberlist")
+                                               (class "userlist"))
+                                            (li (@ (value "   ")))
+                                            (li (@ (value "cut-sea")) "cut-sea")))
+                                    (td "<=")
+                                    (td (@ (id "allmemberlistblock"))
+                                        "検索:"
+                                        (input (@ (type "text")
+                                                  (onkeyup
+                                                   "filter_member(this.value)")
+                                                  (id "membersearch")))
+                                        (ul (@ (id "allmemberlist")
+                                               (class "userlist"))
+                                            (li (@ (value "guest")) "guest")
+                                            (li (@ (value "kago")) "kago")))
+                                    (script
+                                     (@ (type "text/javascript"))
+                                     ?_)))))
                  (tr (td "通知アドレス")
                      (td (textarea ?@))))
           )

@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.50 2006/03/03 01:52:55 cut-sea Exp $ */
+/* $Id: kagoiri-musume.css,v 1.51 2006/03/05 06:06:49 shibata Exp $ */
 
 /*
  * Common stuff
@@ -581,4 +581,50 @@ table#links-table td {
  border: 1px dotted #ddd;
  padding: .1em .5em;
  vertical-align: top;
+}
+
+#memberlist {
+    padding:0px;
+    margin:0px;
+    height:100%;
+    width:100px;
+}
+
+#allmemberlist {
+    height:100px;
+    overflow:auto;
+    margin:2px 0 0 0;
+    padding:0px;
+    border: 1px dotted #7b96ac;
+}
+
+input#membersearch {
+    border: 1px dotted #7b96ac;
+}
+
+ul.userlist{
+    border: 1px solid #7b96ac;
+    background-color: white;
+    height:100px;
+}
+
+ul.userlist:hover{
+    border: 1px solid darkred;
+}
+
+.userlist li {
+    display:block;
+    border-bottom: 1px solid #d7d7d7;
+    margin:0px;
+    padding:0px;
+    padding-left:3px;
+    cursor:move;
+}
+
+.userlist li:hover{
+    background-color:#7b96ac;
+}
+
+#hoverclass{
+    background-color:red;
 }

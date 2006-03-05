@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.4 2006/02/19 09:47:19 shibata Exp $
+;; $Id: common-test.scm,v 1.5 2006/03/05 06:06:49 shibata Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -58,7 +58,7 @@
 
     (test* "make-unit: ユニット作成ページ"
            '(*TOP*
-             (form (@ (onsubmit "return submitForm(this)")
+             (form (@ (onsubmit "return submitCreateUnit(this)")
                       (method "POST")
                       (action ?&))
                    ?*

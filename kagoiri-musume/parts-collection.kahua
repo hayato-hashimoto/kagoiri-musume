@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.82 2006/03/04 05:30:39 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.83 2006/03/05 06:06:49 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -328,7 +328,7 @@
 	      (format ($$ "『~a』ユニット設定") (unit-name-of unit))
 	      ($$ "新ユニット結成")))
      (form/cont/
-      (@/ (onsubmit "return submitForm(this)"))
+      (@/ (onsubmit "return submitCreateUnit(this)"))
       (@@/ (cont (entry-lambda (:keyword name desc notify-addresses
 				:mvkeyword fans priority status type category)
 		     (if (or (string-null? name)
@@ -388,23 +388,31 @@
        (tr/ (@/ (align "left"))
 	    (td/ ($$ "ファン") (span/ (@/ (class "warning")) ($$ "(※)")))
 	    (td/
-	     (table/
-	      (tr/
-	       (td/
-		(select/ (@/ (id "fans") (name "fans") (size "5") (multiple "true"))
-			 (map/ (lambda (fan)
-				 (let1 f (fan-name-of fan)
-				   (if unit
-				       (option/ (@/ (value f)
-						    (selected (fan-to? unit fan)))
-						f)
-				       (option/ (@/ (value f)) f))))
-			       (if unit
-				   (append (fans-of unit)
-					   (lset-difference eq? (all-fans)
-							    (fans-of unit)))
-				   (all-fans)))))
-	       (td/ (updown/ "fans"))))))
+             (receive (fans members)
+                 (if unit
+                     (partition (cut fan-to? unit <>) (all-fans))
+                   (values '() (all-fans)))
+               (table/
+                (tr/
+                 (td/ (@/ (id "memberlistblock"))
+                      (ul/ (@/ (id "memberlist")  (class "userlist"))
+                           (map/
+                            (lambda (fan)
+                              (li/ (@/ (value (fan-name-of fan)))
+                                   (fan-name-of fan)))
+                            fans)))
+                 (td/ "<=")
+                 (td/ (@/ (id "allmemberlistblock"))
+                      ($$ "検索") ":" (input/ (@/ (id "membersearch") (type "text") (onkeyup "filter_member(this.value)")))
+                      (ul/ (@/ (id "allmemberlist") (class "userlist"))
+                           (map/
+                            (lambda (fan)
+                              (li/ (@/ (value (fan-name-of fan)))
+                                   (fan-name-of fan)))
+                            members)))
+                 (script/ (@/ (type "text/javascript"))
+                          "Sortable.create('memberlist',{dropOnEmpty:true, containment:['memberlist','allmemberlist'],constraint:false});"
+                          "Sortable.create('allmemberlist',{dropOnEmpty:true,containment:['memberlist','allmemberlist'], constraint:false})"))))))
        (tr/ (td/ ($$ "通知アドレス"))
             (td/
              (textarea/ (@/ (type "text") (name "notify-addresses")
