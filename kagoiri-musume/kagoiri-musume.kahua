@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.240 2006/03/04 11:19:07 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.241 2006/03/05 04:52:57 cut-sea Exp $
 
 ;;
 ;; include
@@ -442,13 +442,20 @@
               (musume (musume-ref unit musume-no)))
          (cons (link-of musume) seed)))
      seed line))
+  (define (space line seed)
+    (regexp-fold
+     #/\s/
+     reference
+     (lambda (match seed)
+       (cons (no-escape/ "&nbsp;") seed))
+     seed line))
   (define (nr line seed)
     (regexp-fold
      #/\n/
-     reference
+     space
      (lambda (match seed)
        (cons (br/) seed))
-       seed line))
+     seed line))
   ;; body
   (node-set (reverse (nr melody '()))))
 
