@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.83 2006/03/05 06:06:49 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.84 2006/03/05 07:53:24 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -570,3 +570,9 @@
 			   (@@/ (cont log-analysis)) ($$ "•Ì•∞≤Ú¿œ")))
 	     (help-button/ "mypage"))))
 
+
+;; character entity reference
+;;
+;;
+(define &copy (no-escape/ "&#169;"))
+(define &nbsp (no-escape/ "&nbsp;"))

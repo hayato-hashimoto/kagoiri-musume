@@ -4,6 +4,7 @@ DIST_EXCLUDE_X
 ./CVS
 ./kagoiri-musume/CVS
 ./kagoiri-musume/images/CVS
+./kagoiri-musume/javascripts/CVS
 ./kagoiri-musume/msgs/CVS
 ./kagoiri-musume/msgs/ja/CVS
 ./plugins/CVS
