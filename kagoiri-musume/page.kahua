@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.31 2006/03/05 06:06:49 shibata Exp $
+;; $Id: page.kahua,v 1.32 2006/03/05 06:13:42 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -31,19 +31,19 @@
                     "onload = function() { content.focus() }"))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/prototype.js"))))
+                             "kagoiri-musume/javascripts/prototype.js"))))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/scriptaculous.js"))))
+                             "kagoiri-musume/javascripts/scriptaculous.js"))))
           (script/ (@/ (type "text/javascript"))
                    (format "var kahua_self_uri_full = '~a';" (kahua-self-uri-full))
                    (format "var kahua_loading_msg = '~a';" ($$ "読み込み中")))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/async.js"))))
+                             "kagoiri-musume/javascripts/async.js"))))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
-                             "kagoiri-musume/kagoiri-musume.js"))))
+                             "kagoiri-musume/javascripts/kagoiri-musume.js"))))
           )
    (body/
     (node-set body)
