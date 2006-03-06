@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.248 2006/03/05 17:26:39 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.249 2006/03/06 00:02:17 cut-sea Exp $
 
 ;;
 ;; include
@@ -830,18 +830,7 @@
   (permission-check-page
    identity
    ($$ "マイページは一般ユーザアカウントが必要です")
-   (div/ (ul/ (@/ (class "menu"))
-	      (li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont task-calendar)) ($$ "カレンダー")))
-	      (li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont mypage 'todo)) ($$ "TODO")))
-	      (li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont mypage 'recent)) ($$ "最近の更新")))
-	      (li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont mypage 'bookmark)) ($$ "ブックマーク")))
-	      (li/ (a/cont/ (@/ (class "clickable"))
-			    (@@/ (cont sendmail)) ($$ "メール")))
-	      (help-button/ "mypage")))
+   (mypage-header/)
    (let1 type (and type (string->symbol type))
      (case type
        ((todo) (todo))
