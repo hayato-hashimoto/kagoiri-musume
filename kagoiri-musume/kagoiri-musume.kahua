@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.249 2006/03/06 00:02:17 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.250 2006/03/06 02:18:39 cut-sea Exp $
 
 ;;
 ;; include
@@ -956,6 +956,16 @@
 (initialize-main-proc **)
 
 ;
+; initial hook
+;
+
+(define (start-log)
+  (error-log-write 'Logging 3 "System Start..."))
+
+(kahua-add-hook! 'initial start-log)
+
+
+;
 ; error
 ;
 (define (error-proc exc)
@@ -990,3 +1000,4 @@
 
 
 (kahua-error-proc error-proc)
+
