@@ -582,8 +582,14 @@ function close_help(){
 
 
 function filter_member(value){
-     var list = $(allmemberlist);
+     var list = $('allmemberlist');
      var nodes = $A(list.childNodes);
      var matcher = new RegExp(value,'i');
      nodes.map(function(ele){ ele[textContent].match(matcher)?Element.show(ele):Element.hide(ele)});
 }
+function toggleDisplayElement(elem){
+     var elem = $(elem);
+     var style = elem.style;
+     style.display = (style.display == 'block')?'none':'block';
+}
+
