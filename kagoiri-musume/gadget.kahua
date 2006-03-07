@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.59 2006/03/03 04:23:04 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.60 2006/03/07 15:37:45 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -31,15 +31,21 @@
       (cond ((string-null? mel) result)
             ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
              => (lambda (m)
-                  (let* ((unit (find-kahua-instance <unit> (m 1)))
-                         (musume-no (x->integer (m 2)))
-                         (musume (musume-ref unit musume-no)))
-                    (lp (append result
-                                (list (m 'before)
-                                      (format " [~a ~a ] "
-                                              (mname-of musume)
-                                              (url-of musume))))
-                        (m 'after)))))
+                  (or (and-let* ((unit (find-kahua-instance <unit> (m 1)))
+                                 (musume-no (x->integer (m 2)))
+                                 (musume (musume-ref unit musume-no)))
+                        (lp (append result
+                                    (list (m 'before)
+                                          (format " [~a ~a ] "
+                                                  (mname-of musume)
+                                                  (url-of musume))))
+                            (m 'after)))
+                      ;; invalid link
+                      (lp (append result
+                                  (list (m 'before)
+                                        (m)))
+                          (m 'after))
+                      )))
 	    (else (append result (list mel))))))
   (string-concatenate
    (parse melody)))

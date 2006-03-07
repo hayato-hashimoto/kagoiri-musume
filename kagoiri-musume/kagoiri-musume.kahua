@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.251 2006/03/07 14:30:54 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.252 2006/03/07 15:37:28 shibata Exp $
 
 ;;
 ;; include
@@ -437,10 +437,12 @@
      #/\[\[(\d+)\/(\d+)\]\]/
      url
      (lambda (match seed)
-       (let* ((unit (find-kahua-instance <unit> (match 1)))
-              (musume-no (x->integer (match 2)))
-              (musume (musume-ref unit musume-no)))
-         (cons (link-of musume) seed)))
+       (or (and-let* ((unit (find-kahua-instance <unit> (match 1)))
+                      (musume-no (x->integer (match 2)))
+                      (musume (musume-ref unit musume-no)))
+             (cons (link-of musume) seed))
+           ;; invalid link
+           (cons (match) seed)))
      seed line))
   (define (space line seed)
     (regexp-fold
@@ -465,9 +467,9 @@
     (let lp ((mel melody))
       (cond ((#/\[\[(\d+)\/(\d+)\]\]/ mel)
              => (lambda (m)
-                  (let* ((unit (find-kahua-instance <unit> (m 1)))
-                         (musume-no (x->integer (m 2)))
-                         (musume (musume-ref unit musume-no)))
+                  (and-let* ((unit (find-kahua-instance <unit> (m 1)))
+                             (musume-no (x->integer (m 2)))
+                             (musume (musume-ref unit musume-no)))
                     (update! (links-of current-musume)
                              (lambda (ms)
                                (if (memq musume ms)
@@ -477,8 +479,8 @@
                              (lambda (ms)
                                (if (memq current-musume ms)
                                    ms
-                                 (cons current-musume ms))))
-                    (lp (m 'after))))))))
+                                 (cons current-musume ms)))))
+                  (lp (m 'after)))))))
   (analyze melody))
 
 
