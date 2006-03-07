@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.250 2006/03/06 02:18:39 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.251 2006/03/07 14:30:54 shibata Exp $
 
 ;;
 ;; include
@@ -866,7 +866,9 @@
     (html/
      (body/
       (div/ (@/ (class "miniwindow"))
-            (div/ (@/ (class "minititle"))
+            (div/ (@/ (class "minititle")
+                      (id "musumeref_title")
+                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('memo',{handle:'musumeref_title'})"))
                   ($$ "ユニットを選択してください")
                   (a/ (@/ (href "#")
                           (onclick "close_memo(); return false"))
@@ -939,8 +941,11 @@
 		      (else "ヘルプがありません。"))))
     (html/
      (body/
-      (div/ (@/ (class "minwindow"))
-	    (div/ (@/ (class "minititle"))
+      (div/ (@/ (id "help")
+                (class "minwindow"))
+	    (div/ (@/ (class "minititle")
+                      (id "helptitle")
+                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('help',{handle:'helptitle'})"))
 		  ($$ "ヘルプ")
 		  (a/ (@/ (href "#")
 			  (onclick "close_help(); return false"))
