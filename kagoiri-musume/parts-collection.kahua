@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.85 2006/03/05 18:53:51 cut-sea Exp $
+;; $Id: parts-collection.kahua,v 1.86 2006/03/08 00:26:44 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -331,7 +331,7 @@
       (@/ (onsubmit "return submitCreateUnit(this)"))
       (@@/ (cont (entry-lambda (:keyword name desc notify-addresses
 				:mvkeyword fans priority status type category)
-		     (if (or (string-null? name)
+                    (if (or (string-null? name)
 			     (null? (kahua-context-ref* "fans")))
 			 (begin
 			   (set-error-message ($$ "ユニット名入力とファン選択は必須です。"))
@@ -411,8 +411,9 @@
                                    (fan-name-of fan)))
                             members)))
                  (script/ (@/ (type "text/javascript"))
-                          "Sortable.create('memberlist',{dropOnEmpty:true, containment:['memberlist','allmemberlist'],constraint:false});"
-                          "Sortable.create('allmemberlist',{dropOnEmpty:true,containment:['memberlist','allmemberlist'], constraint:false})"))))))
+                          "function draggable () { Sortable.create('memberlist',{dropOnEmpty:true, containment:['memberlist','allmemberlist'],constraint:false});"
+                          "Sortable.create('allmemberlist',{dropOnEmpty:true,containment:['memberlist','allmemberlist'], constraint:false})}"
+                          "Event.observe(window, 'load', draggable);"))))))
        (tr/ (td/ ($$ "通知アドレス"))
             (td/
              (textarea/ (@/ (type "text") (name "notify-addresses")
