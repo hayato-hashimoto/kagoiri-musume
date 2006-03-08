@@ -469,6 +469,24 @@ function insert_mlink(event){
      }
 }
 
+function insert_excerption(target){
+  var myAjax = new Ajax.Request(
+      target.href ,
+      {method: 'get',
+       onComplete:function(req){
+	   var result = eval(req.responseText);
+	   var textarea = document.forms.mainedit.melody;
+	   textarea.focus();
+	   var start = textarea.selectionStart;
+	   textarea.value = textarea.value.substring(0, start)
+             + result
+	     + textarea.value.substring(start);
+	   textarea.selectionEnd = start + result.length;
+       }
+      })
+      return false;
+}
+
 
 function check_click(event, url){
      // var target = event.target;

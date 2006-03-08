@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.5 2006/03/05 16:58:30 cut-sea Exp $
+;; $Id: melody-list.scm,v 1.6 2006/03/08 12:58:58 cut-sea Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -233,7 +233,7 @@
               (dt (span (@ (class "song-no")) "¢ö1.")
                   (span (@ (class "song-time")) ?_)
                   (span (@ (class "song-fan")) "[cut-sea]")
-		  (a (@ (!permute (onClick ?_) (href ?_))) "[ÎØ¾§]")
+		  (a (@ (!permute (onclick ?_) (href ?_))) "[ÎØ¾§]")
                   (a (@ (onClick "return confirm('ËÜÅö¤Ëºï½ü¤·¤Þ¤¹¤«¡©')?true:false")
                         (href ?_))
                      "[ºï½ü]"))
