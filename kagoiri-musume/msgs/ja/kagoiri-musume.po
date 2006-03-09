@@ -775,3 +775,6 @@ msgstr "ログ解析"
 # #: sys-admin.kahua:316
 # msgid "籠入娘。エラーログ調査(暫定)"
 # msgstr ""
+
+msgid "[輪唱]"
+msgstr "[引用]"
