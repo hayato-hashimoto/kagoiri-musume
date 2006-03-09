@@ -482,8 +482,11 @@ function insert_excerption(target){
              + result
 	     + textarea.value.substring(start);
 	   textarea.selectionEnd = start + result.length;
+           new Effect.Highlight('focus');
        }
       })
+       // fixme
+      new Effect.Highlight(target.parentNode.parentNode.getElementsByTagName('P')[0]);
       return false;
 }
 
@@ -606,9 +609,45 @@ function filter_member(value){
      nodes.map(function(ele){ ele.innerHTML.match(matcher)?Element.show(ele):Element.hide(ele)});
 }
 
-function toggleDisplayElement(elem){
-     var elem = $(elem);
-     var style = elem.style;
-     style.display = (style.display == 'block')?'none':'block';
+
+function mail_send_setting(event, unit){
+     var speed = 0.4;
+     function showResponse(req){
+          var ele = document.createElement("div");
+          ele.id = 'mail_send_setting';
+          ele.style.display = 'none';
+          ele.innerHTML = req.responseText;
+          Event.element(event).parentNode.parentNode.appendChild(ele);
+          Effect.SlideDown("mail_send_setting",{duration:speed})
+     }
+     var pane = $('mail_send_setting');
+     if (pane){
+          if (pane.style.display == 'none') {
+               Effect.SlideDown("mail_send_setting",{duration:speed});
+          } else {
+               Effect.SlideUp("mail_send_setting",{duration:speed});
+          }
+     } else {
+          var myAjax = new Ajax.Request(
+               kahua_self_uri_full + '/mail-send-setting/' + unit,
+               {method: 'get', onComplete: showResponse});
+     }
 }
 
+function option_select(elem, selects){
+     var selecter;
+     if (typeof selects == 'boolean'){
+          selector = function(o) { o.selected = selects }
+     } else {
+          selector = function (o) {
+               if (selects.indexOf(o[textContent]) >= 0){
+                    o.selected = true;
+               } else {
+                    o.selected = false;
+               }}
+     }
+     var elem = $(elem);
+     var options = $A(elem.options);
+     new Effect.Highlight(elem, {duration:0.5});
+     options.map(selector);
+}
