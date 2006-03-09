@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.51 2006/03/05 06:06:49 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.52 2006/03/09 16:12:03 shibata Exp $ */
 
 /*
  * Common stuff
@@ -627,4 +627,17 @@ ul.userlist:hover{
 
 #hoverclass{
     background-color:red;
+}
+
+#mail_send_setting {
+/*     position:absolute; */
+    /* width:400px; */
+}
+#mail_send_setting fieldset {
+    background-color: #f2f2f2;
+}
+
+#mail_send_setting legend {
+    background-color: #f2f2f2;
+    border: 1px dotted black;
 }
