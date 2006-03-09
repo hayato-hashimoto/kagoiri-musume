@@ -1,63 +1,11 @@
 //------------------------------------------------------------
 // AJAX functions
 //
-var xmlhttp=false;
-
-
-/*@cc_on @*/
-/*@if (@_jscript_version >= 5)
-// JScript gives us Conditional compilation, we can cope with old IE versions.
-// and security blocked creation of the objects.
- try {
-  xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
- } catch (e) {
-  try {
-   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-  } catch (E) {
-   xmlhttp = false;
-  }
- }
-@else
- xmlhttp=false
-@end @*/
-if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-    try {
-         xmlhttp = new XMLHttpRequest();
-         xmlhttp.overrideMimeType("text/xml");
-    } catch (e) {
-         xmlhttp=false;
-    }
-    /* debug.print (xmlhttp); */
-}
-
-
 function async_get(e,id,pagename)
 {
      new Ajax.Updater(id, pagename, {method: 'get'});
      return false;
 }
-
-// function async_get(e,id,pagename)
-// {
-//      if (!document.getElementById) return true;
-
-//      Element.show('loading')
-//      var element = document.getElementById(id);
-
-//      xmlhttp.open("GET", pagename , true);
-
-//      xmlhttp.onreadystatechange = function()
-//           {
-//                if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
-//                {
-//                     element.innerHTML = xmlhttp.responseText;
-//                     Element.hide('loading')
-
-//                }
-//           }
-//      xmlhttp.send(null);
-//      return false;
-// }
 
 function async_post(e,id)
 {
@@ -118,7 +66,7 @@ function select_worker(e)
 
 function toggle_show(id)
 {
-     var ele = document.getElementById(id);
+     var ele = $(id);
      current = ele.style.display;
      ele.style.display = (current=='block')?'none':'block';
 }
