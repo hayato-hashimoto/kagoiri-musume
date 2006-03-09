@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.6 2006/03/08 12:58:58 cut-sea Exp $
+;; $Id: melody-list.scm,v 1.7 2006/03/09 16:14:53 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -197,7 +197,9 @@
         '(*TOP* (table (@ (class "extension"))
               (tr (td)
                   (td (span (@ (onclick ?_))
-                            (span (@ (class "clickable")) "案件へのリンク"))))
+                            (span (@ (class "clickable")) "案件へのリンク"))
+                      (span (@ (onclick ?_))
+                            (span (@ (class "clickable")) "メール送信対象"))))
               (tr (td "内容")
                   (td (@ (id "melody-text")) 
 		      (textarea

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.86 2006/03/08 00:26:44 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.87 2006/03/09 16:15:01 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -253,7 +253,9 @@
                  (tr/
                   (td/)
                   (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
-                              (clickable ($$ "案件へのリンク")))))
+                              (clickable ($$ "案件へのリンク")))
+                       (span/ (@/ (onclick (format "mail_send_setting(event, ~s)" (key-of unit))))
+                                       (clickable ($$ "メール送信対象")))))
 		 (tr/ (td/ ($$ "内容"))
 		      (td/ (textarea/ (@/ (type "text") (name "melody") (id "melody")
 					  (rows 20) (cols 80)))))
@@ -376,9 +378,7 @@
       (table/
        (tr/ (td/ ($$ "ユニット名") (span/ (@/ (class "warning")) ($$ "(※)")))
 	    (td/
-	     (textarea/ (@/ (type "text") (name "name")
-			    (rows 1) (cols 32))
-			(if unit (unit-name-of unit) ""))
+	     (input/ (@/ (type "text") (name "name") (size 80) (value (if unit (unit-name-of unit) ""))))
 	     (error:span/ (@/ (class "warning")) (set-error-message #f))))
        (tr/ (td/ ($$  "概要"))
 	    (td/ (@/ (colspan 2))

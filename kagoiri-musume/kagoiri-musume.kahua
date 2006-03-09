@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.253 2006/03/08 12:58:57 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.254 2006/03/09 16:15:01 shibata Exp $
 
 ;;
 ;; include
@@ -350,7 +350,7 @@
        (require-fan-message unit)
        (begin
 	 (if (checker user)
-	     (set! (delete-of musume) #t))
+             (set! (delete-of musume) #t))
          (redirect-to unit))))))
 
 
@@ -487,8 +487,6 @@
 ;;;==============================================================
 ;;; Song list
 ;;;
-(define-entry (hoge)
-  `((json "hoge")))
 (define-entry-method ** (unit-id musume-no
                                 :keyword sort_state search
                                 :mvkeyword priority status type category assign)
@@ -619,7 +617,9 @@
                           (tr/
                            (td/)
                            (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
-                                       (clickable ($$ "案件へのリンク")))))
+                                       (clickable ($$ "案件へのリンク")))
+                                (span/ (@/ (onclick (format "mail_send_setting(event, ~s)" (key-of unit))))
+                                       (clickable ($$ "メール送信対象")))))
 			  (tr/
 			   (td/ ($$ "内容"))
 			   (td/ (@/ (id "melody-text"))
@@ -883,6 +883,33 @@
                               (link-of unit)))
                        (all-units (current-fan))))
             )))))
+
+
+(define-entry (mail-send-setting unit-id)
+  ;; need rewrite
+  (let* ((unit (find-kahua-instance <unit> unit-id))
+         (fans (fans-of unit)))
+    (fieldset/
+     (@/ (style "position:relative; margin:5px;"))
+     (legend/ ($$ "送信メンバー選択"))
+     (input/ (@/ (type "hidden") (name "custom_mail_send") (value "yes")))
+     (select/ (@/ (size (x->string (length fans)))
+                  (multiple "multiple")
+                  (name "custom_mail_member")
+                  (id "mail_send_setting_select"))
+              (map/ (lambda (f)
+                      (option/ (@/ (value (fan-name-of f))
+                                   (selected "selected"))
+                               (fan-name-of f)))
+                    (fans-of unit)))
+     (div/ (@/ (style "display:inline;position:absolute"))
+           (span/ (@/ (onclick (format "option_select('mail_send_setting_select', ['~a', $('mainedit').assign.value])" (fan-name-of (current-fan)))))
+                  (clickable ($$ "担当者と自分のみ")))
+           (span/ (@/ (onclick "option_select('mail_send_setting_select', true)"))
+                  (clickable ($$ "全選択")))
+           (span/ (@/ (onclick "option_select('mail_send_setting_select', false)"))
+                  (clickable ($$ "無選択"))))
+     )))
 
 (define (change-passwd . message)
   (let* ((cuser (kahua-current-user))

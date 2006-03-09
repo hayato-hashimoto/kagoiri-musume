@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.3 2006/03/05 06:06:49 shibata Exp $
+;; $Id: unit-list.scm,v 1.4 2006/03/09 16:14:53 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -173,11 +173,11 @@
  (test* "ユニット名・概要・ファン選択"
         '(*TOP*
           (table (tr (td "ユニット名" (span (@ (class "warning")) "(※)"))
-                     (td (textarea
-                          (@ (type "text")
-                             (rows "1")
-                             (name "name")
-                             (cols "32")))))
+                     (td (input
+                          (@ (value "")
+                             (type "text")
+                             (size "80")
+                             (name "name")))))
                  (tr (td "概要")
                      (td (@ (colspan "2"))
                          (textarea

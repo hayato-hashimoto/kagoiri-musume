@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.4 2006/03/05 06:06:49 shibata Exp $
+;; $Id: unit-operate.scm,v 1.5 2006/03/09 16:14:53 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -113,8 +113,7 @@
  (test* "ユニット名・概要・ファン選択(現在の値が選択されているか)"
         '(*TOP*
           (table (tr (td "ユニット名" ?*)
-                     (td (textarea ?@
-                                   "籠入娘。Test Proj.")))
+                     (td (input (@ (value "籠入娘。Test Proj.") ?*))))
                  (tr (td "概要")
                      (td ?@
                          (textarea ?@
