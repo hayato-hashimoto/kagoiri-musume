@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.49 2006/03/05 06:06:59 shibata Exp $
+# $Id: Makefile.in,v 1.50 2006/03/11 08:47:34 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -44,6 +44,7 @@ SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
 
 SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/class.kahua \
+	      kagoiri-musume/fan.kahua \
 	      kagoiri-musume/search.kahua \
 	      kagoiri-musume/page.kahua \
 	      kagoiri-musume/parts-collection.kahua \
@@ -52,7 +53,8 @@ SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/hidden.kahua \
 	      kagoiri-musume/util.kahua \
 	      kagoiri-musume/version.kahua \
-	      kagoiri-musume/debug-support.kahua
+	      kagoiri-musume/debug-support.kahua \
+	      kagoiri-musume/migration.kahua
 
 LOCALSCRIPTFILES = kagoiri-musume/user-setting.kahua
 
