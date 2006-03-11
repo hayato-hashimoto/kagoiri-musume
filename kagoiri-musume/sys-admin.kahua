@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.21 2006/03/06 00:02:17 cut-sea Exp $
+;; $Id: sys-admin.kahua,v 1.22 2006/03/11 08:45:57 shibata Exp $
 ;;
 
 ;; system admin's page
@@ -34,7 +34,7 @@
 			     (apply add-fan login-name passwd mail-address roles))
 			   ;; modify user
 			   (let* ((fan  (id->obj <fan> login-name))
-				  (user (login-user-of fan)))
+				  (user fan))
 			     (if (not (string-null? passwd))
 				 (kahua-user-password-change-force user passwd))
 			     (if (not (string-null? mail-address))

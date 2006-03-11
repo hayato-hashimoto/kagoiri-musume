@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.254 2006/03/09 16:15:01 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.255 2006/03/11 08:45:57 shibata Exp $
 
 ;;
 ;; include
@@ -51,6 +51,8 @@
 (load "kagoiri-musume/parts-collection.kahua")
 (load "kagoiri-musume/sys-admin.kahua")
 (load "kagoiri-musume/hidden.kahua")
+
+(load "kagoiri-musume/migration.kahua")
 
 ;; DB Setting.
 ;;
@@ -184,8 +186,7 @@
   (let1 unit (id->obj <unit> unit-id)
     (define checker
       (lambda (u)
-	(if (memq (id->obj <fan> (ref u 'login-name))
-		  (fans-of unit))
+	(if (memq u (fans-of unit))
 	    u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
@@ -315,7 +316,7 @@
 			     (set! name (kana-trans:half->full name))
 			     (set! melody (string-join (string-split melody "\r\n") "\n"))
 			     (let1 musume (create-new-musume unit name priority status assign type category)
-			       (let1 song (create-new-song musume melody (id->obj <fan> (kahua-current-user-name)))
+			       (let1 song (create-new-song musume melody (kahua-current-user))
 				 ;; get'n set! limit date
 				 (set! (limit-of musume)
 				       (and (get-target) (date->sys-time (get-target))))
@@ -338,8 +339,7 @@
   (let* ((musume (id->obj <musume> musume-id))
 	 (unit (unit-of musume)))
     (define checker (lambda (u)
-		      (if (memq (id->obj <fan> (ref u 'login-name))
-                                (fans-of unit))
+		      (if (memq u (fans-of unit))
 			  u #f)))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
