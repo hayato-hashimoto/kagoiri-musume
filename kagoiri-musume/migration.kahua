@@ -1,0 +1,50 @@
+(use gauche.version)
+
+;; Persistence Generation utils
+(define (source-id->generation class id)
+  (let1 gens (assoc-ref (ref (ref class 'metainfo)
+                             'source-id-map)
+                        id)
+    (if (not (null? gens))
+        (apply min gens)
+      #f)))
+
+(define (generation->source-id class gen)
+  (let1 gens (ref (ref class 'metainfo) 'source-id-map)
+    (let loop ((rest gens))
+      (if (null? rest)
+          #f
+        (if (memv gen (cdr (car rest)))
+            (car (car rest))
+          (loop (cdr rest)))))))
+
+(define-method source-id-of ((obj <kahua-persistent-base>))
+  (generation->source-id (class-of obj)
+                         (ref obj '%persistent-generation)))
+
+
+(define (realize-kahua-proxy proxy)
+  (find-kahua-instance (ref proxy 'class) (ref proxy 'key)))
+
+
+;; migrate <fan> to inheritance <kahua-user>
+(define (migrate-fans)
+  (guard
+   (e (else #?=e))
+   (let1 fans (coerce-to <list> (make-kahua-collection <fan>))
+     (when (not (or (null? fans)
+                    (version<=? "1.1"
+                                (source-id-of (car fans)))))
+       ;; (print "**** migrate <fans> to inheritance <kahua-user> ****")
+       (for-each
+        (lambda (f)
+          (let1 kahua-user (realize-kahua-proxy
+                            (assq-ref (ref f '%hidden-slot-values) 'login-user))
+            (for-each
+             (lambda (slot-def)
+               (let1 name (slot-definition-name slot-def)
+                 (slot-set! f name #?=(ref kahua-user name))))
+             (class-direct-slots <kahua-user>))))
+        fans)))))
+
+(kahua-add-hook! 'initial migrate-fans)
