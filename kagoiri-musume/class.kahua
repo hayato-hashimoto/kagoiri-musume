@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.71 2006/03/07 15:38:39 shibata Exp $
+;; $Id: class.kahua,v 1.72 2006/03/11 08:46:54 shibata Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -130,6 +130,17 @@
     (set! (next-musume-no-of unit) (+ mno 1))
     (set! (musumes-of unit) (cons obj (musumes-of unit)))))
 
+(define-method kill! ((obj <musume>))
+  (set! (delete-of obj) #t)
+  (map (lambda (m)
+         (update! (backlinks-of m)
+                  (cut remove (cut eq? obj <>) <>)))
+       (links-of obj)))
+
+(define-method live! ((obj <musume>))
+  (set! (delete-of obj) #f)
+  )
+
 (define-method next-seq-no ((obj <musume>))
   (+ 1 (length (songs-of obj))))
 
@@ -219,95 +230,6 @@
 (define-class <email> (<kahua-persistent-base>)
   ((address         :allocation :persistent :init-keyword :address
 		    :accessor address-of)))
-
-;; fans means developer
-;;
-(define-class <fan> (<kahua-persistent-base>)
-  (
-   (login-user      :allocation :persistent :init-keyword :login-user
-		    :init-value #f :accessor login-user-of)
-   (email           :allocation :persistent :init-keyword :email
-		    :init-value #f :accessor email-of)
-   ;; daily-tasks is constructed by list of <daily-task> objects.
-   (daily-tasks     :allocation :persistent :init-keyword :daily-tasks
-		    :init-value '() :accessor daily-tasks-of)
-   ;; delete flag
-   (delete          :allocation :persistent :init-keyword :delete
-		    :init-value #f :accessor delete-of)
-   (%properties	    :allocation :persistent
-                    :init-value '())
-   ))
-
-;; pseudo getter
-(define-method slot-missing ((class <class>) (obj <fan>) slot)
-  (assq-ref (ref obj '%properties) slot))
-
-;; pseudo setter
-(define-method slot-missing ((class <class>) (obj <fan>) slot val)
-  (unless (kahua-serializable-object? val)
-    (error "attempted to enter unserializable object to <fan>: ~s"
-           val))
-  (set! (ref obj '%properties)
-      (assq-set! (ref obj '%properties) slot val)))
-
-(define-method unsubscriptions-of ((self <fan>))
-  (or (ref self 'unsubscriptions)
-      '()))
-
-(define-method email-address-of ((self <fan>))
-  (address-of (email-of self)))
-
-(define-method fan-name-of ((self <fan>))
-  (ref (login-user-of self) 'login-name))
-
-(define-method key-of ((self <fan>))
-  (fan-name-of self))
-
-(define (lucky-fan? fan)
-  (not (delete-of fan)))
-
-(define (all-fans)
-  (filter lucky-fan?
-	  (make-kahua-collection <fan>)))
-
-(define (all-fan-names)
-  (map fan-name-of (all-fans)))
-
-(define (add-fan name passwd mail-address . roles)
-  (and-let* ((user (kahua-add-user name passwd))
-	     (email (make <email> :address mail-address))
-	     (fan  (make <fan> :login-user user :email email)))
-    (set! (ref user 'role-alist) roles)
-    fan))
-
-(define (current-fan)
-  (find-kahua-instance <fan> (kahua-current-user-name)))
-
-(define-method fan-to? ((unit <unit>) (fan <fan>))
-  (if (memq fan (fans-of unit)) #t #f))
-
-(define-method viewable? ((unit <unit>) . user)
-  (let1 fan (find-kahua-instance
-	     <fan>
-             (ref (if (null? user)
-                      (kahua-add-user)
-		      (car user)) 'login-name))
-    (memq fan (fans-of unit))))
-
-(define-method kill! ((fan <fan>))
-  (set! (delete-of fan) #t)
-  (set! (ref (ref fan 'login-user) 'inactive) #t))
-
-(define-method live! ((fan <fan>))
-  (set! (delete-of fan) #f)
-  (set! (ref (ref fan 'login-user) 'inactive) #f))
-
-
-;; alias methods for convenient.
-(define-method code-of ((obj <fan>))
-  (fan-name-of obj))
-(define-method disp-name-of ((obj <fan>))
-  (fan-name-of obj))
 
 ;; hacks for #f
 ;;
@@ -461,3 +383,5 @@
 
 (define (id->obj class id)
   (and id (find-kahua-instance class id)))
+
+(load "kagoiri-musume/fan.kahua")
