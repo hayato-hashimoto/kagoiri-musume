@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.72 2006/03/11 08:46:54 shibata Exp $
+;; $Id: class.kahua,v 1.73 2006/03/11 12:23:19 cut-sea Exp $
 ;;
 ;; Unit means Project.
 ;;
@@ -384,4 +384,8 @@
 (define (id->obj class id)
   (and id (find-kahua-instance class id)))
 
+;
+; classes
+;
+(load "kagoiri-musume/club.kahua")
 (load "kagoiri-musume/fan.kahua")

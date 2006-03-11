@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.50 2006/03/11 08:47:34 shibata Exp $
+# $Id: Makefile.in,v 1.51 2006/03/11 12:23:19 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -45,6 +45,7 @@ SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
 SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/class.kahua \
 	      kagoiri-musume/fan.kahua \
+	      kagoiri-musume/club.kahua \
 	      kagoiri-musume/search.kahua \
 	      kagoiri-musume/page.kahua \
 	      kagoiri-musume/parts-collection.kahua \
