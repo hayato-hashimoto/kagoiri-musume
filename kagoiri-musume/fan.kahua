@@ -4,6 +4,9 @@
   (
    (email           :allocation :persistent :init-keyword :email
 		    :init-value #f :accessor email-of)
+   ;; fan is belong to club.
+   (club            :allocation :persistent :init-keyword :club
+		    :init-value #f :accessor club-of)
    ;; daily-tasks is constructed by list of <daily-task> objects.
    (daily-tasks     :allocation :persistent :init-keyword :daily-tasks
 		    :init-value '() :accessor daily-tasks-of)
