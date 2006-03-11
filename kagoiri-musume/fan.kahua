@@ -1,0 +1,81 @@
+;; fans means developer
+;;
+(define-class <fan> (<kahua-user>)
+  (
+   (email           :allocation :persistent :init-keyword :email
+		    :init-value #f :accessor email-of)
+   ;; daily-tasks is constructed by list of <daily-task> objects.
+   (daily-tasks     :allocation :persistent :init-keyword :daily-tasks
+		    :init-value '() :accessor daily-tasks-of)
+   (inactive      :allocation :persistent
+                  :init-keyword :inactive :init-value #f
+                  :accessor delete-of)
+   (%properties	    :allocation :persistent
+                    :init-value '())
+   )
+  :source-id "1.1")
+
+
+;; pseudo getter
+(define-method slot-missing ((class <class>) (obj <fan>) slot)
+  (assq-ref (ref obj '%properties) slot))
+
+;; pseudo setter
+(define-method slot-missing ((class <class>) (obj <fan>) slot val)
+  (unless (kahua-serializable-object? val)
+    (error "attempted to enter unserializable object to <fan>: ~s"
+           val))
+  (set! (ref obj '%properties)
+      (assq-set! (ref obj '%properties) slot val)))
+
+(define-method unsubscriptions-of ((self <fan>))
+  (or (ref self 'unsubscriptions)
+      '()))
+
+(define-method email-address-of ((self <fan>))
+  (address-of (email-of self)))
+
+(define-method fan-name-of ((self <fan>))
+  (ref self 'login-name))
+
+(define-method key-of ((self <fan>))
+  (fan-name-of self))
+
+(define (lucky-fan? fan)
+  (not (delete-of fan)))
+
+(define (all-fans)
+  (filter lucky-fan?
+	  (make-kahua-collection <fan>)))
+
+(define (all-fan-names)
+  (map fan-name-of (all-fans)))
+
+(define (add-fan name passwd mail-address . roles)
+  (and-let* ((email (make <email> :address mail-address))
+             (user (kahua-add-user name passwd :email email)))
+    (set! (ref user 'role-alist) roles)
+    user))
+
+(define current-fan  kahua-current-user)
+
+(define-method fan-to? ((unit <unit>) (fan <fan>))
+  (if (memq fan (fans-of unit)) #t #f))
+
+(define-method viewable? ((unit <unit>) . user)
+  (let1 fan (get-optional user (kahua-current-user))
+    (memq fan (fans-of unit))))
+
+(define-method kill! ((fan <fan>))
+  (set! (delete-of fan) #t))
+
+(define-method live! ((fan <fan>))
+  (set! (delete-of fan) #f))
+
+
+;; alias methods for convenient.
+(define-method code-of ((obj <fan>))
+  (fan-name-of obj))
+(define-method disp-name-of ((obj <fan>))
+  (fan-name-of obj))
+
