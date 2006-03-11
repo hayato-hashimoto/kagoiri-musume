@@ -1,0 +1,80 @@
+(define-class <group> (<kahua-persistent-base>)
+  ((name      :allocation :persistent
+              :init-keyword :name :init-value "")
+   (parent    :allocation :persistent
+              :init-keyword :parent
+              :init-value #f)
+   (groups    :allocation :persistent
+              :init-keyword :children
+              :init-value '())
+   (members   :allocation :persistent
+              :init-keyword :members
+              :init-value '())))
+
+
+
+(define-entry (user-admin)
+  (kagoiri-page
+   (h1/ "CSVインポート")
+   (form/cont/
+    (@/ (enctype "multipart/form-data"))
+    (@@/ (cont parse-csv))
+    (input/ (@/ (type "file") (name "file")))
+    (input/ (@/ (type "submit") (name "import"))))))
+
+(define parse-csv
+  (entry-lambda (:keyword file)
+
+    (define (normalize-group-name name)
+      (string-drop name 3))
+
+    (define (load-groups records)
+      (let1 group-hash (make-hash-table 'string=?)
+        (for-each
+         (lambda (r)
+           (for-each
+            (lambda (g)
+              (let1 name (normalize-group-name g)
+                (hash-table-update! group-hash name (cut + 1 <>) 0)))
+            (drop r 9)))
+         (cdr records))
+        (hash-table-keys group-hash)))
+
+    (when file
+      (let1 groups (load-groups (csv->list (car file)))
+        (edit-group groups)
+        ))))
+
+(define (edit-group groups)
+  (kagoiri-page
+   (h1/ "グループ構造設定")
+   (div/ (@/ (id "root-box")
+             (style "height:200px; width:200px; background:red")))
+
+   (div/ (@/ (style "position:relative")
+             (id "main-box"))
+         (style/ (@/ (type "text/css"))
+                 ".root-box div {margin-bottom:100px}"
+                 "div.box {background: lightblue; height:25; width:200px;position:relative;margin-bottom:5px}"
+                 "div.box2 {border:1px solid black; height:25px; width:200px; position:absolute; left:200px;top:0px; margin-top:0px, margin-bottom:5px}")
+         (node-set
+          (map-with-index 
+           (lambda (idx name)
+             (div/ (@/  (id #`"box-,|idx|")
+                        (class "box"))
+                   name
+                   (div/ (@/  (id #`"box-,|idx|x")
+                              (class "box2")))))
+           groups))
+         (script/ (@/ (type "text/javascript"))
+                  "function draggable () {"
+                  "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onUpdate:update_height});"
+                  "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
+                  (map/
+                   (lambda (idx)
+                     #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onUpdate:update_height});")
+                   (iota (length groups)))
+                  "}"
+                  "Event.observe(window, 'load', draggable);")
+         )))
+
