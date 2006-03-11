@@ -29,22 +29,20 @@
 
 ;; migrate <fan> to inheritance <kahua-user>
 (define (migrate-fans)
-  (guard
-   (e (else #?=e))
-   (let1 fans (coerce-to <list> (make-kahua-collection <fan>))
-     (when (not (or (null? fans)
-                    (version<=? "1.1"
-                                (source-id-of (car fans)))))
-       ;; (print "**** migrate <fans> to inheritance <kahua-user> ****")
-       (for-each
-        (lambda (f)
-          (let1 kahua-user (realize-kahua-proxy
-                            (assq-ref (ref f '%hidden-slot-values) 'login-user))
-            (for-each
-             (lambda (slot-def)
-               (let1 name (slot-definition-name slot-def)
-                 (slot-set! f name #?=(ref kahua-user name))))
-             (class-direct-slots <kahua-user>))))
-        fans)))))
+  (let1 fans (coerce-to <list> (make-kahua-collection <fan>))
+    (when (not (or (null? fans)
+                   (version<=? "1.1"
+                               (source-id-of (car fans)))))
+      ;; (print "**** migrate <fans> to inheritance <kahua-user> ****")
+      (for-each
+       (lambda (f)
+         (let1 kahua-user (realize-kahua-proxy
+                           (assq-ref (ref f '%hidden-slot-values) 'login-user))
+           (for-each
+            (lambda (slot-def)
+              (let1 name (slot-definition-name slot-def)
+                (slot-set! f name (ref kahua-user name))))
+            (class-direct-slots <kahua-user>))))
+       fans))))
 
 (kahua-add-hook! 'initial migrate-fans)
