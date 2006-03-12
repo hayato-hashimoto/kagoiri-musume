@@ -3,9 +3,11 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.5 2006/03/12 09:52:39 shibata Exp $
+;; $Id: group.kahua,v 1.6 2006/03/12 11:33:46 shibata Exp $
 ;;
 ;;
+(kahua-add-hook! 'initial (cut make-kahua-collection <group>))
+
 (define-class <group> (<kahua-persistent-base>)
   ((name      :allocation :persistent
               :accessor name-of
@@ -29,6 +31,9 @@
   (next-method)
   (hash-table-put! (ref obj '%obj-hash)
                    (ref obj 'name) obj))
+
+(define-method write-object ((obj <group>) port)
+  (format port "#<group ~s>" (name-of obj)))
 
 (define (group-hash)
   (class-slot-ref <group> '%obj-hash))
@@ -81,9 +86,6 @@
     ((_ place item cmpfn)
      (update! place (lambda (ls) (if (member item ls cmpfn) ls (cons item ls)))))))
 
-;; (define (uniq-push! place item)
-;;   (update! place (lambda (ls) (if (memq item ls) ls (cons item ls)))))
-
 (define-method join! ((obj <group>) (obj2 <group>))
   (uniq-push! (ref obj2 'parents) obj)
   (uniq-push! (ref obj 'groups) obj2))
@@ -118,18 +120,8 @@
   (values (lset-difference eq? list1 list2)
           (lset-difference eq? list2 list1)))
 
-(define (create-groups&assign-member recordes)
 
-  (define skip-title cdr)
-
-  (define name-ref (cut ref <> 1))
-  (define mail-ref (cut ref <> 4))
-  (define (id-ref line) (car (string-split (mail-ref line) #\@)))
-  (define (groups-ref line) (map (compose group-name->obj
-                                         (cut string-drop <> 3))
-                                (drop line 9)))
-
-  (define (node->group! node parents)
+(define (node->group! node parents)
       (let* ((name (car node))
              (children (cdr node))
              (obj (or (group-name->obj name)
@@ -140,6 +132,17 @@
         (slot-set! obj 'groups
                    (map (cut node->group! <> (list obj)) children))
         obj))
+
+(define (create-groups&assign-member recordes)
+
+  (define skip-title cdr)
+
+  (define name-ref (cut ref <> 1))
+  (define mail-ref (cut ref <> 4))
+  (define (id-ref line) (car (string-split (mail-ref line) #\@)))
+  (define (groups-ref line) (map (compose group-name->obj
+                                         (cut string-drop <> 3))
+                                (drop line 9)))
 
   ((entry-lambda (:keyword grouptree)
      (node->group! (call-with-input-string grouptree read) '())
@@ -235,8 +238,7 @@
             (node-set
              (map-with-index 
               (lambda (idx name)
-                (div/ (@/  (id #`"box-,|idx|")
-                           (class "box"))
+                (div/ (@/ (class "box"))
                       name
                       (div/ (@/  (id #`"box-,|idx|x")
                                  (class "box2")))))
@@ -253,3 +255,48 @@
               "Event.observe(window, 'load', draggable);")
      )))
 
+;; TODO: define-entry-method bug fix
+;; (define-entry-method admin-system ("group" "tree-edit")
+(define-entry-method group-edit ()
+  (define (make-dragbox g)
+    (div/ (@/ (class "box") )
+          (name-of g)
+          (div/ (@/ (id (key-of g)) (class "box2"))
+                (map/ make-dragbox (groups-of g)))))
+
+  (define edit-groups
+    (entry-lambda (:keyword grouptree)
+      (node->group! (call-with-input-string grouptree read) '())
+      ;; (redirect/cont (cont admin-system "group" "tree-edit"))
+      (redirect/cont (cont group-edit))))
+
+
+  (let1 root (top-group)
+    (if root
+        (kagoiri-page
+         (h1/ "グループ構造設定")
+         (fieldset/
+          (legend/ "グループ構造")
+          (form/cont/
+           (@/ (onsubmit "group_edit_submit()"))
+           (@@/ (cont edit-groups))
+           (input/ (@/ (type "hidden") (name "grouptree") (id "grouptree") (value "")))
+           (input/ (@/ (type "submit") (value "保存"))))
+          (div/ (@/ (id "root-box"))
+                (map/ make-dragbox (groups-of root))))
+         (script/ (@/ (type "text/javascript"))
+                  "function draggable () {"
+                  "update_height();"
+                  "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
+                  (map/
+                   (lambda (g)
+                     (if (eq? root g)
+                         ""
+                       #`"Sortable.create(',(key-of g)',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});"))
+                   (make-kahua-collection <group>))
+                  "}"
+                  "Event.observe(window, 'load', draggable);")
+         )
+      (kagoiri-page
+       (h1/ "no group"))
+      )))
