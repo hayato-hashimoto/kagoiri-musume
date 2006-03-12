@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.7 2006/03/12 12:06:15 shibata Exp $
+;; $Id: group.kahua,v 1.8 2006/03/12 16:08:48 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -22,7 +22,8 @@
               :accessor groups-of)
    (members   :allocation :persistent
               :init-keyword :members
-              :init-value '())
+              :init-value '()
+              :accessor members-of)
    (%obj-hash :allocation :class
               :init-value (make-hash-table 'string=?))
    ))
@@ -101,6 +102,13 @@
     (for-each (cut drop-out! <> obj) removed)
     (for-each (cut join! <> obj) added)))
 
+(define-method update-groups! ((obj <fan>) (groups <list>))
+  (receive (removed added)
+      (lset-added+removed (groups-of obj)
+                          groups)
+    (for-each (cut drop-out! <> obj) removed)
+    (for-each (cut join! <> obj) added)))
+
 (define-method join! ((obj <group>) (user <fan>))
   (uniq-push! (ref obj 'members) user)
   (uniq-push! (ref user 'groups) obj))
@@ -109,12 +117,12 @@
   (update! (ref obj 'members) (cut delete! user <> eq?))
   (update! (ref user 'groups) (cut delete! obj <> eq?)))
 
-(define-method update-groups! ((obj <fan>) (groups <list>))
+(define-method update-groups! ((obj <group>) (groups <list>))
   (receive (removed added)
       (lset-added+removed (groups-of obj)
                           groups)
-    (for-each (cut drop-out! <> obj) removed)
-    (for-each (cut join! <> obj)  added)))
+    (for-each (cut drop-out! obj <>) removed)
+    (for-each (cut join! obj <>)  added)))
 
 (define (lset-added+removed list1 list2)
   (values (lset-difference eq? list1 list2)
@@ -129,8 +137,9 @@
         (update-parents! obj parents)
         ;; (slot-set! obj 'parents parents)
         (map (cut join! <> obj) parents)
-        (slot-set! obj 'groups
-                   (map (cut node->group! <> (list obj)) children))
+        (update-groups! obj
+                        ;; (slot-set! obj 'groups
+                        (map (cut node->group! <> (list obj)) children))
         obj))
 
 (define (create-groups&assign-member recordes)
@@ -258,11 +267,15 @@
 ;; TODO: define-entry-method bug fix
 ;; (define-entry-method admin-system ("group" "tree-edit")
 (define-entry-method group-edit ()
-  (define (make-dragbox g)
-    (div/ (@/ (class "box") )
-          (name-of g)
-          (div/ (@/ (id (key-of g)) (class "box2"))
-                (map/ make-dragbox (groups-of g)))))
+  (let1 groups '()
+
+    (define (make-dragbox g)
+      (div/ (@/ (class "box") )
+            (begin
+              (push! groups g)
+              (name-of g))
+            (div/ (@/ (id (key-of g)) (class "box2"))
+                  (map/ make-dragbox (groups-of g)))))
 
   (define edit-groups
     (entry-lambda (:keyword grouptree)
@@ -299,12 +312,13 @@
                   "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
                   (map/
                    (lambda (g)
-                     (if (eq? root g)
+                     (if (null? (parents-of g))
                          ""
                        #`"Sortable.create(',(key-of g)',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});"))
-                   (make-kahua-collection <group>))
+                   groups;; (make-kahua-collection <group>)
+                   )
                   "}"
                   "Event.observe(window, 'load', draggable);"))
       (kagoiri-page
        (h1/ "no group"))
-      )))
+      ))))
