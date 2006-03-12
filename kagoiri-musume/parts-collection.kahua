@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.87 2006/03/09 16:15:01 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.88 2006/03/12 16:10:32 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -116,6 +116,40 @@
    (tr/ (th/ ($$ "新パスワード(確認)"))
 	(td/ (input/ (@/ (type "password") (name again)
 			 (value "")) "")))))
+
+
+(define (group-select/)
+  (let1 root (top-group)
+    (if root
+        (div/ (@/ (id "group-select"))
+               (map/
+                (lambda (g)
+                  (let1 gs (groups-of g)
+                    (div/ (@/ (class "group-item")
+                              (value (key-of g))
+                              (onclick (format "select_group(this, '~a')" (null? gs))))
+                          (name-of g))))
+                  (groups-of root)))
+    "")))
+
+(define-entry (getgroupmember key)
+  (let1 group (find-kahua-instance <group> key)
+    `((json ,(map key-of (members-of group))))))
+
+
+(define-entry (getgroup key)
+  (let1 group (find-kahua-instance <group> key)
+    (td/
+     (div/ (@/ (id "group-select"))
+           (map/
+            (lambda (g)
+              (let1 gs (groups-of g)
+                (div/ (@/ (class "group-item")
+                          (value (key-of g))
+                          (onclick (format "select_group(this, '~a')" (null? gs))))
+                      (name-of g))))
+            (groups-of group))))))
+
 
 (define (musume-menu/ unit)
   (ul/ (@/ (class "menu"))
@@ -393,13 +427,13 @@
                      (partition (cut fan-to? unit <>) (all-fans))
                    (values '() (all-fans)))
                (table/
-                (tr/
+                (tr/ ;; (@/ (id "user-tr"))
                  (td/ (@/ (id "memberlistblock"))
                       (ul/ (@/ (id "memberlist")  (class "userlist"))
                            (map/
                             (lambda (fan)
                               (li/ (@/ (value (fan-name-of fan)))
-                                   (fan-name-of fan)))
+                                   (label-of fan)))
                             fans)))
                  (td/ "<=")
                  (td/ (@/ (id "allmemberlistblock"))
@@ -408,8 +442,10 @@
                            (map/
                             (lambda (fan)
                               (li/ (@/ (value (fan-name-of fan)))
-                                   (fan-name-of fan)))
+                                   (label-of fan)))
                             members)))
+;;                  (td/ (@/ (id "select-td"))
+;;                            (group-select/))
                  (script/ (@/ (type "text/javascript"))
                           "function draggable () { Sortable.create('memberlist',{dropOnEmpty:true, containment:['memberlist','allmemberlist'],constraint:false});"
                           "Sortable.create('allmemberlist',{dropOnEmpty:true,containment:['memberlist','allmemberlist'], constraint:false})}"
