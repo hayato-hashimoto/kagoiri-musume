@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.52 2006/03/09 16:12:03 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.53 2006/03/12 02:21:34 shibata Exp $ */
 
 /*
  * Common stuff
@@ -640,4 +640,58 @@ ul.userlist:hover{
 #mail_send_setting legend {
     background-color: #f2f2f2;
     border: 1px dotted black;
+}
+
+/* user setting */
+
+#main-box div.box {
+    display:inline;
+    margin:5px;
+}
+#main-box div.box div {
+    display:none
+}
+
+/* div#main-box { */
+/*     position:absolute; */
+/*     /\* top:0px; *\/ */
+/*     right:0px; */
+/*     width:50%; */
+/* } */
+
+div#root-box {
+    width:200px;
+    padding-bottom:5px;
+    border:1px dotted gray;
+}
+
+div.box {
+    padding-top:0px;
+    background: lightblue;
+/*     height:25; */
+    width:200px;
+    position:relative;
+/*     margin-bottom:5px; */
+    cursor:move;
+    border:1px solid #7b96ac;
+    margin-bottom:1px;
+}
+
+
+div.box2 {
+    border:1px dotted lightgray;
+    width:200px;
+    position:absolute;
+    left:200px;
+    top:0px;
+    padding-bottom:5px;
+}
+
+
+div.box2 div.box {
+    background: pink;
+}
+
+div.box2 div.box2 div.box {
+    background: lightgreen;
 }
