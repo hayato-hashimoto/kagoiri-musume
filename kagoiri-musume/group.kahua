@@ -1,3 +1,11 @@
+;; -*- coding: euc-jp; mode: kahua -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: group.kahua,v 1.4 2006/03/12 07:51:36 cut-sea Exp $
+;;
+;;
 (define-class <group> (<kahua-persistent-base>)
   ((name      :allocation :persistent
               :init-keyword :name :init-value "")
@@ -30,7 +38,7 @@
 
 (define-entry (user-admin)
   (kagoiri-page
-   (h1/ "CSVã‚¤ãƒ³ãƒãƒ¼ãƒˆ")
+   (h1/ "CSV¥¤¥ó¥İ¡¼¥È")
    (form/cont/
     (@/ (enctype "multipart/form-data"))
     (@@/ (cont parse-csv))
@@ -41,12 +49,12 @@
   (entry-lambda (:keyword file)
     (if (not (null? file))
         (edit-group (csv->list (car file)))
-      (h1/ "ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã—ã¦ãã ã•ã„."))))
+      (h1/ "¥Õ¥¡¥¤¥ë¤ò»ØÄê¤·¤Æ¤¯¤À¤µ¤¤."))))
 
 
 (define (valid-groups groups)
-  ;; ç³»åˆ—ãŒåŒã˜ã‚°ãƒ«ãƒ¼ãƒ—ã‹ã‚‰æœ«ç«¯ã®
-  ;; ã‚°ãƒ«ãƒ¼ãƒ—ä»¥å¤–ã‚’å–ã‚Šé™¤ã
+  ;; ·ÏÎó¤¬Æ±¤¸¥°¥ë¡¼¥×¤«¤éËöÃ¼¤Î
+  ;; ¥°¥ë¡¼¥×°Ê³°¤ò¼è¤ê½ü¤¯
   (let loop ((valid groups)
              (rest groups))
     (if (null? rest)
@@ -56,7 +64,7 @@
             (cdr rest)))))
 
 (define-method parent-groups ((obj <group>))
-  ;; è¤‡æ•°ã®è¦ªã«ã¯æœªå¯¾å¿œ
+  ;; Ê£¿ô¤Î¿Æ¤Ë¤ÏÌ¤ÂĞ±ş
   (let1 parents (ref obj 'parents)
     (if (not (null? parents))
         (cons (car parents)
@@ -142,17 +150,17 @@
   (let1 groups (load-groups recordes)
 
     (kagoiri-page
-     (h1/ "ã‚°ãƒ«ãƒ¼ãƒ—æ§‹é€ è¨­å®š")
+     (h1/ "¥°¥ë¡¼¥×¹½Â¤ÀßÄê")
      (fieldset/
-      (legend/ "ã‚°ãƒ«ãƒ¼ãƒ—æ§‹é€ ")
+      (legend/ "¥°¥ë¡¼¥×¹½Â¤")
       (form/cont/
        (@/ (onsubmit "group_edit_submit()"))
        (@@/ (cont (cut create-groups&assign-member recordes)))
        (input/ (@/ (type "hidden") (name "grouptree") (id "grouptree") (value "")))
-       (input/ (@/ (type "submit") (value "ä¿å­˜"))))
+       (input/ (@/ (type "submit") (value "ÊİÂ¸"))))
       (div/ (@/ (id "root-box"))))
      (fieldset/
-      (legend/ "ã‚°ãƒ«ãƒ¼ãƒ—æ§‹é€ ã®ç‚¹ç·šæ ã¸Drag&Dropã—ã¦ä¸‹ã•ã„")
+      (legend/ "¥°¥ë¡¼¥×¹½Â¤¤ÎÅÀÀşÏÈ¤ØDrag&Drop¤·¤Æ²¼¤µ¤¤")
       (div/ (@/ (id "main-box"))
             (node-set
              (map-with-index 
