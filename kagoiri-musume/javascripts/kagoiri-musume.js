@@ -685,10 +685,12 @@ function group_edit_submit(){
         }});
      // temporary
      var main = $("main-box");
-     $A(main.childNodes).each(function(elem){
-        if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
-             gtree += collect_groups(elem);
-        }});
+     if (main) {
+          $A(main.childNodes).each(function(elem){
+           if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
+                gtree += collect_groups(elem);
+           }});
+     }
      gtree += ')';
      $('grouptree').value = gtree;
 }
