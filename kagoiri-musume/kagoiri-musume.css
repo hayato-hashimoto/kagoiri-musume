@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.53 2006/03/12 02:21:34 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.54 2006/03/12 12:06:15 shibata Exp $ */
 
 /*
  * Common stuff
@@ -644,12 +644,18 @@ ul.userlist:hover{
 
 /* user setting */
 
-#main-box div.box {
+#main-box div.box, #work-box div.box {
     display:inline;
     margin:5px;
 }
-#main-box div.box div {
+#main-box div.box div, #work-box div.box div {
     display:none
+}
+
+div#work-box, div#main-box {
+    padding:10px;
+    border:1px dotted gray;
+    width:100%;
 }
 
 /* div#main-box { */

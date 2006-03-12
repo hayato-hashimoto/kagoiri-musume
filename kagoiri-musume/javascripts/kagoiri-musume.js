@@ -724,3 +724,23 @@ function groups_of(group){
           }
      }
 }
+
+function add_group(elem){
+     var name = elem.newgroup.value;
+     if (!name){
+          return;
+     }
+     var work = $('work-box');
+     var id = Math.random() + '';
+     var group = document.createElement('div');
+     group.className = 'box';
+     var name = document.createTextNode(name);
+     group.appendChild(name);
+     var dragArea = document.createElement('div');
+     dragArea.className = 'box2';
+     dragArea.id = id;
+     group.appendChild(dragArea);
+     work.appendChild(group);
+     Sortable.create(id, {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});
+     Sortable.create('work-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});
+}

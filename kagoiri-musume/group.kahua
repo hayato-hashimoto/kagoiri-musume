@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.6 2006/03/12 11:33:46 shibata Exp $
+;; $Id: group.kahua,v 1.7 2006/03/12 12:06:15 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -284,6 +284,15 @@
            (input/ (@/ (type "submit") (value "保存"))))
           (div/ (@/ (id "root-box"))
                 (map/ make-dragbox (groups-of root))))
+         (fieldset/
+          (legend/ "グループ追加")
+          "グループ名を入力して「追加」ボタンを押して下さい"
+          (form/
+           (@/ (onsubmit "add_group(this);return false"))
+           (input/ (@/ (type "text") (name "newgroup"))) 
+           (input/ (@/ (type "submit") (value "追加"))))
+
+          (div/ (@/ (id "work-box"))))
          (script/ (@/ (type "text/javascript"))
                   "function draggable () {"
                   "update_height();"
@@ -295,8 +304,7 @@
                        #`"Sortable.create(',(key-of g)',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});"))
                    (make-kahua-collection <group>))
                   "}"
-                  "Event.observe(window, 'load', draggable);")
-         )
+                  "Event.observe(window, 'load', draggable);"))
       (kagoiri-page
        (h1/ "no group"))
       )))
