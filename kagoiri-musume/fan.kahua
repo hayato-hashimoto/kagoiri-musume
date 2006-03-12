@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: fan.kahua,v 1.4 2006/03/12 04:03:03 shibata Exp $
+;; $Id: fan.kahua,v 1.5 2006/03/12 16:05:44 shibata Exp $
 ;;
 ;; fans means developer
 ;;
@@ -53,6 +53,10 @@
 
 (define-method key-of ((self <fan>))
   (fan-name-of self))
+
+(define-method label-of ((self <fan>))
+  (or (name-of self)
+      (fan-name-of self)))
 
 (define (lucky-fan? fan)
   (not (delete-of fan)))
