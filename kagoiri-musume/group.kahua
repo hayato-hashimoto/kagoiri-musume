@@ -9,9 +9,24 @@
               :init-value '())
    (members   :allocation :persistent
               :init-keyword :members
-              :init-value '())))
+              :init-value '())
+   (%obj-hash :allocation :class
+              :init-value (make-hash-table 'string=?))
+   ))
 
+(define-method initialize ((obj <group>) initargs)
+  (next-method)
+  (hash-table-put! (ref obj '%obj-hash)
+                   (ref obj 'name) obj))
 
+(define (group-hash)
+  (class-slot-ref <group> '%obj-hash))
+
+(define (top-group)
+  (group-name->obj "*TOP*"))
+
+(define (group-name->obj name)
+  (hash-table-get (group-hash) #?=name #f))
 
 (define-entry (user-admin)
   (kagoiri-page
@@ -24,76 +39,139 @@
 
 (define parse-csv
   (entry-lambda (:keyword file)
+    (if (not (null? file))
+        (edit-group (csv->list (car file)))
+      (h1/ "ファイルを指定してください."))))
 
-    (define (normalize-group-name name)
-      (string-drop name 3))
 
-    (define (load-groups records)
-      (let1 group-hash (make-hash-table 'string=?)
-        (for-each
-         (lambda (r)
-           (for-each
-            (lambda (g)
-              (let1 name (normalize-group-name g)
-                (hash-table-update! group-hash name (cut + 1 <>) 0)))
-            (drop r 9)))
-         (cdr records))
-        (hash-table-keys group-hash)))
+(define (valid-groups groups)
+  ;; 系列が同じグループから末端の
+  ;; グループ以外を取り除く
+  (let loop ((valid groups)
+             (rest groups))
+    (if (null? rest)
+        valid
+      (loop (lset-difference eq? valid
+                    (parent-groups (car rest)))
+            (cdr rest)))))
 
-    (when file
-      (let1 groups (load-groups (csv->list (car file)))
-        (edit-group groups)
-        ))))
+(define-method parent-groups ((obj <group>))
+  ;; 複数の親には未対応
+  (let1 parents (ref obj 'parents)
+    (if (not (null? parents))
+        (cons (car parents)
+              (parent-groups (car parents)))
+      '())))
 
-(define make-groups
-  (entry-lambda (:keyword grouptree)
+(define-syntax uniq-push!
+  (syntax-rules ()
+    ((_ place item)
+     (update! place (lambda (ls) (if (memq item ls) ls (cons item ls)))))
+    ((_ place item cmpfn)
+     (update! place (lambda (ls) (if (member item ls cmpfn) ls (cons item ls)))))))
 
-    (define (iter node parents)
+;; (define (uniq-push! place item)
+;;   (update! place (lambda (ls) (if (memq item ls) ls (cons item ls)))))
+
+(define-method join-group! ((obj <group>) (user <fan>))
+  (uniq-push! (ref obj 'members) user)
+  (uniq-push! (ref user 'groups) obj))
+
+(define (create-groups&assign-member recordes)
+
+  (define skip-title cdr)
+
+  (define name-of (cut ref <> 1))
+  (define mail-of (cut ref <> 4))
+  (define (id-of line) (car (string-split (mail-of line) #\@)))
+  (define (groups-of line) (map (compose group-name->obj
+                                         (cut string-drop <> 3))
+                                (drop line 9)))
+
+  (define (node->group! node parents)
       (let* ((name (car node))
              (children (cdr node))
              (obj (make <group>
                     :name name
-                    :parents parents)))
+                    :parents parents))
+             )
         (slot-set! obj 'groups
-                   (map (cut iter <> (list obj)) children))
+                   (map (cut node->group! <> (list obj)) children))
         obj))
 
-    (iter (call-with-input-string grouptree read) '())
+  ((entry-lambda (:keyword grouptree)
+     (node->group! #?=(call-with-input-string grouptree read) '())
 
-    (h1/ (x->string grouptree))))
+     (let1 non-user '()
+       
+       (for-each
+        (lambda (line)
+          (let* ((id #?=(id-of line))
+                 (name #?=(name-of line))
+                 (mail (mail-of line))
+                 (groups #?=(groups-of line))
+                 (user (kahua-find-user id)))
+            (if #?=user
+                (begin
+                  (slot-set! user 'name name)
+                  (map (cut join-group! <> user)
+                       #?=(valid-groups groups)))
+              (push! non-user id)))
+          )
+        (skip-title recordes))
 
-(define (edit-group groups)
-  (kagoiri-page
-   (h1/ "グループ構造設定")
-   (fieldset/
-    (legend/ "グループ構造")
-    (form/cont/
-     (@/ (onsubmit "group_edit_submit()"))
-     (@@/ (cont make-groups))
-     (input/ (@/ (type "hidden") (name "grouptree") (id "grouptree") (value "")))
-     (input/ (@/ (type "submit") (value "保存"))))
-    (div/ (@/ (id "root-box"))))
-   (fieldset/
-    (legend/ "グループ構造の点線枠へDrag&Dropして下さい")
-    (div/ (@/ (id "main-box"))
-          (node-set
-           (map-with-index 
-            (lambda (idx name)
-              (div/ (@/  (id #`"box-,|idx|")
-                         (class "box"))
-                    name
-                    (div/ (@/  (id #`"box-,|idx|x")
-                               (class "box2")))))
-            groups))))
-   (script/ (@/ (type "text/javascript"))
-            "function draggable () {"
-            "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
-            "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
-            (map/
-             (lambda (idx)
-               #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});")
-             (iota (length groups)))
-            "}"
-            "Event.observe(window, 'load', draggable);")
-         ))
+       (h1/ (x->string non-user))))))
+
+(define (edit-group recordes)
+
+  (define (normalize-group-name name)
+    (string-drop name 3))
+
+  (define (load-groups records)
+    (let1 group-hash (make-hash-table 'string=?)
+      (for-each
+       (lambda (r)
+         (for-each
+          (lambda (g)
+            (let1 name (normalize-group-name g)
+              (hash-table-update! group-hash name (cut + 1 <>) 0)))
+          (drop r 9)))
+       (cdr records))
+      (hash-table-keys group-hash)))
+
+  (let1 groups (load-groups recordes)
+
+    (kagoiri-page
+     (h1/ "グループ構造設定")
+     (fieldset/
+      (legend/ "グループ構造")
+      (form/cont/
+       (@/ (onsubmit "group_edit_submit()"))
+       (@@/ (cont (cut create-groups&assign-member recordes)))
+       (input/ (@/ (type "hidden") (name "grouptree") (id "grouptree") (value "")))
+       (input/ (@/ (type "submit") (value "保存"))))
+      (div/ (@/ (id "root-box"))))
+     (fieldset/
+      (legend/ "グループ構造の点線枠へDrag&Dropして下さい")
+      (div/ (@/ (id "main-box"))
+            (node-set
+             (map-with-index 
+              (lambda (idx name)
+                (div/ (@/  (id #`"box-,|idx|")
+                           (class "box"))
+                      name
+                      (div/ (@/  (id #`"box-,|idx|x")
+                                 (class "box2")))))
+              groups))))
+     (script/ (@/ (type "text/javascript"))
+              "function draggable () {"
+              "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
+              "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
+              (map/
+               (lambda (idx)
+                 #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});")
+               (iota (length groups)))
+              "}"
+              "Event.observe(window, 'load', draggable);")
+     )))
 
