@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.52 2006/03/12 07:51:34 cut-sea Exp $
+# $Id: Makefile.in,v 1.53 2006/03/12 08:10:03 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -78,7 +78,7 @@ JAVASCRIPTFILES = kagoiri-musume/javascripts/kagoiri-musume.js \
 
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
-PLUGINFILES = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm async.scm
+PLUGINFILES = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm async.scm csv.scm
 TESTFILES   = system-admin change-password \
               unit-list unit-operate \
               musume-list musume-operate \
