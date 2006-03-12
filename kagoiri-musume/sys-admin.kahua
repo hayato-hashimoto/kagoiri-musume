@@ -3,11 +3,11 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: sys-admin.kahua,v 1.22 2006/03/11 08:45:57 shibata Exp $
+;; $Id: sys-admin.kahua,v 1.23 2006/03/12 12:06:43 shibata Exp $
 ;;
 
 ;; system admin's page
-(define-entry (admin-system)
+(define-entry-method admin-system ()
   (permission-check-page
    ;; checker: admin role?
    (lambda (u)
