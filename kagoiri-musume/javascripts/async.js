@@ -46,14 +46,14 @@ function async_post(e,id)
 
 function highlight(id)
 {
-     var element = document.getElementById(id);
+     var element = $(id);
 /*      element.style.backgroundColor = "#dedede"; */
-     element.style.backgroundColor = "#f0f0f0";
+     element.style.backgroundColor = "#7b96ac";
 }
 
 function unhighlight(id)
 {
-     var element = document.getElementById(id);
+     var element = $(id);
      element.style.backgroundColor = null;
 }
 
