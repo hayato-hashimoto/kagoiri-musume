@@ -1,11 +1,11 @@
 (define-class <group> (<kahua-persistent-base>)
   ((name      :allocation :persistent
               :init-keyword :name :init-value "")
-   (parent    :allocation :persistent
-              :init-keyword :parent
+   (parents    :allocation :persistent
+              :init-keyword :parents
               :init-value #f)
    (groups    :allocation :persistent
-              :init-keyword :children
+              :init-keyword :groups
               :init-value '())
    (members   :allocation :persistent
               :init-keyword :members
@@ -45,36 +45,55 @@
         (edit-group groups)
         ))))
 
+(define make-groups
+  (entry-lambda (:keyword grouptree)
+
+    (define (iter node parents)
+      (let* ((name (car node))
+             (children (cdr node))
+             (obj (make <group>
+                    :name name
+                    :parents parents)))
+        (slot-set! obj 'groups
+                   (map (cut iter <> (list obj)) children))
+        obj))
+
+    (iter (call-with-input-string grouptree read) '())
+
+    (h1/ (x->string grouptree))))
+
 (define (edit-group groups)
   (kagoiri-page
    (h1/ "グループ構造設定")
-   (div/ (@/ (id "root-box")
-             (style "height:200px; width:200px; background:red")))
-
-   (div/ (@/ (style "position:relative")
-             (id "main-box"))
-         (style/ (@/ (type "text/css"))
-                 ".root-box div {margin-bottom:100px}"
-                 "div.box {background: lightblue; height:25; width:200px;position:relative;margin-bottom:5px}"
-                 "div.box2 {border:1px solid black; height:25px; width:200px; position:absolute; left:200px;top:0px; margin-top:0px, margin-bottom:5px}")
-         (node-set
-          (map-with-index 
-           (lambda (idx name)
-             (div/ (@/  (id #`"box-,|idx|")
-                        (class "box"))
-                   name
-                   (div/ (@/  (id #`"box-,|idx|x")
-                              (class "box2")))))
-           groups))
-         (script/ (@/ (type "text/javascript"))
-                  "function draggable () {"
-                  "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onUpdate:update_height});"
-                  "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
-                  (map/
-                   (lambda (idx)
-                     #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onUpdate:update_height});")
-                   (iota (length groups)))
-                  "}"
-                  "Event.observe(window, 'load', draggable);")
-         )))
+   (fieldset/
+    (legend/ "グループ構造")
+    (form/cont/
+     (@/ (onsubmit "group_edit_submit()"))
+     (@@/ (cont make-groups))
+     (input/ (@/ (type "hidden") (name "grouptree") (id "grouptree") (value "")))
+     (input/ (@/ (type "submit") (value "保存"))))
+    (div/ (@/ (id "root-box"))))
+   (fieldset/
+    (legend/ "グループ構造の点線枠へDrag&Dropして下さい")
+    (div/ (@/ (id "main-box"))
+          (node-set
+           (map-with-index 
+            (lambda (idx name)
+              (div/ (@/  (id #`"box-,|idx|")
+                         (class "box"))
+                    name
+                    (div/ (@/  (id #`"box-,|idx|x")
+                               (class "box2")))))
+            groups))))
+   (script/ (@/ (type "text/javascript"))
+            "function draggable () {"
+            "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
+            "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
+            (map/
+             (lambda (idx)
+               #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});")
+             (iota (length groups)))
+            "}"
+            "Event.observe(window, 'load', draggable);")
+         ))
 
