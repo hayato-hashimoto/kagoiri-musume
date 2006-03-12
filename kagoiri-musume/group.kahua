@@ -3,18 +3,21 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.4 2006/03/12 07:51:36 cut-sea Exp $
+;; $Id: group.kahua,v 1.5 2006/03/12 09:52:39 shibata Exp $
 ;;
 ;;
 (define-class <group> (<kahua-persistent-base>)
   ((name      :allocation :persistent
+              :accessor name-of
               :init-keyword :name :init-value "")
    (parents    :allocation :persistent
               :init-keyword :parents
-              :init-value #f)
+              :init-value '()
+              :accessor parents-of)
    (groups    :allocation :persistent
               :init-keyword :groups
-              :init-value '())
+              :init-value '()
+              :accessor groups-of)
    (members   :allocation :persistent
               :init-keyword :members
               :init-value '())
@@ -34,9 +37,9 @@
   (group-name->obj "*TOP*"))
 
 (define (group-name->obj name)
-  (hash-table-get (group-hash) #?=name #f))
+  (hash-table-get (group-hash) name #f))
 
-(define-entry (user-admin)
+(define-entry-method admin-system ("user" "csv")
   (kagoiri-page
    (h1/ "CSVインポート")
    (form/cont/
@@ -60,7 +63,7 @@
     (if (null? rest)
         valid
       (loop (lset-difference eq? valid
-                    (parent-groups (car rest)))
+                  (parent-groups (car rest)))
             (cdr rest)))))
 
 (define-method parent-groups ((obj <group>))
@@ -81,54 +84,121 @@
 ;; (define (uniq-push! place item)
 ;;   (update! place (lambda (ls) (if (memq item ls) ls (cons item ls)))))
 
-(define-method join-group! ((obj <group>) (user <fan>))
+(define-method join! ((obj <group>) (obj2 <group>))
+  (uniq-push! (ref obj2 'parents) obj)
+  (uniq-push! (ref obj 'groups) obj2))
+
+(define-method drop-out! ((obj <group>) (obj2 <group>))
+  (update! (ref obj2 'parents) (cut delete! obj <> eq?))
+  (update! (ref obj 'groups) (cut delete! obj2 <> eq?)))
+
+(define-method update-parents! ((obj <group>) (groups <list>))
+  (receive (removed added)
+      (lset-added+removed (parents-of obj)
+                          groups)
+    (for-each (cut drop-out! <> obj) removed)
+    (for-each (cut join! <> obj) added)))
+
+(define-method join! ((obj <group>) (user <fan>))
   (uniq-push! (ref obj 'members) user)
   (uniq-push! (ref user 'groups) obj))
+
+(define-method drop-out! ((obj <group>) (user <fan>))
+  (update! (ref obj 'members) (cut delete! user <> eq?))
+  (update! (ref user 'groups) (cut delete! obj <> eq?)))
+
+(define-method update-groups! ((obj <fan>) (groups <list>))
+  (receive (removed added)
+      (lset-added+removed (groups-of obj)
+                          groups)
+    (for-each (cut drop-out! <> obj) removed)
+    (for-each (cut join! <> obj)  added)))
+
+(define (lset-added+removed list1 list2)
+  (values (lset-difference eq? list1 list2)
+          (lset-difference eq? list2 list1)))
 
 (define (create-groups&assign-member recordes)
 
   (define skip-title cdr)
 
-  (define name-of (cut ref <> 1))
-  (define mail-of (cut ref <> 4))
-  (define (id-of line) (car (string-split (mail-of line) #\@)))
-  (define (groups-of line) (map (compose group-name->obj
+  (define name-ref (cut ref <> 1))
+  (define mail-ref (cut ref <> 4))
+  (define (id-ref line) (car (string-split (mail-ref line) #\@)))
+  (define (groups-ref line) (map (compose group-name->obj
                                          (cut string-drop <> 3))
                                 (drop line 9)))
 
   (define (node->group! node parents)
       (let* ((name (car node))
              (children (cdr node))
-             (obj (make <group>
-                    :name name
-                    :parents parents))
-             )
+             (obj (or (group-name->obj name)
+                      (make <group> :name name))))
+        (update-parents! obj parents)
+        ;; (slot-set! obj 'parents parents)
+        (map (cut join! <> obj) parents)
         (slot-set! obj 'groups
                    (map (cut node->group! <> (list obj)) children))
         obj))
 
   ((entry-lambda (:keyword grouptree)
-     (node->group! #?=(call-with-input-string grouptree read) '())
+     (node->group! (call-with-input-string grouptree read) '())
 
-     (let1 non-user '()
-       
+     (let ((non-user '())
+           (update-user '()))
+
        (for-each
         (lambda (line)
-          (let* ((id #?=(id-of line))
-                 (name #?=(name-of line))
-                 (mail (mail-of line))
-                 (groups #?=(groups-of line))
+          (let* ((id (id-ref line))
+                 (name (name-ref line))
+                 (mail (mail-ref line))
+                 (groups (groups-ref line))
                  (user (kahua-find-user id)))
-            (if #?=user
+            (if user
                 (begin
                   (slot-set! user 'name name)
-                  (map (cut join-group! <> user)
-                       #?=(valid-groups groups)))
-              (push! non-user id)))
-          )
+                  (update-groups! user (valid-groups groups))
+                  (push! update-user user))
+              (push! non-user
+                     (list id name mail (valid-groups groups))))))
         (skip-title recordes))
 
-       (h1/ (x->string non-user))))))
+       (kagoiri-page
+        (h1/ "インポート結果")
+        (h2/ "以下のユーザは登録されていません")
+        (table/
+         (tr/
+          (map/ th/ '("ID" "名前" "メールアドレス" "グループ";;  "追加"
+                      )))
+         (map/
+          (lambda (userinfo)
+            (tr/
+             (td/ (ref userinfo 0))
+             (td/ (ref userinfo 1))
+             (td/ (ref userinfo 2))
+             (td/ (node-set
+                   (intersperse ", "
+                                (map name-of (ref userinfo 3)))))
+             ;; (td/ (input/ (@/ (type "checkbox")
+;;                               (name "user_no")
+;;                               (value (ref userinfo 0)))))
+             ))
+          non-user))
+        (h2/ "以下のユーザを更新しました．")
+        (table/
+         (tr/
+          (map/ th/ '("ID" "名前" "メールアドレス" "グループ")))
+         (map/
+          (lambda (user)
+            (tr/
+             (td/ (key-of user))
+             (td/ (name-of user))
+             (td/ (address-of (email-of user)))
+             (td/ (node-set
+                   (intersperse ", "
+                                (map name-of (groups-of user)))))))
+          update-user)
+         ))))))
 
 (define (edit-group recordes)
 
