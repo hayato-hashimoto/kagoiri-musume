@@ -651,3 +651,68 @@ function option_select(elem, selects){
      new Effect.Highlight(elem, {duration:0.5});
      options.map(selector);
 }
+
+function update_height(){
+     var main = $("root-box");
+     $A(main.childNodes).each(function(elem){
+        if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
+             var c = countChild(elem);
+             var height = c;
+             elem.style.margin = '0 0 ' + height + 'px 0';
+        }});
+     Element.hide(main);
+     Element.show(main);
+}
+
+function countChild(elem){
+     var count = 0;
+     $A(elem.childNodes).each(function(ele){
+       if (ele.tagName && ele.tagName.toUpperCase()=="DIV"
+           && ele.className == 'box2'){
+            count = Element.getHeight(ele);
+       }});
+     return count;
+}
+
+function group_edit_submit(){
+     var main = $("root-box");
+     var gtree = '';
+     gtree += '(';
+     gtree += '"*TOP*" ';
+     $A(main.childNodes).each(function(elem){
+        if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
+             gtree += collect_groups(elem);
+        }});
+     gtree += ')';
+     $('grouptree').value = gtree;
+}
+
+function collect_groups(ele){
+     var gtree = '';
+     gtree += '(';
+     gtree += to_string(name_of(ele));
+     var groups =  groups_of(ele);
+     for (var i=0; i<groups.length;i++){
+          gtree += collect_groups(groups[i]);
+     }
+     gtree += ')';
+     return gtree;
+}
+
+function to_string(text){
+     return '"' + text + '" ';
+}
+
+function name_of(group){
+     return group.firstChild.nodeValue;
+}
+
+
+function groups_of(group){
+     var children = group.childNodes;
+     for (var i = 0; i< children.length; i++){
+          if (children[i].className == 'box2'){
+               return children[i].childNodes;
+          }
+     }
+}
