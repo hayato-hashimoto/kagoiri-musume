@@ -675,10 +675,16 @@ function countChild(elem){
 }
 
 function group_edit_submit(){
-     var main = $("root-box");
+     var root = $("root-box");
      var gtree = '';
      gtree += '(';
      gtree += '"*TOP*" ';
+     $A(root.childNodes).each(function(elem){
+        if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
+             gtree += collect_groups(elem);
+        }});
+     // temporary
+     var main = $("main-box");
      $A(main.childNodes).each(function(elem){
         if (elem.tagName && elem.tagName.toUpperCase()=="DIV"){
              gtree += collect_groups(elem);
