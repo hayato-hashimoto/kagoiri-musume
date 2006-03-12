@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.54 2006/03/12 12:06:15 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.55 2006/03/12 16:09:06 shibata Exp $ */
 
 /*
  * Common stuff
@@ -700,4 +700,43 @@ div.box2 div.box {
 
 div.box2 div.box2 div.box {
     background: lightgreen;
+}
+
+div.hoverbox2 {
+    border:2px solid red;
+}
+
+div#group-select-box{
+    position:relative;
+}
+
+tr#user-tr {
+    vertical-align:top;
+}
+
+div#group-select {
+    border: 1px solid #7b96ac;
+    background-color: white;
+    height:100px;
+    overflow:auto;
+    /* position:absolute; */
+/*     top:0px; */
+
+/*     height:100px; */
+    width:200px;
+
+    /* width:100px; */
+}
+
+div.group-item {
+    display:block;
+    border-bottom: 1px solid #d7d7d7;
+    margin:0px;
+    padding:0px;
+    padding-left:3px;
+    cursor:pointer;
+}
+
+div.group-item:hover {
+    background-color:#7b96ac;
 }
