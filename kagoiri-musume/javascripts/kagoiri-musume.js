@@ -746,11 +746,11 @@ function add_group(elem){
 
 function select_group(elem, is_null, pos){
      var key = elem.getAttribute('value');
-     var pos = parseInt(pos);
-     var nextelm = $('group-box' + pos);
+     var tmp_pos = parseInt(pos);
+     var nextelm = $('group-box' + tmp_pos);
      while (nextelm) {
           Element.remove(nextelm);
-          nextelm = $('group-box' + ++pos);
+          nextelm = $('group-box' + ++tmp_pos);
      }
      select(elem);
 
@@ -770,24 +770,21 @@ function select_group(elem, is_null, pos){
                               }});
 
           }
-          new Ajax.Request(kahua_self_uri_full + '/getgroupmember/' + key,
+          new Ajax.Request(kahua_self_uri_full + '/getgroup/member/' + key,
                            {method:'get', onComplete: update});
      }
      if (is_null == '#f') {
 
      function update(req){
-          var next = document.createElement('div');
+          var next = document.createElement('tr');
           next.id = 'group-box' + pos;
           // var group_select = $('group-select-box');
           var group_select = $('user-tr');
           next.innerHTML = req.responseText;
           group_select.appendChild(next);
-
-          // new Effect.Highlight(elem)
-          // Effect.SlideDown(next);
      }
 
-     new Ajax.Request(kahua_self_uri_full + '/getgroup/' + key + '/' + pos,
+     new Ajax.Request(kahua_self_uri_full + '/getgroup/group/' + key + '/' + pos,
                       {method:'get', onComplete: update});
      }
 }
