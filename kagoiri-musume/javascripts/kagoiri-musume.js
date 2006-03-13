@@ -367,7 +367,7 @@ function blockIt(){
 }
 
 function submitCreateUnit(form){
-     var members = $A($('memberlist').getElementsByTagName("LI")).map(function (ele) {return ele.innerHTML});
+     var members = $A($('memberlist').getElementsByTagName("LI")).map(function (ele) {return ele.getAttribute('value')});
      var input;
      members.map(
           function(fan){
