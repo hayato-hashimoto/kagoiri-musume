@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.8 2006/03/12 16:08:48 shibata Exp $
+;; $Id: group.kahua,v 1.9 2006/03/13 15:48:52 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -252,17 +252,25 @@
                       (div/ (@/  (id #`"box-,|idx|x")
                                  (class "box2")))))
               groups))))
-     (script/ (@/ (type "text/javascript"))
-              "function draggable () {"
-              "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
-              "Sortable.create('main-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});"
-              (map/
-               (lambda (idx)
-                 #`"Sortable.create('box-,|idx|x',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});")
-               (iota (length groups)))
-              "}"
-              "Event.observe(window, 'load', draggable);")
+     ;; javascript
+     (js/
+      (js/sortable "root-box"
+                   :dropOnEmpty #t :constraint #f
+                   :tag "div" :containment #f
+                   :onChange 'update_height)
+      (js/sortable "main-box"
+                   :dropOnEmpty #t :constraint #f
+                   :tag "div" :containment #f)
+      (map/
+       (lambda (idx)
+         (js/sortable #`"box-,|idx|x"
+                      :dropOnEmpty #t :constraint #f
+                      :tag "div" :containment #f
+                      :onChange 'update_height))
+       (iota (length groups))))
      )))
+
+(define-entry-method admin-system ("group" "tree-edit") 1)
 
 ;; TODO: define-entry-method bug fix
 ;; (define-entry-method admin-system ("group" "tree-edit")
@@ -306,19 +314,21 @@
            (input/ (@/ (type "submit") (value "ди╡ц"))))
 
           (div/ (@/ (id "work-box"))))
-         (script/ (@/ (type "text/javascript"))
-                  "function draggable () {"
-                  "update_height();"
-                  "Sortable.create('root-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false,onChange:update_height});"
-                  (map/
-                   (lambda (g)
-                     (if (null? (parents-of g))
-                         ""
-                       #`"Sortable.create(',(key-of g)',, {dropOnEmpty:true,, constraint:false,,tag:'div',,containment:false,,onChange:update_height});"))
-                   groups;; (make-kahua-collection <group>)
-                   )
-                  "}"
-                  "Event.observe(window, 'load', draggable);"))
+
+         ;; javascript
+         (js/
+          "update_height();"
+          (js/sortable "root-box"
+                       :dropOnEmpty #t :constraint #f
+                       :tag "div" :containment #f
+                       :onChange 'update_height)
+          (map/
+           (lambda (g)
+             (js/sortable (key-of g)
+                          :dropOnEmpty #t :constraint #f
+                          :tag "div" :containment #f
+                          :onChange 'update_height))
+           groups)))
       (kagoiri-page
        (h1/ "no group"))
       ))))
