@@ -3,6 +3,18 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: hidden.kahua,v 1.6 2006/03/04 05:30:39 cut-sea Exp $
+;; $Id: hidden.kahua,v 1.7 2006/03/13 01:35:15 cut-sea Exp $
 ;;
 
+(define-entry (hidden)
+  (permission-check-page
+   (lambda (u)
+     (if (kahua-user-has-role? u '(admin))
+	 u #f))
+   ($$ "システム管理者のアカウントが必要です")
+   (h2/ "実験ページへのリンク")
+   (ul/ (@/ (class "menu"))
+	(li/ (a/cont/ (@/ (class "clickable"))
+		      (@@/ (cont admin-system "user" "csv")) "CSVインポート"))
+	(li/ (a/cont/ (@/ (class "clickable"))
+		      (@@/ (cont group-edit)) "グループ編集")))))
