@@ -3,7 +3,10 @@
 (define-plugin "async"
   (version "0.1")
   (export a/cont/async: a/cont/async/
-          form/cont/async: form/cont/async/)
+          form/cont/async: form/cont/async/
+          js/
+          js/sortable
+          )
   (depend #f))
 
 (define (flatten ls)
@@ -25,6 +28,60 @@
   (update (cut cons `(a/cont/async ,@(exec '() (node-set args))) <>)))
 (define (form/cont/async/ . args)
   (update (cut cons `(form/cont/async ,@(exec '() (node-set args))) <>)))
+
+
+(define (js/ . body)
+  (script/ (@/ (type "text/javascript"))
+           "Event.observe(window, 'load', function() {"
+           (node-set body)
+           "});"))
+
+(define (keywords->options keywords)
+  (if (and (not (null? keywords))
+           (even? (length keywords)))
+      (format "{~a}"
+              (string-join
+               (let loop ((keywords keywords)
+                          (options '()))
+                 (if (null? keywords)
+                     (reverse options)
+                   (loop (cddr keywords)
+                         (cons (format "~a: ~a"
+                                       (car keywords)
+                                       (x->js-object (cadr keywords)))
+                               options)))) ", "))
+    ""))
+
+(define (x->js-object x)
+  (cond ((string? x) (format "'~a'" x))
+        ((number? x) (number->string x))
+        ((boolean? x) (if x "true" "false"))
+        ((symbol? x) (symbol->string x))
+        ((pair? x) (format "[~a]"
+                           (string-join
+                            (map x->js-object x)
+                            ", ")))))
+
+(define-syntax define-js
+  (syntax-rules ()
+    ((_ (name arg ...) js-name)
+     (define (name arg ... . opt)
+       (node-set
+        (list js-name "("
+              (string-join
+               (list
+                (x->js-object arg) ...
+                (keywords->options opt))
+               ", "
+               )
+              ");"))))))
+
+
+(define-js (js/sortable elem)
+  "Sortable.create")
+
+
+
 
 #|
 (a/cont/sync:
@@ -95,3 +152,6 @@
              ,@(cdr argstr)
              ,@contents))
      context)))
+
+
+
