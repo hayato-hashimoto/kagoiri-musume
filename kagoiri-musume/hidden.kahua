@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: hidden.kahua,v 1.7 2006/03/13 01:35:15 cut-sea Exp $
+;; $Id: hidden.kahua,v 1.8 2006/03/13 15:55:34 shibata Exp $
 ;;
 
 (define-entry (hidden)
@@ -17,4 +17,4 @@
 	(li/ (a/cont/ (@/ (class "clickable"))
 		      (@@/ (cont admin-system "user" "csv")) "CSVインポート"))
 	(li/ (a/cont/ (@/ (class "clickable"))
-		      (@@/ (cont group-edit)) "グループ編集")))))
+                      (@@/ (cont admin-system "group" "tree-edit")) "グループ編集")))))

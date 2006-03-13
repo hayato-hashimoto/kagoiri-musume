@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.9 2006/03/13 15:48:52 shibata Exp $
+;; $Id: group.kahua,v 1.10 2006/03/13 15:55:34 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -270,11 +270,7 @@
        (iota (length groups))))
      )))
 
-(define-entry-method admin-system ("group" "tree-edit") 1)
-
-;; TODO: define-entry-method bug fix
-;; (define-entry-method admin-system ("group" "tree-edit")
-(define-entry-method group-edit ()
+(define-entry-method admin-system ("group" "tree-edit")
   (let1 groups '()
 
     (define (make-dragbox g)
@@ -288,8 +284,7 @@
   (define edit-groups
     (entry-lambda (:keyword grouptree)
       (node->group! (call-with-input-string grouptree read) '())
-      ;; (redirect/cont (cont admin-system "group" "tree-edit"))
-      (redirect/cont (cont group-edit))))
+      (redirect/cont (cont admin-system "group" "tree-edit"))))
 
 
   (let1 root (top-group)
