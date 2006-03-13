@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.90 2006/03/13 16:22:17 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.91 2006/03/13 16:55:57 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -432,7 +432,10 @@
                                    (label-of fan)))
                             members)))
                  (td/ (@/ (id "select-td"))
-                      (group-select/ (top-group) 0))
+                      (let1 group (top-group)
+                        (if group
+                            (group-select/  0)
+                          "")))
                  ;; javascript
                  (js/
                   (js/sortable "memberlist"
