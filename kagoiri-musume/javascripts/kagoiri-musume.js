@@ -413,9 +413,7 @@ Ajax.Responders.register(
                Element.show('loading');
           },
       onComplete: function() {
-               // if(Ajax.activeRequestCount == 0){
                Element.hide('loading');
-               // }
           }
      });
 
@@ -746,38 +744,50 @@ function add_group(elem){
      Sortable.create('work-box', {dropOnEmpty:true, constraint:false,tag:'div',containment:false});
 }
 
-function select_group(elem, is_null){
+function select_group(elem, is_null, pos){
      var key = elem.getAttribute('value');
-     if (is_null == '#t'){
+     var pos = parseInt(pos);
+     var nextelm = $('group-box' + pos);
+     while (nextelm) {
+          Element.remove(nextelm);
+          nextelm = $('group-box' + ++pos);
+     }
+     select(elem);
+
+     if (// is_null == '#t'
+          true
+          ){
           function update(req){
                var members = eval(req.responseText);
                var mlist = $('allmemberlist');
                var nodes = $A(mlist.childNodes);
+               new Effect.Highlight(mlist);
                nodes.map(function(ele){
                               if (members.include(ele.getAttribute('value'))) {
                                    Element.show(ele);
                               } else {
                                    Element.hide(ele);
                               }});
-               new Effect.Highlight(mlist);
+
           }
           new Ajax.Request(kahua_self_uri_full + '/getgroupmember/' + key,
                            {method:'get', onComplete: update});
-     } else {
+     }
+     if (is_null == '#f') {
 
      function update(req){
           var next = document.createElement('div');
+          next.id = 'group-box' + pos;
           // var group_select = $('group-select-box');
           var group_select = $('user-tr');
           next.innerHTML = req.responseText;
           group_select.appendChild(next);
-          // new Effect.Highlight(next, {duration:0.5});
-          highlight(elem);
+
           // new Effect.Highlight(elem)
           // Effect.SlideDown(next);
      }
 
-     new Ajax.Request(kahua_self_uri_full + '/getgroup/' + key,
+     new Ajax.Request(kahua_self_uri_full + '/getgroup/' + key + '/' + pos,
                       {method:'get', onComplete: update});
      }
 }

@@ -78,5 +78,5 @@ function select(ele)
      {
           nodes[i].style.backgroundColor = null;
      }
-     ele.style.backgroundColor = "rgb(194, 243, 182)";
+     ele.style.backgroundColor = "#a9a9a9";
 }
