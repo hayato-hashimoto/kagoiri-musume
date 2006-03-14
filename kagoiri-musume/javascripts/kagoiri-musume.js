@@ -604,7 +604,17 @@ function filter_member(value){
      var list = $('allmemberlist');
      var nodes = $A(list.childNodes);
      var matcher = new RegExp(value,'i');
-     nodes.map(function(ele){ ele.getAttribute('value').match(matcher)?Element.show(ele):Element.hide(ele)});
+     nodes.map(
+          function(ele){
+               if (ele.getAttribute('value').match(matcher) ||
+                   ele.innerHTML.match(matcher))
+               {
+                    if (!ele._hide){
+                         Element.show(ele);
+                    }
+               } else{
+                    Element.hide(ele);
+               }});
 }
 
 
@@ -761,14 +771,15 @@ function select_group(elem, is_null, pos){
                var members = eval(req.responseText);
                var mlist = $('allmemberlist');
                var nodes = $A(mlist.childNodes);
-               new Effect.Highlight(mlist);
                nodes.map(function(ele){
                               if (members.include(ele.getAttribute('value'))) {
                                    Element.show(ele);
+                                   ele._hide = false;
                               } else {
                                    Element.hide(ele);
+                                   ele._hide = true;
                               }});
-
+               new Effect.Highlight(mlist);
           }
           new Ajax.Request(kahua_self_uri_full + '/getgroup/member/' + key,
                            {method:'get', onComplete: update});
@@ -787,4 +798,23 @@ function select_group(elem, is_null, pos){
      new Ajax.Request(kahua_self_uri_full + '/getgroup/group/' + key + '/' + pos,
                       {method:'get', onComplete: update});
      }
+}
+
+function update_memberlist_height(ele){
+     new Effect.Highlight(ele);
+     var height = 0;
+     $A(ele.getElementsByTagName('li')).each(
+          function(ele){height += Element.getHeight(ele)}
+          );
+     if (Element.getHeight(ele) < height){
+          ele.style.height = height;
+     }
+}
+
+function move_to(event, target){
+     var ul = $(target);
+     var elem = Event.findElement(event, 'LI');
+     Element.remove(elem);
+     ul.appendChild(elem);
+     update_memberlist_height(ul);
 }

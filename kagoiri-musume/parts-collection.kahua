@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.92 2006/03/13 16:58:19 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.93 2006/03/14 13:56:06 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -416,7 +416,8 @@
                (table/
                 (tr/ (@/ (id "user-tr"))
                  (td/ (@/ (id "memberlistblock"))
-                      (ul/ (@/ (id "memberlist")  (class "userlist"))
+                      (ul/ (@/ (id "memberlist")  (class "userlist")
+                           (ondblclick "move_to(event,'allmemberlist')"))
                            (map/
                             (lambda (fan)
                               (li/ (@/ (value (fan-name-of fan)))
@@ -425,7 +426,8 @@
                  (td/ "<=")
                  (td/ (@/ (id "allmemberlistblock"))
                       ($$ "¸¡º÷") ":" (input/ (@/ (id "membersearch") (type "text") (onkeyup "filter_member(this.value)")))
-                      (ul/ (@/ (id "allmemberlist") (class "userlist"))
+                      (ul/ (@/ (id "allmemberlist") (class "userlist")
+                               (ondblclick "move_to(event,'memberlist')"))
                            (map/
                             (lambda (fan)
                               (li/ (@/ (value (fan-name-of fan)))
@@ -442,6 +444,7 @@
                                :dropOnEmpty #t
                                :constraint #f
                                :containment #f
+                               :onUpdate 'update_memberlist_height
                                )
                   (js/sortable "allmemberlist"
                                :dropOnEmpty #t

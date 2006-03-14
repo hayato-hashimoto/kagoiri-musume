@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.5 2006/03/13 15:50:31 shibata Exp $
+;; $Id: unit-list.scm,v 1.6 2006/03/14 13:56:05 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -189,7 +189,8 @@
                      (td "ファン" (span (@ (class "warning")) "(※)"))
                      (td (table (tr (@ (id "user-tr"))
                                     (td (@ (id "memberlistblock"))
-                                     (ul (@ (id "memberlist")
+                                     (ul (@ (ondblclick ?_)
+                                            (id "memberlist")
                                             (class "userlist"))))
                                  (td "<=")
                                  (td (@ (id "allmemberlistblock"))
@@ -198,7 +199,8 @@
                                                (onkeyup
                                                  "filter_member(this.value)")
                                                (id "membersearch")))
-                                     (ul (@ (id "allmemberlist")
+                                     (ul (@ (ondblclick ?_)
+                                            (id "allmemberlist")
                                             (class "userlist"))
                                          (li (@ (value "   ")))
                                          (li (@ (value "cut-sea")) "cut-sea")
