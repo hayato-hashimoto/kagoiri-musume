@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.5 2006/03/05 06:06:49 shibata Exp $
+;; $Id: common-test.scm,v 1.6 2006/03/14 15:01:00 shibata Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -82,11 +82,13 @@
     (test* "make-unit: 作成ユニットの確認"
            `(*TOP*
              (tr ?@
-                 (td (a (@ (href ,edit)) "設定"))
-                 (td (a (@ (href ,view)) "籠入娘。Test Proj.") " (0)")
+                 (td ?@ (a (@ (href ,view)) "籠入娘。Test Proj.") " (0)")
                  (td "籠入娘。のバグトラッキングを行うユニット")
-                 (td "cut-sea")
-                 (td (a ?@ "○"))))
+                 (td (span ?@
+                           (span ?@ "1人"))
+                     (div ?@ (div "cut-sea")))
+                 (td (a ?@ "○"))
+                 (td ?@ (span ?@ (a (@ (href ,edit)) "設定")))))
            (call-worker/gsid->sxml
             w
             '()

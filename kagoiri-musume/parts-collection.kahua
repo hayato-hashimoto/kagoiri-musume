@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.93 2006/03/14 13:56:06 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.94 2006/03/14 15:01:00 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -293,11 +293,12 @@
   (let1 unsubscriptions (unsubscriptions-of (current-fan))
     (table/ (@/ (class "listing"))
             (thead/
-             (tr/ (devel:th/) (admin:th/)
-                  (th/ ($$ "ユニット名"))
+             (tr/ (th/ ($$ "ユニット名"))
                   (th/ ($$  "概要"))
-                  (th/ ($$ "ファン"))
-                  (th/ ($$ "購読"))))
+                  (th/ (@/ (nowrap "nowrap"))
+                        ($$ "ファン"))
+                  (th/ ($$ "購読"))
+                  (devel:th/)))
             (tbody/
              (node-set
               (map-with-index
@@ -305,23 +306,26 @@
                  (developer-or-fan?
                   u
                   (tr/ (@/ (class (if (odd? idx) "odd" "even")))
-                       (devel:td/
-                        (link-of u :action "edit" :body ($$ "設定")))
-                       (admin:td/
-                        (a/cont/
-                         (@/ (onClick (format "return confirm('~a')?true:false"
-                                              ($$ "本当に削除しますか？"))))
-                         (@@/ (cont unit-fallout (key-of u)))
-                         ($$ "削除")))
-                       (td/ (link-of u)
+                       (td/ (@/ (nowrap "nowrap"))
+                            (link-of u)
                             (format " (~a)"
                                     (length (all-active-musumes u))))
                        (td/ (description-of u))
-                       (td/ (string-join
-                             (filter-map (lambda (f)
-                                           (and (not (equal? "   " (code-of f)))
-                                                (fan-name-of f)))
-                                         (fans-of u)) " , "))
+                       (td/ (let ((members (filter-map (lambda (f)
+                                                        (and (not (equal? "   " (code-of f)))
+                                                             (label-of f)))
+                                                      (fans-of u)))
+                                  (id (format "members-~a" (key-of u))))
+                              (node-set
+                               (list
+                                (clickable
+                                 (span/ (@/ (onmouseover (js/show id))
+                                            (onmouseout (js/hide id)))
+                                        (length members) ($$ "人")))
+                                (div/ (@/ (id id)
+                                          (style "position:absolute;display:none;background-color:white;border:1px solid black;padding:3px"))
+                                      (map/ div/ members))
+                                ))))
                        (td/
                         (unit-member? u
                           (let1 subscription? (not (memq u unsubscriptions))
@@ -341,7 +345,10 @@
                                                        (redirect/cont (cont **))))))
                                      (if subscription?
                                          ($$ "○")
-					 ($$ "×")))))))))
+					 ($$ "×"))))))
+                       (devel:td/ (@/ (nowrap "nowrap"))
+                                  (clickable (link-of u :action "edit" :body ($$ "設定"))))
+                       )))
                (all-units)))))))
 
 (define (create-unit-form/ . unit)
@@ -350,6 +357,18 @@
      (h2/ (if unit
 	      (format ($$ "『~a』ユニット設定") (unit-name-of unit))
 	      ($$ "新ユニット結成")))
+
+     (if unit
+         (admin:div/
+          (ul/ (@/ (class "menu"))
+               (li/
+                (a/cont/
+                 (@/ (onClick (format "return confirm('~a')?true:false"
+                                      ($$ "本当に削除しますか？"))))
+                 (@@/ (cont unit-fallout (key-of unit)))
+                 ($$ "削除")))))
+       "")
+
      (form/cont/
       (@/ (onsubmit "return submitCreateUnit(this)"))
       (@@/ (cont (entry-lambda (:keyword name desc notify-addresses

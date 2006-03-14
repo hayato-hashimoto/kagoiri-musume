@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.6 2006/03/14 13:56:05 shibata Exp $
+;; $Id: unit-list.scm,v 1.7 2006/03/14 15:01:00 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -61,11 +61,11 @@
           ?*
           (h2 "ユニット一覧")
           (table (@ (class "listing"))
-                 (thead (tr (th)
-                            (th "ユニット名")
+                 (thead (tr (th "ユニット名")
                             (th "概要")
-                            (th "ファン")
-                            (th "購読")))
+                            (th (@ (nowrap "nowrap")) "ファン")
+                            (th "購読")
+                            (th)))
                  (tbody))
           ?*)
         (call-worker/gsid->sxml w

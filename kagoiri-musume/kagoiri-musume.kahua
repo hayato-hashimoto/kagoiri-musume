@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.256 2006/03/12 08:08:44 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.257 2006/03/14 15:01:00 shibata Exp $
 
 ;;
 ;; include
@@ -942,9 +942,9 @@
    (div/ (@/ (class "msgbox"))
 	 (h3/ (node-set message)))))
 
-(define (clickable text)
+(define (clickable . nodes)
   (span/ (@/ (class "clickable"))
-         text))
+         (node-set nodes)))
 
 ;;;==============================================================
 ;;; Help

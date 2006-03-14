@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.7 2006/03/14 13:56:05 shibata Exp $
+;; $Id: unit-operate.scm,v 1.8 2006/03/14 15:01:00 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -168,11 +168,13 @@
  (test* "ユニット設定変更確認"
 	`(*TOP*
           (tr ?@
-              (td (a ?@ "設定"))
-              (td (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
+              (td ?@ (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
               (td "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
-              (td "cut-sea , guest")
-              (td (a ?@ "○")))
+              (td (span ?@
+                        (span ?@ "2人"))
+                  (div ?@ (div "cut-sea") (div "guest")))
+              (td (a ?@ "○"))
+              (td ?@ (span ?@ (a ?@ "設定"))))
           )
         (call-worker/gsid->sxml
 	 w
