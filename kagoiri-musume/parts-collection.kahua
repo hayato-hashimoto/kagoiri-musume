@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.94 2006/03/14 15:01:00 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.95 2006/03/14 15:32:22 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -226,7 +226,7 @@
 		   (prop-td/ status-of statuss-of code-of disp-name-of)
 		   (prop-td/ type-of types-of code-of disp-name-of)
 		   (prop-td/ category-of categories-of code-of disp-name-of)
-		   (prop-td/ assign-of fans-of fan-name-of fan-name-of)
+		   (prop-td/ assign-of fans-of fan-name-of disp-name-of)
 		   (let1 val (limit-of m)
 		     (td/ (@/ (value val))
 			  (if val

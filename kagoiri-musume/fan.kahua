@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: fan.kahua,v 1.5 2006/03/12 16:05:44 shibata Exp $
+;; $Id: fan.kahua,v 1.6 2006/03/14 15:32:22 shibata Exp $
 ;;
 ;; fans means developer
 ;;
@@ -55,8 +55,14 @@
   (fan-name-of self))
 
 (define-method label-of ((self <fan>))
-  (or (name-of self)
-      (fan-name-of self)))
+  (fan-name-or-id self))
+
+(define (fan-name-or-id fan)
+  (or (name-of fan)
+      (fan-name-of fan)))
+
+(define-method disp-name-of ((self <fan>))
+  (fan-name-or-id self))
 
 (define (lucky-fan? fan)
   (not (delete-of fan)))
@@ -93,6 +99,5 @@
 ;; alias methods for convenient.
 (define-method code-of ((obj <fan>))
   (fan-name-of obj))
-(define-method disp-name-of ((obj <fan>))
-  (fan-name-of obj))
+
 

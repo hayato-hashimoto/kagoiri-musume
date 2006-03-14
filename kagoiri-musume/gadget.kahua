@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.61 2006/03/09 16:15:01 shibata Exp $
+;; $Id: gadget.kahua,v 1.62 2006/03/14 15:32:22 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -74,7 +74,7 @@
 		    (string-append ($$ "¡Ú ¥¿¥¤¥È¥ë ¡Û")
 				   #`" ,subject")
 		    (string-append ($$ "¡Ú  ¥Ý¥¹¥È  ¡Û")
-				   #`" ,(fan-name-of (fan-of song))")
+				   #`" ,(disp-name-of (fan-of song))")
 		    (string-append ($$ "¡Ú   Æü»þ   ¡Û")
 				   #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime (ctime-of song)))")
 		    (string-append ($$ "¡Ú¥¹¥Æ¡¼¥¿¥¹¡Û")
@@ -86,7 +86,7 @@
 		    (string-append ($$ "¡Ú ¥«¥Æ¥´¥ê ¡Û")
 				   #`" ,(disp-name-of (category-of musume))")
 		    (string-append ($$ "¡Ú ¥¢¥µ¥¤¥ó ¡Û")
-				   #`" ,(fan-name-of (assign-of musume))")
+				   #`" ,(disp-name-of (assign-of musume))")
 		    (string-append ($$ "¡Ú   ´ü¸Â   ¡Û")
 				   #`" ,(if (limit-of musume) (sys-strftime \"%Y/%m/%d\" (sys-localtime (limit-of musume))) \"\")")
 		    (string-append ($$ "¡Ú ¥³¥á¥ó¥È ¡Û")

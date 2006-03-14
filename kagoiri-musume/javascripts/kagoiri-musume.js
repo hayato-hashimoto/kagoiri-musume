@@ -648,7 +648,7 @@ function option_select(elem, selects){
           selector = function(o) { o.selected = selects }
      } else {
           selector = function (o) {
-               if (selects.indexOf(o[textContent]) >= 0){
+               if (selects.indexOf(o.value) >= 0){
                     o.selected = true;
                } else {
                     o.selected = false;

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.257 2006/03/14 15:01:00 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.258 2006/03/14 15:32:22 shibata Exp $
 
 ;;
 ;; include
@@ -649,7 +649,7 @@
 			      (dl/ (@/ (id #`",k"))
 				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+					(span/ (@/ (class "song-fan")) #`"[,(disp-name-of f)]")
 					(composer? song
 						   (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
 										 ($$ "本当に復活しますか？"))))
@@ -658,7 +658,7 @@
 			      (dl/ (@/ (id #`",k"))
 				   (dt/ (span/ (@/ (class "song-no")) #`"♪,|n|.")
 					(span/ (@/ (class "song-time")) #`" ,(sys-strftime \"%Y/%m/%d %H:%M:%S\" (sys-localtime t))")
-					(span/ (@/ (class "song-fan")) #`"[,(fan-name-of f)]")
+					(span/ (@/ (class "song-fan")) #`"[,(disp-name-of f)]")
 					(a/cont/ (@/ (onclick "insert_excerption(this); return false"))
 						 (@@/ (id "melody-text")
 						      (cont (lambda _
@@ -901,7 +901,7 @@
               (map/ (lambda (f)
                       (option/ (@/ (value (fan-name-of f))
                                    (selected "selected"))
-                               (fan-name-of f)))
+                               (disp-name-of f)))
                     (fans-of unit)))
      (div/ (@/ (style "display:inline;position:absolute"))
            (span/ (@/ (onclick (format "option_select('mail_send_setting_select', ['~a', $('mainedit').assign.value])" (fan-name-of (current-fan)))))
