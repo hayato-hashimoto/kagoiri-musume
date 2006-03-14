@@ -6,6 +6,8 @@
           form/cont/async: form/cont/async/
           js/
           js/sortable
+          js/show
+          js/hide
           )
   (depend #f))
 
@@ -39,7 +41,8 @@
 (define (keywords->options keywords)
   (if (and (not (null? keywords))
            (even? (length keywords)))
-      (format "{~a}"
+      (list
+       (format "{~a}"
               (string-join
                (let loop ((keywords keywords)
                           (options '()))
@@ -49,8 +52,8 @@
                          (cons (format "~a: ~a"
                                        (car keywords)
                                        (x->js-object (cadr keywords)))
-                               options)))) ", "))
-    ""))
+                               options)))) ", ")))
+    '()))
 
 (define (x->js-object x)
   (cond ((string? x) (format "'~a'" x))
@@ -66,21 +69,25 @@
   (syntax-rules ()
     ((_ (name arg ...) js-name)
      (define (name arg ... . opt)
-       (node-set
-        (list js-name "("
-              (string-join
-               (list
-                (x->js-object arg) ...
-                (keywords->options opt))
-               ", "
-               )
-              ");"))))))
+       (string-append
+        js-name "("
+        (string-join
+         (list*
+          (x->js-object arg) ...
+          (keywords->options opt))
+         ", "
+         )
+        ");")))))
 
 
 (define-js (js/sortable elem)
   "Sortable.create")
 
+(define-js (js/show elem)
+  "Element.show")
 
+(define-js (js/hide elem)
+  "Element.hide")
 
 
 #|
