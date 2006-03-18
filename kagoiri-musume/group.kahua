@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.10 2006/03/13 15:55:34 shibata Exp $
+;; $Id: group.kahua,v 1.11 2006/03/18 11:33:47 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -324,6 +324,6 @@
                           :tag "div" :containment #f
                           :onChange 'update_height))
            groups)))
-      (kagoiri-page
-       (h1/ "no group"))
-      ))))
+      (begin
+        (make <group> :name "*TOP*")
+        (redirect/cont (cont admin-system "group" "tree-edit")))))))
