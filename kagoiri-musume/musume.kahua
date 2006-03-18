@@ -1,0 +1,100 @@
+;; -*- coding: euc-jp; mode: kahua -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: musume.kahua,v 1.1 2006/03/18 11:29:13 shibata Exp $
+;;
+;;
+;; Musume means issue.
+;;
+(define-class <musume> (<kahua-persistent-base>)
+  (
+   ;; new slot
+   (unit            :allocation :persistent :init-keyword :unit
+		    :accessor unit-of)
+   ;; musume-no means issue number.
+   (musume-no       :allocation :persistent :init-keyword :musume-no
+		    :init-value #f :accessor mno-of)
+   ;; issue title
+   (musume-name     :allocation :persistent :init-keyword :musume-name
+		    :init-value "" :accessor mname-of)
+   ;; issue priority
+   ;; normal above-normal low high super
+   (priority        :allocation :persistent :init-keyword :priority
+		    :init-value "normal" :accessor priority-of)
+   ;; status
+   ;; open completed on-hold taken rejected
+   (status          :allocation :persistent :init-keyword :status
+		    :init-value "open" :accessor status-of)
+   ;; type
+   ;; discuss request bug report task term etc
+   (type            :allocation :persistent :init-keyword :type
+		    :init-value #f :accessor type-of)
+   ;; category
+   ;;
+   (category        :allocation :persistent :init-keyword :category
+		    :initi-value #f :accessor category-of)
+   ;; assign
+   (assign          :allocation :persistent :init-keyword :assign
+		    :init-value #f :accessor assign-of)
+   ;; songs
+   (songs           :allocation :persistent :init-keyword :songs
+		    :init-value '() :accessor songs-of)
+   ;; create time
+   (ctime           :allocation :persistent :init-keyword :ctime
+		    :init-thunk sys-time :accessor ctime-of)
+   (delete          :allocation :persistent :init-keyword :delete
+		    :init-value #f :accessor delete-of)
+   (limitdate       :allocation :persistent :init-keyword :limitdate
+		    :init-value #f :accessor limit-of)
+
+   (backlinks       :allocation :persistent :init-keyword :backlinks
+		    :init-value '() :accessor backlinks-of)
+   (links           :allocation :persistent :init-keyword :links
+		    :init-value '() :accessor links-of)
+   ))
+
+(define-method persistent-initialize ((obj <musume>) initargs)
+  (next-method)
+  (let* ((unit (unit-of obj))
+	 (mno (next-musume-no-of unit)))
+    (set! (mno-of obj) mno)
+    (set! (next-musume-no-of unit) (+ mno 1))
+    (set! (musumes-of unit) (cons obj (musumes-of unit)))))
+
+(define-method kill! ((obj <musume>))
+  (set! (delete-of obj) #t)
+  (map (lambda (m)
+         (update! (backlinks-of m)
+                  (cut remove (cut eq? obj <>) <>)))
+       (links-of obj)))
+
+(define-method live! ((obj <musume>))
+  (set! (delete-of obj) #f)
+  )
+
+(define-method next-seq-no ((obj <musume>))
+  (+ 1 (length (songs-of obj))))
+
+(define-method object-compare ((obj1 <musume>) (obj2 <musume>))
+  (compare (ctime-of obj1) (ctime-of obj2)))
+
+(define-method compare-value ((obj <musume>) key)
+  (case (string->symbol key)
+    ((no) (format "~3,'0d" (mno-of obj)))
+    ((title) (mname-of obj))
+    ((priority) (code-of (priority-of obj)))
+    ((status) (code-of (status-of obj)))
+    ((assgin) (code-of (assign-of obj)))
+    ((type) (code-of (type-of obj)))
+    ((category) (code-of (category-of obj)))
+    ((ctime) (number->string (ctime-of obj)))
+    ((mtime) (number->string (ctime-of (car (songs-of obj)))))
+    ))
+
+(define-method all-songs ((musume <musume>))
+  (songs-of musume))
+
+(define-method all-active-songs ((musume <musume>))
+  (filter active? (songs-of musume)))

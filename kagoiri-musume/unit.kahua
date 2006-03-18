@@ -1,0 +1,71 @@
+;; -*- coding: euc-jp; mode: kahua -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: unit.kahua,v 1.1 2006/03/18 11:29:13 shibata Exp $
+;;
+;;
+;; Unit means Project.
+;;
+(define-class <unit> (<kahua-persistent-base>)
+  (
+   ;; unit name means project name.
+   (unit-name       :allocation :persistent :init-keyword :unit-name
+		    :accessor unit-name-of)
+   (description     :allocation :persistent :init-keyword :description
+		    :init-value "" :accessor description-of)
+   ;; counter of musume as issue.
+   (next-musume-no  :allocation :persistent :init-keyword :next-musume-no
+		    :init-value 1 :accessor next-musume-no-of)
+   ;; fans means developers.
+   (fans            :allocation :persistent :init-keyword :fans
+		    :init-value '() :accessor fans-of)
+   ;; priorities
+   (priorities      :allocation :persistent :init-keyword :priorities
+		    :init-value '() :accessor priorities-of)
+   ;; statuss
+   (statuss         :allocation :persistent :init-keyword :statuss
+		    :init-value '() :accessor statuss-of)
+   ;; types
+   (types           :allocation :persistent :init-keyword :types
+		    :init-value '() :accessor types-of)
+   ;; categories
+   (categories      :allocation :persistent :init-keyword :categories
+		    :init-value '() :accessor categories-of)
+   (musumes         :allocation :persistent :init-keyword :musumes
+		    :init-value '() :accessor musumes-of)
+   (ctime           :allocation :persistent :init-keyword :ctime
+		    :init-thunk sys-time :accessor ctime-of)
+   ;; delete flag
+   (fallout         :allocation :persistent :init-keyword :fallout
+		    :init-value #f :accessor fallout-of)
+
+   (notify-addresses :allocation :persistent :init-keyword :notify-addresses
+                     :init-value '() :accessor notify-addresses-of)
+   ))
+
+(define (active? unit)
+  (not (fallout-of unit)))
+
+(define (all-units . fan)
+  (if (null? fan)
+      (filter active?
+              (make-kahua-collection <unit>))
+    (let1 fan (car fan)
+      (filter (every-pred active? (cut fan-to? <> fan))
+              (make-kahua-collection <unit>)))))
+
+(define (musume-ref unit mno)
+  (find (lambda (m)
+          (= mno (mno-of m)))
+        (musumes-of unit)))
+
+
+(define-method all-musumes ((unit <unit>))
+  (musumes-of unit))
+
+(define-method all-active-musumes ((unit <unit>))
+  (filter (lambda (m)
+	    (not (delete-of m)))
+	  (musumes-of unit)))

@@ -1,0 +1,24 @@
+;; -*- coding: euc-jp; mode: kahua -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: file.kahua,v 1.1 2006/03/18 11:29:13 shibata Exp $
+;;
+;;
+;; file
+;;
+(define-class <file> (<kahua-persistent-base>)
+  ((file-name       :allocation :persistent :init-keyword :file-name
+		    :accessor name-of)
+   (path            :allocation :persistent :init-keyword :path
+		    :init-value "" :accessor path-of)
+   (extension       :allocation :persistent :init-keyword :extension
+		    :init-value "" :accessor extension-of)
+   (uri             :allocation :persistent :init-keyword :uri
+		    :init-value "" :accessor uri-of)
+;  (type            :allocation :persistent :init-keyword :type
+;		    :init-value "" :accessor type-of)
+;  (size            :allocation :persistent :init-keyword :size
+;		    :init-value "" :accessor size-of)
+   ))
