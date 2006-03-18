@@ -3,17 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: change-password.scm,v 1.1 2006/02/18 14:51:44 shibata Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
+;; $Id: change-password.scm,v 1.2 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -30,51 +20,54 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
+ (login w)
+
+ (call-worker-test* "マイページへ移動"
+
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&)
+                                   ?*)
+                                "cut-sea")))
+
+                    :body '(("name" "cut-sea") ("pass" "cutsea"))
+                    :sxpath (//header-action '(// a)))
+
  (test-section "kagoiri-musume click change password")
 
- (test* "ログイン画面"
-        '(*TOP*
-          (form (@ (method "POST")
-                   (action ?&))
-                ?*))
-        (call-worker/gsid->sxml w '() '() '(// (div (@ (equal? (id "body")))) form))
-        (make-match&pick w))
+ (call-worker-test* "パスワード変更リンク"
 
- (test* "パスワード変更リンク"
-        '(*TOP*
-          ?*
-          (a (@ (href ?&) ?*) "パスワード変更")
-          ?*)
-        (call-worker/gsid->sxml w
-                                '()
-                                '(("name" "cut-sea") ("pass" "cutsea"))
-                                '(// (div (@ (equal? (id "header")))) a))
-        (make-match&pick w))
- 
- (test* "パスワード変更ページ"
-        '(*TOP*
-          (h3 "cut-sea さんのパスワード変更")
-          (form (@ (method "POST")
-                   (action ?&change-pw))
-                 (table (tr (th "旧パスワード")
-                            (td (input (@ (value "")
-                                          (type "password")
-                                          (name "old-pw")
-                                          (id "focus")))))
-                        (tr (th "新パスワード")
-                            (td (input (@ (value "")
-                                          (type "password")
-                                          (name "new-pw")))))
-                        (tr (th "新パスワード(確認)")
-                            (td (input (@ (value "")
-                                          (type "password")
-                                          (name "new-again-pw"))))))
-                 (input (@ (value "変更") (type "submit") (name "submit")))
-                 (p (@ (class "warning"))))
-          )
-        (call-worker/gsid->sxml w '() '()
-                                '(// (div (@ (equal? (id "body")))) *))
-        (make-match&pick w))
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&) ?*) "パスワード変更")))
+                    :sxpath (//navigation-action '(// a))
+                    :redirect #t)
+
+ (call-worker-test* "パスワード変更ページ"
+
+                    :node '(*TOP*
+                            (!contain
+                             (h3 "cut-sea さんのパスワード変更")
+                             (form (@ (method "POST")
+                                      (action ?&change-pw))
+                                   (table (tr (th "旧パスワード")
+                                              (td (input (@ (value "")
+                                                            (type "password")
+                                                            (name "old-pw")
+                                                            (id "focus")))))
+                                          (tr (th "新パスワード")
+                                              (td (input (@ (value "")
+                                                            (type "password")
+                                                            (name "new-pw")))))
+                                          (tr (th "新パスワード(確認)")
+                                              (td (input (@ (value "")
+                                                            (type "password")
+                                                            (name "new-again-pw"))))))
+                                   (input (@ (value "変更") (type "submit") (name "submit")))
+                                   (p (@ (class "warning"))))
+                             ))
+
+                    :sxpath (//body '(*)))
 
  (set-gsid w 'change-pw)
 

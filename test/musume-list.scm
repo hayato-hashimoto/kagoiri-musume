@@ -3,19 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.4 2006/02/25 04:13:43 cut-sea Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
-
-(use common-test)
+;; $Id: musume-list.scm,v 1.5 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -49,19 +37,22 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //navigation)
+                                (//navigation))
         test-sxml-match?)
 
  (test* "メニュー"
         '(*TOP*
-          (ul ?@
-              (li (a (@ (href ?_)
-                        (class "clickable"))
-                     "新しい娘。"))))
+          (!contain
+           (a ?@
+              "案件追加")
+           (a ?@
+              "一覧")
+           (a ?@
+              "設定")))
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //menu)
+                                (//navigation-action '(// a)))
         test-sxml-match?)
 
  (test* "ユニット内検索"
@@ -94,7 +85,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //page-title)
+                                (//page-title))
         test-sxml-match?)
 
 

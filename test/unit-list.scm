@@ -3,17 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.7 2006/03/14 15:01:00 shibata Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
+;; $Id: unit-list.scm,v 1.8 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -74,18 +64,28 @@
                                 '(// (div (@ (equal? (id "body")))) *))
         test-sxml-match?)
 
+ (call-worker-test* "ユニット追加ページへ移動"
+
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&))
+                                "プロジェクト追加")))
+
+                    :sxpath (//navigation-action '(// a))
+                    :body '(("name" "cut-sea") ("pass" "cutsea")))
+
  (test* "新ユニット作成フォーム"
         '(*TOP*
           (form (@ (onsubmit "return submitCreateUnit(this)")
                    (method "POST")
-                   (action ?&unit-list))
+                   (action ?_))
                 ?*
                 (input (@ (value "新ユニット結成") (type "submit")))))
         (call-worker/gsid->sxml w
                                 '()
                                 '(("name" "cut-sea") ("pass" "cutsea"))
                                 '(// (div (@ (equal? (id "body")))) form))
-        (make-match&pick w))
+        test-sxml-match?)
 
  (test* "フィールド選択"
         '(*TOP*

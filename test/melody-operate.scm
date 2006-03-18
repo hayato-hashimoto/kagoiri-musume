@@ -3,19 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-operate.scm,v 1.5 2006/03/08 12:58:58 cut-sea Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
-
-(use common-test)
+;; $Id: melody-operate.scm,v 1.6 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -61,12 +49,12 @@
 
  (test* "ページタイトルの更新をチェック"
         '(*TOP*
-          (h3 "籠入娘。Test Proj. - 1：テストな娘。 - COMPLETED"))
+          (h2 "籠入娘。Test Proj. - 1：テストな娘。 - COMPLETED"))
 
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                `(,@//body h3))
+                                (//body '(h2)))
         test-sxml-match?)
 
  (test* "フィールド選択エリアの更新をチェック"
@@ -121,7 +109,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                `(,@//body dl))
+                                (//body '(dl)))
         test-sxml-match?)
  )
 

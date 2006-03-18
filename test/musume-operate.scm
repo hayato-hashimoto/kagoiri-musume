@@ -3,19 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-operate.scm,v 1.3 2006/03/09 16:14:53 shibata Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
-
-(use common-test)
+;; $Id: musume-operate.scm,v 1.4 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -38,19 +26,15 @@
 
  (set-gsid w 'musume-list)
 
- (test* "案件作成リンク"
-        '(*TOP*
-          ?*
-          (li (a (@ (href ?&musume-new)
-                    ?*)
-                 "新しい娘。"))
-          ?*)
-        (call-worker/gsid->sxml w
-                                '()
-                                '()
-                                '(// (ul (@ (equal? (class "menu")))) *)
-                                )
-        (make-match&pick w))
+ (call-worker-test* "案件作成リンク"
+
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&musume-new))
+                                "案件追加")))
+
+                    :sxpath (//navigation-action '(// a)))
+
 
  (test-section "案件作成ページ")
 
@@ -67,19 +51,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //navigation)
-        test-sxml-match?)
-
- (test* "メニュー"
-        '(*TOP*
-          (ul ?@
-              (li (a (@ (href ?_)
-                        (class "clickable"))
-                     "新しい娘。"))))
-        (call-worker/gsid->sxml w
-                                '()
-                                '()
-                                '(// (ul (@ (equal? (class "menu"))))))
+                                (//navigation))
         test-sxml-match?)
 
  (test* "ページタイトル"
@@ -89,7 +61,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //page-title)
+                                (//page-title))
         test-sxml-match?)
 
  (test* "フォーム"

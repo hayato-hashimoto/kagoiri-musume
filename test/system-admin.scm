@@ -3,17 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.23 2006/02/28 13:27:29 cut-sea Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
+;; $Id: system-admin.scm,v 1.24 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -30,109 +20,41 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
- (test* "first access & collect save points"
-	'(*TOP*
-	  (a (@ (!permute (href ?&admin-system)
-			  (class "clickable"))
-		?*) "システム管理"))
-        (call-worker/gsid->sxml w '() '() '(// body div (a 1)))
-        (make-match&pick w))
+ (login w :top '?&login)
 
- (test* "first access login name input textbox check"
-	'(*TOP*
-	  (tr (th ?_)
-	      (td (input (@ (!permute (type "text")
-				      (name "name"))
-			    ?*)))))
-        (call-worker/gsid->sxml w '() '() '(// form table (tr 1)))
-        test-sxml-match?)
+ (set-gsid w 'login)
 
- (test* "first access login password input textbox check"
-	'(*TOP*
-	  (tr (th ?_)
-	      (td (input (@ (!permute (type "password")
-				      (name "pass"))
-			    ?*)))))
-        (call-worker/gsid->sxml w '() '() '(// form table (tr 2)))
-        test-sxml-match?)
+ (call-worker-test* "一般ユーザでは「システム管理」ボタンを表示しない"
 
- (test* "first access login submit button check"
-	'(*TOP* (input (@ (!permute (type "submit")
-				    (name "submit"))
-			  ?*)))
-        (call-worker/gsid->sxml w '() '() '(// form input))
-        test-sxml-match?)
+                    :node '(*TOP*
+                            (!exclude
+                             "システム管理"))
+
+                    :body '(("name" "cut-sea") ("pass" "cutsea"))
+                    :sxpath (//header-action '(// a *text*)))
+
+ (call-worker-test* "accept system administrator login to admin-system page & check"
+
+                    :node '(*TOP*
+                            (!contain
+                             "システム管理"
+                             "kago"))
+
+                    :body '(("name" "kago") ("pass" "kago"))
+                    :sxpath (//header-action '(// a *text*)))
+
+ (call-worker-test* "システム管理ページへ移動"
+
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&admin-system)
+                                   ?*)
+                                "システム管理")))
+
+                    :body '(("name" "kago") ("pass" "kago"))
+                    :sxpath (//header-action '(// a)))
 
  (set-gsid w 'admin-system)
-
- (test* "click link to entry system admin link"
-	'(*TOP*
-	  (!repeat (a ?@ ?_))
-	  (form (@ (action ?&login) ?*)
-		(table ?*)
-		(input ?@)))
-	(call-worker/gsid->sxml w '() '() '(// div (or@ form a)))
-	(make-match&pick w))
-
- (set-gsid w 'login)
-
- (test* "reject normal user login to admin-system page"
-	'(*TOP* (h3 "システム管理者のアカウントが必要です"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "cut-sea") ("pass" "cutsea"))
-				'(// h3))
-	test-sxml-match?)
-
- (set-gsid w 'login)
-
- (test* "accept system administrator login to admin-system page & check (a 1)"
-	'(*TOP*
-          (!permute
-           (a ?@ "システム管理")
-           (a ?@ "kago")
-           ?*
-           ))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "kago") ("pass" "kago"))
-				'(// (a 1)))
-	test-sxml-match?)
-
- (set-gsid w 'login)
-
- (test* "accept system administrator login to admin-system page & check (a 2)"
-	'(*TOP*
-	  (a ?@ "ユニット一覧"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "kago") ("pass" "kago"))
-				'(// (a 2)))
-	test-sxml-match?)
-
- (set-gsid w 'login)
- 
- (test* "accept system administrator login to admin-system page & check (a 3)"
-	'(*TOP*
-	  (a (@ (href ?&change-password) ?*) "パスワード変更"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "kago") ("pass" "kago"))
-				'(// (a 3)))
-	(make-match&pick w))
-
- (set-gsid w 'login)
-
- (test* "accept system administrator login to admin-system page & check (a 4)"
-	'(*TOP*
-	  (a (@ (href ?&logout) ?*) "Logout"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("name" "kago") ("pass" "kago"))
-				'(// (a 4)))
-	(make-match&pick w))
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check user list table"
 	'(*TOP*
@@ -144,11 +66,9 @@
 	   (tr (td "＊") (td "kago") (td "cut-sea@kagoiri.org") (td "＊") (td "＊") (td))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 1) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add user"
 	'(*TOP*
@@ -164,37 +84,33 @@
 	   (tr (td (input (@ (value "ファン登録") (type "submit") (name "submit")))))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 1) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w 'login)
-
  (test* "accept system administrator login to admin-system page & save add-user entry point"
 	'(*TOP*
-	  ?_ ;; search box
-	  (form (@ (action ?&add-user) ?*)
-		(table ?*)
-		(table ?*)))
-	(call-worker/gsid->sxml w 
+	  (!contain
+           (form (@ (action ?&add-user) ?*)
+                 (table ?*)
+                 (table ?*))))
+        (call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 1)))
 	(make-match&pick w))
 
-
- (set-gsid w 'login)
+ (set-gsid w 'admin-system)
 
  (test* "accept system administrator login to admin-system page & check unit list table"
 	'(*TOP*
 	  (table (thead "登録ユニット一覧") (tr (th "ユニット名") (th "概要") (th "活動状態"))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 2) (table 1)))
 	test-sxml-match?)
 
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check priority list table"
 	'(*TOP*
@@ -207,11 +123,9 @@
 	   (tr (td "super") (td "超高") (td "5") (td))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 3) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add priority"
 	'(*TOP*
@@ -229,11 +143,9 @@
 	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 3) (table 2)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-priority entry point"
 	'(*TOP*
@@ -242,11 +154,11 @@
 		(table ?*)))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 3)))
 	(make-match&pick w))
 
- (set-gsid w 'login)
+ (set-gsid w 'admin-system)
 
  (test* "accept system administrator login to admin-system page & check status list table"
 	'(*TOP*
@@ -260,11 +172,9 @@
 	   (tr (td "taken") (td "TAKEN") (td))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 4) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add status"
 	'(*TOP*
@@ -276,11 +186,10 @@
 	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 4) (table 2)))
 	test-sxml-match?)
 
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-status entry point"
 	'(*TOP*
@@ -289,11 +198,11 @@
 		(table ?*)))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 4)))
 	(make-match&pick w))
 
- (set-gsid w 'login)
+ (set-gsid w 'admin-system)
 
  (test* "accept system administrator login to admin-system page & check type list table"
 	'(*TOP*
@@ -309,11 +218,9 @@
 	   (tr (td "term") (td "用語") (td))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 5) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add type"
 	'(*TOP*
@@ -325,11 +232,9 @@
 	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 5) (table 2)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-type entry point"
 	'(*TOP*
@@ -338,11 +243,11 @@
 		(table ?*)))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 5)))
 	(make-match&pick w))
 
- (set-gsid w 'login)
+ (set-gsid w 'admin-system)
 
  (test* "accept system administrator login to admin-system page & check category list table"
 	'(*TOP*
@@ -355,11 +260,9 @@
 	   (tr (td "section") (td "セクション") (td))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 6) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & check add category"
 	'(*TOP*
@@ -371,11 +274,9 @@
 	   (tr (td (input (@ (value "登録") (type "submit") (name "submit")))))))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 6) (table 2)))
 	test-sxml-match?)
-
- (set-gsid w 'login)
 
  (test* "accept system administrator login to admin-system page & save add-category entry point"
 	'(*TOP*
@@ -384,11 +285,11 @@
 		(table ?*)))
 	(call-worker/gsid->sxml w 
 				'()
-				'(("name" "kago") ("pass" "kago"))
+				'()
 				'(// (form 6)))
 	(make-match&pick w))
 
- (set-gsid w 'login)
+ (set-gsid w 'admin-system)
 
  (test* "accept system administrator login to admin-system page & check dead musumes list table"
 	'(*TOP*
@@ -400,89 +301,6 @@
 				'(("name" "kago") ("pass" "kago"))
 				'(// (form 7) (table 1)))
 	test-sxml-match?)
-
- (set-gsid w 'change-password)
-
- (test* "enter into change-password page"
-	'(*TOP*
-	  ?_
-	  (form (@ (action ?&change-new-password) ?*)
-		(table ?*)
-		(input ?@)
-		?_))
-	(call-worker/gsid->sxml w '() '() '(// form))
-	(make-match&pick w))
-
- (set-gsid w 'change-password)
-
- (test* "change-password page check"
-	'(*TOP*
-	  (table
-	   (tr (th "旧パスワード")
-	       (td (input (@ (!permute (type "password") (name "old-pw")) ?*))))
-	   (tr (th "新パスワード")
-	       (td (input (@ (!permute (type "password") (name "new-pw")) ?*))))
-	   (tr (th "新パスワード(確認)")
-	       (td (input (@ (!permute (type "password") (name "new-again-pw")) ?*))))))
-	(call-worker/gsid->sxml w '() '() '(// table))
-	test-sxml-match?)
-
- (set-gsid w 'change-new-password)
-
- (test* "change password with bad new password and fail"
-	'(*TOP*
-	  ?_
-	  (p ?@ "新パスワードが不正です"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("old-pw" "cutsea") ("new-pw" "badsea") ("new-again-pw" "newsea"))
-				'(// p))
-	test-sxml-match?)
-
- (set-gsid w 'change-new-password)
-
- (test* "change password with bad old password and fail"
-	'(*TOP*
-	  ?_
-	  (p ?@ "旧パスワードが不正です"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("old-pw" "badsea") ("new-pw" "newsea") ("new-again-pw" "newsea"))
-				'(// p))
-	test-sxml-match?)
-
- (set-gsid w 'change-new-password)
-
- (test* "change password with gool password but other users and fail"
-	'(*TOP*
-	  ?_
-	  (p ?@ "旧パスワードが不正です"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("old-pw" "cutsea") ("new-pw" "goodsea") ("new-again-pw" "goodsea"))
-				'(// p))
-	test-sxml-match?)
-
- (set-gsid w 'change-new-password)
-
- (test* "change password with gool password and pass"
-	'(*TOP* (h3 "kago さんのパスワードを変更しました"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("old-pw" "kago") ("new-pw" "musume") ("new-again-pw" "musume"))
-				'(// div h3))
-	test-sxml-match?)
-
- (set-gsid w 'change-new-password)
-
- (test* "confirm changed password and back to original password"
-	'(*TOP* (h3 "kago さんのパスワードを変更しました"))
-	(call-worker/gsid->sxml w 
-				'()
-				'(("old-pw" "musume") ("new-pw" "kago") ("new-again-pw" "kago"))
-				'(// div h3))
-	test-sxml-match?)
-
 
  (set-gsid w 'add-user)
 
@@ -719,15 +537,6 @@
         (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) (tr 6)))
         test-sxml-match?)
 
- (set-gsid w 'logout)
-
- (test/send&pick "logout" w ())
-
- (test* "redirect and login page"
-	'(*TOP* (h3 "ユニット一覧は一般ユーザアカウントが必要です"))
-	(call-worker/gsid->sxml w '() '() '(// h3))
-	test-sxml-match?)
- 
  )
 
 (test-end)

@@ -3,19 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.7 2006/03/09 16:14:53 shibata Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
-
-(use common-test)
+;; $Id: melody-list.scm,v 1.8 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -54,54 +42,43 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                //navigation)
+                                (//navigation))
         test-sxml-match?)
 
- (test* "メニュー"
-        '(*TOP*
-          (ul ?@
-              (li (a (@ (href ?_)
-                        (class "clickable"))
-                     "新しい娘。"))))
-        (call-worker/gsid->sxml w
-                                '()
-                                '()
-                                //menu)
-        test-sxml-match?)
+ (call-worker-test* "メニュー"
 
- (test* "ブックマークボタン"
-        '(*TOP*
-          (a ?@
-             "ブックマークに追加"))
-        (call-worker/gsid->sxml w
-                                '()
-                                '()
-                                '(// (a (@ (equal? (id "bookmark-button"))))))
-        test-sxml-match?)
+                    :node '(*TOP*
+                            (!contain
+                             (a ?@ (span (@ (id "bookmark-button")) "ブックマーク追加"))
+                             (a ?@ "一覧")
+                             (a ?@ "設定")))
+
+                    :sxpath (//navigation-action '(// a)))
 
  (test* "前後移動リンク"
         '(*TOP*
-          (div (a (@ (onclick "copy_search(this)")
+          (!contain
+           (div (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
                   "<<")
                (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
-                  ">>")))
+                  ">>"))))
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                `(,@//body (div 2)))
+                                (//body '(div)))
         test-sxml-match?)
 
  (test* "ページタイトル"
         '(*TOP*
-          (h3 "籠入娘。Test Proj. - 1：テストな娘。 - OPEN"))
+          (h2 "籠入娘。Test Proj. - 1：テストな娘。 - OPEN"))
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                `(,@//body h3))
+                                (//page-title))
         test-sxml-match?)
 
 
@@ -244,7 +221,7 @@
         (call-worker/gsid->sxml w
                                 '()
                                 '()
-                                `(,@//body dl))
+                                (//body '(dl)))
         test-sxml-match?)
  )
 

@@ -3,19 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.8 2006/03/14 15:01:00 shibata Exp $
-
-(use gauche.test)
-(use gauche.collection)
-(use file.util)
-(use text.tree)
-(use sxml.ssax)
-(use sxml.sxpath)
-(use kahua)
-(use kahua.test.xml)
-(use kahua.test.worker)
-
-(use common-test)
+;; $Id: unit-operate.scm,v 1.9 2006/03/18 12:21:16 shibata Exp $
 
 (load "common.scm")
 
@@ -32,9 +20,7 @@
 
  (test* "run kagoiri-musume.kahua" #t (worker-running? w))
 
- (login w :top '?&unit-list)
-
- (set-gsid w 'unit-list)
+ (login w)
 
  (make-unit w :edit '?&unit-edit)
 
