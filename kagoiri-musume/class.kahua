@@ -3,64 +3,9 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: class.kahua,v 1.74 2006/03/12 07:51:36 cut-sea Exp $
+;; $Id: class.kahua,v 1.75 2006/03/18 11:30:02 shibata Exp $
 ;;
-;; Unit means Project.
-;;
-(define-class <unit> (<kahua-persistent-base>)
-  (
-   ;; unit name means project name.
-   (unit-name       :allocation :persistent :init-keyword :unit-name
-		    :accessor unit-name-of)
-   (description     :allocation :persistent :init-keyword :description
-		    :init-value "" :accessor description-of)
-   ;; counter of musume as issue.
-   (next-musume-no  :allocation :persistent :init-keyword :next-musume-no
-		    :init-value 1 :accessor next-musume-no-of)
-   ;; fans means developers.
-   (fans            :allocation :persistent :init-keyword :fans
-		    :init-value '() :accessor fans-of)
-   ;; priorities
-   (priorities      :allocation :persistent :init-keyword :priorities
-		    :init-value '() :accessor priorities-of)
-   ;; statuss
-   (statuss         :allocation :persistent :init-keyword :statuss
-		    :init-value '() :accessor statuss-of)
-   ;; types
-   (types           :allocation :persistent :init-keyword :types
-		    :init-value '() :accessor types-of)
-   ;; categories
-   (categories      :allocation :persistent :init-keyword :categories
-		    :init-value '() :accessor categories-of)
-   (musumes         :allocation :persistent :init-keyword :musumes
-		    :init-value '() :accessor musumes-of)
-   (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-thunk sys-time :accessor ctime-of)
-   ;; delete flag
-   (fallout         :allocation :persistent :init-keyword :fallout
-		    :init-value #f :accessor fallout-of)
-
-   (notify-addresses :allocation :persistent :init-keyword :notify-addresses
-                     :init-value '() :accessor notify-addresses-of)
-   ))
-
-(define (active? unit)
-  (not (fallout-of unit)))
-
-(define (all-units . fan)
-  (if (null? fan)
-      (filter active?
-              (make-kahua-collection <unit>))
-    (let1 fan (car fan)
-      (filter (every-pred active? (cut fan-to? <> fan))
-              (make-kahua-collection <unit>)))))
-
-
-(define (musume-ref unit mno)
-  (find (lambda (m)
-          (= mno (mno-of m)))
-        (musumes-of unit)))
-
+(load "kagoiri-musume/unit.kahua")
 
 (define-method normalize-addresses ((addresses <string>))
   (normalize-addresses
@@ -72,164 +17,13 @@
 (define-method normalize-addresses ((addresses <boolean>))
   '())
 
+(load "kagoiri-musume/musume.kahua")
+(load "kagoiri-musume/song.kahua")
+(load "kagoiri-musume/file.kahua")
+(load "kagoiri-musume/email.kahua")
+(load "kagoiri-musume/fan.kahua")
+(load "kagoiri-musume/group.kahua")
 
-;; Musume means issue.
-;;
-(define-class <musume> (<kahua-persistent-base>)
-  (
-   ;; new slot
-   (unit            :allocation :persistent :init-keyword :unit
-		    :accessor unit-of)
-   ;; musume-no means issue number.
-   (musume-no       :allocation :persistent :init-keyword :musume-no
-		    :init-value #f :accessor mno-of)
-   ;; issue title
-   (musume-name     :allocation :persistent :init-keyword :musume-name
-		    :init-value "" :accessor mname-of)
-   ;; issue priority
-   ;; normal above-normal low high super
-   (priority        :allocation :persistent :init-keyword :priority
-		    :init-value "normal" :accessor priority-of)
-   ;; status
-   ;; open completed on-hold taken rejected
-   (status          :allocation :persistent :init-keyword :status
-		    :init-value "open" :accessor status-of)
-   ;; type
-   ;; discuss request bug report task term etc
-   (type            :allocation :persistent :init-keyword :type
-		    :init-value #f :accessor type-of)
-   ;; category
-   ;;
-   (category        :allocation :persistent :init-keyword :category
-		    :initi-value #f :accessor category-of)
-   ;; assign
-   (assign          :allocation :persistent :init-keyword :assign
-		    :init-value #f :accessor assign-of)
-   ;; songs
-   (songs           :allocation :persistent :init-keyword :songs
-		    :init-value '() :accessor songs-of)
-   ;; create time
-   (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-thunk sys-time :accessor ctime-of)
-   (delete          :allocation :persistent :init-keyword :delete
-		    :init-value #f :accessor delete-of)
-   (limitdate       :allocation :persistent :init-keyword :limitdate
-		    :init-value #f :accessor limit-of)
-
-   (backlinks       :allocation :persistent :init-keyword :backlinks
-		    :init-value '() :accessor backlinks-of)
-   (links           :allocation :persistent :init-keyword :links
-		    :init-value '() :accessor links-of)
-   ))
-
-(define-method persistent-initialize ((obj <musume>) initargs)
-  (next-method)
-  (let* ((unit (unit-of obj))
-	 (mno (next-musume-no-of unit)))
-    (set! (mno-of obj) mno)
-    (set! (next-musume-no-of unit) (+ mno 1))
-    (set! (musumes-of unit) (cons obj (musumes-of unit)))))
-
-(define-method kill! ((obj <musume>))
-  (set! (delete-of obj) #t)
-  (map (lambda (m)
-         (update! (backlinks-of m)
-                  (cut remove (cut eq? obj <>) <>)))
-       (links-of obj)))
-
-(define-method live! ((obj <musume>))
-  (set! (delete-of obj) #f)
-  )
-
-(define-method next-seq-no ((obj <musume>))
-  (+ 1 (length (songs-of obj))))
-
-(define-method all-musumes ((unit <unit>))
-  (musumes-of unit))
-
-(define-method all-active-musumes ((unit <unit>))
-  (filter (lambda (m)
-	    (not (delete-of m)))
-	  (musumes-of unit)))
-
-(define-method object-compare ((obj1 <musume>) (obj2 <musume>))
-  (compare (ctime-of obj1) (ctime-of obj2)))
-
-(define-method compare-value ((obj <musume>) key)
-  (case (string->symbol key)
-    ((no) (format "~3,'0d" (mno-of obj)))
-    ((title) (mname-of obj))
-    ((priority) (code-of (priority-of obj)))
-    ((status) (code-of (status-of obj)))
-    ((assgin) (code-of (assign-of obj)))
-    ((type) (code-of (type-of obj)))
-    ((category) (code-of (category-of obj)))
-    ((ctime) (number->string (ctime-of obj)))
-    ((mtime) (number->string (ctime-of (car (songs-of obj)))))
-    ))
-
-;; song means one of issue.
-;;
-(define-class <song> (<kahua-persistent-base>)
-  ((seq-no          :allocation :persistent :init-keyword :seq-no
-		    :init-value #f :accessor seq-no-of)
-   (musume          :allocation :persistent :init-keyword :musume
-		    :accessor musume-of)
-   (melody          :allocation :persistent :init-keyword :melody
-		    :accessor melody-of)
-   (files           :allocation :persistent :init-keyword :files
-		    :init-value '() :accessor files-of)
-   (fan             :allocation :persistent :init-keyword :fan
-		    :init-value #f :accessor fan-of)
-   (ctime           :allocation :persistent :init-keyword :ctime
-		    :init-thunk sys-time :accessor ctime-of)
-   (delete          :allocation :persistent :init-keyword :delete
-		    :init-value #f :accessor delete-of)
-   ))
-
-(define-method persistent-initialize ((obj <song>) initargs)
-  (next-method)
-  (let* ((musume (musume-of obj))
-	 (songs (songs-of musume)))
-    (set! (seq-no-of obj) (next-seq-no musume))
-    (set! (songs-of musume) (cons obj songs))))
-
-(define-method object-compare ((obj1 <song>) (obj2 <song>))
-  (compare (ctime-of obj1) (ctime-of obj2)))
-
-(define-method all-songs ((musume <musume>))
-  (songs-of musume))
-
-(define-method active? ((song <song>))
-  (not (delete-of song)))
-
-(define-method all-active-songs ((musume <musume>))
-  (filter active? (songs-of musume)))
-
-
-
-;; file
-;;
-(define-class <file> (<kahua-persistent-base>)
-  ((file-name       :allocation :persistent :init-keyword :file-name
-		    :accessor name-of)
-   (path            :allocation :persistent :init-keyword :path
-		    :init-value "" :accessor path-of)
-   (extension       :allocation :persistent :init-keyword :extension
-		    :init-value "" :accessor extension-of)
-   (uri             :allocation :persistent :init-keyword :uri
-		    :init-value "" :accessor uri-of)
-;  (type            :allocation :persistent :init-keyword :type
-;		    :init-value "" :accessor type-of)
-;  (size            :allocation :persistent :init-keyword :size
-;		    :init-value "" :accessor size-of)
-   ))
-
-;; email
-;;
-(define-class <email> (<kahua-persistent-base>)
-  ((address         :allocation :persistent :init-keyword :address
-		    :accessor address-of)))
 
 ;; hacks for #f
 ;;
@@ -384,8 +178,3 @@
 (define (id->obj class id)
   (and id (find-kahua-instance class id)))
 
-;
-; classes
-;
-(load "kagoiri-musume/fan.kahua")
-(load "kagoiri-musume/group.kahua")
