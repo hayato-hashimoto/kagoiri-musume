@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.35 2006/03/13 15:49:19 shibata Exp $
+;; $Id: page.kahua,v 1.36 2006/03/18 11:48:30 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -26,9 +26,7 @@
           (with-ie/
            (link/ (@/ (rel "stylesheet") (type "text/css") (media "screen")
                       (href (kahua-static-document-url
-                             "kagoiri-musume/fixed4ie.css"))))
-           (script/ (@/ (type "text/javascript"))
-                    "onload = function() { content.focus() }"))
+                             "kagoiri-musume/fixed4ie.css")))))
           (script/ (@/ (type "text/javascript")
                        (src (kahua-static-document-url
                              "kagoiri-musume/javascripts/prototype.js"))))
@@ -67,42 +65,34 @@
    ;; navi-link
    (div/ (@/ (id "header"))
          (h1/ (@/ (class "title")) (a/cont/ *kagoiri-musume-title*))
-;;         (a/cont/
-;;	  (@/ (class "clickable"))
-;;          (@@/ (cont kagoiri)) ($$ "トップ"))
-         (a/cont/
-	  (@/ (class "clickable"))
-          (@@/ (cont admin-system)) ($$ "システム管理"))
-         (a/cont/
-	  (@/ (class "clickable"))
-          (@@/ (cont **)) ($$ "ユニット一覧"))
-         (if (not (kahua-current-user))
-             (a/cont/ (@/ (class "clickable"))
-		      (@@/ (cont task-calendar))
-                      ($$ "Login")) "")
-         (if (and (kahua-current-user)
-		  (not (equal? "guest" (kahua-current-user-name))))
-             (a/cont/
-	      (@/ (class "clickable"))
-              (@@/ (cont change-passwd)) ($$ "パスワード変更")) "")
-         (if (kahua-current-user)
-             (span/ ($$ " Now login:")
-                  (a/cont/ (@/ (class "clickable"))
-			   (@@/ (cont task-calendar))
-                           (kahua-current-user-name))) "")
-         (if (kahua-current-user)
-             (a/cont/
-	      (@/ (class "clickable"))
-              (@@/ (cont logout)) ($$ "Logout")) "")
-         (if (kahua-current-user)
-             (form/cont/ (@/ (class "searchbox"))
-                         (@@/ (cont search))
-                         (input/ (@/ (type "text") (name "word") (size 10)))
-                         (input/ (@/ (type "submit") (value ($$ "検索"))))) "")
-         )
-   
+         (div/
+          (@/ (id "header-action"))
+          (if (not (kahua-current-user))
+              (a/cont/ (@/ (class "clickable"))
+                       (@@/ (cont mypage))
+                       ($$ "Login")) "")
+          (if (kahua-current-user)
+              (node-set/
+               (when (admin?)
+                 (a/cont/
+                  (@/ (class "clickable"))
+                  (@@/ (cont admin-system))
+                  ($$ "システム管理")))
+               (span/ ($$ " Now login:")
+                      (a/cont/ (@/ (class "clickable"))
+                               (@@/ (cont mypage))
+                               (kahua-current-user-name)))) "")
+          (if (kahua-current-user)
+              (a/cont/
+               (@/ (class "clickable"))
+               (@@/ (cont logout)) ($$ "Logout")) "")
+          (if (kahua-current-user)
+              (form/cont/ (@/ (class "searchbox"))
+                          (@@/ (cont search))
+                          (input/ (@/ (type "text") (name "word") (size 10)))
+                          (input/ (@/ (type "submit") (value ($$ "検索"))))) "")))
    (div/ (@/ (id "body"))
-   (node-set body))))
+         (node-set body))))
 
 ;
 ; permission check page
@@ -189,23 +179,108 @@
 
 
 (define-method navigation/ ((unit <unit>))
-  (div/ (@/ (id "navigation"))
-        (a/cont/ ($$ "トップ"))
-        " > "
-        (span/ (@/ (class "current"))
-              (link-of unit))))
+  (node-set/
+   (div/ (@/ (id "navigation"))
+         (a/cont/ ($$ "トップ"))
+         " > "
+         (span/ (@/ (class "current"))
+                (link-of unit)))
+   (navigation-action/
+
+    (pa$ equal? "new")
+    (link-of unit :action "new" :body ($$ "案件追加"))
+
+    string->number
+    (link-of unit :body ($$ "一覧"))
+
+    (pa$ equal? "edit")
+    (link-of unit :action "edit" :body ($$ "設定")))))
 
 
 (define-method navigation/ ((musume <musume>))
-  (div/ (@/ (id "navigation"))
-        (a/cont/ ($$ "トップ"))
-        " > "
-        (link-of (unit-of musume))
-        " > "
-        (span/ (@/ (class "current"))
-              (link-of musume))))
+  (node-set/
+   (div/ (@/ (id "navigation"))
+         (a/cont/ ($$ "トップ"))
+         " > "
+         (link-of (unit-of musume))
+         " > "
+         (span/ (@/ (class "current"))
+                (link-of musume)))
+   (navigation-action/
+    not
+    (a/cont/
+     (@@/ (cont add-bookmark musume))
+     (span/ (@/ (id "bookmark-button"))
+            ($$ "ブックマーク追加")))
 
-(define-method navigation/ ()
-  (div/ (@/ (id "navigation"))
-        (span/ (@/ (class "current"))
-               (a/cont/ ($$ "トップ")))))
+    string->number
+    (link-of musume :body ($$ "一覧"))
+
+    (pa$ equal? "edit")
+    (link-of musume :action "edit" :body ($$ "設定")))))
+
+(define-method navigation/ nodes
+  (node-set/
+   (div/ (@/ (id "navigation"))
+         (span/ (@/ (class "current"))
+                (a/cont/ ($$ "トップ")))
+         (when (not (null? nodes))
+           (apply node-set/
+                  " > "
+                  (intersperse " > "
+                               nodes))))
+   (navigation-action/
+    (pa$ equal? "new")
+    (link-of :action "new" :body ($$ "プロジェクト追加"))
+
+    not
+    (link-of :body ($$ "一覧"))
+    )))
+
+(define-method navigation/ ((fan <fan>) name)
+  (node-set/
+   (div/ (@/ (id "navigation"))
+         (span/ (@/ (class "current"))
+                (a/cont/ ($$ "トップ")))
+         " > "
+         (span/ (@/ (class "label"))
+                "マイページ")
+         " > "
+         (span/ (@/ (class "label"))
+                name))
+   (navigation-action/
+    (pa$ equal? "calender")
+    (a/cont/ (@@/ (cont mypage "calender")) ($$ "カレンダー"))
+    (pa$ equal? "todo")
+    (a/cont/ (@@/ (cont mypage "todo")) ($$ "TODO"))
+    (pa$ equal? "recent")
+    (a/cont/ (@@/ (cont mypage "recent")) ($$ "最近の更新"))
+    (pa$ equal? "bookmark")
+    (a/cont/ (@@/ (cont mypage "bookmark")) ($$ "ブックマーク"))
+    (pa$ equal? "")
+    (a/cont/ (@@/ (cont change-passwd)) ($$ "パスワード変更"))
+    )))
+
+(define (navigation-action/ . node-pairs)
+  (let* ((path-info (kahua-context-ref "x-kahua-path-info"))
+         (name (and (not (null? path-info))
+                    (last path-info))))
+    ;; ブラウザが'display:inline-box'をサポートするまでは
+    ;; tableで対応
+    (table/
+     (@/ (id "navigation-action"))
+     (tr/
+      (node-set
+       (let loop ((node-pairs node-pairs)
+                  (nodes '()))
+         (if (null? node-pairs)
+             (reverse nodes)
+           (loop (cddr node-pairs)
+                 (cons
+                  (td/ (when ((car node-pairs) name)
+                         (@/ (class "current")))
+                       (cadr node-pairs))
+                  nodes)))))))))
+
+(define-method obj->string ((self <undefined-object>))
+  empty)
