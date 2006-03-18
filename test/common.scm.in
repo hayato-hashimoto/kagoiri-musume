@@ -3,7 +3,18 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common.scm.in,v 1.9 2006/02/13 11:53:05 cut-sea Exp $
+;; $Id: common.scm.in,v 1.10 2006/03/18 12:18:33 shibata Exp $
+
+(use gauche.test)
+(use gauche.collection)
+(use file.util)
+(use text.tree)
+(use sxml.ssax)
+(use sxml.sxpath)
+(use kahua)
+(use kahua.test.xml)
+(use kahua.test.worker)
+(use common-test)
 
 (define *GOSH* "##GOSH##")
 (define *KAHUA_LIB* "##KAHUA_LIB##")
