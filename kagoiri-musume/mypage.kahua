@@ -1,0 +1,175 @@
+;; -*- coding: euc-jp; mode: kahua -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: mypage.kahua,v 1.1 2006/03/18 11:42:10 shibata Exp $
+;;
+;;
+
+(define-syntax mypage-main
+  (syntax-rules ()
+    ((_ node ...)
+     (permission-check-page
+      identity
+      ($$ "マイページは一般ユーザアカウントが必要です")
+      (node-set/ node ...)))))
+
+(define-entry-method mypage ()
+  (redirect/cont (cont mypage "calender")))
+
+(define-entry-method mypage ("todo")
+  (mypage-main
+   (navigation/ (kahua-current-user) "todo")
+   (h2/ ($$ "TODO"))
+   (let1 musumes (let1 fan (current-fan)
+                    (filter
+                     (lambda (musume)
+                       (eq? (assign-of musume) fan))
+                     (make-kahua-collection <musume>)))
+      (format "~a item(s)" (length musumes))
+      (table/ (@/ (class "listing"))
+              (thead/ (tr/ (th/ ($$ "タイトル"))
+                           (th/ ($$ "優先度"))
+                           (th/ ($$ "ステータス"))
+                           (th/ ($$ "タイプ"))
+                           (th/ ($$ "登録日"))))
+              (tbody/
+               (map/ (lambda (m)
+                       (let1 status (status-of m)
+                         (tr/ (@/ (class #`"status-,(code-of status)"))
+                              (td/ (label-of m))
+                              (td/ (disp-name-of (priority-of m)))
+                              (td/ (disp-name-of status))
+                              (td/ (disp-name-of (type-of m)))
+                              (td/ (sys-strftime "%Y/%m/%d"
+                                                 (sys-localtime (ctime-of m)))))))
+                     (sort musumes
+                           (lambda (m1 m2)
+                             (> (ctime-of m1) (ctime-of m2))))))))))
+
+
+(define-entry-method mypage ("recent")
+  (mypage-main
+   (navigation/ (kahua-current-user) "最近の更新")
+   (h2/ ($$ "最近の更新"))
+   (let* ((units (filter (cut fan-to? <> (current-fan))
+                           (all-units)))
+            (musumes (append-map all-active-musumes units))
+            (songs (append-map songs-of  musumes))
+            (songs (reverse (sort songs)))
+            (songs (take* songs 20)))
+       (format "~a item(s)" (length songs))
+       (map/ (lambda (s)
+               (let1 m (musume-of s)
+                 (div/
+                  (fieldset/
+                   (legend/ (label-of m))
+                   (dt/
+		    (format "♪~a. ~a[~a]"
+			    (seq-no-of s)
+			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
+			    (fan-name-of (fan-of s))))
+                   (p/ (melody-format (melody-of s)))))))
+             songs))))
+
+(define-entry-method mypage ("bookmark")
+  (mypage-main
+   (navigation/ (kahua-current-user) ($$ "ブックマーク"))
+   (h2/ ($$ "ブックマーク"))
+   (let1 musumes (or (ref (current-fan) 'bookmark) '())
+       (format "~a item(s)" (length musumes))
+       (table/ (@/ (class "listing"))
+               (thead/ (tr/ (th/ ($$ "削除"))
+                            (th/ ($$ "タイトル"))
+                            (th/ ($$ "優先度"))
+                            (th/ ($$ "ステータス"))
+                            (th/ ($$ "タイプ"))
+                            (th/ ($$ "登録日"))))
+               (tbody/
+                (map/ (lambda (m)
+                        (let1 status (status-of m)
+                          (tr/ (@/ (class #`"status-,(code-of status)"))
+                               (td/ (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+                                                                  ($$ "本当に削除しますか？"))))
+                                             (@@/ (cont
+                                                   (lambda ()
+                                                     (update! (ref (current-fan) 'bookmark)
+                                                              (cut delete m  <>))
+                                                     (redirect-page "mypage/bookmark"))))
+                                             ($$ "削除")))
+                               (td/ (label-of m))
+                               (td/ (disp-name-of (priority-of m)))
+                               (td/ (disp-name-of status))
+                               (td/ (disp-name-of (type-of m)))
+                               (td/ (sys-strftime "%Y/%m/%d"
+                                                  (sys-localtime (ctime-of m)))))))
+                      musumes))))))
+
+(define-entry-method mypage ("bookmark")
+  (mypage-main
+   (navigation/ (kahua-current-user) ($$ "ブックマーク"))
+   (h2/ ($$ "ブックマーク"))
+   (let1 musumes (or (ref (current-fan) 'bookmark) '())
+       (format "~a item(s)" (length musumes))
+       (table/ (@/ (class "listing"))
+               (thead/ (tr/ (th/ ($$ "削除"))
+                            (th/ ($$ "タイトル"))
+                            (th/ ($$ "優先度"))
+                            (th/ ($$ "ステータス"))
+                            (th/ ($$ "タイプ"))
+                            (th/ ($$ "登録日"))))
+               (tbody/
+                (map/ (lambda (m)
+                        (let1 status (status-of m)
+                          (tr/ (@/ (class #`"status-,(code-of status)"))
+                               (td/ (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
+                                                                  ($$ "本当に削除しますか？"))))
+                                             (@@/ (cont
+                                                   (lambda ()
+                                                     (update! (ref (current-fan) 'bookmark)
+                                                              (cut delete m  <>))
+                                                     (redirect-page "mypage/bookmark"))))
+                                             ($$ "削除")))
+                               (td/ (label-of m))
+                               (td/ (disp-name-of (priority-of m)))
+                               (td/ (disp-name-of status))
+                               (td/ (disp-name-of (type-of m)))
+                               (td/ (sys-strftime "%Y/%m/%d"
+                                                  (sys-localtime (ctime-of m)))))))
+                      musumes))))))
+
+;;;==============================================================
+;;; Task calender
+;;;
+(define-entry-method mypage ("calender")
+  (mypage-main
+   (navigation/ (kahua-current-user) ($$ "カレンダー"))
+   (h2/ ($$ "カレンダー"))
+   (div/ (@/ (id "limit-calendar"))
+	   (task-calendar-table/ (today)))))
+
+(define (change-passwd . message)
+  (let* ((cuser (kahua-current-user))
+	 (cuser-name (ref cuser 'login-name)))
+    (permission-check-page
+     identity
+     ($$ "パスワード変更には一般ユーザのアカウントが必要です")
+     (navigation/ (kahua-current-user) "パスワード変更")
+     (h3/ (format ($$ "~a さんのパスワード変更") cuser-name))
+     (form/cont/
+      (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
+		     (cond ((or (equal? "" new-pw)
+				(equal? "" new-again-pw)
+				(not (equal? new-pw new-again-pw)))
+			    (change-passwd ($$ "新パスワードが不正です")))
+			   ((not (kahua-check-user cuser-name old-pw))
+			    (change-passwd ($$ "旧パスワードが不正です")))
+			   (else
+			    (kahua-user-password-change-force cuser new-pw)
+			    (message-only-page
+			     (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
+      (change-passwrod-table/ "old-pw" "new-pw" "new-again-pw")
+      (input/ (@/ (type "submit") (name "submit") (value ($$ "変更"))))
+      (p/ (@/ (class "warning")) (node-set message))
+      ))))
