@@ -3,13 +3,14 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.6 2006/03/14 15:01:00 shibata Exp $
+;; $Id: common-test.scm,v 1.7 2006/03/18 12:00:40 shibata Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
 (define-module common-test
   (use srfi-13)
   (use gauche.test)
+  (use gauche.parameter)
   (use gauche.collection)
   (use file.util)
   (use text.tree)
@@ -21,34 +22,111 @@
   (export  //body
            //page-title
            //navigation
+           //navigation-action
            //menu
+           //header-action
            login
            make-unit
            make-musume
-          ))
+           current-worker
+           call-worker-test*
+           with-worker
+           ))
 
 (select-module common-test)
 
-(define //body '(// (div (@ (equal? (id "body"))))))
-(define //page-title `(,@//body h2))
-(define //navigation '(// (div (@ (equal? (id "navigation"))))))
-(define //menu '(// (ul (@ (equal? (class "menu"))))))
+(define current-worker (make-parameter #f))
+
+(define (call-worker-test* name . options)
+  (let-keywords* options ((gsid   :gsid #f)
+                          (node   :node '())
+                          (header :header '())
+                          (body   :body '())
+                          (query :sxpath '())
+                          (worker :worker (current-worker))
+                          (redirect :redirect #f)
+                          )
+    (when (or (not gsid)
+              (begin
+                (set-gsid worker gsid)
+                (hash-table-exists? (ref worker 'sessions) (symbol->string gsid))))
+
+      (when redirect
+        (test (string-append name "(redirect)")
+              '(*TOP* (!contain (Status "302 Moved")
+                                (Location ?&)))
+              (lambda ()
+                (call-worker/gsid
+                 worker
+                 header body
+                 header->sxml))
+              (make-match&pick worker)))
+
+      (test name node
+            (lambda ()
+              (call-worker/gsid->sxml
+               worker
+               (if redirect '() header)
+               (if redirect '() body)
+               query))
+            (if (find (lambda (attr) (string-prefix? "?&"
+                                         (x->string (cadr attr))))
+                         ((sxpath '(// @ (or@ href action))) node))
+                (make-match&pick worker)
+              test-sxml-match?)))))
+
+(define $with-worker with-worker)
+
+(define-syntax with-worker
+  (syntax-rules ()
+    ((_ (w command) body ...)
+     ($with-worker (w command)
+                   (current-worker w)
+                   body ...))))
+
+(define-syntax define-sxpath
+  (syntax-rules ()
+    ((_ name sxpath1)
+     (define (name . sxpath)
+       (let1 child (get-optional sxpath '())
+         (append sxpath1 child))))))
+
+(define-sxpath //body
+  '(// (div (@ (equal? (id "body"))))))
+
+(define-sxpath //page-title
+  (//body '(h2)))
+
+(define-sxpath //navigation
+  '(// (div (@ (equal? (id "navigation"))))))
+
+(define-sxpath //navigation-action
+  '(// (* (@ (equal? (id "navigation-action"))))))
+
+(define-sxpath //menu
+  '(// (ul (@ (equal? (class "menu"))))))
+
+(define-sxpath //header-action
+  '(// (div (@ (equal? (id "header-action"))))))
+
 
 
 (define (login w . options)
-  (let-keywords* options ((top :top '?*))
+  (let-keywords* options ((top :top '?&))
 
     (test-section "common-test.scm: login")
 
     (reset-gsid w)
 
-    (test* "login: ログイン画面"
-           `(*TOP*
-             (form (@ (method "POST")
-                      (action ,top))
-                   ?*))
-           (call-worker/gsid->sxml w '() '() '(// (div (@ (equal? (id "body")))) form))
-           (make-match&pick w))))
+    (call-worker-test* "login: ログイン画面"
+
+                       :node `(*TOP*
+                               (form (@ (method "POST")
+                                        (action ,top))
+                                     ?*))
+
+                       :sxpath (//body '(form))
+                       :pick #t)))
 
 (define (make-unit w . options)
   (let-keywords* options ((view :view '?*)
@@ -56,45 +134,52 @@
 
     (test-section "common-test.scm: make-unit")
 
-    (test* "make-unit: ユニット作成ページ"
-           '(*TOP*
-             (form (@ (onsubmit "return submitCreateUnit(this)")
-                      (method "POST")
-                      (action ?&))
-                   ?*
-                   (input (@ (value "新ユニット結成") (type "submit")))))
-           (call-worker/gsid->sxml w
-                                   '()
-                                   '(("name" "cut-sea") ("pass" "cutsea"))
-                                   '(// (div (@ (equal? (id "body")))) form))
-           (make-match&pick w))
+    (call-worker-test* "make-unit: ユニット作成ページへ移動"
 
-    (test/send&pick "make-unit: ユニット作成 サブミット"
-                    w
-                    '(("priority" "normal" "low" "high")
-                      ("status" "open" "completed")
-                      ("type" "bug" "task" "request")
-                      ("category" "global" "section")
-                      ("name" "籠入娘。Test Proj.")
-                      ("desc" "籠入娘。のバグトラッキングを行うユニット")
-                      ("fans" "   " "cut-sea")))
+                    :node '(*TOP*
+                            (!contain
+                             (a (@ (href ?&)
+                                   ?*)
+                                "プロジェクト追加")))
 
-    (test* "make-unit: 作成ユニットの確認"
-           `(*TOP*
-             (tr ?@
-                 (td ?@ (a (@ (href ,view)) "籠入娘。Test Proj.") " (0)")
-                 (td "籠入娘。のバグトラッキングを行うユニット")
-                 (td (span ?@
-                           (span ?@ "1人"))
-                     (div ?@ (div "cut-sea")))
-                 (td (a ?@ "○"))
-                 (td ?@ (span ?@ (a (@ (href ,edit)) "設定")))))
-           (call-worker/gsid->sxml
-            w
-            '()
-            '()
-            '(// (div (@ (equal? (id "body")))) table tbody tr))
-           (make-match&pick w))))
+                    :body '(("name" "cut-sea") ("pass" "cutsea"))
+                    :sxpath (//navigation-action '(// a)))
+
+    (call-worker-test* "make-unit: ユニット作成ページ"
+
+                       :node '(*TOP*
+                               (form (@ (onsubmit "return submitCreateUnit(this)")
+                                        (method "POST")
+                                        (action ?&))
+                                     ?*
+                                     (input (@ (value "新ユニット結成") (type "submit")))))
+
+                       :sxpath (//body '(form)))
+
+    (call-worker-test* "make-unit: ユニット作成 サブミット&作成ユニットの確認"
+
+                       :node `(*TOP*
+                               (tr ?@
+                                   (td ?@ (a (@ (href ,view)) "籠入娘。Test Proj.") " (0)")
+                                   (td "籠入娘。のバグトラッキングを行うユニット")
+                                   (td (span ?@
+                                             (span ?@ "1人"))
+                                       (div ?@ (div "cut-sea")))
+                                   (td (a ?@ "○"))
+                                   (td ?@ (span ?@ (a (@ (href ,edit)) "設定")))))
+
+                       :body '(("priority" "normal" "low" "high")
+                               ("status" "open" "completed")
+                               ("type" "bug" "task" "request")
+                               ("category" "global" "section")
+                               ("name" "籠入娘。Test Proj.")
+                               ("desc" "籠入娘。のバグトラッキングを行うユニット")
+                               ("fans" "   " "cut-sea"))
+
+                       :sxpath (//body '(table tbody tr))
+
+                       :redirect #t)
+    ))
 
 (define (make-musume w . options)
   (let-keywords* options ((unit-view :unit-view #f)
@@ -107,18 +192,15 @@
     (when unit-view
       (set-gsid w (string-drop (symbol->string unit-view) 2)))
 
-    (test* "make-musume: 案件作成リンク"
-           '(*TOP*
-             ?*
-             (li (a (@ (href ?&)
-                       ?*)
-                    "新しい娘。"))
-             ?*)
-           (call-worker/gsid->sxml w
-                                   '()
-                                   '()
-                                   '(// (ul (@ (equal? (class "menu")))) *))
-           (make-match&pick w))
+    (call-worker-test* "make-musume: 案件作成リンク"
+
+                       :node '(*TOP*
+                               (!contain
+                                (a (@ (href ?&)
+                                      ?*)
+                                   "案件追加")))
+
+                       :sxpath (//navigation-action '(// a)))
 
     (test* "make-musume: フォーム"
            '(*TOP*
@@ -153,11 +235,11 @@
 
     (test* "make-musume: 新規案件のmelodyリストページ"
            '(*TOP*
-             (h3 "籠入娘。Test Proj. - 1：テストな娘。 - OPEN"))
+             (h2 "籠入娘。Test Proj. - 1：テストな娘。 - OPEN"))
            (call-worker/gsid->sxml w
                                    '()
                                    '()
-                                   `(,@//body h3))
+                                   (//body '(h2)))
            test-sxml-match?)
 
 
