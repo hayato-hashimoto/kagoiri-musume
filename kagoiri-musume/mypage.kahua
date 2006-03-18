@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: mypage.kahua,v 1.1 2006/03/18 11:42:10 shibata Exp $
+;; $Id: mypage.kahua,v 1.2 2006/03/18 15:06:22 shibata Exp $
 ;;
 ;;
 
@@ -22,31 +22,76 @@
   (mypage-main
    (navigation/ (kahua-current-user) "todo")
    (h2/ ($$ "TODO"))
+   (table/
+    (@/ (class "table-filter"))
+    (tr/ (@/ (onclick "toggle_select_mode(event)"))
+         (map/ (lambda (msg)
+                 (th/ (clickable msg)))
+               (drop-right $property-headers$ 1)))
+    (let1 filter-row "filter_table(this, 'musume_list', '全て')"
+      (define (prop-dropdown/ props-of prop propname)
+        (td/ (select/
+              (@/ (onchange filter-row)
+                  (name propname))
+              (node-set
+               (cons (option/ (@/ (value "*all*")) ($$ "全て"))
+                     (options ;; (props-of unit)
+                      (make-kahua-collection
+                       (find-kahua-class
+                        (string->symbol (format "<~a>" propname))))
+                              prop)))
+              )))
+      (tr/ (@/ (valign "top"))
+           (prop-dropdown/ priorities-of 'priority "priority")
+           (prop-dropdown/ statuss-of 'status "status")
+           (prop-dropdown/ types-of 'type "type")
+           (prop-dropdown/ categories-of 'category "category"))))
    (let1 musumes (let1 fan (current-fan)
                     (filter
                      (lambda (musume)
                        (eq? (assign-of musume) fan))
                      (make-kahua-collection <musume>)))
       (format "~a item(s)" (length musumes))
-      (table/ (@/ (class "listing"))
-              (thead/ (tr/ (th/ ($$ "タイトル"))
-                           (th/ ($$ "優先度"))
-                           (th/ ($$ "ステータス"))
-                           (th/ ($$ "タイプ"))
-                           (th/ ($$ "登録日"))))
-              (tbody/
-               (map/ (lambda (m)
-                       (let1 status (status-of m)
-                         (tr/ (@/ (class #`"status-,(code-of status)"))
-                              (td/ (label-of m))
-                              (td/ (disp-name-of (priority-of m)))
-                              (td/ (disp-name-of status))
-                              (td/ (disp-name-of (type-of m)))
-                              (td/ (sys-strftime "%Y/%m/%d"
-                                                 (sys-localtime (ctime-of m)))))))
-                     (sort musumes
-                           (lambda (m1 m2)
-                             (> (ctime-of m1) (ctime-of m2))))))))))
+      (table/
+       (@/ (class "listing") (id "musume_list"))
+       (thead/
+        (tr/
+         (@/ (onclick "sort_table(event);return false"))
+         (th/ (@/ (value "title")) ($$ "タイトル"))
+         (th/ (@/ (value "priority")) ($$ "優先度"))
+         (th/ (@/ (value "status")) ($$ "ステータス"))
+         (th/ (@/ (value "type")) ($$ "タイプ"))
+         (th/ (@/ (value "ltime")) ($$ "期限"))
+	 (th/ (@/ (value "ctime")) ($$ "登録日"))
+	 (th/ (@/ (value "mtime")) ($$ "更新日"))))
+       (tbody/
+        (map/ (lambda (m)
+                (let1 status (status-of m)
+                  (tr/ (@/ (class #`"status-,(code-of status)"))
+                       (td/ (@/ (value (mname-of m)))
+                            (label-of m))
+                       (td/ (@/ (value (code-of (priority-of m))))
+                            (disp-name-of (priority-of m)))
+                       (td/ (@/ (value (code-of status)))
+                            (disp-name-of status))
+                       (td/ (@/ (value (code-of (type-of m))))
+                            (disp-name-of (type-of m)))
+                       (let1 val (limit-of m)
+                         (td/ (@/ (value val))
+                              (if val
+                                  (sys-strftime "%Y/%m/%d" (sys-localtime val))
+                                "-")))
+                       (let1 val (ctime-of m)
+                         (td/ (@/ (value val))
+                              (sys-strftime "%Y/%m/%d %H:%M"
+                                            (sys-localtime val))))
+                       (let1 val (ctime-of (car (songs-of m)))
+                         (td/ (@/ (value val))
+                              (sys-strftime "%Y/%m/%d %H:%M"
+                                            (sys-localtime val)))))))
+              (sort musumes
+                    (lambda (m1 m2)
+                      (> (ctime-of m1) (ctime-of m2))))))))))
 
 
 (define-entry-method mypage ("recent")
