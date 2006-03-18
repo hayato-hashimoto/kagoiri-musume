@@ -4,7 +4,7 @@
 ;;  Copyright (c) 2004 Time Intermedia Corporation, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: search.kahua,v 1.21 2006/03/11 08:45:57 shibata Exp $
+;; $Id: search.kahua,v 1.22 2006/03/18 11:53:25 shibata Exp $
 
 ;; methods for search.
 (define-method searchable-text ((obj <unit>))
@@ -46,6 +46,14 @@
     (a/cont/ (@@/ (cont ** (key-of (unit-of obj)) (mno-of obj) action))
              (or  body
                   (mname-of obj)))))
+
+;; fixme
+(define-method link-of ((key <keyword>) . options)
+  (let-keywords* (cons key options) ((action :action "")
+                                     (body   :body #f))
+    (a/cont/ (@@/ (cont ** action))
+             (or  body
+                  "¥È¥Ã¥×"))))
 
 (define-method label-of ((obj <musume>))
   (let ((unit (unit-of obj)))
