@@ -818,3 +818,34 @@ function move_to(event, target){
      ul.appendChild(elem);
      update_memberlist_height(ul);
 }
+
+
+function cm(e, dm){
+     x = Event.pointerX(e);
+     y = Event.pointerY(e);
+     var d = document;
+     var space = 5;
+
+     if(x+dm.offsetWidth > d.body.offsetWidth) {
+          dm.style.left= (x - dm.offsetWidth)+"px";
+     } else {
+          dm.style.left=(x+space)+"px";
+     }
+
+     yOffset1 = d.body.scrollTop;
+     yOffset2 = d.documentElement.scrollTop;
+
+     if(yOffset1) {
+          yOffset = yOffset1;
+     } else if (yOffset2) {
+          yOffset = yOffset2;
+     } else {
+          yOffset = 0;
+     }
+     if(y-dm.offsetHeight<=0 || (y-dm.offsetHeight)<yOffset) {
+          dm.style.top=(y+space)+"px";
+     } else {
+          dm.style.top = (y-dm.offsetHeight) + "px";
+     }
+
+}
