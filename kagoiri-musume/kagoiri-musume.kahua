@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.258 2006/03/14 15:32:22 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.259 2006/03/18 11:40:35 shibata Exp $
 
 ;;
 ;; include
@@ -139,20 +139,6 @@
   (page-moved "**" unit-id musume-no))
 
 
-; main page
-;
-#|
-(define-entry (kagoiri)
-  (kagoiri-page
-   (h2/ ($$ "籠入娘。へようこそ！"))
-   (ul/ (@/ (class "menu"))
-        (li/ (a/cont/ (@/ (class "clickable"))
-		      (@@/ (cont admin-system)) ($$ "システム設定管理画面")))
-	(li/ (a/cont/ (@/ (class "clickable"))
-		      (@@/ (cont unit-list)) ($$ "ユニット一覧"))))
-   ))
-|#
-
 ;;;==============================================================
 ;;; Project list
 ;;;
@@ -161,8 +147,16 @@
    identity ($$ "ユニット一覧は一般ユーザアカウントが必要です")
    (navigation/)
    (h2/ ($$ "ユニット一覧"))
-   (unit-list-table/)
-   (devel:hr/)
+   (unit-list-table/)))
+
+
+;;;==============================================================
+;;; Project new
+;;;
+(define-entry-method ** ("new")
+  (permission-check-page
+   identity ($$ "ユニット追加は一般ユーザアカウントが必要です")
+   (navigation/)
    (create-unit-form/)))
 
 
@@ -176,6 +170,7 @@
        (if (viewable? unit u)
 	   u #f))
      (require-fan-message unit)
+     (navigation/ unit)
      (create-unit-form/ unit))))
 
 ;;;==============================================================
@@ -237,9 +232,8 @@
 	       u #f))
 	 (require-fan-message unit)
          (navigation/ unit)
-	 (musume-menu/ unit)
+         (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (inter-unit-search-box/ unit-id)
-	 (h2/ (format ($$ "~a - 娘。一覧") (unit-name-of unit)))
 	 (form/cont/
           (@/ (id "filtering_form"))
 	  (@@/ (cont ** unit-id))
@@ -301,7 +295,6 @@
 	     u #f))
        (require-fan-message unit)
        (navigation/ unit)
-       (musume-menu/ unit)
        (h2/ (unit-name-of unit) ($$ " - 新しい娘。"))
        (form/cont/
 	(@/ (enctype "multipart/form-data")
@@ -546,19 +539,7 @@
 	     (move 0)
 	     (list/
               (navigation/ musume)
-	      (musume-menu/ unit)
-	      (a/cont/ (@/ (id "bookmark-button") (class "clickable"))
-		       (@@/ (cont add-bookmark musume)) ($$ "ブックマークに追加"))
-	      (div/
-	       (a/cont/ (@/ (class "clickable")
-			    (onclick "copy_search(this)"))
-			(@@/ (cont (cut move -1)))
-			"<<" )
-	       (a/cont/ (@/ (class "clickable")
-			    (onclick "copy_search(this)"))
-			(@@/ (cont (cut move +1)))
-			">>"))
-	      (h3/ (@/ (class (and (or (time-limit? musume)
+              (h2/ (@/ (class (and (or (time-limit? musume)
 				       (time-over? musume)) "timeover")))
 		   (format "~a - ~a：~a - ~a~a"
 			   (unit-name-of unit)
@@ -569,6 +550,15 @@
 			   (cond ((time-limit? musume) ($$ "(期日)"))
 				 ((time-over? musume) ($$ "(期限切)"))
 				 (else ""))))
+	      (div/
+	       (a/cont/ (@/ (class "clickable")
+			    (onclick "copy_search(this)"))
+			(@@/ (cont (cut move -1)))
+			"<<" )
+	       (a/cont/ (@/ (class "clickable")
+			    (onclick "copy_search(this)"))
+			(@@/ (cont (cut move +1)))
+			">>"))
 	      (common:form/cont/
 	       (@/ (enctype "multipart/form-data")
                    (id "mainedit"))
@@ -732,116 +722,9 @@
     (input/ (@/ (type "submit") (name "send") (value "送信"))))))
 
 ;;;==============================================================
-;;; Task calender
-;;;
-(define-entry (task-calendar)
-  (define (calendar date)
-    (permission-check-page
-     identity
-     ($$ "カレンダーは一般ユーザアカウントが必要です")
-     (mypage-header/)
-     (div/ (@/ (id "limit-calendar"))
-	   (task-calendar-table/ date))))
-  (calendar (today)))
-
-;;;==============================================================
 ;;; MyPage
 ;;;
-(define-entry (mypage type)
-  (define (todo)
-    (fieldset/
-     (legend/ ($$ "TODO"))
-     (let1 musumes (let1 fan (current-fan)
-                     (filter
-                      (lambda (musume)
-                        (eq? (assign-of musume) fan))
-                      (make-kahua-collection <musume>)))
-       (format "~a item(s)" (length musumes))
-       (table/ (@/ (class "listing"))
-               (thead/ (tr/ (th/ ($$ "タイトル"))
-                            (th/ ($$ "優先度"))
-                            (th/ ($$ "ステータス"))
-                            (th/ ($$ "タイプ"))
-                            (th/ ($$ "登録日"))))
-               (tbody/
-                (map/ (lambda (m)
-                        (let1 status (status-of m)
-                          (tr/ (@/ (class #`"status-,(code-of status)"))
-                               (td/ (label-of m))
-                               (td/ (disp-name-of (priority-of m)))
-                               (td/ (disp-name-of status))
-                               (td/ (disp-name-of (type-of m)))
-                               (td/ (sys-strftime "%Y/%m/%d"
-                                                  (sys-localtime (ctime-of m)))))))
-                      (sort musumes
-			    (lambda (m1 m2)
-			      (> (ctime-of m1) (ctime-of m2))))))))))
-
-  (define (recent)
-    (fieldset/
-     (legend/ ($$ "最近の更新"))
-     (let* ((units (filter (cut fan-to? <> (current-fan))
-                           (all-units)))
-            (musumes (append-map all-active-musumes units))
-            (songs (append-map songs-of  musumes))
-            (songs (reverse (sort songs)))
-            (songs (take* songs 20)))
-       (format "~a item(s)" (length songs))
-       (map/ (lambda (s)
-               (let1 m (musume-of s)
-                 (div/
-                  (fieldset/
-                   (legend/ (label-of m))
-                   (dt/
-		    (format "♪~a. ~a[~a]"
-			    (seq-no-of s)
-			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
-			    (fan-name-of (fan-of s))))
-                   (p/ (melody-format (melody-of s)))))))
-             songs))))
-
-  (define (bookmark)
-    (fieldset/
-     (legend/ ($$ "ブックマーク"))
-     (let1 musumes (or (ref (current-fan) 'bookmark) '())
-       (format "~a item(s)" (length musumes))
-       (table/ (@/ (class "listing"))
-               (thead/ (tr/ (th/ ($$ "削除"))
-                            (th/ ($$ "タイトル"))
-                            (th/ ($$ "優先度"))
-                            (th/ ($$ "ステータス"))
-                            (th/ ($$ "タイプ"))
-                            (th/ ($$ "登録日"))))
-               (tbody/
-                (map/ (lambda (m)
-                        (let1 status (status-of m)
-                          (tr/ (@/ (class #`"status-,(code-of status)"))
-                               (td/ (a/cont/ (@/ (onClick (format "return confirm('~a')?true:false"
-                                                                  ($$ "本当に削除しますか？"))))
-                                             (@@/ (cont
-                                                   (lambda ()
-                                                     (update! (ref (current-fan) 'bookmark)
-                                                              (cut delete m  <>))
-                                                     (redirect-page "mypage/bookmark"))))
-                                             ($$ "削除")))
-                               (td/ (label-of m))
-                               (td/ (disp-name-of (priority-of m)))
-                               (td/ (disp-name-of status))
-                               (td/ (disp-name-of (type-of m)))
-                               (td/ (sys-strftime "%Y/%m/%d"
-                                                  (sys-localtime (ctime-of m)))))))
-                      musumes))))))
-
-  (permission-check-page
-   identity
-   ($$ "マイページは一般ユーザアカウントが必要です")
-   (mypage-header/)
-   (let1 type (and type (string->symbol type))
-     (case type
-       ((todo) (todo))
-       ((recent) (recent))
-       ((bookmark) (bookmark))
-       (else (recent))))))
+(load "kagoiri-musume/mypage.kahua")
 
 ;;;==============================================================
 ;;; Add Bookmark
@@ -912,29 +795,7 @@
                   (clickable ($$ "無選択"))))
      )))
 
-(define (change-passwd . message)
-  (let* ((cuser (kahua-current-user))
-	 (cuser-name (ref cuser 'login-name)))
-    (permission-check-page
-     identity
-     ($$ "パスワード変更には一般ユーザのアカウントが必要です")
-     (h3/ (format ($$ "~a さんのパスワード変更") cuser-name))
-     (form/cont/
-      (@@/ (cont (entry-lambda (:keyword old-pw new-pw new-again-pw)
-		     (cond ((or (equal? "" new-pw)
-				(equal? "" new-again-pw)
-				(not (equal? new-pw new-again-pw)))
-			    (change-passwd ($$ "新パスワードが不正です")))
-			   ((not (kahua-check-user cuser-name old-pw))
-			    (change-passwd ($$ "旧パスワードが不正です")))
-			   (else
-			    (kahua-user-password-change-force cuser new-pw)
-			    (message-only-page
-			     (format ($$ "~a さんのパスワードを変更しました") cuser-name)))))))
-      (change-passwrod-table/ "old-pw" "new-pw" "new-again-pw")
-      (input/ (@/ (type "submit") (name "submit") (value ($$ "変更"))))
-      (p/ (@/ (class "warning")) (node-set message))
-      ))))
+
 
 (define (message-only-page . message)
   message
