@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.95 2006/03/14 15:32:22 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.96 2006/03/18 11:52:19 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -136,15 +136,6 @@
                         (format "select_group(this, '~a' , ~a)" (null? gs) pos)))
                    (name-of g))))
          (groups-of group))))
-
-
-(define (musume-menu/ unit)
-  (ul/ (@/ (class "menu"))
-       (common:li/ (link-of unit
-                     :action "new"
-                     :body (list/
-                             (@/ (class "clickable"))
-                             ($$ "新しい娘。"))))))
 
 (define (require-fan-message unit)
   (format ($$ "『~a』のファンとしてのアカウントが必要です") (unit-name-of unit)))
@@ -319,7 +310,9 @@
                               (node-set
                                (list
                                 (clickable
-                                 (span/ (@/ (onmouseover (js/show id))
+                                 (span/ (@/ (onmouseover ;; (js/show id)
+                                             (format "Element.show('~a'); cm(event, $('~a'));" id id)
+                                                         )
                                             (onmouseout (js/hide id)))
                                         (length members) ($$ "人")))
                                 (div/ (@/ (id id)
