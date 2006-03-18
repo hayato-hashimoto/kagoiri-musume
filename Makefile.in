@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.53 2006/03/12 08:10:03 shibata Exp $
+# $Id: Makefile.in,v 1.54 2006/03/18 12:23:04 shibata Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -44,8 +44,14 @@ SCRIPTS	= kagoiri-musume-start kagoiri-musume-stop
 
 SCRIPTFILES = kagoiri-musume/kagoiri-musume.kahua \
 	      kagoiri-musume/class.kahua \
+	      kagoiri-musume/email.kahua \
 	      kagoiri-musume/fan.kahua \
+	      kagoiri-musume/file.kahua \
 	      kagoiri-musume/group.kahua \
+	      kagoiri-musume/unit.kahua \
+	      kagoiri-musume/musume.kahua \
+	      kagoiri-musume/song.kahua \
+	      kagoiri-musume/mypage.kahua \
 	      kagoiri-musume/search.kahua \
 	      kagoiri-musume/page.kahua \
 	      kagoiri-musume/parts-collection.kahua \
@@ -79,7 +85,8 @@ JAVASCRIPTFILES = kagoiri-musume/javascripts/kagoiri-musume.js \
 SOURCEDIR   = kagoiri-musume
 PLUGINDIR   = plugins
 PLUGINFILES = kagoiri-musume.scm calendar.scm css.scm sendmail-with-headers.scm async.scm csv.scm
-TESTFILES   = system-admin change-password \
+TESTFILES   = login-logout \
+              change-password system-admin \
               unit-list unit-operate \
               musume-list musume-operate \
               melody-list melody-operate
