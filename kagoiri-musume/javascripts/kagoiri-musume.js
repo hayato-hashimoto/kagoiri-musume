@@ -849,3 +849,91 @@ function cm(e, dm){
      }
 
 }
+
+function edit_group(event){
+     Event.stop(event);
+     var elem = Event.element(event);
+     var key = elem.getAttribute('value');
+     new PopupWindow(kahua_self_uri_full + '/admin-system/group/' + key + '/edit',
+                     {event:event,
+                      id:'popupwindow'+key});
+}
+
+function show_member_select(key) {
+     // var tr = Event.findElement(evn,'tr');
+     function show_select(req){
+          var menu = document.createElement('td');
+          // var pwindow = $('popupwindow'+key);
+          var pwindow = $('table'+key);
+          // var dim = Element.getDimensions(pwindow);
+//           var offset = Position.realOffset(pwindow);
+          menu.innerHTML = req.responseText;
+          pwindow.appendChild(menu);
+     }
+     new Ajax.Request(kahua_self_uri_full + '/admin-system/group/' + key + '/nomembers',
+                      {onComplete: show_select});
+};
+
+
+var PopupWindow = Class.create();
+PopupWindow.prototype = {
+     initialize: function(url, options) {
+          var options = Object.extend({
+               parent: document.body,
+               id: 'popupwindow',
+               title: 'popupwindow',
+               onComplete: this.create_window.bind(this)
+               }, options || {});
+          this.options = options;
+          new Ajax.Request(url, options);
+     },
+     create_window: function(req){
+          var popwindow =  document.createElement('div');
+          var title = document.createElement('div');
+          var close_btn = document.createElement('div');
+          var body = document.createElement('div')
+          close_btn.innerHTML = 'close';
+          close_btn.className = 'close-btn';
+          Event.observe(close_btn, 'click', this.close.bind(this));
+          this.popwindow = popwindow;;
+          popwindow.className = 'popupwindow';
+          title.className = 'popuptitle';
+          function drag_on(){
+               Event.stopObserving(title, 'mouseover', drag_on, true);
+               new Draggable(popwindow , {handle:title});
+          };
+          Event.observe(title, 'mouseover', drag_on, true)
+          title.innerHTML = this.options.title;
+          title.appendChild(close_btn);
+          popwindow.id = this.options.id;
+          popwindow.appendChild(title);
+          body.innerHTML = req.responseText;
+          popwindow.appendChild(body);
+          this.options.parent.appendChild(popwindow);
+          var dim = Element.getDimensions(popwindow);
+          popwindow.style.top = (window.innerHeight - dim.height) / 2;
+          popwindow.style.left = (window.innerWidth - dim.width) / 2;
+     },
+     close: function(){
+          Element.remove(this.popwindow);
+     }
+}
+
+function submitSaveGroup(form, id){
+     var members = $A($('userlist' + id).getElementsByTagName("LI")).map(function (ele) {return ele.getAttribute('value')});
+     var input;
+     members.map(
+          function(fan){
+               var input = document.createElement('input');
+               input.name = 'members';
+               input.value = fan;
+               input.type = 'text';
+               Element.hide(input);
+               form.appendChild(input);
+          });
+     var post = Form.serialize(form);
+     new Ajax.Request(form.action,
+                      {method:'post',
+                                postBody:post});
+     Element.remove($('popupwindow'+id))
+}
