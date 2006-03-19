@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.260 2006/03/18 12:59:00 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.261 2006/03/19 15:42:16 shibata Exp $
 
 ;;
 ;; include
@@ -41,6 +41,55 @@
             #f)
 
 (define $$ gettext)
+
+;
+; permission check page
+;
+; [checker]
+; checker is a predicate for <kahua-user> object.
+; return value is #f or <kahua-user> object.
+; So, at default, this template check whether kahua-user or not,
+; therefore, you write additional check.
+; If you care only kahua-user or not, you set identity as checker.
+;
+(define-syntax permission-check-page
+  (syntax-rules ()
+    ((_ checker msg body ...)
+     (begin
+       (or (and (kahua-current-user)
+		(not (ref (kahua-current-user) 'inactive))
+                (checker (kahua-current-user)))
+           ;; new account set
+           (set! (kahua-current-user)
+               (ref (login-pc-page #f checker msg) 'login-name)))
+       (kagoiri-page (node-set (list body ...)))))))
+
+
+;
+; maybe, redirect-page will called at the end of begin-body.
+;
+(define-syntax permission-check-logic
+  (syntax-rules ()
+    ((_ checker msg begin-body)
+     (begin
+       (or (and (kahua-current-user)
+		(not (ref (kahua-current-user) 'inactive))
+                (checker (kahua-current-user)))
+           ;; new account set
+           (set! (kahua-current-user)
+               (ref (login-pc-page #f checker msg) 'login-name)))
+       begin-body))))
+
+;; system admin's page
+(define-syntax admin-system-main
+  (syntax-rules ()
+    ((_ node ...)
+     (permission-check-page
+      (lambda (u)
+        (if (kahua-user-has-role? u '(admin))
+            u #f))
+      ($$ "システム管理者のアカウントが必要です")
+      (node-set/ node ...)))))
 
 (load "kagoiri-musume/version.kahua")
 (load "kagoiri-musume/user-setting.kahua")
