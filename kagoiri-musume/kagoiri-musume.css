@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.56 2006/03/18 11:35:29 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.57 2006/03/19 14:48:09 shibata Exp $ */
 
 /*
  * Common stuff
@@ -569,7 +569,16 @@ div.miniwindow {
     /* max-width: 400px; */
 }
 
-div.minititle {
+div.popupwindow {
+    position:absolute;
+    border:1px solid black;
+    background-color:white;
+/*     width:50%; */
+/*     height::50%; */
+
+}
+
+div.minititle, div.popuptitle {
     padding:2px;
     background-color:#7b96ac;
     color:white;
@@ -580,7 +589,7 @@ div.minititle {
     position:relative;
 }
 
-div.minititle a {
+div.minititle a, .close-btn {
     text-decoration:none;
     position:absolute;
     right:3px;
@@ -660,8 +669,6 @@ table#links-table td {
 }
 
 #memberlist {
-    padding:0px;
-    margin:0px;
     height:100%;
     width:100px;
 }
@@ -679,6 +686,8 @@ input#membersearch {
 }
 
 ul.userlist{
+    padding:0px;
+    margin:0px;
     border: 1px solid #7b96ac;
     background-color: white;
     height:100px;
@@ -815,4 +824,18 @@ div.group-item {
 
 div.group-item:hover {
     background-color:#7b96ac;
+}
+
+.group-edit {
+    width: 400px;
+    background-color:white;
+}
+
+.group-edit td {
+    border:1px solid black;
+}
+
+ul.nomembers {
+    height:200px !important;
+    overflow:auto;
 }
