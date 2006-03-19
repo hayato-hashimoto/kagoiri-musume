@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.11 2006/03/18 11:33:47 shibata Exp $
+;; $Id: group.kahua,v 1.12 2006/03/19 14:47:09 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -270,11 +270,74 @@
        (iota (length groups))))
      )))
 
-(define-entry-method admin-system ("group" "tree-edit")
+(define-entry-method admin-system ("group" group-key "nomembers")
+  (div/
+   (ul/
+    (@/ (id #`"nomembers,|group-key|")
+        (class "userlist nomembers"))
+    (map/
+     (lambda (fan)
+       (li/ (@/ (value (fan-name-of fan)))
+            (label-of fan)))
+     (make-kahua-collection <fan>))
+    )
+   (script/ (@/ (type "text/javascript"))
+            (js/sortable #`"nomembers,|group-key|"
+                 :dropOnEmpty #t
+                 :constraint #f
+                 :containment #f
+                 ))))
+
+(define-entry-method admin-system ("group" group-key "edit")
+  (let1 group (find-kahua-instance <group> group-key)
+    (form/cont/
+     (@/ (onsubmit #`"submitSaveGroup(this,,',|group-key|'); return false"))
+     (@@/ (cont
+           (entry-lambda (:keyword name :mvkeyword members)
+             (set! (name-of group) name)
+             (set! (members-of group) (map kahua-find-user members))
+             (span/ (x->string (cons members name))))))
+     (table/
+      (tr/ (@/ (id #`"table,|group-key|"))
+       (td/
+        (table/
+         (@/ (class "group-edit"))
+         (tr/
+          (td/ "グループ名")
+          (td/
+           (input/ (@/ (value  (name-of group))
+                       (name "name")))))
+         (tr/
+          (td/ "メンバー")
+          (td/
+           (ul/ (@/ (id #`"userlist,|group-key|")
+                    (class "userlist")
+                    (ondblclick "move_to(event,'allmemberlist')"))
+                (map/
+                 (lambda (fan)
+                   (li/ (@/ (value (fan-name-of fan)))
+                        (label-of fan)))
+                 (members-of group))))
+          (td/
+           (a/ (@/ (onclick #`"show_member_select(',|group-key|')"))
+               (clickable "＋"))
+           ))))))
+     (script/
+      (@/ (type "text/javascript"))
+      (js/sortable #`"userlist,|group-key|"
+                   :dropOnEmpty #t
+                   :constraint #f
+                   :containment #f
+                   ))
+     (input/ (@/ (type "submit") (value "保存"))))))
+
+(define-entry-method admin-system ("group")
   (let1 groups '()
 
     (define (make-dragbox g)
-      (div/ (@/ (class "box") )
+      (div/ (@/ (class "box")
+                (value (key-of g))
+                (ondblclick "edit_group(event)"))
             (begin
               (push! groups g)
               (name-of g))
@@ -289,8 +352,9 @@
 
   (let1 root (top-group)
     (if root
-        (kagoiri-page
-         (h1/ "グループ構造設定")
+        (admin-system-main
+         (admin-system-navigation/ "グループ")
+         (h2/ "グループ構造設定")
          (fieldset/
           (legend/ "グループ構造")
           (form/cont/
