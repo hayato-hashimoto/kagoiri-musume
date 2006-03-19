@@ -762,6 +762,13 @@ function select_group(elem, is_null, pos){
           Element.remove(nextelm);
           nextelm = $('group-box' + ++tmp_pos);
      }
+     if (pos == 0 && elem.style.backgroundColor){
+          elem.style.backgroundColor = null;
+          var mlist = $('allmemberlist');
+          var nodes = $A(mlist.childNodes);
+          nodes.map(function(ele){ Element.show(ele); ele._hide=false;});
+          return
+     }
      select(elem);
 
      if (// is_null == '#t'
