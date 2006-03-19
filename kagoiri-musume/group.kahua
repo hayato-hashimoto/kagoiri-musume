@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.12 2006/03/19 14:47:09 shibata Exp $
+;; $Id: group.kahua,v 1.13 2006/03/19 15:42:28 shibata Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -390,4 +390,4 @@
            groups)))
       (begin
         (make <group> :name "*TOP*")
-        (redirect/cont (cont admin-system "group" "tree-edit")))))))
+        (redirect/cont (cont admin-system "group")))))))
