@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit.kahua,v 1.1 2006/03/18 11:29:13 shibata Exp $
+;; $Id: unit.kahua,v 1.2 2006/04/03 16:20:57 shibata Exp $
 ;;
 ;;
 ;; Unit means Project.
@@ -43,6 +43,9 @@
 
    (notify-addresses :allocation :persistent :init-keyword :notify-addresses
                      :init-value '() :accessor notify-addresses-of)
+
+   (public           :allocation :persistent :init-keyword :public
+                     :init-value #f :accessor public-of)
    ))
 
 (define (active? unit)
@@ -53,7 +56,9 @@
       (filter active?
               (make-kahua-collection <unit>))
     (let1 fan (car fan)
-      (filter (every-pred active? (cut fan-to? <> fan))
+      (filter (every-pred active? (lambda (u)
+                                    (or (public-of u)
+                                        (fan-to? u fan))))
               (make-kahua-collection <unit>)))))
 
 (define (musume-ref unit mno)

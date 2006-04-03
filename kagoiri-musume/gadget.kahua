@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.62 2006/03/14 15:32:22 shibata Exp $
+;; $Id: gadget.kahua,v 1.63 2006/04/03 16:20:57 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -118,7 +118,7 @@
 		    :in-reply-to *kagoiri-musume-email*))
 
 
-(define (create-new-unit name desc fans priority status type category notify-addresses)
+(define (create-new-unit name desc fans priority status type category notify-addresses public)
   (and (not (string-null? name))
        (not (null? fans))
        (or (id->obj <unit> name)
@@ -130,7 +130,8 @@
 	     :statuss (id-list->obj-list <status> status)
 	     :types (id-list->obj-list <type> type)
 	     :categories (id-list->obj-list <category> category)
-	     :notify-addresses (normalize-addresses notify-addresses)))))
+	     :notify-addresses (normalize-addresses notify-addresses)
+             :public public))))
 
 (define (create-new-musume unit name priority status assign type category)
   (make <musume> :unit unit
@@ -162,7 +163,7 @@
   (set! (limit-of musume) d)
   musume)
 
-(define (unit-makeover! unit n d notify fs ps ss ts cs)
+(define (unit-makeover! unit n d notify public fs ps ss ts cs)
   (if (not (string-null? n))
       (set! (unit-name-of unit) n))
   (set! (description-of unit) d)
@@ -172,6 +173,7 @@
   (set! (types-of unit) (id-list->obj-list <type> ts))
   (set! (categories-of unit) (id-list->obj-list <category> cs))
   (set! (notify-addresses-of unit) (normalize-addresses (kahua-context-ref "notify-addresses")))
+  (set! (public-of unit) public)
   unit)
 
 (define (uploaded-file-name unit musume song)

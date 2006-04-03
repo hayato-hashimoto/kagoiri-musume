@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.8 2006/03/18 12:21:16 shibata Exp $
+;; $Id: unit-list.scm,v 1.9 2006/04/03 16:20:47 shibata Exp $
 
 (load "common.scm")
 
@@ -215,7 +215,12 @@
                           (@ (type "text")
                              (rows "2")
                              (name "notify-addresses")
-                             (cols "20"))))))
+                             (cols "20")))))
+                 (tr (td "¸ø³«")
+                  (td (input (@ (type "checkbox")
+                                (name "public")
+                                (id "public")))
+                      (label (@ (for "public")) "¸ø³«"))))
           )
         (call-worker/gsid->sxml w
                                 '()

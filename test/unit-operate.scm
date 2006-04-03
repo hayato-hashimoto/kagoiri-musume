@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.9 2006/03/18 12:21:16 shibata Exp $
+;; $Id: unit-operate.scm,v 1.10 2006/04/03 16:20:47 shibata Exp $
 
 (load "common.scm")
 
@@ -130,7 +130,12 @@
                                      (@ (type "text/javascript"))
                                      ?_)))))
                  (tr (td "通知アドレス")
-                     (td (textarea ?@))))
+                     (td (textarea ?@)))
+                 (tr (td "公開")
+                     (td (input (@ (type "checkbox")
+                                   (name "public")
+                                   (id "public")))
+                         (label (@ (for "public")) "公開"))))
           )
         (call-worker/gsid->sxml
 	 w

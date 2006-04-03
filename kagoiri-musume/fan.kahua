@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: fan.kahua,v 1.6 2006/03/14 15:32:22 shibata Exp $
+;; $Id: fan.kahua,v 1.7 2006/04/03 16:20:57 shibata Exp $
 ;;
 ;; fans means developer
 ;;
@@ -87,7 +87,8 @@
 
 (define-method viewable? ((unit <unit>) . user)
   (let1 fan (get-optional user (kahua-current-user))
-    (memq fan (fans-of unit))))
+    (or (public-of unit)
+        (memq fan (fans-of unit)))))
 
 (define-method kill! ((fan <fan>))
   (set! (delete-of fan) #t))

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.261 2006/03/19 15:42:16 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.262 2006/04/03 16:20:57 shibata Exp $
 
 ;;
 ;; include
@@ -430,8 +430,8 @@
 	 (musume (musume-of song))
 	 (unit (unit-of musume)))
     (define (checker u) 
-      (if (memq (id->obj <fan> (ref u 'login-name))
-		(fans-of unit))
+      (if (eq? (id->obj <fan> (ref u 'login-name))
+               (fan-of song))
 	  u #f))
     (let1 user (or (and (kahua-current-user)
 			(checker (kahua-current-user)))
@@ -603,11 +603,11 @@
 	       (a/cont/ (@/ (class "clickable")
 			    (onclick "copy_search(this)"))
 			(@@/ (cont (cut move -1)))
-			"<<" )
+			"前の案件" )
 	       (a/cont/ (@/ (class "clickable")
 			    (onclick "copy_search(this)"))
 			(@@/ (cont (cut move +1)))
-			">>"))
+			"次の案件"))
 	      (common:form/cont/
 	       (@/ (enctype "multipart/form-data")
                    (id "mainedit"))
@@ -804,7 +804,7 @@
       (div/ (@/ (class "miniwindow"))
             (div/ (@/ (class "minititle")
                       (id "musumeref_title")
-                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('memo',{handle:'musumeref_title'})"))
+                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('memo',{handle:$('musumeref_title')})"))
                   ($$ "ユニットを選択してください")
                   (a/ (@/ (href "#")
                           (onclick "close_memo(); return false"))
@@ -886,7 +886,7 @@
                 (class "minwindow"))
 	    (div/ (@/ (class "minititle")
                       (id "helptitle")
-                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('help',{handle:'helptitle'})"))
+                      (onmousedown "this.onmousedown=Prototype.emptyFunction; new Draggable('help',{handle:$('helptitle')})"))
 		  ($$ "ヘルプ")
 		  (a/ (@/ (href "#")
 			  (onclick "close_help(); return false"))

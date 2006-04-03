@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.8 2006/03/18 12:21:16 shibata Exp $
+;; $Id: melody-list.scm,v 1.9 2006/04/03 16:20:47 shibata Exp $
 
 (load "common.scm")
 
@@ -61,11 +61,11 @@
            (div (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
-                  "<<")
+                  "Á°¤Î°Æ·ï")
                (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
-                  ">>"))))
+                  "¼¡¤Î°Æ·ï"))))
         (call-worker/gsid->sxml w
                                 '()
                                 '()
