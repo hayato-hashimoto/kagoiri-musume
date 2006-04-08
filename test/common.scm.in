@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common.scm.in,v 1.10 2006/03/18 12:18:33 shibata Exp $
+;; $Id: common.scm.in,v 1.11 2006/04/08 11:45:01 shibata Exp $
 
 (use gauche.test)
 (use gauche.collection)
@@ -25,10 +25,11 @@
   `(map symbol->string ,lst))
 
 (define (*setup*)
-  (sys-system "rm -rf _tmp _work kagoiri-musume")
+  (sys-system "rm -rf _tmp _www _work kagoiri-musume")
   (sys-mkdir "kagoiri-musume" #o755)
   (sys-system "touch kagoiri-musume/user-setting.kahua")
   (sys-mkdir "_tmp" #o755)
+  (sys-mkdir "_www" #o755)
   (sys-mkdir "_work" #o755)
   (sys-mkdir "_work/plugins" #o755)
 
