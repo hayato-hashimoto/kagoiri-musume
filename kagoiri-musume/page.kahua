@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.37 2006/03/19 15:42:15 shibata Exp $
+;; $Id: page.kahua,v 1.38 2006/04/08 11:43:48 shibata Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -137,7 +137,7 @@
 	    (@/ (name "Status") (value "302 Moved")))
 	   (extra-header/
 	    (@/ (name "Location")
-		(value (string-append (kahua-self-uri-full) path)))))))
+		(value (kahua-self-uri-full path)))))))
 
 
 (define-method navigation/ ((unit <unit>))

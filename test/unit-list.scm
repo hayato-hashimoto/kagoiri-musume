@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.9 2006/04/03 16:20:47 shibata Exp $
+;; $Id: unit-list.scm,v 1.10 2006/04/08 11:43:48 shibata Exp $
 
 (load "common.scm")
 
@@ -39,7 +39,7 @@
  (test* "ナビゲーション"
         '(*TOP*
           (span (@ (class "current"))
-                (a (@ (href "kahua.cgi/kagoiri-musume/")) "トップ")))
+                (a (@ (href "/kahua.cgi/kagoiri-musume/")) "トップ")))
         (call-worker/gsid->sxml w
                                 '()
                                 '(("name" "cut-sea") ("pass" "cutsea"))
