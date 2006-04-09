@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.5 2006/03/18 12:21:16 shibata Exp $
+;; $Id: musume-list.scm,v 1.6 2006/04/09 10:34:21 shibata Exp $
 
 (load "common.scm")
 
@@ -96,7 +96,6 @@
           (form (@ (method "POST")
                    (id "filtering_form")
                    (action ?_))
-                (table ?*)
                 (table ?*)
                 ))
 

@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.57 2006/03/19 14:48:09 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.58 2006/04/09 10:34:21 shibata Exp $ */
 
 /*
  * Common stuff
@@ -49,13 +49,26 @@ pre {
     overflow: auto;
 }
 
+form {
+    border: 2px solid #D6D9E9;
+    background-color:rgb(242, 243, 248);
+    margin:5px;
+    padding:5px;
+}
+
+form.searchbox , #search-box form {
+    border:none;
+    background-color:transparent;
+    margin:0px;
+    padding:0px;
+}
+
 input, textarea
 {
     background-color: white;
     color: inherit;
     border: 1px solid #7b96ac;
     vertical-align:middle;
-
 }
 
 textarea, input[type="text"], input[type="password"]{
