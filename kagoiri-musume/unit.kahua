@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit.kahua,v 1.2 2006/04/03 16:20:57 shibata Exp $
+;; $Id: unit.kahua,v 1.3 2006/05/12 16:11:15 cut-sea Exp $
 ;;
 ;;
 ;; Unit means Project.
@@ -66,6 +66,12 @@
           (= mno (mno-of m)))
         (musumes-of unit)))
 
+(define-method fans/blank-of ((unit <unit>))
+  (let1 blank (kahua-find-user "   ")
+    (cons blank
+	  (filter (lambda (f)
+		    (not (eq? f blank)))
+		  (ref unit 'fans)))))
 
 (define-method all-musumes ((unit <unit>))
   (musumes-of unit))

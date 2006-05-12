@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.63 2006/04/03 16:20:57 shibata Exp $
+;; $Id: gadget.kahua,v 1.64 2006/05/12 16:11:15 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -15,7 +15,7 @@
   (list priority-of status-of type-of category-of assign-of))
 
 (define $properties-accessor-list$
-  (list priorities-of statuss-of types-of categories-of fans-of))
+  (list priorities-of statuss-of types-of categories-of fans/blank-of))
 
 (define $all-properties-list$
   (list all-priorities all-statuss all-types all-categories all-fans))
