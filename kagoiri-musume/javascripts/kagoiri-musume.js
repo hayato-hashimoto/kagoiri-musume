@@ -21,8 +21,10 @@ function init(){
      // for IE
      if (win){
           var navi = $('navigation');
-          Element.remove(navi);
-          document.body.appendChild(navi);
+	  if (navi) {
+	      Element.remove(navi);
+	      document.body.appendChild(navi);
+	  }
      }
 }
 
