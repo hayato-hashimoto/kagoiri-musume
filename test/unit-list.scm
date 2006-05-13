@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.10 2006/04/08 11:43:48 shibata Exp $
+;; $Id: unit-list.scm,v 1.11 2006/05/13 06:50:53 shibata Exp $
 
 (load "common.scm")
 
@@ -202,10 +202,10 @@
                                      (ul (@ (ondblclick ?_)
                                             (id "allmemberlist")
                                             (class "userlist"))
-                                         (li (@ (value "   ")))
-                                         (li (@ (value "cut-sea")) "cut-sea")
-                                         (li (@ (value "guest")) "guest")
-                                         (li (@ (value "kago")) "kago")))
+                                         (li (@ (user-name "   ")))
+                                         (li (@ (user-name "cut-sea")) "cut-sea")
+                                         (li (@ (user-name "guest")) "guest")
+                                         (li (@ (user-name "kago")) "kago")))
                                  (td (@ (id "select-td")))
                                  (script
                                    (@ (type "text/javascript"))
