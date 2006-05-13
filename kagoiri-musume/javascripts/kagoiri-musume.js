@@ -369,7 +369,7 @@ function blockIt(){
 }
 
 function submitCreateUnit(form){
-     var members = $A($('memberlist').getElementsByTagName("LI")).map(function (ele) {return ele.getAttribute('value')});
+     var members = $A($('memberlist').getElementsByTagName("LI")).map(function (ele) {return ele.getAttribute('user-name')});
      var input;
      members.map(
           function(fan){
@@ -608,7 +608,7 @@ function filter_member(value){
      var matcher = new RegExp(value,'i');
      nodes.map(
           function(ele){
-               if (ele.getAttribute('value').match(matcher) ||
+               if (ele.getAttribute('user-name').match(matcher) ||
                    ele.innerHTML.match(matcher))
                {
                     if (!ele._hide){
@@ -781,7 +781,7 @@ function select_group(elem, is_null, pos){
                var mlist = $('allmemberlist');
                var nodes = $A(mlist.childNodes);
                nodes.map(function(ele){
-                              if (members.include(ele.getAttribute('value'))) {
+                              if (members.include(ele.getAttribute('user-name'))) {
                                    Element.show(ele);
                                    ele._hide = false;
                               } else {
