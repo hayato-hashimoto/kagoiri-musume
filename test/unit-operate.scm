@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.12 2006/05/13 08:36:13 shibata Exp $
+;; $Id: unit-operate.scm,v 1.13 2006/05/14 02:29:50 shibata Exp $
 
 (load "common.scm")
 
@@ -111,8 +111,8 @@
                                         (ul (@ (ondblclick ?_)
                                                (id "memberlist")
                                                (class "userlist"))
-                                            (li (@ (kahua:user-name "   ")))
-                                            (li (@ (kahua:user-name "cut-sea")) "cut-sea")))
+                                            (li (@ (user-name "   ")))
+                                            (li (@ (user-name "cut-sea")) "cut-sea")))
                                     (td "<=")
                                     (td (@ (id "allmemberlistblock"))
                                         "¸¡º÷:"
@@ -123,8 +123,8 @@
                                         (ul (@ (ondblclick ?_)
                                                (id "allmemberlist")
                                                (class "userlist"))
-                                            (li (@ (kahua:user-name "guest")) "guest")
-                                            (li (@ (kahua:user-name "kago")) "kago")))
+                                            (li (@ (user-name "guest")) "guest")
+                                            (li (@ (user-name "kago")) "kago")))
                                     (td (@ (id "select-td")))
                                     (script
                                      (@ (type "text/javascript"))
