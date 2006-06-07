@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.265 2006/06/07 12:11:22 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.266 2006/06/07 12:20:04 cut-sea Exp $
 
 ;;
 ;; include
@@ -549,9 +549,9 @@
       (define (excerpt song)
 	`((json
 	   ,(string-append (apply string-append
-				  (map (lambda (line) #`">,line")
+				  (map (lambda (line) #`">,line\n")
 				       (string-split (melody-of song) "\n")))
-			   "\n\n"))))
+			   "\n"))))
       (define (move dist)
 	(let ((musumes (sort (all-active-musumes unit))))
 	  (define (make-filter prop code prop-of)
