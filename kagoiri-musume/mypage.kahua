@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: mypage.kahua,v 1.3 2006/03/19 14:45:35 shibata Exp $
+;; $Id: mypage.kahua,v 1.4 2006/06/07 10:57:20 cut-sea Exp $
 ;;
 ;;
 
@@ -99,25 +99,27 @@
    (navigation/ (kahua-current-user) "最近の更新")
    (h2/ ($$ "最近の更新"))
    (let* ((units (filter (cut fan-to? <> (current-fan))
-                           (all-units)))
-            (musumes (append-map all-active-musumes units))
-            (songs (append-map songs-of  musumes))
-            (songs (reverse (sort songs)))
-            (songs (take* songs 20)))
-       (format "~a item(s)" (length songs))
-       (map/ (lambda (s)
-               (let1 m (musume-of s)
-                 (div/
-                  (fieldset/
-                   (legend/ (label-of m))
-                   (dt/
-		    (format "♪~a. ~a[~a]"
-			    (seq-no-of s)
-			    (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
-			    (fan-name-of (fan-of s))))
-                   (p/ (@/ (class "rectangle"))
-                       (melody-format (melody-of s)))))))
-             songs))))
+			 (all-units)))
+	  (musumes (append-map all-active-musumes units))
+	  (songs (append-map songs-of  musumes))
+	  (songs (reverse (sort songs)))
+	  (songs (take* songs 20)))
+     (format "~a item(s)" (length songs))
+     (map/ (lambda (s)
+	     (let1 m (musume-of s)
+	       (div/
+		(fieldset/
+		 (legend/ (label-of m))
+		 (dt/
+		  (format "♪~a. ~a[~a]"
+			  (seq-no-of s)
+			  (sys-strftime "%Y/%m/%d %H:%M:%S" (sys-localtime (ctime-of s)))
+			  (fan-name-of (fan-of s))))
+		 (if (delete-of s)
+		     (p/ (@/ (class "warning rectangle")) ($$ "このメロディは削除されてます"))
+		     (p/ (@/ (class "rectangle"))
+			  (melody-format (melody-of s))))))))
+	   songs))))
 
 (define-entry-method mypage ("bookmark")
   (mypage-main
