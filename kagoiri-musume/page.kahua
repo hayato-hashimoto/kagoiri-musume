@@ -3,13 +3,21 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.39 2006/06/10 00:08:16 cut-sea Exp $
+;; $Id: page.kahua,v 1.40 2006/07/04 09:47:47 bizenn Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
 
 (define-if-not-bound *kagoiri-musume-title*
   "äÆÆþÌ¼¡£ - Groupie System")
+
+(define-constant *content-type*
+  (format "text/html; charset=~a"
+	  (case (gauche-character-encoding)
+	    ((euc-jp) 'EUC-JP)
+	    ((utf-8)  'UTF-8)
+	    ((sjis)   'Shift_JIS)
+	    (else     'EUC-JP))))	; Fit w/ kahua.cgi.in
 
 ;
 ; page base
@@ -19,7 +27,7 @@
   (html/
    (head/ (title/ *kagoiri-musume-title*)
 	  (meta/ (@/ (http-equiv "Content-type")
-		     (content "text/html; charset=euc-jp")))
+		     (content *content-type*)))
 	  (link/ (@/ (rel "stylesheet") (type "text/css")
 		     (href (kahua-static-document-url
 			    "kagoiri-musume/kagoiri-musume.css"))))

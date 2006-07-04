@@ -1,14 +1,14 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.54 2006/03/18 12:23:04 shibata Exp $
+# $Id: Makefile.in,v 1.55 2006/07/04 09:47:47 bizenn Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
 SHELL             = @SHELL@
 prefix            = @prefix@
 exec_prefix       = @exec_prefix@
-bindir            = @bindir@/$(kahua)
-sbindir           = @sbindir@/$(kahua)
-libexecdir	  = @libexecdir@/$(kahua)
+bindir            = @bindir@
+sbindir           = @sbindir@
+libexecdir	  = @libexecdir@
 datadir		  = @datadir@/$(kahua)
 sysconfdir        = @sysconfdir@/$(kahua)
 sharedstatedir    = @sharedstatedir@/$(kahua)
@@ -16,8 +16,8 @@ localstatedir     = @localstatedir@/$(kahua)
 libdir            = @libdir@/$(kahua)
 includedir        = @includedir@/$(kahua)
 oldincludedir     = @oldincludedir@/$(kahua)
-infodir           = @infodir@/$(kahua)
-mandir            = @mandir@/$(kahua)
+infodir           = @infodir@
+mandir            = @mandir@
 srcdir            = @srcdir@
 VPATH             = $(srcdir)
 top_builddir      = @top_builddir@
