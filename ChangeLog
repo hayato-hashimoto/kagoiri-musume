@@ -1,3 +1,9 @@
+2006-07-19  Shiro Kawai  <shiro@acm.org>
+
+	* configure.ac: add $(prefix)/bin instead of $(prefix)/bin/kahua
+	  to PATH if --prefix is given, adapting the change of kahua
+	  installation directories.
+
 2006-07-04  Katsutoshi Itoh <cut-sea@master.email.ne.jp>
 
 	* for Kahua_ha branch.
