@@ -1,0 +1,218 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; widget
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-class <input-widget-type> () ())
+(define-class <display-widget-type> () ())
+
+(define *input* (make <input-widget-type>))
+(define *display* (make <display-widget-type>))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; validator
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define validator.string.not-null
+  (lambda (value)
+    (cond ((and (string? value)
+                (not (string-null? value))) #f)
+          (else "文字列を入力してください"))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; field
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-class <field> ()
+  ((value
+    :init-keyword :value)
+   (name
+    :init-value #f
+    :init-keyword :name)
+   (title
+    :init-value ""
+    :init-keyword :title)
+   (validators
+    :init-value '()
+    :init-keyword :validators)
+   (fails
+    :init-value '())
+   (init-value
+    :init-keyword :init-value)
+   ))
+
+;; string-field
+(define-class <string-field> (<field>)
+  ((input-size
+    :init-value 20
+    :init-keyword :input-size)))
+
+(define-method render ((field <string-field>) (type <input-widget-type>))
+  (node-set/
+   (dt/ (ref field 'title))
+   (dd/ (input/ (@/ (type "text")
+                    (name (ref field 'name))
+                    (value (ref field 'value))))
+        ;; error message
+        (map/ (pa$ span/ (@/ (class "error")))
+              (ref field 'fails)))))
+
+(define-method render ((field <string-field>) (type <display-widget-type>))
+  (node-set/
+   (dt/ (ref field 'title))
+   (dd/ (ref field 'value))))
+
+(define-method update/request ((field <string-field>))
+  (let1 value (kahua-context-ref (ref field 'name))
+    (slot-set! field 'value value)))
+
+
+(define-class <boolean-field> (<field>) ())
+
+(define-method render ((field <boolean-field>) (type <input-widget-type>))
+  (node-set/
+   (dt/ (ref field 'title))
+   (dd/ (input/ (@/ (type "checkbox")
+                    (name (ref field 'name))
+                    (checked (ref field 'value)))))))
+
+(define-method render ((field <boolean-field>) (type <display-widget-type>))
+  (node-set/
+   (dt/ (ref field 'title))
+   (dd/ (if (ref field 'value)
+            "True"
+          "False"))))
+
+(define-method update/request ((field <boolean-field>))
+  (let1 value (kahua-context-ref (ref field 'name) #f)
+    (slot-set! field 'value #?=(not (not value)))))
+
+(define-method validate ((field <field>))
+  (let1 fails #f
+    (slot-set! field 'fails '())
+    (for-each
+     (lambda (validator)
+       (cond ((validator (ref field 'value))
+              => (lambda (fail)
+                   (set! fails #t)
+                   (slot-push! field 'fails fail)))))
+     (ref field 'validators))
+    fails))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; form
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-class <form> () ())
+
+(define-values (for-each-fields map-fields)
+  (let1 %make-mapper
+      (lambda (mapper)
+        (lambda (proc form)
+          (mapper
+           (lambda (slot)
+             (let1 slot-name (slot-definition-name slot)
+               (proc slot-name (ref form slot-name))))
+           (class-slots (class-of form)))))
+
+    (values (%make-mapper for-each)
+            (%make-mapper map))))
+
+(define (map-fields/ . args)
+  (node-set (apply map-fields args)))
+
+
+(define-method update/request ((form <form>))
+  (for-each-fields
+   (lambda (_ field)
+     (update/request field))
+   form))
+
+(define-method validate ((form <form>))
+  (let1 fails #f
+    (for-each-fields
+     (lambda (name field)
+       (when (validate field)
+         (set! fails #t)))
+     form)
+    fails))
+
+(define (update-context/form! context form)
+  (for-each-fields
+   (lambda (name field)
+     (slot-set! context name (ref field 'value)))
+   form))
+
+(define (update-form/context! form context)
+  (let1 create? (procedure? context)
+    (for-each-fields
+     (lambda (name field)
+       (unless (slot-bound? field 'value)
+         (slot-set! field 'value
+                    (if create?
+                        (ref field 'init-value)
+                      (ref context name)))))
+     form)))
+
+;; input form
+(define (input-form form . options)
+  (let-keywords* options
+      ((context #f))
+    (apply %render form context *input* options)))
+
+(define-method %render ((form <form>) context (type <input-widget-type>) . options)
+  (let-keywords* options
+      ((next-cont #f))
+
+    (define (%realize-context ctx)
+      (when (procedure? ctx)
+        (set! context (ctx))))
+
+    (define (%handler pcont)
+      (lambda ()
+        (update/request form)
+        (if (validate form)
+            (pcont (apply %render form context type options))
+          (begin
+            (%realize-context context)
+            (update-context/form! context form)
+            (if next-cont
+                (next-cont context form)
+              (pcont (apply %render form context type
+                            (append '(:message "Saved") options))))))))
+
+    (let/pc pcont
+      (pcont
+       (form/cont/
+        (@@/ (cont (%handler pcont)))
+        (begin
+          (update-form/context! form context)
+          (apply render form context type options)))))))
+
+(define-method render ((form <form>) context (type <input-widget-type>) . options)
+  (let-keywords* options
+      ((message #f))
+
+    (node-set/
+     (if message (span/ (@/ (class "message")) message) "")
+     (dl/
+      (map-fields/
+       (lambda (_ field)
+         (render field type))
+       form))
+
+     (input/ (@/ (type "submit") (value "save"))))))
+
+;; display form
+
+(define (display-form form . options)
+  (let-keywords* options
+      ((context #f))
+    (update-form/context! form context)
+    (apply render form context *display* options)))
+
+(define-method render ((form <form>) context (type <display-widget-type>) . options)
+  (dl/
+   (map-fields/
+    (lambda (_ field)
+      (render field type))
+    form)))
