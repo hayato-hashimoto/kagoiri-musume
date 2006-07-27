@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.6 2006/04/09 10:34:21 shibata Exp $
+;; $Id: musume-list.scm,v 1.7 2006/07/27 09:45:53 cut-sea Exp $
 
 (load "common.scm")
 
@@ -108,65 +108,64 @@
  (test* "フィルタ操作テーブル"
         '(*TOP*
           (table (@ (class "table-filter"))
-                   (tr (@ (onclick "toggle_select_mode(event)"))
-                       (th (span (@ (class "clickable")) "優先度"))
-                       (th (span (@ (class "clickable")) "ステータス"))
-                       (th (span (@ (class "clickable")) "タイプ"))
-                       (th (span (@ (class "clickable")) "カテゴリ"))
-                       (th (span (@ (class "clickable")) "アサイン"))
-                       (th "表示上限"))
-                   (tr (@ (valign "top"))
-                       (td (select
-                             (@ (onchange
-                                  "filter_table(this, 'musume_list', '全て')")
-                                (name "priority"))
-                             (option (@ (value "*all*")) "全て")
-                             (option (@ (value "normal")) "普通")
-                             (option (@ (value "low")) "低")
-                             (option (@ (value "high")) "高")))
-                       (td (select
-                             (@ (onchange
-                                  "filter_table(this, 'musume_list', '全て')")
-                                (name "status"))
-                             (option (@ (value "*all*")) "全て")
-                             (option (@ (value "open")) "OPEN")
-                             (option (@ (value "completed")) "COMPLETED")))
-                       (td (select
-                             (@ (onchange
-                                  "filter_table(this, 'musume_list', '全て')")
-                                (name "type"))
-                             (option (@ (value "*all*")) "全て")
-                             (option (@ (value "bug")) "バグ")
-                             (option (@ (value "task")) "タスク")
-                             (option (@ (value "request")) "変更要望")))
-                       (td (select
-                             (@ (onchange
-                                  "filter_table(this, 'musume_list', '全て')")
-                                (name "category"))
-                             (option (@ (value "*all*")) "全て")
-                             (option (@ (value "global")) "全体")
-                             (option (@ (value "section")) "セクション")))
-                       (td (select
-                             (@ (onchange
-                                  "filter_table(this, 'musume_list', '全て')")
-                                (name "assign"))
-                             (option (@ (value "*all*")) "全て")
-                             (option (@ (value "   ")))
-                             (option (@ (value "cut-sea")) "cut-sea")))
-                       (td (select
-                             (@ (name "limit"))
-                             (option (@ (value "")))
-                             (option (@ (value "20")) "20")
-                             (option (@ (value "50")) "50")
-                             (option
-                               (@ (value "200") (selected "true"))
-                               "200")
-                             (option (@ (value "500")) "500")
-                             (option (@ (value "1000")) "1000")))
-                       (td (noscript
-                             (input (@ (value "絞り込み")
-                                       (type "submit")
-                                       (name "submit"))))))))
+		 (tr (@ (onclick "toggle_select_mode(event)"))
+		     (th (span (@ (class "clickable")) "優先度"))
+		     (th (span (@ (class "clickable")) "ステータス"))
+		     (th (span (@ (class "clickable")) "タイプ"))
+		     (th (span (@ (class "clickable")) "カテゴリ"))
+		     (th (span (@ (class "clickable")) "アサイン"))
+		     (th "表示上限"))
+		 (tr (@ (valign "top"))
+		     (td (select
+			  (@ (onchange
+			      "filter_table(this, 'musume_list', '全て')")
+			     (name "priority"))
+			  (option (@ (value "*all*")) "全て")
+			  (option (@ (value "normal")) "普通")
+			  (option (@ (value "low")) "低")
+			  (option (@ (value "high")) "高")))
+		     (td (select
+			  (@ (onchange
+			      "filter_table(this, 'musume_list', '全て')")
+			     (name "status"))
+			  (option (@ (value "*all*")) "全て")
+			  (option (@ (value "open")) "OPEN")
+			  (option (@ (value "completed")) "COMPLETED")))
+		     (td (select
+			  (@ (onchange
+			      "filter_table(this, 'musume_list', '全て')")
+			     (name "type"))
+			  (option (@ (value "*all*")) "全て")
+			  (option (@ (value "bug")) "バグ")
+			  (option (@ (value "task")) "タスク")
+			  (option (@ (value "request")) "変更要望")))
+		     (td (select
+			  (@ (onchange
+			      "filter_table(this, 'musume_list', '全て')")
+			     (name "category"))
+			  (option (@ (value "*all*")) "全て")
+			  (option (@ (value "global")) "全体")
+			  (option (@ (value "section")) "セクション")))
+		     (td (select
+			  (@ (onchange
+			      "filter_table(this, 'musume_list', '全て')")
+			     (name "assign"))
+			  (option (@ (value "*all*")) "全て")
+			  (option (@ (value "   ")))
+			  (option (@ (value "cut-sea")) "cut-sea")))
+		     (td (select
+			  (@ (name "limit"))
+			  (option (@ (value "")))
+			  (option (@ (value "20")) "20")
+			  (option (@ (value "50")) "50")
+			  (option
+			   (@ (value "200") (selected "true"))
+			   "200")
+			  (option (@ (value "500")) "500")
+			  (option (@ (value "1000")) "1000")))
+		     (td (input (@ (value "絞り込み")
+				   (type "submit")
+				   (name "submit")))))))
 
         (call-worker/gsid->sxml w
                                 '()

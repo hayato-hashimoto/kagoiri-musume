@@ -1,3 +1,7 @@
+2006-07-27  Katsutoshi Itoh <cut-sea@kahua.org>
+
+	* noscript/ tag deleted from musume-list.
+	
 2006-07-19  Shiro Kawai  <shiro@acm.org>
 
 	* configure.ac: add $(prefix)/bin instead of $(prefix)/bin/kahua
