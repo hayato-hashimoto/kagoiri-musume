@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: debug-support.kahua,v 1.4 2006/02/12 09:07:47 cut-sea Exp $
+;; $Id: debug-support.kahua,v 1.5 2006/07/29 14:49:15 cut-sea Exp $
 ;;
 
 (use text.tree)
@@ -16,14 +16,6 @@
 ;;(use slib)
 ;;(require 'pretty-print)
 
-(define (node->sxml node)
-  (pretty-print (rev-nodes (exec () node))))
-
-(define (node->html node)
-  (write-tree
-   (sxml:sxml->xml
-    (car (rev-nodes (exec () node))))))
-
 (define-macro (with-login user . body)
   (let ((ss (gensym))
 	(user (x->string user)))
@@ -33,7 +25,18 @@
 	   ((kahua-current-context `(("session-state" ,,ss))))
 	 ,@body))))
 
+(define (node->sxml node)
+  (pretty-print (rev-nodes (exec () node))))
 
+(define (node->html node)
+  (define (safety-net node)
+    (cond ((procedure? node) #`"#[closure,(ref node 'info)]")
+	  ((pair? node) (cons (safety-net (car node))
+			      (safety-net (cdr node))))
+	  (else node)))
+  (write-tree
+   (sxml:sxml->xml
+    (safety-net (car (rev-nodes (exec () node)))))))
 
 ;;-------------------------------------------------------------------
 ;;

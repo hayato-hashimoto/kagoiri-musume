@@ -1,3 +1,7 @@
+2006-07-29  Katsutoshi Itoh  <cut-sea@kahua.org>
+
+        * sanitize procedure in node at debug-support.kahua.
+	
 2006-07-27  Katsutoshi Itoh <cut-sea@kahua.org>
 
 	* noscript/ tag deleted from musume-list.
