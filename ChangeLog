@@ -1,3 +1,9 @@
+2006-08-30    <yasuyuki@javaopen.org>
+
+	* kagoiri-musume/javascripts/kagoiri-musume.js: 'select' ==> '/select'.
+
+	* kagoiri-musume/javascripts/kagoiri-musume.js.scm (popup-linkselect): "select" ==> "/select".
+
 2006-07-29  Katsutoshi Itoh  <cut-sea@kahua.org>
 
         * sanitize procedure in node at debug-support.kahua.

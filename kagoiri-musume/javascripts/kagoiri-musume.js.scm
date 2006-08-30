@@ -365,7 +365,7 @@
         (set! ele.innterHTML req.response-text)))
 
     (define my-ajax (make ajax.*request
-                         (+ kahua-self-uri-full "select")
+                         (+ kahua-self-uri-full "/select")
                          (create
                           :method "get"
                           :on-complate show-response)))))

@@ -450,7 +450,7 @@ function popup_linkselect(event, unit){
           ele.innerHTML = req.responseText;
      }
      var myAjax = new Ajax.Request(
-          kahua_self_uri_full + 'select',
+          kahua_self_uri_full + '/select',
           {method: 'get', onComplete: showResponse}
           );
 }
