@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: initdb.scm,v 1.19 2006/02/28 00:55:42 cut-sea Exp $
+;; $Id: initdb.scm,v 1.20 2006/11/11 15:24:28 cut-sea Exp $
 
 ;;
 ;; include
@@ -22,19 +22,10 @@
 ;; DB Setting.
 ;;
 (define-if-not-bound *kagoiri-musume-database-name*
-  (let1 dbpath
-      (build-path (ref (kahua-config) 'working-directory)
-		  "kagoiri-musume"
-		  "db")
-    dbpath))
-
+  #`"efs:,(kahua-working-directory)/kagoiri-musume")
 
 (define-if-not-bound *kagoiri-musume-log-database-name*
-  (let1 dbpath
-      (build-path (ref (kahua-config) 'working-directory)
-		  "kagoiri-musume"
-		  "log")
-    dbpath))
+  #`",(kahua-working-directory)/kagoiri-musume/log")
 
 
 ;; tip

@@ -1,5 +1,5 @@
 # Makefile for kagoiri-musume
-# $Id: Makefile.in,v 1.55 2006/07/04 09:47:47 bizenn Exp $
+# $Id: Makefile.in,v 1.56 2006/11/11 15:24:28 cut-sea Exp $
 
 package	          = kagoiri-musume
 kahua		  = kahua
@@ -35,6 +35,7 @@ KAHUA_LIB     = $(libdir)
 KAHUACONFIG = -c $(sysconfdir)/kahua.conf
 
 KAGOIRI_MUSUME_INPLACE = $(shell pwd)
+TEST_DIR = $(shell pwd)
 
 KAGOIRI_MUSUME_VERSION = $(shell cat $(top_srcdir)/VERSION)
 KAGOIRI_MUSUME_WORKING = $(KAGOIRI_MUSUME_INPLACE)
@@ -96,7 +97,7 @@ CONFIG_GENERATED = Makefile kagoiri-musume.conf test/common.scm config.log confi
 
 .PHONY: all check clean distclean install maintainer-clean
 
-all:	test/common.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
+all:	test/test.conf test/common.scm $(SCRIPTS) kagoiri-musume/version.kahua kagoiri-musume.conf
 	-rm -rf tmp checkout
 	mkdir tmp
 	ln -s . checkout
@@ -108,6 +109,9 @@ kagoiri-musume-start: kagoiri-musume-start.in
 kagoiri-musume-stop: kagoiri-musume-stop.in
 	sed -e "s@###KAGOIRI_MUSUME_INPLACE###@$(KAGOIRI_MUSUME_INPLACE)@" $? > $@
 	chmod +x $@
+
+test/test.conf: test/test.conf.in
+	sed -e "s@##TEST_DIR##@$(TEST_DIR)@" $? > $@
 
 test/common.scm: test/common.scm.in
 	sed -e "s@##GOSH##@$(GOSH)@" -e "s@##KAHUA_WORKING##@$(KAHUA_WORKING)@" -e "s@##KAHUA_LIB##@$(KAHUA_LIB)@" -e "s@##KAGOIRI_MUSUME_VERSION##@$(KAGOIRI_MUSUME_VERSION)@" -e "s@##PLUGINS##@$(PLUGINFILES)@" $? > $@
@@ -126,7 +130,7 @@ check:  all
 	done
 
 clean:
-	rm -rf core *~ kagoiri-musume/*~ kagoiri-musume/version.kahua test/*~ test/common.scm $(SCRIPTS) checkout
+	rm -rf core *~ kagoiri-musume/*~ kagoiri-musume/version.kahua test/*~ test/test.conf test/common.scm $(SCRIPTS) checkout
 
 dbinit:
 	$(GOSH) -I$(KAHUA_LIB) -I./ -l kagoiri-musume/user-setting.kahua initdb.scm;
@@ -139,7 +143,7 @@ install: dbinit
 	for f in $(PLUGINFILES); do \
 	  $(KAHUA_INSTALL) $(KAHUACONFIG) -t plugin -r $$f $(PLUGINDIR)/$$f;\
 	done
-
+	mkdir -p $(bindir)
 	for f in $(SCRIPTS); do \
 	  $(INSTALL) -m 555 $$f $(bindir)/$$f;\
 	done

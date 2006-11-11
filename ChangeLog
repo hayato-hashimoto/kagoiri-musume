@@ -1,3 +1,9 @@
+2006-11-11    <cut-sea@kahua.org>
+
+	* Warnning!: Now fail some tests.
+	* replace test.conf to test.conf.in
+	* replace database with efs, which aim to walk with Kahua CVS HEAD.
+
 2006-11-11  Shiro Kawai  <shiro@acm.org>
 
 	* kagoiri-musume/page.kahua, test/common-test.scm: Changed HTTP
