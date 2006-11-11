@@ -1,3 +1,7 @@
+2006-11-11    <cut-sea@kahua.org>
+
+	* add coding rule comment for *.kahua/*.scm
+	
 2006-08-30    <yasuyuki@javaopen.org>
 
 	* kagoiri-musume/javascripts/kagoiri-musume.js: 'select' ==> '/select'.

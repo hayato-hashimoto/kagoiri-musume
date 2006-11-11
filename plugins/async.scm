@@ -1,3 +1,11 @@
+;; -*- coding: euc-jp; mode: scheme -*-
+;;
+;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
+;;  See COPYING for terms and conditions of using this software
+;;
+;; $Id: async.scm,v 1.6 2006/11/11 11:19:31 cut-sea Exp $
+
+
 (use kahua.elem)
 
 (define-plugin "async"
