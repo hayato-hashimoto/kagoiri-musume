@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.7 2006/03/18 12:00:40 shibata Exp $
+;; $Id: common-test.scm,v 1.8 2006/11/11 12:05:42 shiro Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -53,7 +53,7 @@
 
       (when redirect
         (test (string-append name "(redirect)")
-              '(*TOP* (!contain (Status "302 Moved")
+              '(*TOP* (!contain (Status "302 Found")
                                 (Location ?&)))
               (lambda ()
                 (call-worker/gsid
@@ -215,7 +215,7 @@
 
     (test* "make-musume: 案件作成 サブミット"
            `(*TOP*
-             (!contain (Status "302 Moved")
+             (!contain (Status "302 Found")
                        (Location ,(or view '?&))))
            (call-worker/gsid
             w

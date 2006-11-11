@@ -1,3 +1,9 @@
+2006-11-11  Shiro Kawai  <shiro@acm.org>
+
+	* kagoiri-musume/page.kahua, test/common-test.scm: Changed HTTP
+	  response from "302 Moved" to "302 Found", following the change
+	  in Kahua.
+
 2006-11-11    <cut-sea@kahua.org>
 
 	* add coding rule comment for *.kahua/*.scm
