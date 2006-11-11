@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.13 2006/05/14 02:29:50 shibata Exp $
+;; $Id: unit-operate.scm,v 1.14 2006/11/11 16:49:18 cut-sea Exp $
 
 (load "common.scm")
 
@@ -69,17 +69,17 @@
                           (option (@ (value "open") (selected "#t")) "OPEN")
                           (option (@ (value "completed") (selected "#t")) "COMPLETED")
                           (option (@ (value "on-hold")) "ON HOLD")
-                          (option (@ (value "rejected")) "REJECTED")
-                          (option (@ (value "taken")) "TAKEN")))
+                          (option (@ (value "taken")) "TAKEN")
+                          (option (@ (value "rejected")) "REJECTED")))
                      (td ?*)
                      (td (select ?@
                           (option (@ (value "bug") (selected "#t")) "バグ")
                           (option (@ (value "task") (selected "#t")) "タスク")
                           (option (@ (value "request") (selected "#t")) "変更要望")
                           (option (@ (value "discuss")) "議論")
-                          (option (@ (value "etc")) "その他")
                           (option (@ (value "report")) "報告")
-                          (option (@ (value "term")) "用語")))
+                          (option (@ (value "term")) "用語")
+                          (option (@ (value "etc")) "その他")))
                      (td ?*)
                      (td (select ?@
                           (option (@ (value "global") (selected "#t")) "全体")
@@ -123,8 +123,8 @@
                                         (ul (@ (ondblclick ?_)
                                                (id "allmemberlist")
                                                (class "userlist"))
-                                            (li (@ (user-name "guest")) "guest")
-                                            (li (@ (user-name "kago")) "kago")))
+                                            (li (@ (user-name "kago")) "kago")
+                                            (li (@ (user-name "guest")) "guest")))
                                     (td (@ (id "select-td")))
                                     (script
                                      (@ (type "text/javascript"))

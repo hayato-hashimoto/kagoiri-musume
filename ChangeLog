@@ -3,6 +3,7 @@
 	* Warnning!: Now fail some tests.
 	* replace test.conf to test.conf.in
 	* replace database with efs, which aim to walk with Kahua CVS HEAD.
+	* test repair for Kahua CVS HEAD.
 
 2006-11-11  Shiro Kawai  <shiro@acm.org>
 
