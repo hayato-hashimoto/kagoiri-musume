@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.269 2006/11/11 15:24:42 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.270 2006/11/12 07:49:19 cut-sea Exp $
 
 ;;
 ;; include
@@ -111,9 +111,9 @@
   "äÆÆþÌ¼¡£ - Groupie System")
 
 (define-if-not-bound *kagoiri-musume-database-name*
-  (let1 dbpath #`"efs:,(kahua-working-directory)/kagoiri-musume"
+  (let1 dbpath #`",(kahua-working-directory)/kagoiri-musume"
     (make-directory* dbpath)
-    dbpath))
+    #`"efs:,dbpath"))
 
 ;; Error Log Level
 ;;
