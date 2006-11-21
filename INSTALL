@@ -1,11 +1,11 @@
-$Id: INSTALL,v 1.8 2006/01/08 08:40:09 cut-sea Exp $
+$Id: INSTALL,v 1.9 2006/11/21 23:21:14 cut-sea Exp $
 
 kagoiri-musume : A simple dummy application of Kahua
 
 [Requirements]
 
-Gauche-0.8.6
-Kahua-0.3.5
+Gauche-0.8.8
+Kahua-0.8
 
 [Installation]
 
