@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.14 2006/11/11 16:49:18 cut-sea Exp $
+;; $Id: unit-operate.scm,v 1.15 2006/12/13 01:21:03 cut-sea Exp $
 
 (load "common.scm")
 
@@ -59,33 +59,41 @@
  (test* "フィールド選択(現在の値が選択されているか)"
 	`(*TOP*
           (table (tr ?*)
-                 (tr (td (select ?@
-                          (option (@ (value "normal") (selected "#t")) "普通")
-                          (option (@ (value "low") (selected "#t")) "低")
-                          (option (@ (value "high") (selected "#t")) "高")
-                          (option (@ (value "super")) "超高")))
+                 (tr (td (select
+			  ?@
+			  (!permute
+			   (option (@ (value "normal") (selected "#t")) "普通")
+			   (option (@ (value "low") (selected "#t")) "低")
+			   (option (@ (value "high") (selected "#t")) "高")
+			   (option (@ (value "super")) "超高"))))
                      (td ?*)
-                     (td (select ?@
-                          (option (@ (value "open") (selected "#t")) "OPEN")
-                          (option (@ (value "completed") (selected "#t")) "COMPLETED")
-                          (option (@ (value "on-hold")) "ON HOLD")
-                          (option (@ (value "taken")) "TAKEN")
-                          (option (@ (value "rejected")) "REJECTED")))
+                     (td (select
+			  ?@
+			  (!permute
+			   (option (@ (value "open") (selected "#t")) "OPEN")
+			   (option (@ (value "completed") (selected "#t")) "COMPLETED")
+			   (option (@ (value "on-hold")) "ON HOLD")
+			   (option (@ (value "taken")) "TAKEN")
+			   (option (@ (value "rejected")) "REJECTED"))))
                      (td ?*)
-                     (td (select ?@
-                          (option (@ (value "bug") (selected "#t")) "バグ")
-                          (option (@ (value "task") (selected "#t")) "タスク")
-                          (option (@ (value "request") (selected "#t")) "変更要望")
-                          (option (@ (value "discuss")) "議論")
-                          (option (@ (value "report")) "報告")
-                          (option (@ (value "term")) "用語")
-                          (option (@ (value "etc")) "その他")))
+                     (td (select
+			  ?@
+			  (!permute
+			   (option (@ (value "bug") (selected "#t")) "バグ")
+			   (option (@ (value "task") (selected "#t")) "タスク")
+			   (option (@ (value "request") (selected "#t")) "変更要望")
+			   (option (@ (value "discuss")) "議論")
+			   (option (@ (value "report")) "報告")
+			   (option (@ (value "term")) "用語")
+			   (option (@ (value "etc")) "その他"))))
                      (td ?*)
-                     (td (select ?@
-                          (option (@ (value "global") (selected "#t")) "全体")
-                          (option (@ (value "section") (selected "#t")) "セクション")
-                          (option (@ (value "infra")) "インフラ")
-                          (option (@ (value "master")) "マスタ")))
+                     (td (select
+			  ?@
+			  (!permute
+			   (option (@ (value "global") (selected "#t")) "全体")
+			   (option (@ (value "section") (selected "#t")) "セクション")
+			   (option (@ (value "infra")) "インフラ")
+			   (option (@ (value "master")) "マスタ"))))
                      (td ?*))))
         (call-worker/gsid->sxml
 	 w
@@ -123,8 +131,9 @@
                                         (ul (@ (ondblclick ?_)
                                                (id "allmemberlist")
                                                (class "userlist"))
-                                            (li (@ (user-name "kago")) "kago")
-                                            (li (@ (user-name "guest")) "guest")))
+					    (!permute
+					     (li (@ (user-name "kago")) "kago")
+					     (li (@ (user-name "guest")) "guest"))))
                                     (td (@ (id "select-td")))
                                     (script
                                      (@ (type "text/javascript"))

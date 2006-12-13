@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.12 2006/11/11 16:49:18 cut-sea Exp $
+;; $Id: unit-list.scm,v 1.13 2006/12/13 01:21:03 cut-sea Exp $
 
 (load "common.scm")
 
@@ -103,10 +103,11 @@
                              (name "priority")
                              (multiple "true")
                              (id "priority"))
-                          (option (@ (value "normal")) "普通")
-                          (option (@ (value "low")) "低")
-                          (option (@ (value "high")) "高")
-                          (option (@ (value "super")) "超高")))
+			  (!permute
+			   (option (@ (value "normal")) "普通")
+			   (option (@ (value "low")) "低")
+			   (option (@ (value "high")) "高")
+			   (option (@ (value "super")) "超高"))))
                      (td (div (@ (onclick "up_select(this, 'priority')")
                                  (class "clickable"))
                               "↑")
@@ -118,11 +119,12 @@
                              (name "status")
                              (multiple "true")
                              (id "status"))
-                          (option (@ (value "open")) "OPEN")
-                          (option (@ (value "completed")) "COMPLETED")
-                          (option (@ (value "on-hold")) "ON HOLD")
-                          (option (@ (value "taken")) "TAKEN")
-                          (option (@ (value "rejected")) "REJECTED")))
+			  (!permute
+			   (option (@ (value "open")) "OPEN")
+			   (option (@ (value "completed")) "COMPLETED")
+			   (option (@ (value "on-hold")) "ON HOLD")
+			   (option (@ (value "taken")) "TAKEN")
+			   (option (@ (value "rejected")) "REJECTED"))))
                      (td (div (@ (onclick "up_select(this, 'status')")
                                  (class "clickable"))
                               "↑")
@@ -134,13 +136,14 @@
                              (name "type")
                              (multiple "true")
                              (id "type"))
-                          (option (@ (value "bug")) "バグ")
-                          (option (@ (value "task")) "タスク")
-                          (option (@ (value "request")) "変更要望")
-                          (option (@ (value "discuss")) "議論")
-                          (option (@ (value "report")) "報告")
-                          (option (@ (value "term")) "用語")
-                          (option (@ (value "etc")) "その他")))
+			  (!permute
+			   (option (@ (value "bug")) "バグ")
+			   (option (@ (value "task")) "タスク")
+			   (option (@ (value "request")) "変更要望")
+			   (option (@ (value "discuss")) "議論")
+			   (option (@ (value "report")) "報告")
+			   (option (@ (value "term")) "用語")
+			   (option (@ (value "etc")) "その他"))))
                      (td (div (@ (onclick "up_select(this, 'type')")
                                  (class "clickable"))
                               "↑")
@@ -152,10 +155,11 @@
                              (name "category")
                              (multiple "true")
                              (id "category"))
-                          (option (@ (value "section")) "セクション")
-                          (option (@ (value "global")) "全体")
-                          (option (@ (value "infra")) "インフラ")
-                          (option (@ (value "master")) "マスタ")))
+			  (!permute
+			   (option (@ (value "section")) "セクション")
+			   (option (@ (value "global")) "全体")
+			   (option (@ (value "infra")) "インフラ")
+			   (option (@ (value "master")) "マスタ"))))
                      (td (div (@ (onclick "up_select(this, 'category')")
                                  (class "clickable"))
                               "↑")
@@ -197,15 +201,16 @@
                                      "検索:"
                                      (input (@ (type "text")
                                                (onkeyup
-                                                 "filter_member(this.value)")
+						"filter_member(this.value)")
                                                (id "membersearch")))
                                      (ul (@ (ondblclick ?_)
                                             (id "allmemberlist")
                                             (class "userlist"))
-                                         (li (@ (user-name "   ")))
-                                         (li (@ (user-name "kago")) "kago")
-                                         (li (@ (user-name "cut-sea")) "cut-sea")
-                                         (li (@ (user-name "guest")) "guest")))
+					 (!permute
+					  (li (@ (user-name "   ")))
+					  (li (@ (user-name "kago")) "kago")
+					  (li (@ (user-name "cut-sea")) "cut-sea")
+					  (li (@ (user-name "guest")) "guest"))))
                                  (td (@ (id "select-td")))
                                  (script
                                    (@ (type "text/javascript"))
