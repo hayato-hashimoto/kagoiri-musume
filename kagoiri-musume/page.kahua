@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: page.kahua,v 1.41 2006/11/11 12:05:42 shiro Exp $
+;; $Id: page.kahua,v 1.42 2006/12/13 03:10:53 bizenn Exp $
 ;;
 (load "kagoiri-musume/util.kahua")
 (load "kagoiri-musume/version.kahua")
@@ -252,5 +252,5 @@
                        (cadr node-pairs))
                   nodes)))))))))
 
-(define-method obj->string ((self <undefined-object>))
-  empty)
+(define-method x->string ((self <undefined-object>))
+  "")
