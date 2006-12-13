@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.26 2006/12/13 01:21:03 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.27 2006/12/13 01:35:34 cut-sea Exp $
 
 (load "common.scm")
 
@@ -317,9 +317,8 @@
 
  (test* "confirm to added new fan"
 	'(*TOP*
-	  ?*
-	  (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td))
-	  ?*)
+	  (!contain
+	   (tr (td) (td "shibata") (td "shibata@kagoiri-musume.org") (td) (td) (td))))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) (table 1) tr))
 	test-sxml-match?)
 
@@ -335,9 +334,8 @@
 
  (test* "confirm to change normal to admin and hide"
 	'(*TOP*
-	  ?*
-	  (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td "＊") (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊"))))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) (table 1) tr))
 	test-sxml-match?)
 
@@ -353,9 +351,8 @@
 
  (test* "confirm to change admin to normal and hide keep"
 	'(*TOP*
-	  ?*
-	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td) (td) (td "＊"))))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) (table 1) tr))
 	test-sxml-match?)
 
@@ -373,9 +370,8 @@
 
  (test* "confirm to develop and client roles without input passwd and mail-address"
 	'(*TOP*
-	  ?*
-	  (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td "＊") (td "＊") (td))
-	  ?*)
+	  (!contain
+	   (tr (td) (td "shibata") (td "shibata@kagoiri.org") (td "＊") (td "＊") (td))))
 	(call-worker/gsid->sxml w '() '() '(// (form 1) (table 1) tr))
 	test-sxml-match?)
 
@@ -390,9 +386,8 @@
 
  (test* "confirm to added new priority item"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テストレベル") (td "3") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テストレベル") (td "3") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) tr))
         test-sxml-match?)
 
@@ -407,9 +402,8 @@
 
  (test* "confirm to priority item's name level and delete"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td "4") (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td "4") (td "＊"))))
         (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) tr))
         test-sxml-match?)
 
@@ -424,9 +418,8 @@
 
  (test* "confirm to priority item's name level and delete"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td "2") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td "2") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 3) (table 1) tr))
         test-sxml-match?)
 
@@ -440,9 +433,8 @@
 
  (test* "confirm to added new status item"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テストステータス") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テストステータス") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) tr))
         test-sxml-match?)
 
@@ -456,9 +448,8 @@
 
  (test* "confirm to status item's name and delete"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td "＊"))))
         (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) tr))
         test-sxml-match?)
 
@@ -472,9 +463,8 @@
 
  (test* "confirm to status item's name and delete without input name"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 4) (table 1) tr))
         test-sxml-match?)
 
@@ -488,9 +478,8 @@
 
  (test* "confirm to added new type item"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テストタイプ") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テストタイプ") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) tr))
         test-sxml-match?)
 
@@ -504,9 +493,8 @@
 
  (test* "confirm to type item's name and delete"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td "＊"))))
         (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) tr))
         test-sxml-match?)
 
@@ -520,9 +508,8 @@
 
  (test* "confirm to type item's name and delete without input name"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 5) (table 1) tr))
         test-sxml-match?)
 
@@ -536,9 +523,8 @@
 
  (test* "confirm to added new category"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テストカテゴリ") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テストカテゴリ") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) tr))
         test-sxml-match?)
 
@@ -552,9 +538,8 @@
 
  (test* "confirm to category item's name and delete"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td "＊"))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td "＊"))))
         (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) tr))
         test-sxml-match?)
 
@@ -568,9 +553,8 @@
 
  (test* "confirm to category item's name and delete without input name"
 	'(*TOP*
-	  ?*
-	  (tr (td "test") (td "テスト") (td))
-	  ?*)
+	  (!contain
+	   (tr (td "test") (td "テスト") (td))))
         (call-worker/gsid->sxml w '() '() '(// (form 6) (table 1) tr))
         test-sxml-match?)
 
