@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.13 2006/12/13 01:21:03 cut-sea Exp $
+;; $Id: unit-list.scm,v 1.14 2006/12/13 01:40:55 cut-sea Exp $
 
 (load "common.scm")
 
@@ -48,16 +48,16 @@
 
  (test* "ユニット一覧"
         '(*TOP*
-          ?*
-          (h2 "ユニット一覧")
-          (table (@ (class "listing"))
-                 (thead (tr (th "ユニット名")
-                            (th "概要")
-                            (th (@ (nowrap "nowrap")) "ファン")
-                            (th "購読")
-                            (th)))
-                 (tbody))
-          ?*)
+	  (!contain
+	   (!seq
+	    (h2 "ユニット一覧")
+	    (table (@ (class "listing"))
+		   (thead (tr (th "ユニット名")
+			      (th "概要")
+			      (th (@ (nowrap "nowrap")) "ファン")
+			      (th "購読")
+			      (th)))
+		   (tbody)))))
         (call-worker/gsid->sxml w
                                 '()
                                 '(("name" "cut-sea") ("pass" "cutsea"))
