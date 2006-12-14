@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.100 2006/12/13 15:33:12 bizenn Exp $
+;; $Id: parts-collection.kahua,v 1.101 2006/12/14 07:21:05 cut-sea Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -91,6 +91,7 @@
 
 (define-checker (has-item? unit props-of)
   (not (null? (props-of unit))))
+      
 
 (define-checker (composer? song)
   (eq? (current-fan) (fan-of song)))
@@ -266,7 +267,7 @@
                  (tr/
                   (td/)
                   (td/ (span/ (@/ (onclick (format "popup_linkselect(event, ~s)" (key-of unit))))
-                              (clickable ($$ "案件へのリンク")))
+                              (clickable ($$ "娘へのリンク")))
                        (span/ (@/ (onclick (format "mail_send_setting(event, ~s)" (key-of unit))))
                                        (clickable ($$ "メール送信対象")))))
 		 (tr/ (td/ ($$ "内容"))

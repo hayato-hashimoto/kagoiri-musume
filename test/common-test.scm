@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.9 2006/12/14 06:35:56 cut-sea Exp $
+;; $Id: common-test.scm,v 1.10 2006/12/14 07:21:23 cut-sea Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -140,7 +140,7 @@
                             (!contain
                              (a (@ (href ?&)
                                    ?*)
-                                "プロジェクト追加")))
+                                "ユニット結成")))
 
                     :body '(("name" "cut-sea") ("pass" "cutsea"))
                     :sxpath (//navigation-action '(// a)))
@@ -192,13 +192,13 @@
     (when unit-view
       (set-gsid w (string-drop (symbol->string unit-view) 2)))
 
-    (call-worker-test* "make-musume: 案件作成リンク"
+    (call-worker-test* "make-musume: 娘加入リンク"
 
                        :node '(*TOP*
                                (!contain
                                 (a (@ (href ?&)
                                       ?*)
-                                   "案件追加")))
+                                   "娘加入")))
 
                        :sxpath (//navigation-action '(// a)))
 
@@ -213,7 +213,7 @@
                                    '(// (form (@ (equal? (id "mainedit"))))))
            (make-match&pick w))
 
-    (test* "make-musume: 案件作成 サブミット"
+    (test* "make-musume: 娘加入 サブミット"
            `(*TOP*
              (!contain (Status "302 Found")
                        (Location ,(or view '?&))))
@@ -233,7 +233,7 @@
     (when view
       (set-gsid w (string-drop (symbol->string view) 2)))
 
-    (test* "make-musume: 新規案件のmelodyリストページ"
+    (test* "make-musume: 新加入娘のmelodyリストページ"
            '(*TOP*
              (h2 "籠入娘。Test Proj. - 1：テストな娘。 - OPEN"))
            (call-worker/gsid->sxml w

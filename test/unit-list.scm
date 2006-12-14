@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.15 2006/12/14 06:35:56 cut-sea Exp $
+;; $Id: unit-list.scm,v 1.16 2006/12/14 07:21:23 cut-sea Exp $
 
 (load "common.scm")
 
@@ -69,7 +69,7 @@
                     :node '(*TOP*
                             (!contain
                              (a (@ (href ?&))
-                                "プロジェクト追加")))
+                                "ユニット結成")))
 
                     :sxpath (//navigation-action '(// a))
                     :body '(("name" "cut-sea") ("pass" "cutsea")))

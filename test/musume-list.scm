@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.8 2006/12/14 06:35:56 cut-sea Exp $
+;; $Id: musume-list.scm,v 1.9 2006/12/14 07:21:23 cut-sea Exp $
 
 (load "common.scm")
 
@@ -44,7 +44,7 @@
         '(*TOP*
           (!contain
            (a ?@
-              "案件追加")
+              "娘加入")
            (a ?@
               "一覧")
            (a ?@
@@ -89,7 +89,7 @@
         test-sxml-match?)
 
 
- (test-section "案件一覧テーブル")
+ (test-section "娘一覧テーブル")
 
  (test* "フォーム"
         '(*TOP*

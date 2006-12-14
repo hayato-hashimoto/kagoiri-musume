@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-operate.scm,v 1.5 2006/12/14 06:35:56 cut-sea Exp $
+;; $Id: musume-operate.scm,v 1.6 2006/12/14 07:21:23 cut-sea Exp $
 
 (load "common.scm")
 
@@ -26,17 +26,17 @@
 
  (set-gsid w 'musume-list)
 
- (call-worker-test* "案件作成リンク"
+ (call-worker-test* "娘加入リンク"
 
                     :node '(*TOP*
                             (!contain
                              (a (@ (href ?&musume-new))
-                                "案件追加")))
+                                "娘加入")))
 
                     :sxpath (//navigation-action '(// a)))
 
 
- (test-section "案件作成ページ")
+ (test-section "娘加入ページ")
 
  (set-gsid w 'musume-new)
 
@@ -147,7 +147,7 @@
                  (tr (td)
                      (td (span (@ (onclick ?_))
                                (span (@ (class "clickable"))
-                                     "案件へのリンク"))
+                                     "娘へのリンク"))
                          (span (@ (onclick ?_))
                                (span (@ (class "clickable"))
                                      "メール送信対象"))))

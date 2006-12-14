@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.10 2006/12/14 06:35:56 cut-sea Exp $
+;; $Id: melody-list.scm,v 1.11 2006/12/14 07:21:23 cut-sea Exp $
 
 (load "common.scm")
 
@@ -61,11 +61,11 @@
            (div (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
-                  "前の案件")
+                  "前の娘")
                (a (@ (onclick "copy_search(this)")
                      (href ?_)
                      (class "clickable"))
-                  "次の案件"))))
+                  "次の娘"))))
         (call-worker/gsid->sxml w
                                 '()
                                 '()
@@ -174,7 +174,7 @@
         '(*TOP* (table (@ (class "extension"))
               (tr (td)
                   (td (span (@ (onclick ?_))
-                            (span (@ (class "clickable")) "案件へのリンク"))
+                            (span (@ (class "clickable")) "娘へのリンク"))
                       (span (@ (onclick ?_))
                             (span (@ (class "clickable")) "メール送信対象"))))
               (tr (td "内容")
