@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-operate.scm,v 1.4 2006/03/18 12:21:16 shibata Exp $
+;; $Id: musume-operate.scm,v 1.5 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -113,7 +113,7 @@
                            "セクション")))
                      (td (select
                           (@ (name "assign"))
-                          (option (@ (value "   ")))
+                          (option (@ (value "")))
                           (option
                            (@ (value "cut-sea"))
                            "cut-sea")))

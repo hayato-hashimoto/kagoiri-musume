@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: system-admin.scm,v 1.27 2006/12/13 01:35:34 cut-sea Exp $
+;; $Id: system-admin.scm,v 1.28 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -63,8 +63,7 @@
 	   (!permute
 	    (tr (th "´ÉÍý¼Ô¸¢¸Â") (th "¥í¥°¥¤¥óÌ¾") (th "¥á¡¼¥ë¥¢¥É¥ì¥¹") (th "³«È¯") (th "¸ÜµÒ") (th "±£Ì©"))
 	    (tr (td "¡ö") (td "kago") (td "cut-sea@kagoiri.org") (td "¡ö") (td "¡ö") (td))
-	    (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "¡ö") (td) (td))
-	    (tr (td) (td "guest") (td) (td) (td) (td)))))
+	    (tr (td) (td "cut-sea") (td "cut-sea@kagoiri.org") (td "¡ö") (td) (td)))))
 	(call-worker/gsid->sxml w 
 				'()
 				'()

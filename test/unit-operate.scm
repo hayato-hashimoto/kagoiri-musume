@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-operate.scm,v 1.15 2006/12/13 01:21:03 cut-sea Exp $
+;; $Id: unit-operate.scm,v 1.16 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -119,7 +119,6 @@
                                         (ul (@ (ondblclick ?_)
                                                (id "memberlist")
                                                (class "userlist"))
-                                            (li (@ (user-name "   ")))
                                             (li (@ (user-name "cut-sea")) "cut-sea")))
                                     (td "<=")
                                     (td (@ (id "allmemberlistblock"))
@@ -132,8 +131,7 @@
                                                (id "allmemberlist")
                                                (class "userlist"))
 					    (!permute
-					     (li (@ (user-name "kago")) "kago")
-					     (li (@ (user-name "guest")) "guest"))))
+					     (li (@ (user-name "kago")) "kago"))))
                                     (td (@ (id "select-td")))
                                     (script
                                      (@ (type "text/javascript"))
@@ -163,7 +161,7 @@
 		   ("category" "master" "infra" "global" "section")
 		   ("name" "籠入娘。Test Project.")
 		   ("desc" "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
-		   ("fans" "   " "cut-sea" "guest")))
+		   ("fans" "cut-sea")))
 
  (test* "ユニット設定変更確認"
 	`(*TOP*
@@ -171,8 +169,8 @@
               (td ?@ (a (@ (href ?&) ?*) "籠入娘。Test Project.") " (0)")
               (td "籠入娘。のバグトラッキングとタスクマネージメントを行うユニット")
               (td (span ?@
-                        (span ?@ "2人"))
-                  (div ?@ (div "cut-sea") (div "guest")))
+                        (span ?@ "1人"))
+                  (div ?@ (div "cut-sea")))
               (td (a ?@ "○"))
               (td ?@ (span ?@ (a ?@ "設定"))))
           )

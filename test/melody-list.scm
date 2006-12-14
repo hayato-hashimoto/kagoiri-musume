@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-list.scm,v 1.9 2006/04/03 16:20:47 shibata Exp $
+;; $Id: melody-list.scm,v 1.10 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -147,7 +147,7 @@
                            "セクション")))
                      (td (select
                           (@ (name "assign"))
-                          (option (@ (value "   ")))
+                          (option (@ (value "")))
                           (option
                            (@ (value "cut-sea")
                               (selected "true"))

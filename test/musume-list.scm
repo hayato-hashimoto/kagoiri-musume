@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.7 2006/07/27 09:45:53 cut-sea Exp $
+;; $Id: musume-list.scm,v 1.8 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -151,7 +151,6 @@
 			      "filter_table(this, 'musume_list', '全て')")
 			     (name "assign"))
 			  (option (@ (value "*all*")) "全て")
-			  (option (@ (value "   ")))
 			  (option (@ (value "cut-sea")) "cut-sea")))
 		     (td (select
 			  (@ (name "limit"))

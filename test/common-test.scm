@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.8 2006/11/11 12:05:42 shiro Exp $
+;; $Id: common-test.scm,v 1.9 2006/12/14 06:35:56 cut-sea Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -174,7 +174,7 @@
                                ("category" "global" "section")
                                ("name" "籠入娘。Test Proj.")
                                ("desc" "籠入娘。のバグトラッキングを行うユニット")
-                               ("fans" "   " "cut-sea"))
+                               ("fans" "cut-sea"))
 
                        :sxpath (//body '(table tbody tr))
 

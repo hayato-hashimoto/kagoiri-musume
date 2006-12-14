@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: melody-operate.scm,v 1.6 2006/03/18 12:21:16 shibata Exp $
+;; $Id: melody-operate.scm,v 1.7 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -45,7 +45,7 @@
 		   ("type" "discuss")
 		   ("category" "section")
 		   ("melody" "クローズする")
-		   ("assign" "   ")))
+		   ("assign" "")))
 
  (test* "ページタイトルの更新をチェック"
         '(*TOP*
@@ -84,7 +84,7 @@
                            "セクション")))
                      (td (select
                           (@ (name "assign"))
-                          (option (@ (value "   ") (selected "true")))
+                          (option (@ (value "") (selected "true")))
                           (option (@ (value "cut-sea")) "cut-sea")))
                      (td ?*))))
 

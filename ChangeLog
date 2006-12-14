@@ -3,7 +3,7 @@
 	* improve performance of recent melodies page.
 	  so, add new slot name as 'recent' into <unit> class.
 	* Fix: Error occered after save at group edit page.
-
+	* remove "   " and "guest" user from initdb.scm.
 	
 2006-12-14  Tatsuya BIZENN  <bizenn@arthub.net>
 

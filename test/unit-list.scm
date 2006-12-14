@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.14 2006/12/13 01:40:55 cut-sea Exp $
+;; $Id: unit-list.scm,v 1.15 2006/12/14 06:35:56 cut-sea Exp $
 
 (load "common.scm")
 
@@ -207,10 +207,8 @@
                                             (id "allmemberlist")
                                             (class "userlist"))
 					 (!permute
-					  (li (@ (user-name "   ")))
 					  (li (@ (user-name "kago")) "kago")
-					  (li (@ (user-name "cut-sea")) "cut-sea")
-					  (li (@ (user-name "guest")) "guest"))))
+					  (li (@ (user-name "cut-sea")) "cut-sea"))))
                                  (td (@ (id "select-td")))
                                  (script
                                    (@ (type "text/javascript"))
