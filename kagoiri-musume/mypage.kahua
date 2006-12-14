@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: mypage.kahua,v 1.4 2006/06/07 10:57:20 cut-sea Exp $
+;; $Id: mypage.kahua,v 1.5 2006/12/14 00:07:38 cut-sea Exp $
 ;;
 ;;
 
@@ -100,9 +100,9 @@
    (h2/ ($$ "最近の更新"))
    (let* ((units (filter (cut fan-to? <> (current-fan))
 			 (all-units)))
-	  (musumes (append-map all-active-musumes units))
-	  (songs (append-map songs-of  musumes))
-	  (songs (reverse (sort songs)))
+	  (songs (append-map recent-of  units))
+	  (songs (sort songs (lambda (s1 s2)
+			       (> (ctime-of s1) (ctime-of s2)))))
 	  (songs (take* songs 20)))
      (format "~a item(s)" (length songs))
      (map/ (lambda (s)
@@ -118,7 +118,7 @@
 		 (if (delete-of s)
 		     (p/ (@/ (class "warning rectangle")) ($$ "このメロディは削除されてます"))
 		     (p/ (@/ (class "rectangle"))
-			  (melody-format (melody-of s))))))))
+			 (melody-format (melody-of s))))))))
 	   songs))))
 
 (define-entry-method mypage ("bookmark")

@@ -1,3 +1,9 @@
+2006-12-14  Katsutoshi Itoh <cut-sea@kahua.org>
+
+	* improve performance of recent melodies page.
+	  so, add new slot name as 'recent' into <unit> class.
+
+	
 2006-12-14  Tatsuya BIZENN  <bizenn@arthub.net>
 
 	* Use when/ unless/ instead of when unless for conditional

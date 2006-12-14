@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.65 2006/07/03 23:28:29 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.66 2006/12/14 00:07:38 cut-sea Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -197,6 +197,9 @@
 	(set! (files-of song)
 	      (list (create-new-file file-name file-xtnsn file-path file-uri))))))
 
+(define (recent-update! unit song)
+  (set! (recent-of unit)
+	(take* (cons song (recent-of unit)) 20)))
 
 ;; for error message
 ;;
