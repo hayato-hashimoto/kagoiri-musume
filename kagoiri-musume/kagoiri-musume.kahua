@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.273 2006/12/14 00:07:38 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.274 2006/12/14 02:53:42 cut-sea Exp $
 
 ;;
 ;; include
@@ -146,6 +146,9 @@
 ;;
 (primary-database-name *kagoiri-musume-database-name*)
 
+;; default value
+;;
+(define-if-not-bound *kagoiri-recent-limits* 20)
 
 ;; moved entry
 (define (page-moved . path)

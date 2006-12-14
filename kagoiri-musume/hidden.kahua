@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: hidden.kahua,v 1.9 2006/03/18 11:34:47 shibata Exp $
+;; $Id: hidden.kahua,v 1.10 2006/12/14 02:53:42 cut-sea Exp $
 ;;
 
 (define-syntax entryes
@@ -42,8 +42,28 @@
    (ul/ (@/ (class "menu"))
         (entryes
          ((admin-system "user" "csv") "CSVインポート")
-         ((admin-system "group" "tree-edit") "グループ編集")
+         ((admin-system "group") "グループ編集")
          ((sendmail) "メール")
          ((log-analysis) "ログ解析")
+	 ((version-update) "アップデート")
          ))))
 
+
+(define (version-update)
+  ;; When new kagoiri-musume version,
+  ;; developper add here update logic.
+  ;; *** W A R N N I N G ***
+  ;; You, Developper of This Program,
+  ;; Note that user can click and do this logic time and again.
+  ;;
+  ;;
+  (for-each (lambda (u)
+	      (if (null? (recent-of u))
+		  (let* ((ms (musumes-of u))
+			 (ss (append-map songs-of ms))
+			 (ss (sort ss (lambda (s1 s2)
+					(> (ctime-of s1) (ctime-of s2))))))
+		    (set! (recent-of u) (take* ss *kagoiri-recent-limits*)))))
+	    (make-kahua-collection <unit>))
+  ;; default is only redirect self
+  (redirect/cont (cont hidden)))

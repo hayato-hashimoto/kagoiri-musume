@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: group.kahua,v 1.13 2006/03/19 15:42:28 shibata Exp $
+;; $Id: group.kahua,v 1.14 2006/12/14 02:53:42 cut-sea Exp $
 ;;
 ;;
 (kahua-add-hook! 'initial (cut make-kahua-collection <group>))
@@ -130,17 +130,17 @@
 
 
 (define (node->group! node parents)
-      (let* ((name (car node))
-             (children (cdr node))
-             (obj (or (group-name->obj name)
-                      (make <group> :name name))))
-        (update-parents! obj parents)
-        ;; (slot-set! obj 'parents parents)
-        (map (cut join! <> obj) parents)
-        (update-groups! obj
-                        ;; (slot-set! obj 'groups
-                        (map (cut node->group! <> (list obj)) children))
-        obj))
+  (let* ((name (car node))
+	 (children (cdr node))
+	 (obj (or (group-name->obj name)
+		  (make <group> :name name))))
+    (update-parents! obj parents)
+    ;; (slot-set! obj 'parents parents)
+    (map (cut join! <> obj) parents)
+    (update-groups! obj
+		    ;; (slot-set! obj 'groups
+		    (map (cut node->group! <> (list obj)) children))
+    obj))
 
 (define (create-groups&assign-member recordes)
 
@@ -347,7 +347,7 @@
   (define edit-groups
     (entry-lambda (:keyword grouptree)
       (node->group! (call-with-input-string grouptree read) '())
-      (redirect/cont (cont admin-system "group" "tree-edit"))))
+      (redirect/cont (cont admin-system "group"))))
 
 
   (let1 root (top-group)
