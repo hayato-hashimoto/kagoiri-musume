@@ -1,7 +1,7 @@
 dnl
 dnl Configuring kagoiri-musume
 dnl  process this file with "autoconf" to generate 'configure'.
-dnl $Id: configure.ac,v 1.13 2006/12/14 03:51:58 cut-sea Exp $
+dnl $Id: configure.ac,v 1.14 2006/12/27 17:45:52 cut-sea Exp $
 AC_PREREQ(2.59)
 AC_INIT(kagoiri-musume, 0.1.3, cut-sea@master.email.ne.jp)
 
@@ -24,6 +24,18 @@ fi
 if test X$KAHUA_INSTALL = X; then 
   AC_MSG_ERROR([Cannot find Kahua installed.  Please install Kahua-0.8 or later, and make sure to set PATH properly.])
 fi
+
+KAHUACONFIG_OPTION=' -c $(sysconfdir)/kahua.conf'
+AC_ARG_WITH(site-bundle,
+  AC_HELP_STRING([--with-site-bundle=/path/to/bundle],
+                 [Target site bundle path. Default: none]),
+  [
+    case "$with_site_bundle" in
+      no) KAHUACONFIG_OPTION=' -c $(sysconfdir)/kahua.conf' ;;
+      *)  KAHUACONFIG_OPTION=" -S $with_site_bundle" ;;
+    esac
+  ])
+AC_SUBST(KAHUACONFIG_OPTION)
 
 dnl Add more test
 
