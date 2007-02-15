@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: common-test.scm,v 1.10 2006/12/14 07:21:23 cut-sea Exp $
+;; $Id: common-test.scm,v 1.11 2007/02/15 13:43:20 cut-sea Exp $
 
 ;; コンテンツ作成用テストライブラリ
 
@@ -125,8 +125,7 @@
                                         (action ,top))
                                      ?*))
 
-                       :sxpath (//body '(form))
-                       :pick #t)))
+                       :sxpath (//body '(form)))))
 
 (define (make-unit w . options)
   (let-keywords* options ((view :view '?*)

@@ -1,3 +1,7 @@
+2007-02-15  Katsutoshi Itoh <cut-sea@kahua.org>
+
+	* remove unneccessary keyword :pick from test-common code.
+	
 2006-12-28  Katsutoshi Itoh <cut-sea@kahua.org>
 
 	* modify: catch up with Kahua-1.0 site bundle.
