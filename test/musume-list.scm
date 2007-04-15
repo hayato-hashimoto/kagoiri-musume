@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.10 2007/04/15 03:59:25 shibata Exp $
+;; $Id: musume-list.scm,v 1.11 2007/04/15 12:44:26 shibata Exp $
 
 (load "common.scm")
 
@@ -113,8 +113,7 @@
 		     (th (span (@ (class "clickable")) "ステータス"))
 		     (th (span (@ (class "clickable")) "タイプ"))
 		     (th (span (@ (class "clickable")) "カテゴリ"))
-		     (th (span (@ (class "clickable")) "アサイン"))
-		     (th "表示上限"))
+		     (th (span (@ (class "clickable")) "アサイン")))
 		 (tr (@ (valign "top"))
 		     (td (select
 			  (@ (onchange
@@ -152,19 +151,10 @@
 			     (name "assign"))
 			  (option (@ (value "*all*")) "全て")
 			  (option (@ (value "cut-sea")) "cut-sea")))
-		     (td (select
-			  (@ (name "limit"))
-			  (option (@ (value "")))
-			  (option (@ (value "20")) "20")
-			  (option (@ (value "50")) "50")
-			  (option
-			   (@ (value "200") (selected "true"))
-			   "200")
-			  (option (@ (value "500")) "500")
-			  (option (@ (value "1000")) "1000")))
-		     (td (input (@ (value "絞り込み")
-				   (type "submit")
-				   (name "submit")))))))
+		     (td (noscript
+                          (input (@ (value "絞り込み")
+                                    (type "submit")
+                                    (name "submit"))))))))
 
         (call-worker/gsid->sxml w
                                 '()

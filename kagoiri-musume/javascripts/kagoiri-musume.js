@@ -946,3 +946,7 @@ function submitSaveGroup(form, id){
                                 postBody:post});
      Element.remove($('popupwindow'+id))
 }
+
+function toggle_non_display_statuss(input){
+    location.href = $("non-display-status-link").href
+}

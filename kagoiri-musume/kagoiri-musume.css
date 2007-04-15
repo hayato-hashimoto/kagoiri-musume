@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.59 2007/04/15 03:59:25 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.60 2007/04/15 12:45:16 shibata Exp $ */
 
 /*
  * Common stuff
@@ -879,4 +879,14 @@ ul.nomembers {
 .flesh-meter .old {
     background-color:#100;
     color:#100;
+}
+
+#non-display-status-control {
+    float:left;
+    margin:5px;
+}
+
+#non-display-status-control .label {
+    font-weight:bold;
+    text-decoration:underline;
 }

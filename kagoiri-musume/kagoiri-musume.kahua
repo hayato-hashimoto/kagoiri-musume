@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.277 2007/04/15 03:59:25 shibata Exp $
+;; $Id: kagoiri-musume.kahua,v 1.278 2007/04/15 12:45:16 shibata Exp $
 
 ;;
 ;; include
@@ -248,11 +248,8 @@
 ;;;==============================================================
 ;;; Subject list
 ;;;
-(define-entry-method ** (unit-id :keyword priority status assign type category limit)
-  (let* ((*default-limit* 200)
-	 (*limits-list* '("" "20" "50" "200" "500" "1000"))
-	 (*limit* (or limit (x->string *default-limit*)))
-         (*status-dict* (make-hash-table 'string=?)))
+(define-entry-method ** (unit-id :keyword priority status assign type category)
+  (let* ((*status-dict* (make-hash-table 'string=?)))
     (define (make-filter prop code prop-of)
       (if (or (not prop)
 	      (equal? "*all*" prop))
@@ -263,19 +260,20 @@
 	   (t-filter (make-filter type code-of type-of))
 	   (c-filter (make-filter category code-of category-of))
            (a-filter (make-filter assign fan-name-of assign-of))
-	   (and-filter (lambda (m)
-			 (let1 statusid (code-of (status-of m))
-			   (hash-table-put!
-			    *status-dict*
-			    statusid
-			    (+ (hash-table-get *status-dict* statusid 0) 1)))
-			 ((every-pred p-filter s-filter t-filter c-filter a-filter) m)))
-	   (limiter (if (string-null? *limit*)
-			identity
-			(lambda (ms)
-			  (take* ms (x->integer *limit*))))))
-      (let1 unit (id->obj <unit> unit-id)
-	(permission-check-page
+	   (and-filter (every-pred p-filter s-filter t-filter c-filter a-filter))
+           (count-status (lambda (m)
+                           (let1 statusid (code-of (status-of m))
+                             (hash-table-update! *status-dict* statusid
+                                                 (cut + 1 <>) 0)
+                             #t)))
+           (unit (id->obj <unit> unit-id))
+           (non-display-status-filter
+            (if (show-non-display-statuss?)
+                identity
+              (lambda (m)
+                (not (non-display-status? unit (status-of m))))))
+           )
+      (permission-check-page
 	 (lambda (u)
 	   (if (viewable? unit u)
 	       u #f))
@@ -286,6 +284,20 @@
 	 (form/cont/
           (@/ (id "filtering_form"))
 	  (@@/ (cont ** unit-id))
+
+          (when/ (not (null? (non-display-statuss-of unit)))
+                 (div/ (@/ (id "non-display-status-control"))
+                       (input/ (@/ (type "checkbox")
+                                   (checked (show-non-display-statuss?))
+                                   (onchange "toggle_non_display_statuss(this)")))
+                       (a/cont/ (if (show-non-display-statuss?)
+                                    (@@/ (cont ** (key-of unit)))
+                                  (@@/ (cont ** (key-of unit) '(show_non_display_statuss 1))))
+                                (@/ (id "non-display-status-link")
+                                    (class "label"))
+                                (string-join (map disp-name-of (non-display-statuss-of unit)) ", ")
+                                "ステータスを表示")))
+
 	  (table/
 	   (@/ (class "table-filter"))
 	   (tr/ (@/ (onclick "toggle_select_mode(event)"))
@@ -293,7 +305,7 @@
 			(has-item? unit props-of (th/ (clickable msg))))
 		      $properties-accessor-list$
 		      $property-headers$)
-		(th/ ($$ "表示上限")))
+                )
 	   (let1 filter-row "filter_table(this, 'musume_list', '全て')"
 	     (define (prop-dropdown/ props-of prop propname)
 	       (has-item? unit props-of
@@ -310,23 +322,15 @@
 		  (prop-dropdown/ categories-of category "category")
 		  (prop-dropdown/ fans-of assign "assign")
 		  (td/
-		   (select/
-		    (@/ (name "limit"))
-		    (map/ (lambda (l)
-			    (if (equal? *limit* l)
-				(option/ (@/ (value l) (selected "true")) l)
-				(option/ (@/ (value l)) l)))
-			  *limits-list*)))
-		  (td/
-		   (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み")))))
+                   (noscript/
+                    (input/ (@/ (type "submit") (name "submit") (value ($$ "絞り込み"))))))
 		  ))))
          ;; data table
-         (let1 musumes (limiter
-                        (sort (filter and-filter
-                                      (all-active-musumes unit))
-                              (lambda (m1 m2)
-                                (> (mno-of m1) (mno-of m2)))))
-           (musume-table/ unit musumes *status-dict*)))))))
+         (let1 musumes (sort (filter (every-pred count-status non-display-status-filter and-filter)
+                                     (all-active-musumes unit))
+                             (lambda (m1 m2)
+                               (> (mno-of m1) (mno-of m2))))
+           (musume-table/ unit musumes *status-dict*))))))
 
 ;;;==============================================================
 ;;; Subject new

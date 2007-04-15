@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit-list.scm,v 1.16 2006/12/14 07:21:23 cut-sea Exp $
+;; $Id: unit-list.scm,v 1.17 2007/04/15 12:44:26 shibata Exp $
 
 (load "common.scm")
 
@@ -176,7 +176,14 @@
 
  (test* "ユニット名・概要・ファン選択"
         '(*TOP*
-          (table (tr (td "ユニット名" (span (@ (class "warning")) "(※)"))
+          (table (tr (td "非表示ステータス")
+                     (td (select (@ (size "5") (name "non-display-statuss") (multiple "true"))
+                                 (option (@ (value "open")) "OPEN")
+                                 (option (@ (value "taken")) "TAKEN")
+                                 (option (@ (value "on-hold")) "ON HOLD")
+                                 (option (@ (value "completed")) "COMPLETED")
+                                 (option (@ (value "rejected")) "REJECTED"))))
+                 (tr (td "ユニット名" (span (@ (class "warning")) "(※)"))
                      (td (input
                           (@ (value "")
                              (type "text")

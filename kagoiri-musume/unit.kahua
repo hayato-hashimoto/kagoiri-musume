@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: unit.kahua,v 1.4 2006/12/14 00:07:38 cut-sea Exp $
+;; $Id: unit.kahua,v 1.5 2007/04/15 12:45:16 shibata Exp $
 ;;
 ;;
 ;; Unit means Project.
@@ -27,6 +27,11 @@
    ;; statuss
    (statuss         :allocation :persistent :init-keyword :statuss
 		    :init-value '() :accessor statuss-of)
+   ;; non-display-statuss
+   (non-display-statuss
+                    :allocation :persistent :init-keyword :non-display-statuss
+		    :init-value '() :accessor non-display-statuss-of)
+
    ;; types
    (types           :allocation :persistent :init-keyword :types
 		    :init-value '() :accessor types-of)
@@ -83,3 +88,6 @@
   (filter (lambda (m)
 	    (not (delete-of m)))
 	  (musumes-of unit)))
+
+(define (non-display-status? unit status)
+  (memq status (ref unit 'non-display-statuss)))
