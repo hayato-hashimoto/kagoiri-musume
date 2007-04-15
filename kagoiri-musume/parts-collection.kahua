@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: parts-collection.kahua,v 1.102 2007/04/15 03:59:25 shibata Exp $
+;; $Id: parts-collection.kahua,v 1.103 2007/04/15 04:47:21 shibata Exp $
 ;;
 ;; utility tags
 (define list/ (compose node-set list))
@@ -209,7 +209,7 @@
                               (value (format "~3,'0d" song-num))
                               (title (length songs)))
                           (map/ flesh-meter/
-                                (take* (reverse songs) 15))))
+                                (reverse (take* songs 15)))))
 
 		   (let1 val (format "~3,'0d" (mno-of m))
 		     (td/ (@/ (value val))
