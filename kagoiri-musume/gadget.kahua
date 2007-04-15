@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: gadget.kahua,v 1.67 2006/12/14 02:53:42 cut-sea Exp $
+;; $Id: gadget.kahua,v 1.68 2007/04/15 03:59:25 shibata Exp $
 ;;
 (define $property-list$
   (list "priority" "status" "type" "category" "assign"))
@@ -280,3 +280,14 @@
 (define (help-button/ keyword)
   (span/ (@/ (onclick #`"popup_help(event, ',|keyword|')"))
 	 (clickable "H")))
+
+
+(define seconds->freshness
+  (let* ((one-day (* 60 60 24))
+         (one-week (* one-day 7))
+         (one-month (* one-day 30)))
+    (lambda (seconds)
+      (cond ((< seconds one-day) "one-day")
+            ((< seconds one-week) "one-week")
+            ((< seconds one-month) "one-month")
+            (else "old")))))

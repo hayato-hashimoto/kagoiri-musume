@@ -1,5 +1,5 @@
 /* style sheet for kagoiri-musume */
-/* $Id: kagoiri-musume.css,v 1.58 2006/04/09 10:34:21 shibata Exp $ */
+/* $Id: kagoiri-musume.css,v 1.59 2007/04/15 03:59:25 shibata Exp $ */
 
 /*
  * Common stuff
@@ -851,4 +851,32 @@ div.group-item:hover {
 ul.nomembers {
     height:200px !important;
     overflow:auto;
+}
+
+.delete {
+    background-color:pink;
+}
+
+.flesh-meter .scale {
+    border-right:1px solid gray;
+}
+
+.flesh-meter .one-day {
+    background-color:#f00;
+    color:#f00;
+}
+
+.flesh-meter .one-week {
+    background-color:#a00;
+    color:#a00;
+}
+
+.flesh-meter .one-month {
+    background-color:#600;
+    color:#600;
+}
+
+.flesh-meter .old {
+    background-color:#100;
+    color:#100;
 }

@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: song.kahua,v 1.1 2006/03/18 11:29:13 shibata Exp $
+;; $Id: song.kahua,v 1.2 2007/04/15 03:59:25 shibata Exp $
 ;;
 ;;
 ;; song means one of issue.
@@ -37,3 +37,8 @@
 
 (define-method active? ((song <song>))
   (not (delete-of song)))
+
+(define (flesh-meter/ song)
+  (let1 sec (- (sys-time) (ctime-of song))
+    (span/ (@/ (class (format "scale ~a"  (seconds->freshness sec))))
+           ".")))

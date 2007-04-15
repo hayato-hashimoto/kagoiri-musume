@@ -1,3 +1,8 @@
+2007-04-15 SHIBATA Tomohisa <shibata@kahua.org>
+
+	* add fleshness meter to issue list page.
+	* modify: issue delete button moved from issue list page to issue edit page.
+
 2007-02-15  Katsutoshi Itoh <cut-sea@kahua.org>
 
 	* remove unneccessary keyword :pick from test-common code.

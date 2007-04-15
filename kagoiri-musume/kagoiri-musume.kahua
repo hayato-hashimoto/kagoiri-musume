@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: kagoiri-musume.kahua,v 1.276 2006/12/27 17:45:52 cut-sea Exp $
+;; $Id: kagoiri-musume.kahua,v 1.277 2007/04/15 03:59:25 shibata Exp $
 
 ;;
 ;; include
@@ -409,6 +409,7 @@
      (require-fan-message unit)
      (navigation/ musume)
      (h3/ (format ($$ "『~a』の『~a 』を編集する。") (unit-name-of unit) (mname-of musume)))
+
      (form/cont/
       (@@/ (cont (entry-lambda (:keyword name)
                    (if (not (string-null? name))
@@ -419,7 +420,14 @@
 				    (id "focus") (size 80)
 				    (value (mname-of musume)))))))
       (input/ (@/ (type "submit") (value ($$ "改名")))))
-     )))
+
+     (devel:div/
+      (a/cont/
+       (@/ (class "clickable delete")
+           (onClick (format "return confirm('~a')?true:false"
+                            ($$ "本当に削除しますか？"))))
+       (@@/ (cont remove-musume (key-of musume)))
+       ($$ "削除"))))))
 
 
 ;;;==============================================================

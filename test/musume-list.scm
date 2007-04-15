@@ -3,7 +3,7 @@
 ;;  Copyright (c) 2005 Kahua.Org, All rights reserved.
 ;;  See COPYING for terms and conditions of using this software
 ;;
-;; $Id: musume-list.scm,v 1.9 2006/12/14 07:21:23 cut-sea Exp $
+;; $Id: musume-list.scm,v 1.10 2007/04/15 03:59:25 shibata Exp $
 
 (load "common.scm")
 
@@ -190,7 +190,7 @@
                                         "COMPLETED")
                                      "(0) "))
                           (tr (@ (onclick "sort_table(event);return false"))
-                              (th)
+                              (th (@ (value "flesh-meter")) "更新度")
                               (th (@ (value "no")) "No.")
                               (th (@ (value "title")) "タイトル")
                               (th (@ (value "priority")) "優先度")
