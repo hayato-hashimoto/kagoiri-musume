@@ -1,3 +1,7 @@
+2007-06-20  Katsutoshi Itoh <cut-sea@kahua.org>
+
+	* change: viewable? method for unit and fan.
+	
 2007-04-15 SHIBATA Tomohisa <shibata@kahua.org>
 
 	* add non-display status to unit.
