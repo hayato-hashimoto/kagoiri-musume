@@ -39,7 +39,8 @@
  (test* "ナビゲーション"
         '(*TOP*
           (span (@ (class "current"))
-                (a (@ (href "/kahua.cgi/kagoiri-musume/")) "トップ")))
+                (a (@ (href (!or "/kahua.cgi/kagoiri-musume/"
+				 "/kahua.cgi/kagoiri-musume"))) "トップ")))
         (call-worker/gsid->sxml w
                                 '()
                                 '(("name" "cut-sea") ("pass" "cutsea"))
