@@ -132,7 +132,9 @@ check:  all
 	done
 
 clean:
-	rm -rf core *~ kagoiri-musume/*~ kagoiri-musume/version.kahua test/*~ test/test.conf test/common.scm $(SCRIPTS) checkout
+	rm -rf core *~ kagoiri-musume/*~ kagoiri-musume/version.kahua tmp \
+	test/*~ test/*.log test/_* test/test.conf test/common.scm test/kagoiri-musume \
+	$(SCRIPTS) checkout
 
 dbinit:
 	$(GOSH) -I$(KAHUA_LIB) -I./ -l kagoiri-musume/user-setting.kahua initdb.scm $(KAHUACONFIG);
