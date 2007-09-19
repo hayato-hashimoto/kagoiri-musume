@@ -40,8 +40,9 @@
 ;;
 (define (main args)
   (let-args (cdr args)
-      ((site "S=s" #f))
-    (let* ((conf (if site (kahua-common-init site #t) (kahua-config)))
+      ((conf-file "c=s" #f)
+       (site "S=s" #f))
+    (let* ((conf (if site (kahua-common-init site conf-file) (kahua-config)))
 	   (database  #`",(ref conf 'database-directory)/,(ref conf 'default-database-name)"))
       (with-db (db database)
 	  (new-fan "kago" "kago" "cut-sea@kagoiri.org" 'admin 'developer 'client 'user)

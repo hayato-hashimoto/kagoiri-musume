@@ -1,5 +1,11 @@
 2007-09-19  Tatsuya BIZENN  <bizenn@arthub.net>
 
+	* change: initdb.scm
+	  Add support -c option.
+	* change: Makefile.in
+	  Split install target into install(copy and setup files) and dbinit
+	  (initialize database).
+
 	* remove kagoiri-musume-start.in, kagoiri-musume-stop.in.
 	* change: Makefile.in
 	  Purge entries related above scripts.  This is to fit with modern
