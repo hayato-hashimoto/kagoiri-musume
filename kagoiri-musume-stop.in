@@ -1,4 +1,0 @@
-#!/bin/sh
-
-kahua-admin -c ###KAGOIRI_MUSUME_INPLACE###/kagoiri-musume.conf shutdown > /dev/null 2>&1
-

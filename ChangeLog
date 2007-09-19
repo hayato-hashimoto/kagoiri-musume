@@ -1,3 +1,10 @@
+2007-09-19  Tatsuya BIZENN  <bizenn@arthub.net>
+
+	* remove kagoiri-musume-start.in, kagoiri-musume-stop.in.
+	* change: Makefile.in
+	  Purge entries related above scripts.  This is to fit with modern
+	  Kahua's fashion.
+
 2007-06-20  Katsutoshi Itoh <cut-sea@kahua.org>
 
 	* change: viewable? method for unit and fan.
