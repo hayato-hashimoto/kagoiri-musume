@@ -36,11 +36,6 @@ Then, edit app-servers in the Kahua working directory to add "kagoiri-musume" en
 
   (kagoiri-musume :argument () :run-by-default 0)
 
-If you want to allow non registered user to edit page, 
-give 'non-member-edit as a argument.
-
-  (kagoiri-musume :argument (non-member-edit) :run-by-default 0)
-
 [Task at First Contact]
 At first conntact for Kagoiri-Musume, you can login by only 'kago' account.
 The 'kago' account is system administrater level account.
